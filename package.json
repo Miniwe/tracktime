@@ -1,0 +1,16 @@
+{
+  "name": "tracktime",
+  "main": "index.html",
+  "description": "Track time. Chrome platform app.",
+  "version": "0.01",
+  "window": {
+    "toolbar": false,
+    // "show": false,
+    // "frame": true,
+    "position": "center",
+    "width": 640,
+    "height": 480,
+    "min_width": 600,
+    "min_height": 400
+  }
+}
