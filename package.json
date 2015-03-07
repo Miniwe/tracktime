@@ -1,16 +1,24 @@
 {
   "name": "tracktime",
-  "main": "index.html",
+  "version": "0.0.1",
   "description": "Track time. Chrome platform app.",
-  "version": "0.01",
+  "main": "index.html",
+  "scripts": {
+    "test": "test index.html"
+  },
   "window": {
-    "toolbar": false,
-    // "show": false,
-    // "frame": true,
+    "toolbar": true,
+    "frame": true,
     "position": "center",
-    "width": 640,
-    "height": 480,
+    "width": 800,
+    "height": 600,
     "min_width": 600,
     "min_height": 400
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^3.4.0",
+    "lokijs": "^1.2.0"
   }
 }
