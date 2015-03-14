@@ -1,1 +1,4 @@
-alert 'coffee run'
+$ ->
+  console.log 'app run'
+  $.material.init()
+  return

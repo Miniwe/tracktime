@@ -1,12 +1,3 @@
-(function() {
-  alert('coffee run');
-
-  console.log('models inside');
-
-}).call(this);
-
-//# sourceMappingURL=app.coffee.js.map
-
 /*!
  * jQuery JavaScript Library v2.1.3
  * http://jquery.com/
@@ -23649,3 +23640,13 @@ function toArray(list, index) {
 },{}]},{},[1])
 (1)
 });
+
+(function() {
+  $(function() {
+    console.log('app run');
+    $.material.init();
+  });
+
+}).call(this);
+
+//# sourceMappingURL=app.coffee.js.map

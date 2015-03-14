@@ -108,14 +108,25 @@ module.exports = function (grunt) {
       }
     },
     concat: {
-      dist: {
+      jss: {
         src: [
-        path.resolve(config.tmpPath) + '/*.js'
+          path.resolve(config.tmpPath) + '/bower_components.js',
+          path.resolve(config.tmpPath) + '/app.coffee.js'
         ],
         dest: path.resolve(config.tmpPath) + '/script.js'
+      },
+      css: {
+        src: [
+          path.resolve(config.tmpPath) + '/*.css',
+          path.resolve(config.tmpPath) + '/css/app.css',
+        ],
+        dest: path.resolve(config.tmpPath) + '/css/style.css',
       }
     },
     uglify: {
+      options: {
+          sourceMap: true
+      },
       build: {
         src: path.resolve(config.tmpPath) + '/script.js',
         dest: path.resolve(config.tmpPath) + '/script.min.js'
@@ -158,6 +169,16 @@ module.exports = function (grunt) {
 
   });
 
+grunt.registerTask('app:start', 'Start stanalone app', function() {
+  grunt.util.spawn({
+    cmd: ['nw'],
+    args: ['.'],
+  }, function done() {
+    grunt.log.ok('app stated');
+  });
+
+});
+
 grunt.registerTask('tmp:create', 'Create tmp folder', function() {
   grunt.task.run('tmp:delete');
   grunt.file.mkdir(path.resolve(config.tmpPath));
@@ -174,11 +195,12 @@ grunt.registerTask('client', 'Build client standalone', [
   'coffee',
   'jshint', //@todo fix pathes to work
   'bower_concat',
-  'concat',
   'compass',
+  'concat',
   'copy',
   // 'uglify', // @all working - turn on in production
-  // 'tmp:delete'
+  'tmp:delete',
+  'app:start'
   ]);
 
 grunt.registerTask('server', 'Start the app server', ['express:dev:stop', 'express:dev:start']);
