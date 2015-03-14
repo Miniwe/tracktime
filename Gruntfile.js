@@ -10,6 +10,10 @@ module.exports = function (grunt) {
 
   require('grunt-express-server')(grunt);
 
+  // require('grunt-contrib-copy')(grunt);
+
+  require('grunt-bower-concat')(grunt);
+
 
   grunt.initConfig({
     express: {
@@ -38,9 +42,9 @@ module.exports = function (grunt) {
     },
     jshint: {
       all: [
-        'Gruntfile.js',
-        'tasks/*.js',
-        '<%= nodeunit.tests %>'
+      'Gruntfile.js',
+      'tasks/*.js',
+      '<%= nodeunit.tests %>'
       ],
       options: {
         jshintrc: '.jshintrc'
@@ -61,13 +65,29 @@ module.exports = function (grunt) {
         },
         src: ['index.html']
       }
+    },
+    bower_concat: {
+      all: {
+        dest: 'public/assets/js/script.js',
+        cssDest: 'public/assets/css/style.css',
+        // exclude: [
+        // 'jquery',
+        // 'modernizr'
+        // ],
+        dependencies: {
+          'underscore': 'jquery',
+          'backbone': 'underscore'
+        },
+        bowerOptions: {
+          relative: false
+        }
+      }
     }
   });
 
-  grunt.registerTask('client', 'Start the app client', function() {
-    console.log('start client');
-  });
-  grunt.registerTask('serve', 'Start the app server', ['express:dev:stop', 'express:dev:start']);
+grunt.registerTask('client', 'Start the app client', ['bower_concat']);
 
-  grunt.registerTask('default', []);
+grunt.registerTask('server', 'Start the app server', ['express:dev:stop', 'express:dev:start']);
+
+grunt.registerTask('default', []);
 };
