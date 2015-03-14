@@ -146,9 +146,10 @@ module.exports = function (grunt) {
           dest: path.resolve('public/assets')
         },
         {
-          // cwd: path.resolve(config.tmpPath),
-          src: '.tmp/script.js',
-          dest: 'public/assets/js/script.js'
+          expand: true,
+          cwd: path.resolve(config.tmpPath),
+          src: 'script.js',
+          dest: 'public/assets/js/'
         }
 
         ],
@@ -158,6 +159,7 @@ module.exports = function (grunt) {
   });
 
 grunt.registerTask('tmp:create', 'Create tmp folder', function() {
+  grunt.task.run('tmp:delete');
   grunt.file.mkdir(path.resolve(config.tmpPath));
 });
 
@@ -176,7 +178,7 @@ grunt.registerTask('client', 'Build client standalone', [
   'compass',
   'copy',
   // 'uglify', // @all working - turn on in production
-  'tmp:delete'
+  // 'tmp:delete'
   ]);
 
 grunt.registerTask('server', 'Start the app server', ['express:dev:stop', 'express:dev:start']);
