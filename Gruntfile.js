@@ -1,6 +1,13 @@
 'use strict';
 
+var path = require('path');
+
 module.exports = function (grunt) {
+
+  var config = {
+    'tmpPath': '.tmp'
+  };
+
   // Load grunt tasks automatically
   // https://www.npmjs.com/package/load-grunt-tasks
   require('load-grunt-tasks')(grunt);
@@ -10,9 +17,13 @@ module.exports = function (grunt) {
 
   require('grunt-express-server')(grunt);
 
-  // require('grunt-contrib-copy')(grunt);
+  // require('grunt-bower-concat')(grunt);
 
-  require('grunt-bower-concat')(grunt);
+
+  // require('grunt-contrib-copy')(grunt);
+  // require('grunt-contrib-jshint')(grunt); // ?? not working for me :(
+  // grunt.require('grunt-contrib-coffee');
+  // grunt.loadNpmTasks('grunt-contrib-concat');
 
 
   grunt.initConfig({
@@ -44,7 +55,8 @@ module.exports = function (grunt) {
       all: [
       'Gruntfile.js',
       'tasks/*.js',
-      '<%= nodeunit.tests %>'
+      path.resolve(config.tmpPath) + '/app.coffee.js'
+      // , '<%= nodeunit.tests %>'
       ],
       options: {
         jshintrc: '.jshintrc'
@@ -68,8 +80,8 @@ module.exports = function (grunt) {
     },
     bower_concat: {
       all: {
-        dest: 'public/assets/js/script.js',
-        cssDest: 'public/assets/css/style.css',
+        dest: path.resolve(config.tmpPath , 'bower_components.js'),
+        cssDest: path.resolve(config.tmpPath , 'bower_components.css'),
         // exclude: [
         // 'jquery',
         // 'modernizr'
@@ -82,10 +94,90 @@ module.exports = function (grunt) {
           relative: false
         }
       }
+    },
+    coffee: {
+      compile: {
+        options: {
+          join: true,
+          sourceMap: true
+        },
+        files: {
+          '.tmp/app.coffee.js': ['app/**/*.coffee']
+
+        }
+      }
+    },
+    concat: {
+      dist: {
+        src: [
+        path.resolve(config.tmpPath) + '/*.js'
+        ],
+        dest: path.resolve(config.tmpPath) + '/script.js'
+      }
+    },
+    uglify: {
+      build: {
+        src: path.resolve(config.tmpPath) + '/script.js',
+        dest: path.resolve(config.tmpPath) + '/script.min.js'
+      }
+    },
+    compass: {
+      dist: {
+        options: {
+          sassDir: path.resolve('assets/sass'),
+          cssDir: path.resolve(config.tmpPath) + '/css',
+          environment: 'production'
+        }
+      },
+      dev: {
+        options: {
+          sassDir: path.resolve('assets/sass'),
+          cssDir: path.resolve(config.tmpPath) + '/css'
+        }
+      }
+    },
+    copy: {
+      main: {
+        files: [
+        {
+          expand: true,
+          cwd: path.resolve(config.tmpPath),
+          src: 'css/**',
+          dest: path.resolve('public/assets')
+        },
+        {
+          // cwd: path.resolve(config.tmpPath),
+          src: '.tmp/script.js',
+          dest: 'public/assets/js/script.js'
+        }
+
+        ],
+      },
     }
+
   });
 
-grunt.registerTask('client', 'Start the app client', ['bower_concat']);
+grunt.registerTask('tmp:create', 'Create tmp folder', function() {
+  grunt.file.mkdir(path.resolve(config.tmpPath));
+});
+
+grunt.registerTask('tmp:delete', 'Delete tmp folder', function() {
+  grunt.file.delete(path.resolve(config.tmpPath), {
+    force: true
+  });
+});
+
+grunt.registerTask('client', 'Build client standalone', [
+  'tmp:create',
+  'coffee',
+  'jshint', //@todo fix pathes to work
+  'bower_concat',
+  'concat',
+  'compass',
+  'copy',
+  // 'uglify', // @all working - turn on in production
+  'tmp:delete'
+  ]);
 
 grunt.registerTask('server', 'Start the app server', ['express:dev:stop', 'express:dev:start']);
 
