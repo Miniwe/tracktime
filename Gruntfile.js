@@ -162,9 +162,28 @@ module.exports = function (grunt) {
           src: 'script.js',
           dest: 'public/assets/js/'
         }
-
-        ],
+        ]
       },
+      bootstrap: {
+        files: [
+        {
+          expand: true,
+          cwd: path.resolve('bower_components/bootstrap/dist'),
+          src: [
+            'fonts/**'
+          ],
+          dest: path.resolve('public/assets')
+        },
+        {
+          expand: true,
+          cwd: path.resolve('bower_components/bootstrap-material-design/dist'),
+          src: [
+            'fonts/**'
+          ],
+          dest: path.resolve('public/assets')
+        }
+        ]
+      }
     }
 
   });

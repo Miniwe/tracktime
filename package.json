@@ -1,11 +1,11 @@
 {
   "name": "tracktime",
   "version": "0.0.1",
-  "description": "Track time. Chrome platform app.",
+  "description": "Track time. Nodejs on Chrome platform app.",
   "main": "public/index.html",
   "scripts": {
     "test": "grunt test",
-    "build": "bower install; grunt build"
+    "build": "npm install; bower install; "
   },
   "repository": {
     "type": "git",
@@ -14,8 +14,8 @@
   "window": {
     "toolbar": true,
     "frame": true,
-    "position": "center",
-    "width": 800,
+    "position": "top",
+    "width": 1000,
     "height": 600,
     "min_width": 600,
     "min_height": 400
