@@ -25,6 +25,7 @@ var handleClient = function (socket) {
 app.set('port', process.env.PORT || 3000);
 // app.configure(function () {
 // });
+
 io.on("connection", handleClient);
 
 //define routes
@@ -32,19 +33,14 @@ app.get('/', function (req, res) {
   res.send('Hello World!');
 })
 
-
-app.listen(app.get('port'));
-
-// console.log('Listening on port ' + app.get('port'));
-
-/*
--------------
-var app = require("express");
+//define routes
+app.get('/users', function (req, res) {
+  res.send('Hello from users!');
+})
 
 
-app.listen(8080);
-
-io.on("connection", function (socket) {
+server.listen(app.get('port'), function(){
+    // console.log('Listening on port ' + app.get('port'));
 });
-*/
+
 

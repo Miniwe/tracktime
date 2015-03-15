@@ -1,6 +1,7 @@
 {
     "globals": {
-        "$": false
+        "$": false,
+        "io": false
     },
 
     "predef": [

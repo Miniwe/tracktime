@@ -23645,16 +23645,26 @@ function toArray(list, index) {
   var Lokitest;
 
   $(function() {
-    var loki;
+    var loki, socket;
     console.log('app run');
     $.material.init();
     loki = new Lokitest;
+    socket = io('http://localhost:3000');
+    socket.on('connect', function() {
+      alert('Connected!');
+    });
+    socket.on('event', function(data) {
+      console.log('Event!', data);
+    });
+    socket.on('disconnect', function() {
+      console.log('disconnect!');
+    });
   });
 
   Lokitest = (function() {
     function Lokitest() {
       var LokiJS;
-      this.test('<li>Start loki</li>');
+      this.test('Start loki</li>');
       LokiJS = require('lokijs');
       this.db = new LokiJS('users_1.json');
       $('.add-users').on('click', (function(_this) {

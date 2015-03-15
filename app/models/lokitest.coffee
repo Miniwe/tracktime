@@ -1,6 +1,6 @@
 class Lokitest
   constructor: () ->
-    @test '<li>Start loki</li>'
+    @test 'Start loki</li>'
     # console.log('111');
     LokiJS = require('lokijs')
     @db = new LokiJS('users_1.json')

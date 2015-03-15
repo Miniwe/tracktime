@@ -32,7 +32,9 @@ module.exports = function (grunt) {
         node_env: 'dev',
         port: 3000,
         hostname: '*',
-        logs: '/logs'
+        // nospawn: true,
+        // delay: 5,
+        logs: 'logs'
       },
       dev: {
         options: {
@@ -212,7 +214,7 @@ grunt.registerTask('tmp:delete', 'Delete tmp folder', function() {
 grunt.registerTask('client', 'Build client standalone', [
   'tmp:create',
   'coffee',
-  'jshint', //@todo fix pathes to work
+  'jshint', //@todo fix pathes to full work
   'bower_concat',
   'compass',
   'concat',
@@ -222,7 +224,7 @@ grunt.registerTask('client', 'Build client standalone', [
   'app:start'
   ]);
 
-grunt.registerTask('server', 'Start the app server', ['express:dev:stop', 'express:dev:start']);
+grunt.registerTask('serve', 'Start the app server', ['express:dev:stop', 'express:dev:start']);
 
 grunt.registerTask('default', []);
 };
