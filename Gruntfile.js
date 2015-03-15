@@ -174,7 +174,7 @@ grunt.registerTask('app:start', 'Start stanalone app', function() {
     cmd: ['nw'],
     args: ['.'],
   }, function done() {
-    grunt.log.ok('app stated');
+    grunt.log.ok('app started');
   });
 
 });

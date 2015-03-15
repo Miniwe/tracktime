@@ -23642,10 +23642,83 @@ function toArray(list, index) {
 });
 
 (function() {
+  var Lokitest;
+
   $(function() {
+    var loki;
     console.log('app run');
     $.material.init();
+    loki = new Lokitest;
   });
+
+  Lokitest = (function() {
+    function Lokitest() {
+      var LokiJS;
+      this.test('<li>Start loki</li>');
+      LokiJS = require('lokijs');
+      this.db = new LokiJS('users_1.json');
+      $('.add-users').on('click', (function(_this) {
+        return function(event) {
+          console.log('add-users');
+          event.preventDefault();
+          return _this.add();
+        };
+      })(this));
+      $('.get-users').on('click', (function(_this) {
+        return function(event) {
+          console.log('get-users');
+          event.preventDefault();
+          return _this.get();
+        };
+      })(this));
+      return;
+    }
+
+    Lokitest.prototype.test = function(msg) {
+      if (msg) {
+        $('h1').html(msg);
+      }
+    };
+
+    Lokitest.prototype.add = function() {
+      var users;
+      users = this.db.addCollection('users', {
+        indices: ['name']
+      });
+      users.insert({
+        name: 'User 10',
+        user: 20
+      });
+      users.insert({
+        name: 'User 11',
+        user: 21
+      });
+      users.insert({
+        name: 'User 12',
+        user: 22
+      });
+      this.db.saveDatabase();
+    };
+
+    Lokitest.prototype.get = function() {
+      this.db.loadDatabase({}, (function(_this) {
+        return function() {
+          var users;
+          users = _this.db.getCollection('users');
+          if (users) {
+            console.log('users', users.data);
+          } else {
+            console.log('no users Data');
+            console.log('will create');
+            _this.add();
+          }
+        };
+      })(this));
+    };
+
+    return Lokitest;
+
+  })();
 
 }).call(this);
 
