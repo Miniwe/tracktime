@@ -6,27 +6,36 @@ var app = module.exports = express();
 
 
 var handleClient = function (socket) {
-    // we've got a client connection
-    var tweet = {user: "nodesource", text: "Hello, world!"};
+socket.on( 'connect', function() {
+    console.log('Connection Established! Ready to send/receive data!');
+    socket.send('my message here');
+    socket.send(1234567);
+    socket.send([1,2,3,4,5]);
+    socket.send({ apples : 'bananas' });
+} );
 
-    // to make things interesting, have it send every second
-    var interval = setInterval(function () {
-        socket.emit("tweet", tweet);
-    }, 1000);
+socket.on( 'message', function(message) {
+    console.log(message);
+} );
 
-    socket.on("disconnect", function () {
-        clearInterval(interval);
-    });
+socket.on( 'disconnect', function() {
+    console.log('my connection dropped');
+} );
+
+// Extra event in Socket.IO provided by PubNub
+socket.on( 'reconnect', function() {
+    console.log('my connection has been restored!');
+} );
+
 
 };
 
+io.on("connection", handleClient);
 
 
 app.set('port', process.env.PORT || 3000);
 // app.configure(function () {
 // });
-
-io.on("connection", handleClient);
 
 //define routes
 app.get('/', function (req, res) {
@@ -35,12 +44,10 @@ app.get('/', function (req, res) {
 
 //define routes
 app.get('/users', function (req, res) {
-  res.send('Hello from users!');
+  res.send('tweet!');
 })
 
 
 server.listen(app.get('port'), function(){
     // console.log('Listening on port ' + app.get('port'));
 });
-
-
