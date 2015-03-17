@@ -23642,35 +23642,35 @@ function toArray(list, index) {
 });
 
 (function() {
-  var Lokitest;
+  var App, Lokitest,
+    extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    hasProp = {}.hasOwnProperty;
+
+  App = (function(superClass) {
+    extend(App, superClass);
+
+    function App() {
+      console.log('app constructor');
+      return;
+    }
+
+    App.prototype.initialize = function() {
+      console.log('app init');
+      Backbone.history.start({
+        pushState: true
+      });
+    };
+
+    return App;
+
+  })(Backbone.Model);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = App : void 0) || (this.App = App);
 
   $(function() {
-    var content, domain, loki, socket;
-    console.log('app run');
     $.material.init();
-    domain = 'http://localhost:3000';
-    loki = new Lokitest;
-    socket = io(domain);
-    content = $('h1');
-    socket.on('connect', function() {
-      console.log('Connected!');
-    });
-    socket.on('message', function(msg) {
-      return content.append($('<p>').text(msg)).append($('<em>').text(' from server'));
-    });
-    socket.on('event', function(data) {
-      console.log('Event!', data);
-    });
-    $('.send-request').on('click', function(event) {
-      var msg;
-      event.preventDefault();
-      msg = 'text object';
-      content.append($('<p>').text(msg)).append($('<em>').text(' from me'));
-      return socket.emit(msg);
-    });
-    socket.on('disconnect', function() {
-      console.log('disconnect!');
-    });
+    App = new App;
+    App.initialize();
   });
 
   Lokitest = (function() {

@@ -214,7 +214,7 @@ grunt.registerTask('tmp:delete', 'Delete tmp folder', function() {
 grunt.registerTask('client', 'Build client standalone', [
   'tmp:create',
   'coffee',
-  'jshint', //@todo fix pathes to full work
+  // 'jshint', //@todo fix pathes to full work
   'bower_concat',
   'compass',
   'concat',
