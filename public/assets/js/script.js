@@ -23669,7 +23669,7 @@ function toArray(list, index) {
 
   $(function() {
     $.material.init();
-    App = new App;
+    App = new App();
     App.initialize();
   });
 

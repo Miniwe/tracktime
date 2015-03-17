@@ -1,0 +1,38 @@
+{
+  "main": {
+    "files": [
+      {
+        "expand": true,
+        "cwd": ".tmp",
+        "src": "css/**",
+        "dest": "public/assets"
+      },
+      {
+        "expand": true,
+        "cwd": ".tmp",
+        "src": "script.js",
+        "dest": "public/assets/js/"
+      }
+    ]
+  },
+  "bootstrap": {
+    "files": [
+      {
+        "expand": true,
+        "cwd": "bower_components/bootstrap/dist",
+        "src": [
+          "fonts/**"
+        ],
+        "dest": "public/assets"
+      },
+      {
+        "expand": true,
+        "cwd": "bower_components/bootstrap-material-design/dist",
+        "src": [
+          "fonts/**"
+        ],
+        "dest": "public/assets"
+      }
+    ]
+  }
+}

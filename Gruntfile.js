@@ -8,223 +8,44 @@ module.exports = function (grunt) {
     'tmpPath': '.tmp'
   };
 
-  // Load grunt tasks automatically
-  // https://www.npmjs.com/package/load-grunt-tasks
-  require('load-grunt-tasks')(grunt);
+  // Load grunt config and tasks automatically
+  require('load-grunt-config')(grunt, {
+    configPath: path.join(process.cwd(),'config/grunt'), //path to task.js files, defaults to grunt dir
+    init: true, //auto grunt.initConfig
+    data: { //data passed into config.  Can use with <%= test %>
+      test: false,
+      curPath: process.cwd(),
+      tmpPath: path.join(process.cwd(), config.tmpPath)
+    },
+    loadGruntTasks: {
+      pattern: 'grunt-*',
+      config: require('./package.json'),
+      scope: 'devDependencies'
+    },
+    postProcess: function(config) {}, //can post process config object before it gets passed to grunt
+    preMerge: function(config, data) {}
+  });
 
   // Time how long tasks take. Can help when optimizing build times
   require('time-grunt')(grunt);
 
-  require('grunt-express-server')(grunt);
 
-  // require('grunt-bower-concat')(grunt);
-
-
-  // require('grunt-contrib-copy')(grunt);
-  // require('grunt-contrib-jshint')(grunt); // ?? not working for me :(
-  // grunt.require('grunt-contrib-coffee');
-  // grunt.loadNpmTasks('grunt-contrib-concat');
-
-
-  grunt.initConfig({
-    express: {
-      options: { // Override defaults here
-        node_env: 'dev',
-        port: 3000,
-        hostname: '*',
-        // nospawn: true,
-        // delay: 5,
-        logs: 'logs'
-      },
-      dev: {
-        options: {
-          script: 'server/server.js'
-        }
-      },
-      prod: {
-        options: {
-          script: 'server/server.js',
-          node_env: 'production'
-        }
-      },
-      test: {
-        options: {
-          script: 'server/server.js'
-        }
-      }
-    },
-    jshint: {
-      all: [
-      'Gruntfile.js',
-      'tasks/*.js',
-      path.resolve(config.tmpPath) + '/app.coffee.js'
-      // , '<%= nodeunit.tests %>'
-      ],
-      options: {
-        jshintrc: '.jshintrc'
-      }
-    },
-    htmlhint: {
-      build: {
-        options: {
-          'tag-pair': true,
-          'tagname-lowercase': true,
-          'attr-lowercase': true,
-          'attr-value-double-quotes': true,
-          'doctype-first': true,
-          'spec-char-escape': true,
-          'id-unique': true,
-          'head-script-disabled': true,
-          'style-disabled': true
-        },
-        src: ['index.html']
-      }
-    },
-    bower_concat: {
-      all: {
-        dest: path.resolve(config.tmpPath , 'bower_components.js'),
-        cssDest: path.resolve(config.tmpPath , 'bower_components.css'),
-        // exclude: [
-        // 'jquery',
-        // 'modernizr'
-        // ],
-        dependencies: {
-          'underscore': 'jquery',
-          'backbone': 'underscore'
-        },
-        bowerOptions: {
-          relative: false
-        }
-      }
-    },
-    coffee: {
-      compile: {
-        options: {
-          join: true,
-          sourceMap: true
-        },
-        files: {
-          '.tmp/app.coffee.js': ['app/**/*.coffee']
-
-        }
-      }
-    },
-    concat: {
-      jss: {
-        src: [
-          path.resolve(config.tmpPath) + '/bower_components.js',
-          path.resolve(config.tmpPath) + '/app.coffee.js'
-        ],
-        dest: path.resolve(config.tmpPath) + '/script.js'
-      },
-      css: {
-        src: [
-          path.resolve(config.tmpPath) + '/*.css',
-          path.resolve(config.tmpPath) + '/css/app.css',
-        ],
-        dest: path.resolve(config.tmpPath) + '/css/style.css',
-      }
-    },
-    uglify: {
-      options: {
-          sourceMap: true
-      },
-      build: {
-        src: path.resolve(config.tmpPath) + '/script.js',
-        dest: path.resolve(config.tmpPath) + '/script.min.js'
-      }
-    },
-    compass: {
-      dist: {
-        options: {
-          sassDir: path.resolve('assets/sass'),
-          cssDir: path.resolve(config.tmpPath) + '/css',
-          environment: 'production'
-        }
-      },
-      dev: {
-        options: {
-          sassDir: path.resolve('assets/sass'),
-          cssDir: path.resolve(config.tmpPath) + '/css'
-        }
-      }
-    },
-    copy: {
-      main: {
-        files: [
-        {
-          expand: true,
-          cwd: path.resolve(config.tmpPath),
-          src: 'css/**',
-          dest: path.resolve('public/assets')
-        },
-        {
-          expand: true,
-          cwd: path.resolve(config.tmpPath),
-          src: 'script.js',
-          dest: 'public/assets/js/'
-        }
-        ]
-      },
-      bootstrap: {
-        files: [
-        {
-          expand: true,
-          cwd: path.resolve('bower_components/bootstrap/dist'),
-          src: [
-            'fonts/**'
-          ],
-          dest: path.resolve('public/assets')
-        },
-        {
-          expand: true,
-          cwd: path.resolve('bower_components/bootstrap-material-design/dist'),
-          src: [
-            'fonts/**'
-          ],
-          dest: path.resolve('public/assets')
-        }
-        ]
-      }
-    }
-
+  grunt.registerTask('app:start', 'Start stanalone app', function() {
+    grunt.util.spawn({
+      cmd: ['nw'],
+      args: ['.'],
+    }, function done() { /* grunt.log.ok('app started');*/ });
   });
 
-grunt.registerTask('app:start', 'Start stanalone app', function() {
-  grunt.util.spawn({
-    cmd: ['nw'],
-    args: ['.'],
-  }, function done() {
-    // grunt.log.ok('app started');
+  grunt.registerTask('tmp:create', 'Create tmp folder', function() {
+    grunt.task.run('tmp:delete');
+    grunt.file.mkdir(path.join(process.cwd(), config.tmpPath));
   });
 
-});
-
-grunt.registerTask('tmp:create', 'Create tmp folder', function() {
-  grunt.task.run('tmp:delete');
-  grunt.file.mkdir(path.resolve(config.tmpPath));
-});
-
-grunt.registerTask('tmp:delete', 'Delete tmp folder', function() {
-  grunt.file.delete(path.resolve(config.tmpPath), {
-    force: true
+  grunt.registerTask('tmp:delete', 'Delete tmp folder', function() {
+    grunt.file.delete(path.join(process.cwd(), config.tmpPath), {
+      force: true
+    });
   });
-});
 
-grunt.registerTask('client', 'Build client standalone', [
-  'tmp:create',
-  'coffee',
-  // 'jshint', //@todo fix pathes to full work
-  'bower_concat',
-  'compass',
-  'concat',
-  'copy',
-  // 'uglify', // @all working - turn on in production
-  'tmp:delete',
-  'app:start'
-  ]);
-
-grunt.registerTask('serve', 'Start the app server', ['express:dev:stop', 'express:dev:start']);
-
-grunt.registerTask('default', []);
 };

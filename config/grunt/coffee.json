@@ -1,0 +1,11 @@
+{
+  "compile": {
+    "options": {
+      "join": true,
+      "sourceMap": true
+    },
+    "files": {
+      ".tmp/app.coffee.js": ["app/**/*.coffee"]
+    }
+  }
+}

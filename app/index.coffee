@@ -1,7 +1,7 @@
 $ ->
   $.material.init()
 
-  App = new App
-  App.initialize();
+  App = new App()
+  App.initialize()
 
   return

@@ -1,0 +1,15 @@
+{
+  "options": {
+      "globals": [
+      "$",
+      "io",
+      "Backbone",
+      "console",
+      "require",
+      "module"
+    ]
+  },
+  "files": [
+    "app/**/*.coffee"
+  ]
+}

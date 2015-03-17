@@ -1,0 +1,11 @@
+{
+  "all": [
+    "Gruntfile.js",
+    "tasks/*.js",
+    "// .tmp/app.coffee.js",
+    "// <%= nodeunit.tests %>"
+  ],
+  "options": {
+    "jshintrc": ".jshintrc"
+  }
+}

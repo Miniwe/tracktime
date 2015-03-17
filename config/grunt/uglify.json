@@ -1,0 +1,9 @@
+{
+  "options": {
+    "sourceMap": true
+  },
+  "build": {
+    "src": ".tmp/script.js",
+    "dest": ".tmp/script.min.js"
+  }
+}

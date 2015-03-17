@@ -1,0 +1,15 @@
+{
+  "dist": {
+    "options": {
+      "sassDir": "assets/sass",
+      "cssDir": ".tmp/css",
+      "environment": "production"
+    }
+  },
+  "dev": {
+    "options": {
+      "sassDir": "assets/sass",
+      "cssDir": ".tmp/css"
+    }
+  }
+}

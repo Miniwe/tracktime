@@ -1,0 +1,20 @@
+{
+  "default": [],
+  "client": [
+    "tmp:create",
+    "coffee_jshint",
+    "coffee",
+    "bower_concat",
+    "compass",
+    "concat",
+    "copy",
+    "tmp:delete",
+    "app:start"
+  ],
+  "serve": [
+    "express:dev:stop",
+    "express:dev:start"
+  ]
+}
+
+

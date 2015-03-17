@@ -1,0 +1,17 @@
+{
+  "all": {
+    "dest": ".tmp/bower_components.js",
+    "cssDest": ".tmp/bower_components.css",
+    "exclude": [
+      "// jquery",
+      "// modernizr"
+    ],
+    "dependencies": {
+      "underscore": "jquery",
+      "backbone": "underscore"
+    },
+    "bowerOptions": {
+      "relative": false
+    }
+  }
+}

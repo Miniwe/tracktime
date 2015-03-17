@@ -1,0 +1,16 @@
+{
+  "jss": {
+    "src": [
+      ".tmp/bower_components.js",
+      ".tmp/app.coffee.js"
+    ],
+    "dest": ".tmp/script.js"
+  },
+  "css": {
+    "src": [
+      ".tmp/*.css",
+      ".tmp/css/app.css"
+    ],
+    "dest": ".tmp/css/style.css"
+  }
+}
