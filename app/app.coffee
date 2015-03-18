@@ -1,14 +1,11 @@
-class App extends Backbone.Model
-  constructor: () ->
-    console.log 'app constructor'
-    return
+class Tracktime extends Backbone.Model
 
   initialize: () ->
-    console.log 'app init'
-
+    console.log 'Tracktime init'
+    @set 'router', new Tracktime.Router()
     Backbone.history.start
       pushState: true
 
     return
 
-(module?.exports = App) or @App = App
+(module?.exports = Tracktime) or @Tracktime = Tracktime

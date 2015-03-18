@@ -1,7 +1,7 @@
 $ ->
   $.material.init()
 
-  App = new App()
-  App.initialize()
+  Tracktime = new Tracktime()
+  # Tracktime.initialize()
 
   return

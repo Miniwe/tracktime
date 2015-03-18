@@ -1,0 +1,7 @@
+{
+  "pull": {
+    "key": "uEiJcDjZNRNwzZZl56FutUxxcYXCro2o0Zo53wul5HQkHuYLyC",
+    "format": "json",
+    "dest": "grunt/locales/"
+  }
+}

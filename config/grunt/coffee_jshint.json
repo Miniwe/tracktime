@@ -2,9 +2,12 @@
   "options": {
       "globals": [
       "$",
+      "_",
       "io",
       "Backbone",
       "console",
+      "window",
+      "Tracktime",
       "require",
       "module"
     ]
