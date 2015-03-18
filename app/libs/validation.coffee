@@ -1,6 +1,6 @@
 Backbone.Validation.configure
-  selector: 'class'
-  labelFormatter: 'label'
+  selector: 'class_v'
+  labelFormatter: 'label_v'
   # attributes: 'inputNames' # returns the name attributes of bound view input elements
   # forceUpdate: true
 

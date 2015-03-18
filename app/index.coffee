@@ -1,7 +1,13 @@
 $ ->
   $.material.init()
 
-  Tracktime = new Tracktime()
-  # Tracktime.initialize()
+  tracktime = new Tracktime()
+  tracktimeView = new Tracktime.AppView {model: tracktime}
+
+  tracktime.populateRecords()
+  tracktimeView.renderRecords()
+
+
+  $("#app-content").append tracktimeView.el
 
   return

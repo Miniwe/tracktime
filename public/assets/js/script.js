@@ -24357,12 +24357,41 @@ function toArray(list, index) {
       return Tracktime.__super__.constructor.apply(this, arguments);
     }
 
+    Tracktime.prototype.urlRoot = "/";
+
+    Tracktime.prototype.defaults = {
+      title: "TrackTime App",
+      tmpRecords: [
+        {
+          subject: 'Lorem',
+          description: 'Iipsum dolor sit amet, consectetur adipisicing elit. Quisquam, facere!'
+        }, {
+          subject: 'Tempore',
+          description: 'Harum quis officiis consequuntur dolorem omnis at quo maxime?'
+        }, {
+          subject: 'Consequuntur',
+          description: 'Libero quibusdam perspiciatis assumenda quas natus eveniet asperiores dolor.'
+        }, {
+          subject: 'Rem',
+          description: 'Libero, enim doloremque blanditiis delectus quasi itaque architecto accusantium!'
+        }
+      ]
+    };
+
     Tracktime.prototype.initialize = function() {
-      console.log('Tracktime init');
       this.set('router', new Tracktime.Router());
       Backbone.history.start({
         pushState: true
       });
+    };
+
+    Tracktime.prototype.populateRecords = function() {
+      var recordsCollection;
+      recordsCollection = new Tracktime.RecordsCollection();
+      _.each(this.get('tmpRecords'), function(record) {
+        return recordsCollection.add(new Tracktime.Record(record));
+      });
+      return this.set('records', recordsCollection);
     };
 
     return Tracktime;
@@ -24387,13 +24416,20 @@ function toArray(list, index) {
   })(Backbone.Collection);
 
   $(function() {
+    var tracktime, tracktimeView;
     $.material.init();
-    Tracktime = new Tracktime();
+    tracktime = new Tracktime();
+    tracktimeView = new Tracktime.AppView({
+      model: tracktime
+    });
+    tracktime.populateRecords();
+    tracktimeView.renderRecords();
+    $("#app-content").append(tracktimeView.el);
   });
 
   Backbone.Validation.configure({
-    selector: 'class',
-    labelFormatter: 'label'
+    selector: 'class_v',
+    labelFormatter: 'label_v'
   });
 
   _.extend(Backbone.Model.prototype, Backbone.Validation.mixin);
@@ -24554,6 +24590,140 @@ function toArray(list, index) {
   })(Backbone.Router);
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.Router : void 0) || (this.Tracktime.Router = Tracktime.Router);
+
+  Tracktime.AppView = (function(superClass) {
+    extend(AppView, superClass);
+
+    function AppView() {
+      return AppView.__super__.constructor.apply(this, arguments);
+    }
+
+    AppView.prototype.className = 'jumbotron';
+
+    AppView.prototype.initialize = function() {
+      return this.render();
+    };
+
+    AppView.prototype.attributes = function() {
+      return {
+        id: this.model.cid
+      };
+    };
+
+    AppView.prototype.render = function() {
+      return this.$el.html('').append($("<h1>").html(this.model.get('title')));
+    };
+
+    AppView.prototype.renderRecords = function() {
+      var recordsView;
+      recordsView = new Tracktime.RecordsView({
+        collection: this.model.get('records')
+      });
+      return this.$el.append(recordsView.el);
+    };
+
+    return AppView;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AppView : void 0) || (this.Tracktime.AppView = Tracktime.AppView);
+
+  Tracktime.RecordView = (function(superClass) {
+    extend(RecordView, superClass);
+
+    function RecordView() {
+      return RecordView.__super__.constructor.apply(this, arguments);
+    }
+
+    RecordView.prototype.tagName = 'li';
+
+    RecordView.prototype.className = 'list-group-item';
+
+    RecordView.prototype.initialize = function() {
+      return this.render();
+    };
+
+    RecordView.prototype.attributes = function() {
+      return {
+        id: this.model.cid
+      };
+    };
+
+    RecordView.prototype.render = function() {
+      return this.$el.html('').append($("<div>", {
+        "class": 'least-content'
+      }).html(this.model.cid)).append($("<h4>", {
+        "class": 'list-group-item-heading'
+      }).html(this.model.get('subject'))).append($("<p>", {
+        "class": 'list-group-item-text'
+      }).html(this.model.get('description')));
+    };
+
+    return RecordView;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.RecordView : void 0) || (this.Tracktime.RecordView = Tracktime.RecordView);
+
+  Tracktime.RecordsView = (function(superClass) {
+    extend(RecordsView, superClass);
+
+    function RecordsView() {
+      return RecordsView.__super__.constructor.apply(this, arguments);
+    }
+
+    RecordsView.prototype.tagName = 'ul';
+
+    RecordsView.prototype.className = 'list-group';
+
+    RecordsView.prototype.initialize = function() {
+      return this.render();
+    };
+
+    RecordsView.prototype.render = function() {
+      return _.each(this.collection.models, (function(_this) {
+        return function(record) {
+          var recordView;
+          recordView = new Tracktime.RecordView({
+            model: record
+          });
+          return _this.$el.append(recordView.el);
+        };
+      })(this), this);
+    };
+
+    return RecordsView;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.RecordsView : void 0) || (this.Tracktime.RecordsView = Tracktime.RecordsView);
+
+  Tracktime.View = (function(superClass) {
+    extend(View, superClass);
+
+    function View() {
+      return View.__super__.constructor.apply(this, arguments);
+    }
+
+    View.prototype.tagName = 'div';
+
+    View.prototype.className = 'class';
+
+    View.prototype.id = 'view';
+
+    View.prototype.initialize = function() {
+      return this.render();
+    };
+
+    View.prototype.render = function() {
+      return this.$el.html((this.model.get('field')) + " (" + (this.model.get('someAttribute')) + ")");
+    };
+
+    return View;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.View : void 0) || (this.Tracktime.View = Tracktime.View);
 
 }).call(this);
 

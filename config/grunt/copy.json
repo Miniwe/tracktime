@@ -10,7 +10,7 @@
       {
         "expand": true,
         "cwd": ".tmp",
-        "src": "script.js",
+        "src": ["script.js", "*.map"],
         "dest": "public/assets/js/"
       }
     ]
