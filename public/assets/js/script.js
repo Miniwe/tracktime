@@ -15377,7 +15377,7 @@ if (typeof jQuery === 'undefined') {
     if (typeof evt.which == "undefined") {
       return true;
     } else if (typeof evt.which == "number" && evt.which > 0) {
-      return !evt.ctrlKey && !evt.metaKey && !evt.altKey && evt.which != 8;
+      return !evt.ctrlKey && !evt.metaKey && !evt.altKey && evt.which != 8 && evt.which != 9;
     }
     return false;
   }
@@ -15411,7 +15411,7 @@ if (typeof jQuery === 'undefined') {
       $((selector) ? selector : this.options.checkboxElements)
       .filter(":notmdproc")
       .data("mdproc", true)
-      .after("<span class=ripple></span><span class=check></span>");
+      .after("<span class=checkbox-material><span class=check></span></span>");
     },
     "togglebutton": function(selector) {
       // Add fake-checkbox to material checkboxes
@@ -15433,6 +15433,10 @@ if (typeof jQuery === 'undefined') {
       .data("mdproc", true)
       .each( function() {
         var $this = $(this);
+
+        if (!$(this).attr("data-hint") && !$this.hasClass("floating-label")) {
+          return;
+        }
         $this.wrap("<div class=form-control-wrapper></div>");
         $this.after("<span class=material-input></span>");
 
@@ -15470,7 +15474,7 @@ if (typeof jQuery === 'undefined') {
       })
       .on("keyup change", ".form-control", function() {
         var $this = $(this);
-        if($this.val() === "" && $this[0].checkValidity()) {
+        if ($this.val() === "" && (typeof $this[0].checkValidity != "undefined" && $this[0].checkValidity())) {
           $this.addClass("empty");
         } else {
           $this.removeClass("empty");
@@ -15637,7 +15641,7 @@ if (typeof jQuery === 'undefined') {
        * Verify if the user is just touching on a device and return if so
        */
       if(self.isTouch() && event.type === "mousedown") {
-        return false;
+        return;
       }
 
 
@@ -24598,7 +24602,7 @@ function toArray(list, index) {
       return AppView.__super__.constructor.apply(this, arguments);
     }
 
-    AppView.prototype.className = 'jumbotron';
+    AppView.prototype.className = '';
 
     AppView.prototype.initialize = function() {
       return this.render();

@@ -1,5 +1,5 @@
 class Tracktime.AppView extends Backbone.View
-  className: 'jumbotron'
+  className: ''
 
   initialize: () ->
     @render()
