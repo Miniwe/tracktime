@@ -1,1 +1,102 @@
 TrackTime Pro
+
+**To Read**
+backbone:
+ ☐ http://adamjspooner.github.io/coffeescript-meet-backbonejs/
+  ☐ @_7 http://fzysqr.com/2011/02/28/nodechat-js-using-node-js-backbone-js-socket-io-and-redis-to-make-a-real-time-chat-app/
+  ☐ @_8 http://blog.flowdock.com/2013/01/25/syncing-backbone-models-in-realtime-over-socketio/
+  ☐ http://coenraets.org/blog/2012/10/nodecellar-sample-application-with-backbone-js-twitter-bootstrap-node-js-express-and-mongodb/
+  ☐ http://devcenter.kinvey.com/backbone/guides/datastore @backbone @db @Kinvey
+  ☐ https://github.com/jkat98/benm/blob/master/Gruntfile.js @title Boilerplate web app using @Backbone.js, @ExpressJS, node.js, @MongoDB
+  ☐ http://addyosmani.github.io/backbone-fundamentals/ @backbone
+  ☐ http://ricostacruz.com/backbone-patterns/
+  ☐ http://pragmatic-backbone.com/
+  ☐ http://thedersen.com/projects/backbone-validation/
+    ☐ http://thedersen.com/projects/backbone-validation/#built-in-validators
+  ☐ https://github.com/alexbeletsky/backbone-express-spa
+  ☐ http://backbonetutorials.com/what-is-a-model/
+ ☐ http://backbonerelational.org/ @backbone @relational
+   ☐ https://antoviaque.org/docs/tutorials/backbone-relational-tutorial/ @backbone @relational
+ ☐ https://github.com/artyomtrityak/backbone.controller @backbone @controller
+Data save:
+  ☐ https://github.com/nwjs/nw.js/wiki/Save-persistent-data-in-app @db @overview Save persistent data in app
+  ☐ http://lokijs.org/#/ @db @loki
+  ☐ https://www.npmjs.com/package/localStorage @db @localstorage
+  ☐ http://stackoverflow.com/questions/10358100/how-to-access-localstorage-in-node-js @db @localstorage
+  ☐ https://parse.com/plans @db
+  ☐ http://habrahabr.ru/post/253395/ @mongoose @db
+
+✔ разгруппировать и обозначить все ссылки @done (15-03-11 12:27)
+  ☐ @_0 https://nodesource.com/blog/understanding-socketio @socket @manual
+  ☐ @_01 https://www.npmjs.com/package/socket.io-client @socket @manual
+  ☐ @_02 http://stackoverflow.com/questions/9687561/is-it-possible-to-set-up-a-socket-io-client-running-server-side-on-a-node-js-s @socket
+  ☐ @_1 http://habrahabr.ru/post/127525/ @socket @manual
+  ☐ @_2 https://github.com/rauchg/chat-example @socket @manual
+  ☐ @_3 https://github.com/Automattic/socket.io/blob/master/examples/chat/public/main.js @socket @manual
+  ☐ @_4 http://socket.io/ @title primary site
+  ☐ @_5 https://strongloop.com/strongblog/node-js-api-offline-sync-replication/ @loopback @sync
+  ☐ @_6 https://github.com/strongloop/loopback-example-full-stack @loopback @full-stack
+  ☐ @_9 http://www.smashingmagazine.com/2013/10/29/get-up-running-grunt/
+  ✔ start wine application @done (15-03-11 10:51)
+    ✔ http://coenraets.org/blog/2012/10/creating-a-rest-api-using-node-js-express-and-mongodb/ @done (15-03-10 11:01)
+    ✔ https://gist.github.com/ccoenraets/3859656 @done (15-03-11 11:59)
+    ✔ https://github.com/ccoenraets/nodecellar @done (15-03-11 11:59)
+  ☐ http://habrahabr.ru/post/244523/  @обработка_ошибок
+  ☐ http://habrahabr.ru/post/162555/ @testing @express
+  ☐ http://habrahabr.ru/post/215651/ @full-stack Приложение на @Express.js + @Sass/Compass + @CoffeeScript + @Haml из песочницы
+  ☐ http://habrahabr.ru/company/ostrovok/blog/183746/ @full-stack Чем живет мобильный Островок @Мобильныйвеб
+  ☐ + http://habrahabr.ru/post/192256/ @app @testing @full-stack Построение полноценного MVC веб-сайта на ExpressJS
+  ☐ Jade @tempalte
+  ☐ http://www.sitepoint.com/introduction-mean-stack/ @title An Introduction to the MEAN Stack
+  ☐ http://habrahabr.ru/post/211620/ @livereload @express
+  ☐ https://github.com/scotch-io/node-ejs @express @ejs @template
+  ☐ http://twitter.github.io/hogan.js/ @template
+  ☐ http://expressjs.com/advanced/developing-template-engines.html @template @express
+  ☐ http://expressjs.com/guide/using-template-engines.html @template @express @jade
+  ☐ http://habrahabr.ru/post/201924/ @express @auth #cvcvc vbxcvbcv
+  ☐ Количественные CSS селекторы перевод @css @url http://habrahabr.ru/post/252181/
+  ☐ Веб-компоненты в реализации Polymer от Google из песочницы @url: http://habrahabr.ru/post/237421/
+  standalone node.js application:
+    ☐ https://www.google.com/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8#q=standalone%20node.js%20application
+    ☐ http://www.felixrieseberg.com/building-standalone-node-js-apps/
+  ☐ http://habrahabr.ru/post/130345/ @title Tactoom.com изнутри — социальная блог-платформа на NodeJS/NoSQL
+  ☐ https://github.com/scotch-io/node-ejs @template @ejs
+  ☐ http://nwjs.io/ @title Node Webkit primary site
+  ☐ http://devfreecasts.org/ @title A huge collection of free screencasts for developers
+  ☐ https://mango.github.io/slideout/ @ui A touch slideout navigation menu for your mobile web apps.
+  ☐ http://designm.ag/web-designs/web-design-trends-for-2015/ @ui
+  ☐ http://www.idangero.us/framework7/examples/#.VP4LyoFwvCI @ui
+  ☐ https://github.com/mranney/node_redis @redis @db
+  ☐ https://github.com/substack/node-browserify @browser-side  @browserify
+  ☐ http://habrahabr.ru/post/206678/  @npm @tips @manual
+  ☐ http://cordova.apache.org/ Apache Cordova is a set of device APIs that allow a @mobile app developer to access native device function such as the @camera or @accelerometer from JavaScript.
+  ☐ http://habrahabr.ru/post/245775/ @node @manual
+  ☐ https://github.com/NodeBB/NodeBB @title Node.js based @forum software built for the modern web
+  ☐ https://github.com/foreverjs/forever @restart-node-server
+  ☐ https://github.com/blai/grunt-express @title Start an Express.js web server using grunt.js
+  ☐ https://github.com/ericclemmons/fast-static
+  ☐ http://stackoverflow.com/questions/21148042/concat-bower-components-with-grunt @bower
+  ☐ https://github.com/sapegin/grunt-bower-concat @bower
+  ☐ http://thanpol.as/grunt/Grunt-with-express-server-and-Livereload/ @bower
+  ☐ http://nginx.com/blog/nginx-nodejs-websockets-socketio/
+  ☐ https://github.com/Hkey1/fast-static/blob/master/README_ru-ru.md @title модуль node.js для облегчения сборки фронтенд файлов. При этом когда env=production происходит кеширование в памяти и fast-static работает быстрее стандартных middleware Express/Connect и меньше грузит диск и процессор. Конвертирует: coffee, haml, less, jade, sass, md
+ ☐ http://habrahabr.ru/company/redmadrobot/blog/252773/
+ ☐ http://fezvrasta.github.io/bootstrap-material-design/#slider
+ ☐ https://github.com/shootaroo/jit-grunt
+  Standalone Node.js application. Here are instructions to create installers for each OS:
+   ☐ Mac OS X: http://blog.coolaj86.com/articles/how-to-create-an-osx-pkg-installer.html
+   ☐ Ubuntu Linux: http://blog.coolaj86.com/articles/how-to-create-a-debian-installer.html
+   ☐ Microsoft Windows: http://blog.coolaj86.com/articles/how-to-create-an-innosetup-installer.html
+ ☐ http://habrahabr.ru/post/215651/ @title Приложение на Express.js + Sass/Compass + CoffeeScript + Haml из песочницы
+ ☐ http://stackoverflow.com/questions/14976839/grunt-livereload-with-node-js-application
+ ☐ http://chrisawren.com/posts/Advanced-Grunt-tooling
+ ☐ http://bootstrap-growl.remabledesigns.com/
+ ☐ http://darrenderidder.github.io/talks/ModulePatterns/#/8
+ ☐ http://sideeffect.kr:8005/
+ ☐ http://browserify.org/
+ ☐ http://www.2ality.com/2011/09/jshint.html
+ ☐ http://jade-lang.com/api/
+ ☐ http://dailyjs.com/2010/11/22/node-tutorial-4/
+ ☐ http://carolineaubry.com/Jasmine-and-CoffeeScript/ @Jasmine @CoffeeScript @testing
+ ☐ http://code.tutsplus.com/courses/test-driven-development-with-coffeescript-and-jasmine @Jasmine @CoffeeScript @testing
+ ☐ http://tinnedfruit.com/2011/03/03/testing-backbone-apps-with-jasmine-sinon.html @Jasmine @backbone @testing
