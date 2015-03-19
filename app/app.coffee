@@ -1,5 +1,4 @@
 class Tracktime extends Backbone.Model
-
   urlRoot: "/"
 
   defaults:
@@ -28,9 +27,9 @@ class Tracktime extends Backbone.Model
     ]
 
   initialize: () ->
-    @set 'router', new Tracktime.Router()
+    @set 'router', new Tracktime.AppRouter {controller: @}
     Backbone.history.start
-      pushState: true
+      pushState: false
     return
 
   populateRecords: () ->
@@ -38,5 +37,6 @@ class Tracktime extends Backbone.Model
     _.each @get('tmpRecords'), (record) ->
       recordsCollection.add new Tracktime.Record record
     @set 'records', recordsCollection
+    @trigger 'update_records'
 
 (module?.exports = Tracktime) or @Tracktime = Tracktime

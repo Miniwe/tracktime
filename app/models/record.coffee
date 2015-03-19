@@ -8,6 +8,8 @@ class Tracktime.Record extends Backbone.Model
     description: ""
     date: () -> new Date()
     project: 0
+    # order: Tracktime.RecordsCollection.nextOrder()
+
 
   validation:
     subject: ->

@@ -1,7 +1,10 @@
 class Tracktime.AppView extends Backbone.View
   className: ''
+  # template: _.template $('#app-content').html()
 
   initialize: () ->
+    @listenTo @model, 'update_records', @renderRecords
+
     @render()
 
   attributes: () ->
@@ -9,6 +12,8 @@ class Tracktime.AppView extends Backbone.View
 
   render: () ->
     @$el.html('').append $("<h1>").html @model.get 'title'
+    # renderedContent = @template @collection.toJSON()
+    # $@el.html renderedContent)
 
   renderRecords: () ->
     recordsView = new Tracktime.RecordsView {collection: @model.get('records')}
