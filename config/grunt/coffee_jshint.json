@@ -2,6 +2,7 @@
   "options": {
       "globals": [
       "$",
+      "jQuery",
       "_",
       "io",
       "Backbone",

@@ -8,25 +8,31 @@ class Tracktime.RecordsRouter extends Backbone.Router
     'records/:id/save':    'save'
 
   initialize: (options) ->
-    console.log 'init RecordsRouter'
+    $.alert 'init RecordsRouter'
     _.extend @, options
 
   list: () ->
+    $.alert 'list'
     console.log 'list', @
 
   details: (id) ->
+    $.alert 'details'
     console.log 'details', id
 
   edit: (id) ->
+    $.alert 'edit'
     console.log 'edit', id
 
   delete: (id) ->
+    $.alert 'delete'
     console.log 'delete', id
 
   add: (id) ->
+    $.alert 'add'
     console.log 'add', id
 
   save: (id) ->
+    $.alert 'save'
     console.log 'save', id
 
 

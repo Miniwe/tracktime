@@ -17607,6 +17607,8 @@ var toObject = function (o) {
 
 }));
 
+!function(a){"function"==typeof define&&define.amd?define(["jquery"],a):"object"==typeof exports?module.exports=a(require("jquery")):a(jQuery)}(function(a){function b(a){return"undefined"!=typeof a&&null!==a?!0:!1}a(document).ready(function(){a("body").append("<div id=snackbar-container/>")}),a(document).on("click","[data-toggle=snackbar]",function(){a(this).snackbar("toggle")}).on("click","#snackbar-container .snackbar",function(){a(this).snackbar("hide")}),a.snackbar=function(c){if(b(c)&&c===Object(c)){var d;d=b(c.id)?a("#"+c.id):a("<div/>").attr("id","snackbar"+Date.now()).attr("class","snackbar");var e=d.hasClass("snackbar-opened");b(c.style)?d.attr("class","snackbar "+c.style):d.attr("class","snackbar"),c.htmlAllowed=b(c.htmlAllowed)?c.htmlAllowed:!1,c.timeout=b(c.timeout)?c.timeout:3e3,c.content=c.htmlAllowed?c.content:a("<p>"+c.content+"</p>").text(),b(c.content)&&(d.find(".snackbar-content").length?d.find(".snackbar-content").html(c.content):d.prepend("<span class=snackbar-content>"+c.content+"</span>")),b(c.id)?d.insertAfter("#snackbar-container .snackbar:last-child"):d.appendTo("#snackbar-container"),b(c.action)&&"toggle"==c.action&&(c.action=e?"hide":"show");var f=Date.now();d.data("animationId1",f),setTimeout(function(){d.data("animationId1")===f&&(b(c.action)&&"show"!=c.action?b(c.action)&&"hide"==c.action&&d.removeClass("snackbar-opened"):d.addClass("snackbar-opened"))},50);var g=Date.now();return d.data("animationId2",g),0!==c.timeout&&setTimeout(function(){d.data("animationId2")===g&&d.removeClass("snackbar-opened")},c.timeout),d}return!1},a.fn.snackbar=function(c){var d={};if(this.hasClass("snackbar"))return d.id=this.attr("id"),("show"===c||"hide"===c||"toggle"==c)&&(d.action=c),a.snackbar(d);b(c)&&"show"!==c&&"hide"!==c&&"toggle"!=c||(d={content:a(this).attr("data-content"),style:a(this).attr("data-style"),timeout:a(this).attr("data-timeout"),htmlAllowed:a(this).attr("data-html-allowed")}),b(c)&&(d.id=this.attr("data-snackbar-id"),("show"===c||"hide"===c||"toggle"==c)&&(d.action=c));var e=a.snackbar(d);return this.attr("data-snackbar-id",e.attr("id")),e}});
+//# sourceMappingURL=snackbar.min.js.map
 !function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.io=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 
 module.exports = _dereq_('./lib/');
@@ -24680,7 +24682,7 @@ function toArray(list, index) {
     RecordsCollection.prototype.localStorage = new Backbone.LocalStorage('records-backbone');
 
     RecordsCollection.prototype.initialize = function() {
-      console.log('initialize', 'RecordsCollection');
+      $.alert('initialize RecordsCollection');
       return this.router = new Tracktime.RecordsRouter({
         controller: this
       });
@@ -24709,6 +24711,26 @@ function toArray(list, index) {
     });
     $("#app-content").append(tracktimeView.el);
   });
+
+  (function($) {
+    var snackbarOptions;
+    snackbarOptions = {
+      content: '',
+      style: '',
+      timeout: 2000,
+      htmlAllowed: true
+    };
+    return $.extend({
+      alert: function(params) {
+        if (_.isString(params)) {
+          snackbarOptions.content = params;
+        } else {
+          snackbarOptions = $.extend({}, snackbarOptions, params);
+        }
+        return $.snackbar(snackbarOptions);
+      }
+    });
+  })(jQuery);
 
   Backbone.Validation.configure({
     selector: 'class_v',
@@ -24863,7 +24885,8 @@ function toArray(list, index) {
       '': 'index',
       'populate': 'pagepopulate',
       'slashed/path': 'slashed',
-      'with-params/:param1/:param2': 'withParams'
+      'with-params/:param1/:param2': 'withParams',
+      '*default': 'default'
     };
 
     AppRouter.prototype.initialize = function(options) {
@@ -24871,11 +24894,11 @@ function toArray(list, index) {
     };
 
     AppRouter.prototype.index = function() {
-      return console.log('index');
+      return $.alert('index');
     };
 
     AppRouter.prototype["default"] = function() {
-      console.log('Unknown page');
+      $.alert('Unknown page');
       return this.navigate("", true);
     };
 
@@ -24884,10 +24907,14 @@ function toArray(list, index) {
     };
 
     AppRouter.prototype.slashed = function() {
-      return console.log('slashed');
+      return $.alert({
+        content: 'slashed',
+        timeout: 4000
+      });
     };
 
     AppRouter.prototype.withParams = function(param1, param2) {
+      $.alert('withParams');
       return console.log('withParams', param1, param2);
     };
 
@@ -24914,31 +24941,37 @@ function toArray(list, index) {
     };
 
     RecordsRouter.prototype.initialize = function(options) {
-      console.log('init RecordsRouter');
+      $.alert('init RecordsRouter');
       return _.extend(this, options);
     };
 
     RecordsRouter.prototype.list = function() {
+      $.alert('list');
       return console.log('list', this);
     };
 
     RecordsRouter.prototype.details = function(id) {
+      $.alert('details');
       return console.log('details', id);
     };
 
     RecordsRouter.prototype.edit = function(id) {
+      $.alert('edit');
       return console.log('edit', id);
     };
 
     RecordsRouter.prototype["delete"] = function(id) {
+      $.alert('delete');
       return console.log('delete', id);
     };
 
     RecordsRouter.prototype.add = function(id) {
+      $.alert('add');
       return console.log('add', id);
     };
 
     RecordsRouter.prototype.save = function(id) {
+      $.alert('save');
       return console.log('save', id);
     };
 

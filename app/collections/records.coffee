@@ -4,7 +4,7 @@ class Tracktime.RecordsCollection extends Backbone.Collection
   localStorage: new Backbone.LocalStorage ('records-backbone')
 
   initialize: () ->
-    console.log 'initialize', 'RecordsCollection'
+    $.alert 'initialize RecordsCollection'
     @router = new Tracktime.RecordsRouter {controller: @}
 
   nextOrder: () ->
