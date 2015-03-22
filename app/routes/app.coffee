@@ -19,12 +19,12 @@ class Tracktime.AppRouter extends Backbone.Router
     @navigate "", true
 
   pagepopulate: () ->
-    $.alert 'pagepopulate try'
-    AppChannel.command 'populateRecords'
+    $.alert 'populateRecords'
+    Tracktime.AppChannel.command 'populateRecords'
 
   slashed: () ->
     $.alert
-      content: 'slashed'
+      content: 'slashed (4s)'
       timeout: 4000
 
   withParams: (param1, param2) ->

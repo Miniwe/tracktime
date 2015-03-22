@@ -1,6 +1,6 @@
 $ ->
   $.material.init()
 
-  AppChannel.init().command 'start'
+  Tracktime.AppChannel.init().command 'start'
 
   return

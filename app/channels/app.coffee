@@ -1,20 +1,24 @@
-AppChannel = Backbone.Radio.channel 'app'
+Tracktime.AppChannel = Backbone.Radio.channel 'app'
 
-_.extend AppChannel,
+_.extend Tracktime.AppChannel,
   init: () ->
     @model = new Tracktime()
+    @bindComply()
     return @
+
+  bindComply: () ->
+    @comply
+      'start': @startApp
+      'populateRecords': @populateRecords
+
   startApp: () ->
     @view = new Tracktime.AppView {model: @model}
     @router = new Tracktime.AppRouter()
     Backbone.history.start
       pushState: false
 
-    $.alert 'start !'
+  populateRecords: () ->
+    @model.populateRecords()
 
-AppChannel.comply 'start', AppChannel.startApp
-AppChannel.comply 'populateRecords', () ->
-  $.alert 'populateRecords !'
-  @model.populateRecords()
 
-(module?.exports = AppChannel) or @AppChannel = AppChannel
+(module?.exports = Tracktime.AppChannel) or @Tracktime.AppChannel = Tracktime.AppChannel

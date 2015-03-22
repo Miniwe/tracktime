@@ -10,7 +10,6 @@
         "app/collections/*.coffee",
         "app/channels/**/*.coffee",
         "app/**/*.coffee"
-
       ]
     }
   }
