@@ -26,6 +26,7 @@ class Tracktime.AppRouter extends Backbone.Router
     $.alert
       content: 'slashed (4s)'
       timeout: 4000
+    Tracktime.AppChannel.command 'altView'
 
   withParams: (param1, param2) ->
     $.alert 'withParams'
