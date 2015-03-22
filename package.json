@@ -4,8 +4,8 @@
   "description": "Track time. Nodejs on Chrome platform app.",
   "main": "public/index.html",
   "scripts": {
-    "test": "grunt test",
-    "build": "npm install; bower install; "
+    "client": "grunt client",
+    "build": "npm install; bower install"
   },
   "repository": {
     "type": "git",
