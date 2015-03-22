@@ -1,11 +1,14 @@
 class Tracktime.AppView extends Backbone.View
+  el: '#app-content'
   className: ''
   # template: _.template $('#app-content').html()
 
   initialize: () ->
-    @listenTo @model, 'update_records', @renderRecords
-
     @render()
+    @bindEvents()
+
+  bindEvents: () ->
+    @listenTo @model, 'update_records', @renderRecords
 
   attributes: () ->
     id: @model.cid

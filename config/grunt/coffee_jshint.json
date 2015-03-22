@@ -10,6 +10,7 @@
       "window",
       "Tracktime",
       "require",
+      "AppChannel",
       "module"
     ]
   },

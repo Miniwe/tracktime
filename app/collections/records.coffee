@@ -13,3 +13,5 @@ class Tracktime.RecordsCollection extends Backbone.Collection
     else
       order = @last().get('order') + 1
     return order
+
+(module?.exports = Tracktime.RecordsCollection) or @Tracktime.RecordsCollection = Tracktime.RecordsCollection

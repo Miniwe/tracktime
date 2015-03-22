@@ -5,7 +5,13 @@
       "sourceMap": true
     },
     "files": {
-      ".tmp/app.coffee.js": ["app/**/*.coffee"]
+      ".tmp/app.coffee.js": [
+        "app/models/*.coffee",
+        "app/collections/*.coffee",
+        "app/channels/**/*.coffee",
+        "app/**/*.coffee"
+
+      ]
     }
   }
 }

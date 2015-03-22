@@ -4,7 +4,7 @@ class Tracktime.AppRouter extends Backbone.Router
     'populate':                    'pagepopulate' #populate
     'slashed/path':                'slashed'      #slashed/path
     'with-params/:param1/:param2': 'withParams'   #with-params/any/50
-    '*default':                    'default'      #???
+    '*actions':                    'default'      #???
 
   initialize: (options) ->
     _.extend @, options
@@ -13,12 +13,14 @@ class Tracktime.AppRouter extends Backbone.Router
     $.alert 'index'
 
 
-  default: () ->
+  default: (actions) ->
     $.alert 'Unknown page'
+    console.log 'actions', actions
     @navigate "", true
 
   pagepopulate: () ->
-    @controller.populateRecords()
+    $.alert 'pagepopulate try'
+    AppChannel.command 'populateRecords'
 
   slashed: () ->
     $.alert

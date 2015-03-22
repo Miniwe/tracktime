@@ -24653,12 +24653,7 @@ function toArray(list, index) {
     };
 
     Tracktime.prototype.populateRecords = function() {
-      var recordsCollection;
-      recordsCollection = new Tracktime.RecordsCollection();
-      _.each(this.get('tmpRecords'), function(record) {
-        return recordsCollection.add(new Tracktime.Record(record));
-      });
-      this.set('records', recordsCollection);
+      this.set('records', new Tracktime.RecordsCollection(this.get('tmpRecords')));
       return this.trigger('update_records');
     };
 
@@ -24702,6 +24697,23 @@ function toArray(list, index) {
 
   })(Backbone.Collection);
 
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.RecordsCollection : void 0) || (this.Tracktime.RecordsCollection = Tracktime.RecordsCollection);
+
+  Tracktime.AppController = (function(superClass) {
+    extend(AppController, superClass);
+
+    function AppController() {
+      return AppController.__super__.constructor.apply(this, arguments);
+    }
+
+    AppController.prototype.construct = function(options) {
+      return _.extend(this.options, options);
+    };
+
+    return AppController;
+
+  })(Tracktime.Controller);
+
   $(function() {
     var tracktime, tracktimeView;
     $.material.init();
@@ -24731,6 +24743,19 @@ function toArray(list, index) {
       }
     });
   })(jQuery);
+
+  Tracktime.Controller = (function() {
+    function Controller() {}
+
+    Controller.prototype.options = {};
+
+    Controller.prototype.construct = function(options) {
+      return _.extend(this.options, options);
+    };
+
+    return Controller;
+
+  })();
 
   Backbone.Validation.configure({
     selector: 'class_v',
@@ -24886,7 +24911,7 @@ function toArray(list, index) {
       'populate': 'pagepopulate',
       'slashed/path': 'slashed',
       'with-params/:param1/:param2': 'withParams',
-      '*default': 'default'
+      '*actions': 'default'
     };
 
     AppRouter.prototype.initialize = function(options) {
@@ -24897,12 +24922,14 @@ function toArray(list, index) {
       return $.alert('index');
     };
 
-    AppRouter.prototype["default"] = function() {
+    AppRouter.prototype["default"] = function(actions) {
       $.alert('Unknown page');
+      console.log('actions', actions);
       return this.navigate("", true);
     };
 
     AppRouter.prototype.pagepopulate = function() {
+      $.alert('pagepopulate try');
       return this.controller.populateRecords();
     };
 

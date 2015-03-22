@@ -27,16 +27,10 @@ class Tracktime extends Backbone.Model
     ]
 
   initialize: () ->
-    @set 'router', new Tracktime.AppRouter {controller: @}
-    Backbone.history.start
-      pushState: false
     return
 
   populateRecords: () ->
-    recordsCollection = new Tracktime.RecordsCollection()
-    _.each @get('tmpRecords'), (record) ->
-      recordsCollection.add new Tracktime.Record record
-    @set 'records', recordsCollection
+    @set 'records', new Tracktime.RecordsCollection @get('tmpRecords')
     @trigger 'update_records'
 
 (module?.exports = Tracktime) or @Tracktime = Tracktime

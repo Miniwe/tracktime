@@ -10,7 +10,7 @@
       {
         "expand": true,
         "cwd": ".tmp",
-        "src": ["script.js", "*.map"],
+        "src": ["_script.js", "bower_components.js", "app.coffee.js", "*.map"],
         "dest": "public/assets/js/"
       }
     ]
