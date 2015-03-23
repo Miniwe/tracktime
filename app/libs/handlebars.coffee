@@ -7,3 +7,8 @@ Handlebars.registerHelper 'link_to', (options) ->
       attrs[key] = Handlebars.Utils.escapeExpression value
   new (Handlebars.SafeString) $("<a />", attrs).html(body)[0].outerHTML
 
+
+Handlebars.registerHelper 'safe_val', (value, safeValue) ->
+  out = value || safeValue
+  new Handlebars.SafeString(out)
+

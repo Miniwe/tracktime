@@ -28679,12 +28679,43 @@ function toArray(list, index) {
 
 this["JST"] = this["JST"] || {};
 
-Handlebars.registerPartial("layout/_footer", Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  return "<footer>\n  <div class=\"well\">I'am footer partial</div>\n</footer>";
-  },"useData":true}));
+this["JST"]["global/app"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+  return escapeExpression(((helpers.safe_val || (depth0 && depth0.safe_val) || helperMissing).call(depth0, (depth0 != null ? depth0.title : depth0), "lalal", {"name":"safe_val","hash":{},"data":data})))
+    + "\n";
+},"useData":true});
+
+this["JST"]["global/footer"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+  return "\n<div class=\"well\">I'am footer partial</div>\n\n<div class=\"well\">"
+    + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
+    'body': ("Click on subview"),
+    'id': ("click-me"),
+    'href': ("#click-me")
+  },"data":data})))
+    + "</div>\n";
+},"useData":true});
+
+this["JST"]["global/main"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+  return "<h1> "
+    + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
+    + "</h1>\n<ul>\n  <li>"
+    + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
+    'body': ("Populate"),
+    'href': ("#populate")
+  },"data":data})))
+    + "</li>\n  <li>"
+    + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
+    'body': ("Slashed"),
+    'href': ("#slashed/path")
+  },"data":data})))
+    + "</li>\n</ul>\n";
+},"useData":true});
 
 this["JST"]["header"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  var stack1, helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, buffer = "<h1>Header "
+  var stack1, helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+  return "<h1>Header "
     + escapeExpression(((helper = (helper = helpers.text || (depth0 != null ? depth0.text : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"text","hash":{},"data":data}) : helper)))
     + "</h1>\n\n<li>"
     + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
@@ -28692,11 +28723,8 @@ this["JST"]["header"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"m
     'body': (((stack1 = (depth0 != null ? depth0.obj : depth0)) != null ? stack1.body : stack1)),
     'href': (((stack1 = (depth0 != null ? depth0.obj : depth0)) != null ? stack1.url : stack1))
   },"data":data})))
-    + "</li>\n\n\n";
-  stack1 = this.invokePartial(partials['layout/_footer'], '', 'layout/_footer', depth0, undefined, helpers, partials, data);
-  if (stack1 != null) { buffer += stack1; }
-  return buffer;
-},"usePartial":true,"useData":true});
+    + "</li>\n\n\n> layout/_footer";
+},"useData":true});
 (function() {
   var Lokitest, Tracktime,
     extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
@@ -28712,7 +28740,7 @@ this["JST"]["header"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"m
     Tracktime.prototype.urlRoot = "/";
 
     Tracktime.prototype.defaults = {
-      title: "TrackTime App",
+      title: "TrackTime App - from",
       tmpRecords: [
         {
           subject: 'Lorem',
@@ -28994,6 +29022,12 @@ this["JST"]["header"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"m
     return new Handlebars.SafeString($("<a />", attrs).html(body)[0].outerHTML);
   });
 
+  Handlebars.registerHelper('safe_val', function(value, safeValue) {
+    var out;
+    out = value || safeValue;
+    return new Handlebars.SafeString(out);
+  });
+
   Backbone.Validation.configure({
     selector: 'class_v',
     labelFormatter: 'label_v'
@@ -29122,23 +29156,41 @@ this["JST"]["header"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"m
 
     AppView.prototype.className = '';
 
+    AppView.prototype.layoutTemplate = JST['global/app'];
+
+    AppView.prototype.childViews = {};
+
     AppView.prototype.initialize = function() {
+      this.initChilds();
       this.render();
       return this.bindEvents();
+    };
+
+    AppView.prototype.initChilds = function() {
+      this.childViews['main'] = new Tracktime.AppView.Main({
+        parentView: this,
+        model: this.model
+      });
+      return this.childViews['footer'] = new Tracktime.AppView.Footer({
+        parentView: this
+      });
     };
 
     AppView.prototype.bindEvents = function() {
       return this.listenTo(this.model, 'update_records', this.renderRecords);
     };
 
-    AppView.prototype.attributes = function() {
-      return {
-        id: this.model.cid
-      };
+    AppView.prototype.render = function() {
+      this.$el.html(this.layoutTemplate(this.model.toJSON()));
+      return this.renderChilds();
     };
 
-    AppView.prototype.render = function() {
-      return this.$el.html('').append($("<h1>").html(this.model.get('title')));
+    AppView.prototype.renderChilds = function() {
+      return $.each(this.childViews, (function(_this) {
+        return function(index, subview) {
+          return _this.$el.append(subview.el);
+        };
+      })(this));
     };
 
     AppView.prototype.renderRecords = function() {
@@ -29186,6 +29238,75 @@ this["JST"]["header"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"m
   })(Backbone.View);
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AppView2 : void 0) || (this.Tracktime.AppView2 = Tracktime.AppView2);
+
+  Tracktime.AppView.Footer = (function(superClass) {
+    extend(Footer, superClass);
+
+    function Footer() {
+      return Footer.__super__.constructor.apply(this, arguments);
+    }
+
+    Footer.prototype.el = 'footer';
+
+    Footer.prototype.className = '';
+
+    Footer.prototype.template = JST['global/footer'];
+
+    Footer.prototype.events = {
+      'click #click-me': 'clickMe'
+    };
+
+    Footer.prototype.initialize = function() {
+      return this.render();
+    };
+
+    Footer.prototype.render = function() {
+      var ref;
+      return this.$el.html(this.template((ref = this.model) != null ? ref.toJSON() : void 0));
+    };
+
+    Footer.prototype.clickMe = function(event) {
+      event.preventDefault();
+      return $.alert('Subview :: ' + $(event.target).attr('href'));
+    };
+
+    return Footer;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AppView.Footer : void 0) || (this.Tracktime.AppView.Footer = Tracktime.AppView.Footer);
+
+  Tracktime.AppView.Main = (function(superClass) {
+    extend(Main, superClass);
+
+    function Main() {
+      return Main.__super__.constructor.apply(this, arguments);
+    }
+
+    Main.prototype.template = JST['global/main'];
+
+    Main.prototype.events = {
+      'click a': 'testLinks'
+    };
+
+    Main.prototype.initialize = function() {
+      return this.render();
+    };
+
+    Main.prototype.render = function() {
+      var ref;
+      return this.$el.html(this.template((ref = this.model) != null ? ref.toJSON() : void 0));
+    };
+
+    Main.prototype.testLinks = function(event) {
+      return $.alert('Clicked' + $(event.target).attr('href'));
+    };
+
+    return Main;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AppView.Main : void 0) || (this.Tracktime.AppView.Main = Tracktime.AppView.Main);
 
   Tracktime.RecordView = (function(superClass) {
     extend(RecordView, superClass);

@@ -2,7 +2,7 @@ class Tracktime extends Backbone.Model
   urlRoot: "/"
 
   defaults:
-    title: "TrackTime App"
+    title: "TrackTime App - from"
     tmpRecords: [
       {
         subject: 'Lorem'

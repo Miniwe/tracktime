@@ -8,6 +8,7 @@
       "Backbone",
       "console",
       "window",
+      "document",
       "Tracktime",
       "Handlebars",
       "JST",

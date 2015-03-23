@@ -1,22 +1,32 @@
 class Tracktime.AppView extends Backbone.View
   el: '#app-content'
   className: ''
-  # template: _.template $('#app-content').html()
+  layoutTemplate: JST['global/app']
+  # template: JST['dashboard']
+  childViews: {}
 
   initialize: () ->
+    @initChilds()
     @render()
     @bindEvents()
+
+  initChilds: ()->
+    @childViews['main'] = new Tracktime.AppView.Main
+      parentView: @
+      model: @model
+    @childViews['footer'] = new Tracktime.AppView.Footer parentView: @
 
   bindEvents: () ->
     @listenTo @model, 'update_records', @renderRecords
 
-  attributes: () ->
-    id: @model.cid
-
   render: () ->
-    @$el.html('').append $("<h1>").html @model.get 'title'
-    # renderedContent = @template @collection.toJSON()
-    # $@el.html renderedContent)
+    # $(document).title @model.get 'title'
+    @$el.html @layoutTemplate @model.toJSON()
+    @renderChilds()
+
+  renderChilds: ()->
+    $.each @childViews, (index, subview) =>
+      @$el.append subview.el
 
   renderRecords: () ->
     recordsView = new Tracktime.RecordsView {collection: @model.get('records')}
