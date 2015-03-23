@@ -9,6 +9,8 @@
       "console",
       "window",
       "Tracktime",
+      "Handlebars",
+      "JST",
       "require",
       "module"
     ]

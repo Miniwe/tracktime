@@ -1,10 +1,11 @@
 {
   "jss": {
     "src": [
-      ".tmp/_bower_components.js",
-      ".tmp/_app.coffee.js"
+      ".tmp/bower_components.js",
+      ".tmp/templates.js",
+      ".tmp/app.coffee.js"
     ],
-    "dest": ".tmp/_script.js"
+    "dest": ".tmp/script.js"
   },
   "css": {
     "src": [

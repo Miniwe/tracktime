@@ -9,9 +9,9 @@ _.extend Tracktime.AppChannel,
 
   bindComply: () ->
     @comply
-      'start': @startApp
+      'start':           @startApp
       'populateRecords': @populateRecords
-      'altView': @altView
+      'altView':         @altView
 
   startApp: () ->
     @view = new Tracktime.AppView {model: @model}

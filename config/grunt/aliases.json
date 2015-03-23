@@ -5,6 +5,7 @@
     "coffee_jshint",
     "coffee",
     "bower_concat",
+    "handlebars",
     "compass",
     "concat",
     "copy",
