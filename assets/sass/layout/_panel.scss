@@ -1,0 +1,11 @@
+#panel {
+  background: #fff;
+  height: 100%;
+  padding-top: $header-height;
+  .scrollWrapper {
+    overflow: auto;
+    height: 100%;
+    outline: 1px solid red;
+    background-color: #f99;
+  }
+}
