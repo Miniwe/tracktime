@@ -10,6 +10,7 @@
   "css": {
     "src": [
       ".tmp/*.css",
+      ".tmp/css/vendor.css",
       ".tmp/css/app.css"
     ],
     "dest": ".tmp/css/style.css"

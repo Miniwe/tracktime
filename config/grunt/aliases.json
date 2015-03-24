@@ -9,7 +9,6 @@
     "compass",
     "concat",
     "copy",
-    "tmp:delete",
     "app:start"
   ],
   "serve": [

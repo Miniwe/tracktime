@@ -1,36 +1,35 @@
 class Tracktime.AppView extends Backbone.View
-  el: '#app-content'
+  el: '#panel'
   className: ''
   layoutTemplate: JST['global/app']
-  # template: JST['dashboard']
   childViews: {}
 
-  initialize: () ->
-    @initChilds()
+  initialize: ->
     @render()
-    @bindEvents()
+    @initUI()
 
-  initChilds: ()->
-    @childViews['main'] = new Tracktime.AppView.Main
-      parentView: @
-      model: @model
-    @childViews['footer'] = new Tracktime.AppView.Footer parentView: @
-
-  bindEvents: () ->
-    @listenTo @model, 'update_records', @renderRecords
-
-  render: () ->
+  render: ->
     # $(document).title @model.get 'title'
-    @$el.html @layoutTemplate @model.toJSON()
+    # @$el.html @layoutTemplate @model.toJSON()
     @renderChilds()
 
-  renderChilds: ()->
-    $.each @childViews, (index, subview) =>
-      @$el.append subview.el
+  renderChilds: ->
+    @childViews['header'] = new Tracktime.AppView.Header
+      container: @
+    @childViews['main'] = new Tracktime.AppView.Main model: @model, container: @
+    @childViews['footer'] = new Tracktime.AppView.Footer
+      container: @
+    @childViews['menu'] = new Tracktime.AppView.Menu
+      container: @
 
-  renderRecords: () ->
-    recordsView = new Tracktime.RecordsView {collection: @model.get('records')}
-    @$el.append recordsView.el
+  initUI: ->
+    $.material.init()
+    @slideout = new Slideout
+      'panel': $('#panel')[0]
+      'menu': $('#menu')[0]
+      'padding': 256
+      'tolerance': 70
+
 
 (module?.exports = Tracktime.AppView) or @Tracktime.AppView = Tracktime.AppView
 

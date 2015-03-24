@@ -1,7 +1,6 @@
 class Tracktime.AppView.Footer extends Backbone.View
-  el: 'footer'
-  className: ''
-  template: JST['global/footer']
+  el: '#footer'
+  template: JST['layout/footer']
   events:
     'click #click-me': 'clickMe'
 

@@ -1,6 +1,10 @@
 @import 'global/base';
 @import 'global/fonts';
 
-body {
-  padding-top: 74px;
+@import 'layout/menu';
+@import 'layout/panel';
+
+html, body {
+  height: 100%;
+  overflow: hidden;
 }

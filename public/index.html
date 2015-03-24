@@ -12,125 +12,41 @@
 <body>
 
 
-  <nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="/">Tim Track</a>
-      </div>
-      <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-        <li><a href="#">Index</a></li>
-        <li><a href="#populate">Page Populate</a></li>
-        <li><a href="#slashed/path">Slashed</a></li>
-        <li><a href="#with-params/any/50">With Params</a></li>
-        <li><a href="#records">Records list</a></li>
-      </ul>
-        <form class="navbar-form navbar-right">
-          <div class="form-group">
-            <input type="text" placeholder="Email" class="form-control">
-          </div>
-          <div class="form-group">
-            <input type="password" placeholder="Password" class="form-control">
-          </div>
-          <button type="submit" class="btn btn-success">Sign in</button>
-        </form>
-      </div><!--/.navbar-collapse -->
+
+
+
+  <nav id="menu">
+    <header>
+      <h2>Menu</h2>
+    </header>
+    <div class="panel panel-default">
+      <div class="panel-heading"><h1>Submenu 1 heading</h1></div>
+      <div class="panel-body">Submenu 1 content</div>
     </div>
+
   </nav>
 
-  <!-- Main jumbotron for a primary marketing message or call to action -->
-  <div class="jumbotron">
-    <div class="container">
+  <main id="panel" class="panel panel-default">
+    <header id="header" class="panel-heading">
+      <button id="menuToggler" class="btn btn-primary btn-lg">☰</button>
+      <h1>header</h1>
+    </header>
+    <div class="scrollWrapper">
+      <div id="main" class="panel-body">
+        <h1>main</h1>
+        <p>main</p>
+      </div>
+      <footer id="footer" class="panel-footer">
+          footer
+      </footer>
 
-      <div id="app-content"></div>
     </div>
-  </div>
-
-  <div class="container">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-
-        <h1>Hello, world!</h1>
-
-      </div>
-      <div class="row">
-        <div class="col-md-9">
-
-          <div class="panel-body">
-
-            <p>This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting  point to create something more unique.</p>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="panel-body">
-            <ul>
-              <li><span class="glyphicon glyphicon-star" aria-hidden="true"></span> Icon</li>
-              <li><i class="mdi-action-account-balance"></i> Material icon</li>
-
-              <li><img src="assets/img/logo.png" width="auto" height="32px" alt="Logo Sample"><img src="assets/img/logo.png" width="auto" height="32px" alt="Logo Sample"> Img</li>
-
-            </ul>
-          </div>
-
-        </div>
-      </div>
-      <div class="panel-footer">
-        <p>
-          <a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a>
-        </p>
-        <div class="btn-group">
-
-          <a class="add-users btn btn-info btn-lg" href="#" role="button">Add users</a>
-          <a class="get-users btn btn-success btn-lg" href="#" role="button">Get users</a>
-          <a class="send-request btn btn-warning btn-lg" href="#" role="button">Send Request</a>
-
-        </div>
-
-      </div>
-    </div>
-    <!-- Example row of columns -->
-    <hr>
-    <div class="row">
-      <div class="col-md-4">
-        <h2>Heading</h2>
-        <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-        <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-      </div>
-      <div class="col-md-4">
-        <h2>Heading</h2>
-        <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-        <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-      </div>
-      <div class="col-md-4">
-        <h2>Heading</h2>
-        <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-        <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-      </div>
-    </div>
-
-    <hr>
-
-    <footer>
-      <p>&copy; Company 2014</p>
-    </footer>
-  </div> <!-- /container -->
-
+  </main>
 
   <script src="assets/js/bower_components.js"></script>
-
   <script src="assets/js/templates.js"></script>
-
   <script src="assets/js/app.coffee.js"></script>
 
-
-  <script>
-  </script>
 
 </body>
 </html>

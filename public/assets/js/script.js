@@ -16490,6 +16490,64 @@ if (typeof jQuery === 'undefined') {
 })(jQuery, window, document);
 
 /*!
+ * decouple - v0.0.1
+ *
+ * Copyright (c) 2014, @pazguille <guille87paz@gmail.com>
+ * Released under the MIT license.
+ */
+(function(window) {
+'use strict';
+
+var requestAnimFrame = (function() {
+  return window.requestAnimationFrame ||
+    window.webkitRequestAnimationFrame ||
+    function (callback) {
+      window.setTimeout(callback, 1000 / 60);
+    };
+}());
+
+function decouple(node, event, fn) {
+  var eve,
+      tracking = false;
+
+  function captureEvent(e) {
+    eve = e;
+    track();
+  }
+
+  function track() {
+    if (!tracking) {
+      requestAnimFrame(update);
+      tracking = true;
+    }
+  }
+
+  function update() {
+    fn.call(node, eve);
+    tracking = false;
+  }
+
+  node.addEventListener(event, captureEvent, false);
+}
+
+/**
+ * Expose decouple
+ */
+// AMD
+if (typeof window.define === 'function' && window.define.amd !== undefined) {
+  window.define('decouple', [], function () {
+    return decouple;
+  });
+// CommonJS
+} else if (typeof module !== 'undefined' && module.exports !== undefined) {
+  module.exports = decouple;
+// Browser
+} else {
+  window.decouple = decouple;
+};
+
+}(this));
+/*!
  * https://github.com/es-shims/es5-shim
  * @license es5-shim Copyright 2009-2014 by contributors, MIT License
  * see https://github.com/es-shims/es5-shim/blob/master/LICENSE
@@ -21673,6 +21731,275 @@ var __module0__ = (function(__dependency1__, __dependency2__, __dependency3__, _
 
   return __module0__;
 }));
+
+!function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.Slideout=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+'use strict';
+
+/**
+ * Module dependencies
+ */
+var decouple = require('decouple');
+
+/**
+ * Privates
+ */
+var scrollTimeout;
+var scrolling = false;
+var doc = window.document;
+var html = doc.documentElement;
+var msPointerSupported = window.navigator.msPointerEnabled;
+var touch = {
+  'start': msPointerSupported ? 'MSPointerDown' : 'touchstart',
+  'move': msPointerSupported ? 'MSPointerMove' : 'touchmove',
+  'end': msPointerSupported ? 'MSPointerUp' : 'touchend'
+};
+var prefix = (function prefix() {
+  var regex = /^(Webkit|Khtml|Moz|ms|O)(?=[A-Z])/;
+  var styleDeclaration = doc.getElementsByTagName('script')[0].style;
+  for (var prop in styleDeclaration) {
+    if (regex.test(prop)) {
+      return '-' + prop.match(regex)[0].toLowerCase() + '-';
+    }
+  }
+  // Nothing found so far? Webkit does not enumerate over the CSS properties of the style object.
+  // However (prop in style) returns the correct value, so we'll have to test for
+  // the precence of a specific property
+  if ('WebkitOpacity' in styleDeclaration) { return '-webkit-'; }
+  if ('KhtmlOpacity' in styleDeclaration) { return '-khtml-'; }
+  return '';
+}());
+
+/**
+ * Slideout constructor
+ */
+function Slideout(options) {
+  options = options || {};
+
+  // Sets default values
+  this._startOffsetX = 0;
+  this._currentOffsetX = 0;
+  this._opening = false;
+  this._moved = false;
+  this._opened = false;
+  this._preventOpen = false;
+
+  // Sets panel
+  this.panel = options.panel;
+  this.menu = options.menu;
+
+  // Sets  classnames
+  this.panel.className += ' slideout-panel';
+  this.menu.className += ' slideout-menu';
+
+  // Sets options
+  this._fx = options.fx || 'ease';
+  this._duration = parseInt(options.duration, 10) || 300;
+  this._tolerance = parseInt(options.tolerance, 10) || 70;
+  this._padding = parseInt(options.padding, 10) || 256;
+
+  // Init touch events
+  this._initTouchEvents();
+}
+
+/**
+ * Opens the slideout menu.
+ */
+Slideout.prototype.open = function() {
+  var self = this;
+  if (html.className.search('slideout-open') === -1) { html.className += ' slideout-open'; }
+  this._setTransition();
+  this._translateXTo(this._padding);
+  this._opened = true;
+  setTimeout(function() {
+    self.panel.style.transition = self.panel.style['-webkit-transition'] = '';
+  }, this._duration + 50);
+  return this;
+};
+
+/**
+ * Closes slideout menu.
+ */
+Slideout.prototype.close = function() {
+  var self = this;
+  if (!this.isOpen() && !this._opening) { return this; }
+  this._setTransition();
+  this._translateXTo(0);
+  this._opened = false;
+  setTimeout(function() {
+    html.className = html.className.replace(/ slideout-open/, '');
+    self.panel.style.transition = self.panel.style['-webkit-transition'] = '';
+  }, this._duration + 50);
+  return this;
+};
+
+/**
+ * Toggles (open/close) slideout menu.
+ */
+Slideout.prototype.toggle = function() {
+  return this.isOpen() ? this.close() : this.open();
+};
+
+/**
+ * Returns true if the slideout is currently open, and false if it is closed.
+ */
+Slideout.prototype.isOpen = function() {
+  return this._opened;
+};
+
+/**
+ * Translates panel and updates currentOffset with a given X point
+ */
+Slideout.prototype._translateXTo = function(translateX) {
+  this._currentOffsetX = translateX;
+  this.panel.style[prefix + 'transform'] = this.panel.style.transform = 'translate3d(' + translateX + 'px, 0, 0)';
+};
+
+/**
+ * Set transition properties
+ */
+Slideout.prototype._setTransition = function() {
+  this.panel.style[prefix + 'transition'] = this.panel.style.transition = prefix + 'transform ' + this._duration + 'ms ' + this._fx;
+};
+
+/**
+ * Initializes touch event
+ */
+Slideout.prototype._initTouchEvents = function() {
+  var self = this;
+
+  /**
+   * Decouple scroll event
+   */
+  decouple(doc, 'scroll', function() {
+    if (!self._moved) {
+      clearTimeout(scrollTimeout);
+      scrolling = true;
+      scrollTimeout = setTimeout(function() {
+        scrolling = false;
+      }, 250);
+    }
+  });
+
+  /**
+   * Prevents touchmove event if slideout is moving
+   */
+  doc.addEventListener(touch.move, function(eve) {
+    if (self._moved) {
+      eve.preventDefault();
+    }
+  });
+
+  /**
+   * Resets values on touchstart
+   */
+  this.panel.addEventListener(touch.start, function(eve) {
+    self._moved = false;
+    self._opening = false;
+    self._startOffsetX = eve.touches[0].pageX;
+    self._preventOpen = (!self.isOpen() && self.menu.clientWidth !== 0);
+  });
+
+  /**
+   * Resets values on touchcancel
+   */
+  this.panel.addEventListener('touchcancel', function() {
+    self._moved = false;
+    self._opening = false;
+  });
+
+  /**
+   * Toggles slideout on touchend
+   */
+  this.panel.addEventListener(touch.end, function() {
+    if (self._moved) {
+      (self._opening && Math.abs(self._currentOffsetX) > self._tolerance) ? self.open() : self.close();
+    }
+    self._moved = false;
+  });
+
+  /**
+   * Translates panel on touchmove
+   */
+  this.panel.addEventListener(touch.move, function(eve) {
+
+    if (scrolling || self._preventOpen) { return; }
+
+    var dif_x = eve.touches[0].clientX - self._startOffsetX;
+    var translateX = self._currentOffsetX = dif_x;
+
+    if (Math.abs(translateX) > self._padding) { return; }
+
+    if (Math.abs(dif_x) > 20) {
+      self._opening = true;
+
+      if (self._opened && dif_x > 0 || !self._opened && dif_x < 0) { return; }
+
+      if (!self._moved && html.className.search('slideout-open') === -1) {
+        html.className += ' slideout-open';
+      }
+
+      if (dif_x <= 0) {
+        translateX = dif_x + self._padding;
+        self._opening = false;
+      }
+
+      self.panel.style[prefix + 'transform'] = self.panel.style.transform = 'translate3d(' + translateX + 'px, 0, 0)';
+
+      self._moved = true;
+    }
+
+  });
+
+};
+
+/**
+ * Expose Slideout
+ */
+module.exports = Slideout;
+
+},{"decouple":2}],2:[function(require,module,exports){
+'use strict';
+
+var requestAnimFrame = (function() {
+  return window.requestAnimationFrame ||
+    window.webkitRequestAnimationFrame ||
+    function (callback) {
+      window.setTimeout(callback, 1000 / 60);
+    };
+}());
+
+function decouple(node, event, fn) {
+  var eve,
+      tracking = false;
+
+  function captureEvent(e) {
+    eve = e;
+    track();
+  }
+
+  function track() {
+    if (!tracking) {
+      requestAnimFrame(update);
+      tracking = true;
+    }
+  }
+
+  function update() {
+    fn.call(node, eve);
+    tracking = false;
+  }
+
+  node.addEventListener(event, captureEvent, false);
+}
+
+/**
+ * Expose decouple
+ */
+module.exports = decouple;
+
+},{}]},{},[1])(1)
+});
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIm5vZGVfbW9kdWxlcy9icm93c2VyaWZ5L25vZGVfbW9kdWxlcy9icm93c2VyLXBhY2svX3ByZWx1ZGUuanMiLCJpbmRleC5qcyIsIm5vZGVfbW9kdWxlcy9kZWNvdXBsZS9pbmRleC5qcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtBQ0FBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7O0FDL05BO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSIsImZpbGUiOiJnZW5lcmF0ZWQuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlc0NvbnRlbnQiOlsiKGZ1bmN0aW9uIGUodCxuLHIpe2Z1bmN0aW9uIHMobyx1KXtpZighbltvXSl7aWYoIXRbb10pe3ZhciBhPXR5cGVvZiByZXF1aXJlPT1cImZ1bmN0aW9uXCImJnJlcXVpcmU7aWYoIXUmJmEpcmV0dXJuIGEobywhMCk7aWYoaSlyZXR1cm4gaShvLCEwKTt2YXIgZj1uZXcgRXJyb3IoXCJDYW5ub3QgZmluZCBtb2R1bGUgJ1wiK28rXCInXCIpO3Rocm93IGYuY29kZT1cIk1PRFVMRV9OT1RfRk9VTkRcIixmfXZhciBsPW5bb109e2V4cG9ydHM6e319O3Rbb11bMF0uY2FsbChsLmV4cG9ydHMsZnVuY3Rpb24oZSl7dmFyIG49dFtvXVsxXVtlXTtyZXR1cm4gcyhuP246ZSl9LGwsbC5leHBvcnRzLGUsdCxuLHIpfXJldHVybiBuW29dLmV4cG9ydHN9dmFyIGk9dHlwZW9mIHJlcXVpcmU9PVwiZnVuY3Rpb25cIiYmcmVxdWlyZTtmb3IodmFyIG89MDtvPHIubGVuZ3RoO28rKylzKHJbb10pO3JldHVybiBzfSkiLCIndXNlIHN0cmljdCc7XG5cbi8qKlxuICogTW9kdWxlIGRlcGVuZGVuY2llc1xuICovXG52YXIgZGVjb3VwbGUgPSByZXF1aXJlKCdkZWNvdXBsZScpO1xuXG4vKipcbiAqIFByaXZhdGVzXG4gKi9cbnZhciBzY3JvbGxUaW1lb3V0O1xudmFyIHNjcm9sbGluZyA9IGZhbHNlO1xudmFyIGRvYyA9IHdpbmRvdy5kb2N1bWVudDtcbnZhciBodG1sID0gZG9jLmRvY3VtZW50RWxlbWVudDtcbnZhciBtc1BvaW50ZXJTdXBwb3J0ZWQgPSB3aW5kb3cubmF2aWdhdG9yLm1zUG9pbnRlckVuYWJsZWQ7XG52YXIgdG91Y2ggPSB7XG4gICdzdGFydCc6IG1zUG9pbnRlclN1cHBvcnRlZCA/ICdNU1BvaW50ZXJEb3duJyA6ICd0b3VjaHN0YXJ0JyxcbiAgJ21vdmUnOiBtc1BvaW50ZXJTdXBwb3J0ZWQgPyAnTVNQb2ludGVyTW92ZScgOiAndG91Y2htb3ZlJyxcbiAgJ2VuZCc6IG1zUG9pbnRlclN1cHBvcnRlZCA/ICdNU1BvaW50ZXJVcCcgOiAndG91Y2hlbmQnXG59O1xudmFyIHByZWZpeCA9IChmdW5jdGlvbiBwcmVmaXgoKSB7XG4gIHZhciByZWdleCA9IC9eKFdlYmtpdHxLaHRtbHxNb3p8bXN8TykoPz1bQS1aXSkvO1xuICB2YXIgc3R5bGVEZWNsYXJhdGlvbiA9IGRvYy5nZXRFbGVtZW50c0J5VGFnTmFtZSgnc2NyaXB0JylbMF0uc3R5bGU7XG4gIGZvciAodmFyIHByb3AgaW4gc3R5bGVEZWNsYXJhdGlvbikge1xuICAgIGlmIChyZWdleC50ZXN0KHByb3ApKSB7XG4gICAgICByZXR1cm4gJy0nICsgcHJvcC5tYXRjaChyZWdleClbMF0udG9Mb3dlckNhc2UoKSArICctJztcbiAgICB9XG4gIH1cbiAgLy8gTm90aGluZyBmb3VuZCBzbyBmYXI/IFdlYmtpdCBkb2VzIG5vdCBlbnVtZXJhdGUgb3ZlciB0aGUgQ1NTIHByb3BlcnRpZXMgb2YgdGhlIHN0eWxlIG9iamVjdC5cbiAgLy8gSG93ZXZlciAocHJvcCBpbiBzdHlsZSkgcmV0dXJucyB0aGUgY29ycmVjdCB2YWx1ZSwgc28gd2UnbGwgaGF2ZSB0byB0ZXN0IGZvclxuICAvLyB0aGUgcHJlY2VuY2Ugb2YgYSBzcGVjaWZpYyBwcm9wZXJ0eVxuICBpZiAoJ1dlYmtpdE9wYWNpdHknIGluIHN0eWxlRGVjbGFyYXRpb24pIHsgcmV0dXJuICctd2Via2l0LSc7IH1cbiAgaWYgKCdLaHRtbE9wYWNpdHknIGluIHN0eWxlRGVjbGFyYXRpb24pIHsgcmV0dXJuICcta2h0bWwtJzsgfVxuICByZXR1cm4gJyc7XG59KCkpO1xuXG4vKipcbiAqIFNsaWRlb3V0IGNvbnN0cnVjdG9yXG4gKi9cbmZ1bmN0aW9uIFNsaWRlb3V0KG9wdGlvbnMpIHtcbiAgb3B0aW9ucyA9IG9wdGlvbnMgfHwge307XG5cbiAgLy8gU2V0cyBkZWZhdWx0IHZhbHVlc1xuICB0aGlzLl9zdGFydE9mZnNldFggPSAwO1xuICB0aGlzLl9jdXJyZW50T2Zmc2V0WCA9IDA7XG4gIHRoaXMuX29wZW5pbmcgPSBmYWxzZTtcbiAgdGhpcy5fbW92ZWQgPSBmYWxzZTtcbiAgdGhpcy5fb3BlbmVkID0gZmFsc2U7XG4gIHRoaXMuX3ByZXZlbnRPcGVuID0gZmFsc2U7XG5cbiAgLy8gU2V0cyBwYW5lbFxuICB0aGlzLnBhbmVsID0gb3B0aW9ucy5wYW5lbDtcbiAgdGhpcy5tZW51ID0gb3B0aW9ucy5tZW51O1xuXG4gIC8vIFNldHMgIGNsYXNzbmFtZXNcbiAgdGhpcy5wYW5lbC5jbGFzc05hbWUgKz0gJyBzbGlkZW91dC1wYW5lbCc7XG4gIHRoaXMubWVudS5jbGFzc05hbWUgKz0gJyBzbGlkZW91dC1tZW51JztcblxuICAvLyBTZXRzIG9wdGlvbnNcbiAgdGhpcy5fZnggPSBvcHRpb25zLmZ4IHx8ICdlYXNlJztcbiAgdGhpcy5fZHVyYXRpb24gPSBwYXJzZUludChvcHRpb25zLmR1cmF0aW9uLCAxMCkgfHwgMzAwO1xuICB0aGlzLl90b2xlcmFuY2UgPSBwYXJzZUludChvcHRpb25zLnRvbGVyYW5jZSwgMTApIHx8IDcwO1xuICB0aGlzLl9wYWRkaW5nID0gcGFyc2VJbnQob3B0aW9ucy5wYWRkaW5nLCAxMCkgfHwgMjU2O1xuXG4gIC8vIEluaXQgdG91Y2ggZXZlbnRzXG4gIHRoaXMuX2luaXRUb3VjaEV2ZW50cygpO1xufVxuXG4vKipcbiAqIE9wZW5zIHRoZSBzbGlkZW91dCBtZW51LlxuICovXG5TbGlkZW91dC5wcm90b3R5cGUub3BlbiA9IGZ1bmN0aW9uKCkge1xuICB2YXIgc2VsZiA9IHRoaXM7XG4gIGlmIChodG1sLmNsYXNzTmFtZS5zZWFyY2goJ3NsaWRlb3V0LW9wZW4nKSA9PT0gLTEpIHsgaHRtbC5jbGFzc05hbWUgKz0gJyBzbGlkZW91dC1vcGVuJzsgfVxuICB0aGlzLl9zZXRUcmFuc2l0aW9uKCk7XG4gIHRoaXMuX3RyYW5zbGF0ZVhUbyh0aGlzLl9wYWRkaW5nKTtcbiAgdGhpcy5fb3BlbmVkID0gdHJ1ZTtcbiAgc2V0VGltZW91dChmdW5jdGlvbigpIHtcbiAgICBzZWxmLnBhbmVsLnN0eWxlLnRyYW5zaXRpb24gPSBzZWxmLnBhbmVsLnN0eWxlWyctd2Via2l0LXRyYW5zaXRpb24nXSA9ICcnO1xuICB9LCB0aGlzLl9kdXJhdGlvbiArIDUwKTtcbiAgcmV0dXJuIHRoaXM7XG59O1xuXG4vKipcbiAqIENsb3NlcyBzbGlkZW91dCBtZW51LlxuICovXG5TbGlkZW91dC5wcm90b3R5cGUuY2xvc2UgPSBmdW5jdGlvbigpIHtcbiAgdmFyIHNlbGYgPSB0aGlzO1xuICBpZiAoIXRoaXMuaXNPcGVuKCkgJiYgIXRoaXMuX29wZW5pbmcpIHsgcmV0dXJuIHRoaXM7IH1cbiAgdGhpcy5fc2V0VHJhbnNpdGlvbigpO1xuICB0aGlzLl90cmFuc2xhdGVYVG8oMCk7XG4gIHRoaXMuX29wZW5lZCA9IGZhbHNlO1xuICBzZXRUaW1lb3V0KGZ1bmN0aW9uKCkge1xuICAgIGh0bWwuY2xhc3NOYW1lID0gaHRtbC5jbGFzc05hbWUucmVwbGFjZSgvIHNsaWRlb3V0LW9wZW4vLCAnJyk7XG4gICAgc2VsZi5wYW5lbC5zdHlsZS50cmFuc2l0aW9uID0gc2VsZi5wYW5lbC5zdHlsZVsnLXdlYmtpdC10cmFuc2l0aW9uJ10gPSAnJztcbiAgfSwgdGhpcy5fZHVyYXRpb24gKyA1MCk7XG4gIHJldHVybiB0aGlzO1xufTtcblxuLyoqXG4gKiBUb2dnbGVzIChvcGVuL2Nsb3NlKSBzbGlkZW91dCBtZW51LlxuICovXG5TbGlkZW91dC5wcm90b3R5cGUudG9nZ2xlID0gZnVuY3Rpb24oKSB7XG4gIHJldHVybiB0aGlzLmlzT3BlbigpID8gdGhpcy5jbG9zZSgpIDogdGhpcy5vcGVuKCk7XG59O1xuXG4vKipcbiAqIFJldHVybnMgdHJ1ZSBpZiB0aGUgc2xpZGVvdXQgaXMgY3VycmVudGx5IG9wZW4sIGFuZCBmYWxzZSBpZiBpdCBpcyBjbG9zZWQuXG4gKi9cblNsaWRlb3V0LnByb3RvdHlwZS5pc09wZW4gPSBmdW5jdGlvbigpIHtcbiAgcmV0dXJuIHRoaXMuX29wZW5lZDtcbn07XG5cbi8qKlxuICogVHJhbnNsYXRlcyBwYW5lbCBhbmQgdXBkYXRlcyBjdXJyZW50T2Zmc2V0IHdpdGggYSBnaXZlbiBYIHBvaW50XG4gKi9cblNsaWRlb3V0LnByb3RvdHlwZS5fdHJhbnNsYXRlWFRvID0gZnVuY3Rpb24odHJhbnNsYXRlWCkge1xuICB0aGlzLl9jdXJyZW50T2Zmc2V0WCA9IHRyYW5zbGF0ZVg7XG4gIHRoaXMucGFuZWwuc3R5bGVbcHJlZml4ICsgJ3RyYW5zZm9ybSddID0gdGhpcy5wYW5lbC5zdHlsZS50cmFuc2Zvcm0gPSAndHJhbnNsYXRlM2QoJyArIHRyYW5zbGF0ZVggKyAncHgsIDAsIDApJztcbn07XG5cbi8qKlxuICogU2V0IHRyYW5zaXRpb24gcHJvcGVydGllc1xuICovXG5TbGlkZW91dC5wcm90b3R5cGUuX3NldFRyYW5zaXRpb24gPSBmdW5jdGlvbigpIHtcbiAgdGhpcy5wYW5lbC5zdHlsZVtwcmVmaXggKyAndHJhbnNpdGlvbiddID0gdGhpcy5wYW5lbC5zdHlsZS50cmFuc2l0aW9uID0gcHJlZml4ICsgJ3RyYW5zZm9ybSAnICsgdGhpcy5fZHVyYXRpb24gKyAnbXMgJyArIHRoaXMuX2Z4O1xufTtcblxuLyoqXG4gKiBJbml0aWFsaXplcyB0b3VjaCBldmVudFxuICovXG5TbGlkZW91dC5wcm90b3R5cGUuX2luaXRUb3VjaEV2ZW50cyA9IGZ1bmN0aW9uKCkge1xuICB2YXIgc2VsZiA9IHRoaXM7XG5cbiAgLyoqXG4gICAqIERlY291cGxlIHNjcm9sbCBldmVudFxuICAgKi9cbiAgZGVjb3VwbGUoZG9jLCAnc2Nyb2xsJywgZnVuY3Rpb24oKSB7XG4gICAgaWYgKCFzZWxmLl9tb3ZlZCkge1xuICAgICAgY2xlYXJUaW1lb3V0KHNjcm9sbFRpbWVvdXQpO1xuICAgICAgc2Nyb2xsaW5nID0gdHJ1ZTtcbiAgICAgIHNjcm9sbFRpbWVvdXQgPSBzZXRUaW1lb3V0KGZ1bmN0aW9uKCkge1xuICAgICAgICBzY3JvbGxpbmcgPSBmYWxzZTtcbiAgICAgIH0sIDI1MCk7XG4gICAgfVxuICB9KTtcblxuICAvKipcbiAgICogUHJldmVudHMgdG91Y2htb3ZlIGV2ZW50IGlmIHNsaWRlb3V0IGlzIG1vdmluZ1xuICAgKi9cbiAgZG9jLmFkZEV2ZW50TGlzdGVuZXIodG91Y2gubW92ZSwgZnVuY3Rpb24oZXZlKSB7XG4gICAgaWYgKHNlbGYuX21vdmVkKSB7XG4gICAgICBldmUucHJldmVudERlZmF1bHQoKTtcbiAgICB9XG4gIH0pO1xuXG4gIC8qKlxuICAgKiBSZXNldHMgdmFsdWVzIG9uIHRvdWNoc3RhcnRcbiAgICovXG4gIHRoaXMucGFuZWwuYWRkRXZlbnRMaXN0ZW5lcih0b3VjaC5zdGFydCwgZnVuY3Rpb24oZXZlKSB7XG4gICAgc2VsZi5fbW92ZWQgPSBmYWxzZTtcbiAgICBzZWxmLl9vcGVuaW5nID0gZmFsc2U7XG4gICAgc2VsZi5fc3RhcnRPZmZzZXRYID0gZXZlLnRvdWNoZXNbMF0ucGFnZVg7XG4gICAgc2VsZi5fcHJldmVudE9wZW4gPSAoIXNlbGYuaXNPcGVuKCkgJiYgc2VsZi5tZW51LmNsaWVudFdpZHRoICE9PSAwKTtcbiAgfSk7XG5cbiAgLyoqXG4gICAqIFJlc2V0cyB2YWx1ZXMgb24gdG91Y2hjYW5jZWxcbiAgICovXG4gIHRoaXMucGFuZWwuYWRkRXZlbnRMaXN0ZW5lcigndG91Y2hjYW5jZWwnLCBmdW5jdGlvbigpIHtcbiAgICBzZWxmLl9tb3ZlZCA9IGZhbHNlO1xuICAgIHNlbGYuX29wZW5pbmcgPSBmYWxzZTtcbiAgfSk7XG5cbiAgLyoqXG4gICAqIFRvZ2dsZXMgc2xpZGVvdXQgb24gdG91Y2hlbmRcbiAgICovXG4gIHRoaXMucGFuZWwuYWRkRXZlbnRMaXN0ZW5lcih0b3VjaC5lbmQsIGZ1bmN0aW9uKCkge1xuICAgIGlmIChzZWxmLl9tb3ZlZCkge1xuICAgICAgKHNlbGYuX29wZW5pbmcgJiYgTWF0aC5hYnMoc2VsZi5fY3VycmVudE9mZnNldFgpID4gc2VsZi5fdG9sZXJhbmNlKSA/IHNlbGYub3BlbigpIDogc2VsZi5jbG9zZSgpO1xuICAgIH1cbiAgICBzZWxmLl9tb3ZlZCA9IGZhbHNlO1xuICB9KTtcblxuICAvKipcbiAgICogVHJhbnNsYXRlcyBwYW5lbCBvbiB0b3VjaG1vdmVcbiAgICovXG4gIHRoaXMucGFuZWwuYWRkRXZlbnRMaXN0ZW5lcih0b3VjaC5tb3ZlLCBmdW5jdGlvbihldmUpIHtcblxuICAgIGlmIChzY3JvbGxpbmcgfHwgc2VsZi5fcHJldmVudE9wZW4pIHsgcmV0dXJuOyB9XG5cbiAgICB2YXIgZGlmX3ggPSBldmUudG91Y2hlc1swXS5jbGllbnRYIC0gc2VsZi5fc3RhcnRPZmZzZXRYO1xuICAgIHZhciB0cmFuc2xhdGVYID0gc2VsZi5fY3VycmVudE9mZnNldFggPSBkaWZfeDtcblxuICAgIGlmIChNYXRoLmFicyh0cmFuc2xhdGVYKSA+IHNlbGYuX3BhZGRpbmcpIHsgcmV0dXJuOyB9XG5cbiAgICBpZiAoTWF0aC5hYnMoZGlmX3gpID4gMjApIHtcbiAgICAgIHNlbGYuX29wZW5pbmcgPSB0cnVlO1xuXG4gICAgICBpZiAoc2VsZi5fb3BlbmVkICYmIGRpZl94ID4gMCB8fCAhc2VsZi5fb3BlbmVkICYmIGRpZl94IDwgMCkgeyByZXR1cm47IH1cblxuICAgICAgaWYgKCFzZWxmLl9tb3ZlZCAmJiBodG1sLmNsYXNzTmFtZS5zZWFyY2goJ3NsaWRlb3V0LW9wZW4nKSA9PT0gLTEpIHtcbiAgICAgICAgaHRtbC5jbGFzc05hbWUgKz0gJyBzbGlkZW91dC1vcGVuJztcbiAgICAgIH1cblxuICAgICAgaWYgKGRpZl94IDw9IDApIHtcbiAgICAgICAgdHJhbnNsYXRlWCA9IGRpZl94ICsgc2VsZi5fcGFkZGluZztcbiAgICAgICAgc2VsZi5fb3BlbmluZyA9IGZhbHNlO1xuICAgICAgfVxuXG4gICAgICBzZWxmLnBhbmVsLnN0eWxlW3ByZWZpeCArICd0cmFuc2Zvcm0nXSA9IHNlbGYucGFuZWwuc3R5bGUudHJhbnNmb3JtID0gJ3RyYW5zbGF0ZTNkKCcgKyB0cmFuc2xhdGVYICsgJ3B4LCAwLCAwKSc7XG5cbiAgICAgIHNlbGYuX21vdmVkID0gdHJ1ZTtcbiAgICB9XG5cbiAgfSk7XG5cbn07XG5cbi8qKlxuICogRXhwb3NlIFNsaWRlb3V0XG4gKi9cbm1vZHVsZS5leHBvcnRzID0gU2xpZGVvdXQ7XG4iLCIndXNlIHN0cmljdCc7XG5cbnZhciByZXF1ZXN0QW5pbUZyYW1lID0gKGZ1bmN0aW9uKCkge1xuICByZXR1cm4gd2luZG93LnJlcXVlc3RBbmltYXRpb25GcmFtZSB8fFxuICAgIHdpbmRvdy53ZWJraXRSZXF1ZXN0QW5pbWF0aW9uRnJhbWUgfHxcbiAgICBmdW5jdGlvbiAoY2FsbGJhY2spIHtcbiAgICAgIHdpbmRvdy5zZXRUaW1lb3V0KGNhbGxiYWNrLCAxMDAwIC8gNjApO1xuICAgIH07XG59KCkpO1xuXG5mdW5jdGlvbiBkZWNvdXBsZShub2RlLCBldmVudCwgZm4pIHtcbiAgdmFyIGV2ZSxcbiAgICAgIHRyYWNraW5nID0gZmFsc2U7XG5cbiAgZnVuY3Rpb24gY2FwdHVyZUV2ZW50KGUpIHtcbiAgICBldmUgPSBlO1xuICAgIHRyYWNrKCk7XG4gIH1cblxuICBmdW5jdGlvbiB0cmFjaygpIHtcbiAgICBpZiAoIXRyYWNraW5nKSB7XG4gICAgICByZXF1ZXN0QW5pbUZyYW1lKHVwZGF0ZSk7XG4gICAgICB0cmFja2luZyA9IHRydWU7XG4gICAgfVxuICB9XG5cbiAgZnVuY3Rpb24gdXBkYXRlKCkge1xuICAgIGZuLmNhbGwobm9kZSwgZXZlKTtcbiAgICB0cmFja2luZyA9IGZhbHNlO1xuICB9XG5cbiAgbm9kZS5hZGRFdmVudExpc3RlbmVyKGV2ZW50LCBjYXB0dXJlRXZlbnQsIGZhbHNlKTtcbn1cblxuLyoqXG4gKiBFeHBvc2UgZGVjb3VwbGVcbiAqL1xubW9kdWxlLmV4cG9ydHMgPSBkZWNvdXBsZTtcbiJdfQ==
 
 !function(a){"function"==typeof define&&define.amd?define(["jquery"],a):"object"==typeof exports?module.exports=a(require("jquery")):a(jQuery)}(function(a){function b(a){return"undefined"!=typeof a&&null!==a?!0:!1}a(document).ready(function(){a("body").append("<div id=snackbar-container/>")}),a(document).on("click","[data-toggle=snackbar]",function(){a(this).snackbar("toggle")}).on("click","#snackbar-container .snackbar",function(){a(this).snackbar("hide")}),a.snackbar=function(c){if(b(c)&&c===Object(c)){var d;d=b(c.id)?a("#"+c.id):a("<div/>").attr("id","snackbar"+Date.now()).attr("class","snackbar");var e=d.hasClass("snackbar-opened");b(c.style)?d.attr("class","snackbar "+c.style):d.attr("class","snackbar"),c.htmlAllowed=b(c.htmlAllowed)?c.htmlAllowed:!1,c.timeout=b(c.timeout)?c.timeout:3e3,c.content=c.htmlAllowed?c.content:a("<p>"+c.content+"</p>").text(),b(c.content)&&(d.find(".snackbar-content").length?d.find(".snackbar-content").html(c.content):d.prepend("<span class=snackbar-content>"+c.content+"</span>")),b(c.id)?d.insertAfter("#snackbar-container .snackbar:last-child"):d.appendTo("#snackbar-container"),b(c.action)&&"toggle"==c.action&&(c.action=e?"hide":"show");var f=Date.now();d.data("animationId1",f),setTimeout(function(){d.data("animationId1")===f&&(b(c.action)&&"show"!=c.action?b(c.action)&&"hide"==c.action&&d.removeClass("snackbar-opened"):d.addClass("snackbar-opened"))},50);var g=Date.now();return d.data("animationId2",g),0!==c.timeout&&setTimeout(function(){d.data("animationId2")===g&&d.removeClass("snackbar-opened")},c.timeout),d}return!1},a.fn.snackbar=function(c){var d={};if(this.hasClass("snackbar"))return d.id=this.attr("id"),("show"===c||"hide"===c||"toggle"==c)&&(d.action=c),a.snackbar(d);b(c)&&"show"!==c&&"hide"!==c&&"toggle"!=c||(d={content:a(this).attr("data-content"),style:a(this).attr("data-style"),timeout:a(this).attr("data-timeout"),htmlAllowed:a(this).attr("data-html-allowed")}),b(c)&&(d.id=this.attr("data-snackbar-id"),("show"===c||"hide"===c||"toggle"==c)&&(d.action=c));var e=a.snackbar(d);return this.attr("data-snackbar-id",e.attr("id")),e}});
 //# sourceMappingURL=snackbar.min.js.map
@@ -28680,50 +29007,49 @@ function toArray(list, index) {
 this["JST"] = this["JST"] || {};
 
 this["JST"]["global/app"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  var helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-  return escapeExpression(((helpers.safe_val || (depth0 && depth0.safe_val) || helperMissing).call(depth0, (depth0 != null ? depth0.title : depth0), "lalal", {"name":"safe_val","hash":{},"data":data})))
-    + "\n";
-},"useData":true});
+  return "<nav id=\"menu\" class=\"col-md-4\">\n</nav>\n\n<main id=\"panel\" class=\"panel panel-default\">\n  <header id=\"header\">\n  </header>\n  <div id=\"main\">\n  </div>\n  <footer id=\"footer\">\n  </footer>\n</main>";
+  },"useData":true});
 
-this["JST"]["global/footer"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+this["JST"]["layout/footer"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-  return "\n<div class=\"well\">I'am footer partial</div>\n\n<div class=\"well\">"
+  return "<div class=\"panel-footer\">\n  <div class=\"well\">I'am footer partial</div>\n\n  <div class=\"well\">"
     + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
     'body': ("Click on subview"),
     'id': ("click-me"),
     'href': ("#click-me")
   },"data":data})))
-    + "</div>\n";
+    + "</div>\n</div>\n";
 },"useData":true});
 
-this["JST"]["global/main"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+this["JST"]["layout/header"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+  return "<div class=\"panel-heading\">\n  <button id=\"menuToggler\" class=\"btn btn-fab btn-raised btn-material-red\">\n<i class=\"mdi-navigation-arrow-back\"></i>\n  </button>\n  <h1>"
+    + escapeExpression(((helpers.safe_val || (depth0 && depth0.safe_val) || helperMissing).call(depth0, (depth0 != null ? depth0.title : depth0), "lalal", {"name":"safe_val","hash":{},"data":data})))
+    + "</h1>\n</div>\n";
+},"useData":true});
+
+this["JST"]["layout/main"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-  return "<h1> "
+  return "<div class=\"panel-body\">\n\n  <h1>Main:: "
     + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
-    + "</h1>\n<ul>\n  <li>"
+    + "</h1>\n\n  <hr />\n\n\n</div>\n";
+},"useData":true});
+
+this["JST"]["layout/menu"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+  return "<header>\n  <h2>Menu</h2>\n</header>\n<div class=\"panel panel-default\">\n  <div class=\"panel-heading\"><h1>Submenu 1 heading</h1></div>\n  <div class=\"panel-body\">\n\n    "
     + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
     'body': ("Populate"),
-    'href': ("#populate")
+    'href': ("#populate"),
+    'class': ("btn btn-block")
   },"data":data})))
-    + "</li>\n  <li>"
+    + "\n    "
     + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
     'body': ("Slashed"),
-    'href': ("#slashed/path")
+    'href': ("#slashed/path"),
+    'class': ("btn btn-block")
   },"data":data})))
-    + "</li>\n</ul>\n";
-},"useData":true});
-
-this["JST"]["header"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  var stack1, helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-  return "<h1>Header "
-    + escapeExpression(((helper = (helper = helpers.text || (depth0 != null ? depth0.text : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"text","hash":{},"data":data}) : helper)))
-    + "</h1>\n\n<li>"
-    + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
-    'class': ("superclas"),
-    'body': (((stack1 = (depth0 != null ? depth0.obj : depth0)) != null ? stack1.body : stack1)),
-    'href': (((stack1 = (depth0 != null ? depth0.obj : depth0)) != null ? stack1.url : stack1))
-  },"data":data})))
-    + "</li>\n\n\n> layout/_footer";
+    + "\n\n\n  </div>\n</div>\n";
 },"useData":true});
 (function() {
   var Lokitest, Tracktime,
@@ -28744,16 +29070,16 @@ this["JST"]["header"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"m
       tmpRecords: [
         {
           subject: 'Lorem',
-          description: 'Iipsum dolor sit amet, consectetur adipisicing elit. Quisquam, facere!'
+          description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nam, culpa, deleniti, temporibus, itaque similique suscipit saepe rerum voluptates voluptatum asperiores modi possimus vitae inventore dolore illo incidunt dolorem animi iure provident labore minima delectus unde nihil soluta recusandae ut dicta explicabo perspiciatis dolores eum. Numquam molestias reiciendis quibusdam sunt suscipit fugit temporibus asperiores quia. Cum, vel, molestias, sapiente ex nisi blanditiis dolorem quod beatae obcaecati culpa eos eius at vitae sed modi explicabo tempore. Harum, error nam veritatis maiores est at incidunt quae magni amet non qui eum. Aperiam, harum, tenetur facere officia delectus omnis odio totam consequatur obcaecati tempora. '
         }, {
           subject: 'Tempore',
-          description: 'Harum quis officiis consequuntur dolorem omnis at quo maxime?'
+          description: 'Accusamus, cumque, aperiam velit quos quisquam ex officiis obcaecati totam ipsa saepe fugiat in. Corrupti, soluta, aliquid cumque adipisci nihil omnis explicabo itaque commodi neque dolorum fugit quibusdam deserunt voluptates corporis amet hic quod blanditiis nesciunt dignissimos vero iure. Omnis, provident ducimus delectus sed in incidunt expedita quae accusantium cum culpa recusandae rerum ipsum vitae aliquid ratione ea architecto optio accusamus similique saepe nobis vel deleniti tempora iure consequatur. Debitis laborum accusantium omnis iure velit necessitatibus quod veniam sequi! Excepturi, praesentium, porro ducimus fugit provident repellendus quibusdam dolorum nisi autem tenetur. Non, neque reiciendis eius sequi accusamus. Quam, nostrum, nesciunt. '
         }, {
           subject: 'Consequuntur',
-          description: 'Libero quibusdam perspiciatis assumenda quas natus eveniet asperiores dolor.'
+          description: 'Obcaecati, incidunt, optio deleniti earum odio nobis dolore sapiente delectus. Accusamus sequi voluptatibus magni fuga fugit nisi aut nam rem repellat possimus! Delectus, harum nisi eos nostrum necessitatibus ducimus eius odio dolores ratione quas quos laboriosam magnam reprehenderit itaque nihil! Dolor, hic, asperiores alias aut voluptas odit illum voluptatem quod! Pariatur, nesciunt distinctio aliquam quam voluptatibus temporibus voluptate placeat quaerat nemo quidem. Asperiores, nihil quasi molestias suscipit sunt. Itaque, sapiente voluptatibus qui non fugit impedit voluptatem beatae repellat at nulla dignissimos esse doloribus. Officiis, dolorem, id, officia sapiente eius ullam vel dolorum numquam et aspernatur illo deleniti enim quam autem! '
         }, {
           subject: 'Rem',
-          description: 'Libero, enim doloremque blanditiis delectus quasi itaque architecto accusantium!'
+          description: 'Quisquam ab soluta dicta amet possimus iure deserunt expedita facere maxime nemo. Laudantium, quod, dignissimos, quos perspiciatis illo numquam est hic qui totam eligendi aut in provident dolor. Libero, dolores, cumque ut molestiae iusto nostrum tempore voluptatum laborum iure quae? Culpa, et, deserunt, explicabo a assumenda voluptate commodi voluptatum possimus omnis totam libero ipsum delectus? Harum, facilis, suscipit perspiciatis dolorum sapiente quae voluptas assumenda cumque atque accusamus blanditiis ullam doloribus enim placeat saepe dolorem sed quos architecto error vero odit deserunt autem? Sunt, cumque, similique voluptatem quis voluptatum non explicabo quibusdam porro in nihil quae sint rem molestias vero beatae!'
         }
       ]
     };
@@ -28980,29 +29306,15 @@ this["JST"]["header"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"m
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AppChannel : void 0) || (this.Tracktime.AppChannel = Tracktime.AppChannel);
 
   $(function() {
-    $.material.init();
     Tracktime.AppChannel.init().command('start');
   });
 
-  (function($) {
-    var snackbarOptions;
-    snackbarOptions = {
-      content: '',
-      style: '',
-      timeout: 2000,
-      htmlAllowed: true
-    };
-    return $.extend({
-      alert: function(params) {
-        if (_.isString(params)) {
-          snackbarOptions.content = params;
-        } else {
-          snackbarOptions = $.extend({}, snackbarOptions, params);
-        }
-        return $.snackbar(snackbarOptions);
-      }
-    });
-  })(jQuery);
+  Backbone.Validation.configure({
+    selector: 'class_v',
+    labelFormatter: 'label_v'
+  });
+
+  _.extend(Backbone.Model.prototype, Backbone.Validation.mixin);
 
   Handlebars.registerHelper('link_to', function(options) {
     var attrs, body, key, ref, value;
@@ -29028,12 +29340,25 @@ this["JST"]["header"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"m
     return new Handlebars.SafeString(out);
   });
 
-  Backbone.Validation.configure({
-    selector: 'class_v',
-    labelFormatter: 'label_v'
-  });
-
-  _.extend(Backbone.Model.prototype, Backbone.Validation.mixin);
+  (function($) {
+    var snackbarOptions;
+    snackbarOptions = {
+      content: '',
+      style: '',
+      timeout: 2000,
+      htmlAllowed: true
+    };
+    return $.extend({
+      alert: function(params) {
+        if (_.isString(params)) {
+          snackbarOptions.content = params;
+        } else {
+          snackbarOptions = $.extend({}, snackbarOptions, params);
+        }
+        return $.snackbar(snackbarOptions);
+      }
+    });
+  })(jQuery);
 
   Tracktime.AppRouter = (function(superClass) {
     extend(AppRouter, superClass);
@@ -29152,7 +29477,7 @@ this["JST"]["header"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"m
       return AppView.__super__.constructor.apply(this, arguments);
     }
 
-    AppView.prototype.el = '#app-content';
+    AppView.prototype.el = '#panel';
 
     AppView.prototype.className = '';
 
@@ -29161,44 +29486,38 @@ this["JST"]["header"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"m
     AppView.prototype.childViews = {};
 
     AppView.prototype.initialize = function() {
-      this.initChilds();
       this.render();
-      return this.bindEvents();
-    };
-
-    AppView.prototype.initChilds = function() {
-      this.childViews['main'] = new Tracktime.AppView.Main({
-        parentView: this,
-        model: this.model
-      });
-      return this.childViews['footer'] = new Tracktime.AppView.Footer({
-        parentView: this
-      });
-    };
-
-    AppView.prototype.bindEvents = function() {
-      return this.listenTo(this.model, 'update_records', this.renderRecords);
+      return this.initUI();
     };
 
     AppView.prototype.render = function() {
-      this.$el.html(this.layoutTemplate(this.model.toJSON()));
       return this.renderChilds();
     };
 
     AppView.prototype.renderChilds = function() {
-      return $.each(this.childViews, (function(_this) {
-        return function(index, subview) {
-          return _this.$el.append(subview.el);
-        };
-      })(this));
+      this.childViews['header'] = new Tracktime.AppView.Header({
+        container: this
+      });
+      this.childViews['main'] = new Tracktime.AppView.Main({
+        model: this.model,
+        container: this
+      });
+      this.childViews['footer'] = new Tracktime.AppView.Footer({
+        container: this
+      });
+      return this.childViews['menu'] = new Tracktime.AppView.Menu({
+        container: this
+      });
     };
 
-    AppView.prototype.renderRecords = function() {
-      var recordsView;
-      recordsView = new Tracktime.RecordsView({
-        collection: this.model.get('records')
+    AppView.prototype.initUI = function() {
+      $.material.init();
+      return this.slideout = new Slideout({
+        'panel': $('#panel')[0],
+        'menu': $('#menu')[0],
+        'padding': 256,
+        'tolerance': 70
       });
-      return this.$el.append(recordsView.el);
     };
 
     return AppView;
@@ -29239,6 +29558,32 @@ this["JST"]["header"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"m
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AppView2 : void 0) || (this.Tracktime.AppView2 = Tracktime.AppView2);
 
+  Tracktime.AppView.Global = (function(superClass) {
+    extend(Global, superClass);
+
+    function Global() {
+      return Global.__super__.constructor.apply(this, arguments);
+    }
+
+    Global.prototype.el = 'body';
+
+    Global.prototype.template = JST['layout/global'];
+
+    Global.prototype.initialize = function() {
+      return this.render();
+    };
+
+    Global.prototype.render = function() {
+      var ref;
+      return this.$el.html(this.template((ref = this.model) != null ? ref.toJSON() : void 0));
+    };
+
+    return Global;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AppView.Global : void 0) || (this.Tracktime.AppView.Global = Tracktime.AppView.Global);
+
   Tracktime.AppView.Footer = (function(superClass) {
     extend(Footer, superClass);
 
@@ -29246,11 +29591,9 @@ this["JST"]["header"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"m
       return Footer.__super__.constructor.apply(this, arguments);
     }
 
-    Footer.prototype.el = 'footer';
+    Footer.prototype.el = '#footer';
 
-    Footer.prototype.className = '';
-
-    Footer.prototype.template = JST['global/footer'];
+    Footer.prototype.template = JST['layout/footer'];
 
     Footer.prototype.events = {
       'click #click-me': 'clickMe'
@@ -29276,6 +29619,41 @@ this["JST"]["header"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"m
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AppView.Footer : void 0) || (this.Tracktime.AppView.Footer = Tracktime.AppView.Footer);
 
+  Tracktime.AppView.Header = (function(superClass) {
+    extend(Header, superClass);
+
+    function Header() {
+      return Header.__super__.constructor.apply(this, arguments);
+    }
+
+    Header.prototype.el = '#header';
+
+    Header.prototype.template = JST['layout/header'];
+
+    Header.prototype.events = {
+      'click #menuToggler': 'slideoutToggle'
+    };
+
+    Header.prototype.initialize = function(options) {
+      this.options = options;
+      return this.render();
+    };
+
+    Header.prototype.render = function() {
+      var ref;
+      return this.$el.html(this.template((ref = this.model) != null ? ref.toJSON() : void 0));
+    };
+
+    Header.prototype.slideoutToggle = function() {
+      return this.options.container.slideout.toggle();
+    };
+
+    return Header;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AppView.Header : void 0) || (this.Tracktime.AppView.Header = Tracktime.AppView.Header);
+
   Tracktime.AppView.Main = (function(superClass) {
     extend(Main, superClass);
 
@@ -29283,14 +29661,17 @@ this["JST"]["header"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"m
       return Main.__super__.constructor.apply(this, arguments);
     }
 
-    Main.prototype.template = JST['global/main'];
+    Main.prototype.el = '#main';
+
+    Main.prototype.template = JST['layout/main'];
 
     Main.prototype.events = {
       'click a': 'testLinks'
     };
 
     Main.prototype.initialize = function() {
-      return this.render();
+      this.render();
+      return this.bindEvents();
     };
 
     Main.prototype.render = function() {
@@ -29302,11 +29683,49 @@ this["JST"]["header"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"m
       return $.alert('Clicked' + $(event.target).attr('href'));
     };
 
+    Main.prototype.bindEvents = function() {
+      return this.listenTo(this.model, 'update_records', this.renderRecords);
+    };
+
+    Main.prototype.renderRecords = function() {
+      var recordsView;
+      recordsView = new Tracktime.RecordsView({
+        collection: this.model.get('records')
+      });
+      return this.$el.append(recordsView.el);
+    };
+
     return Main;
 
   })(Backbone.View);
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AppView.Main : void 0) || (this.Tracktime.AppView.Main = Tracktime.AppView.Main);
+
+  Tracktime.AppView.Menu = (function(superClass) {
+    extend(Menu, superClass);
+
+    function Menu() {
+      return Menu.__super__.constructor.apply(this, arguments);
+    }
+
+    Menu.prototype.el = '#menu';
+
+    Menu.prototype.template = JST['layout/menu'];
+
+    Menu.prototype.initialize = function() {
+      return this.render();
+    };
+
+    Menu.prototype.render = function() {
+      var ref;
+      return this.$el.html(this.template((ref = this.model) != null ? ref.toJSON() : void 0));
+    };
+
+    return Menu;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AppView.Menu : void 0) || (this.Tracktime.AppView.Menu = Tracktime.AppView.Menu);
 
   Tracktime.RecordView = (function(superClass) {
     extend(RecordView, superClass);
@@ -29357,7 +29776,19 @@ this["JST"]["header"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"m
     RecordsView.prototype.className = 'list-group';
 
     RecordsView.prototype.initialize = function() {
-      return this.render();
+      this.$el.append("<hr>0</hr>");
+      this.render();
+      this.$el.append("<hr>1</hr>");
+      this.render();
+      this.$el.append("<hr>2</hr>");
+      this.render();
+      this.$el.append("<hr>3</hr>");
+      this.render();
+      this.$el.append("<hr>4</hr>");
+      this.render();
+      this.$el.append("<hr>5</hr>");
+      this.render();
+      return this.$el.append("<hr>6</hr>");
     };
 
     RecordsView.prototype.render = function() {

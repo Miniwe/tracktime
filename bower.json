@@ -23,6 +23,9 @@
     "bootstrap-material-design": "~0.3.0",
     "jquery": "~2.1.3",
     "socket.io-client": "~1.3.5",
-    "snackbarjs": "git://github.com/fezvrasta/snackbarjs.git#master"
+    "snackbarjs": "git://github.com/fezvrasta/snackbarjs.git#master",
+    "decouple": "~0.0.1",
+    "slideout": "https://github.com/mango/slideout.git#~0.1.5"
+
   }
 }

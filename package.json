@@ -12,7 +12,7 @@
     "url": "https://github.com/Miniwe/tracktime.git"
   },
   "window": {
-    "toolbar": true,
+    "toolbar": false,
     "frame": true,
     "position": "top",
     "width": 1000,
