@@ -29007,49 +29007,49 @@ function toArray(list, index) {
 this["JST"] = this["JST"] || {};
 
 this["JST"]["global/app"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  return "<nav id=\"menu\" class=\"col-md-4\">\n</nav>\n\n<main id=\"panel\" class=\"panel panel-default\">\n  <header id=\"header\">\n  </header>\n  <div id=\"main\">\n  </div>\n  <footer id=\"footer\">\n  </footer>\n</main>";
+  return "<header id=\"header\">\n</header>\n<div class=\"scrollWrapper\">\n  <div id=\"main\" style=\"padding: 1em;\">\n  </div>\n  <footer id=\"footer\">\n  </footer>\n</div>\n";
   },"useData":true});
 
 this["JST"]["layout/footer"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-  return "<div class=\"panel-footer\">\n  <div class=\"well\">I'am footer partial</div>\n\n  <div class=\"well\">"
+  return "<div class=\"well\" style=\"margin: 0;\">\n  <p>I'am footer partial</p>\n\n  <p>"
     + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
     'body': ("Click on subview"),
     'id': ("click-me"),
     'href': ("#click-me")
   },"data":data})))
-    + "</div>\n</div>\n";
+    + "</p>\n</div>\n";
 },"useData":true});
 
 this["JST"]["layout/header"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-  return "<div class=\"panel-heading\">\n  <button id=\"menuToggler\" class=\"btn btn-fab btn-raised btn-material-red\">\n<i class=\"mdi-navigation-arrow-back\"></i>\n  </button>\n  <h1>"
-    + escapeExpression(((helpers.safe_val || (depth0 && depth0.safe_val) || helperMissing).call(depth0, (depth0 != null ? depth0.title : depth0), "lalal", {"name":"safe_val","hash":{},"data":data})))
-    + "</h1>\n</div>\n";
+  return "<div class=\"navbar navbar-material-amber\">\n  <div class=\"navbar-header\">\n    <button type=\"button\" class=\"navbar-toggle\" data-toggle=\"collapse\" data-target=\".navbar-material-amber-collapse\">\n      <span class=\"icon-bar\"></span>\n      <span class=\"icon-bar\"></span>\n      <span class=\"icon-bar\"></span>\n    </button>\n    <a id=\"menuToggler\" class=\"navbar-brand\" href=\"javascript:void(0)\">\n      <!-- btn btn-fab btn-raised btn-material-red -->\n      <i class=\"mdi-navigation-arrow-back\"></i>\n    </a>\n  </div>\n  <div class=\"navbar-collapse collapse navbar-material-amber-collapse\">\n    <ul class=\"nav navbar-nav\">\n      <li class=\"dropdown\">\n        <a href=\"index.html\" data-target=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" aria-expanded=\"false\">Action type <b class=\"caret\"></b><div class=\"ripple-wrapper\"></div></a>\n        <ul class=\"dropdown-menu\">\n          <li><a href=\"javascript:void(0)\">Add track</a></li>\n          <li class=\"divider\"></li>\n          <li class=\"dropdown-header\">Recent projects</li>\n          <li><a href=\"javascript:void(0)\">Project name 1</a></li>\n          <li><a href=\"javascript:void(0)\">Another project 2</a></li>\n          <li class=\"divider\"></li>\n          <li><a href=\"javascript:void(0)\">Search</a></li>\n          <li><a href=\"javascript:void(0)\">Something else here</a></li>\n        </ul>\n      </li>\n    </ul>\n    <form class=\"navbar-form navbar-left\">\n      <div class=\"form-control-wrapper\"><input type=\"text\" class=\"form-control empty\"><div class=\"floating-label\">Selected Action Hint</div><span class=\"material-input\"></span></div>\n      <!-- <div class=\"form-control-wrapper\"><textarea class=\"form-control\"></textarea><div class=\"floating-label\">Selected Action Hint</div><span class=\"material-input\"></span></div> -->\n    </form>\n    <ul class=\"nav navbar-nav navbar-right\">\n      <li class=\"active\"><a href=\"javascript:void(0)\">Active</a></li>\n      <li><a href=\"javascript:void(0)\">Link</a></li>\n      <li><a href=\"#\">"
+    + escapeExpression(((helpers.safe_val || (depth0 && depth0.safe_val) || helperMissing).call(depth0, (depth0 != null ? depth0.title : depth0), "Project title default", {"name":"safe_val","hash":{},"data":data})))
+    + "</a></li>\n    </ul>\n  </div>\n</div>\n";
 },"useData":true});
 
 this["JST"]["layout/main"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-  return "<div class=\"panel-body\">\n\n  <h1>Main:: "
+  return "<h1>Main:: "
     + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
-    + "</h1>\n\n  <hr />\n\n\n</div>\n";
+    + "</h1>\n\n<hr />\n";
 },"useData":true});
 
 this["JST"]["layout/menu"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-  return "<header>\n  <h2>Menu</h2>\n</header>\n<div class=\"panel panel-default\">\n  <div class=\"panel-heading\"><h1>Submenu 1 heading</h1></div>\n  <div class=\"panel-body\">\n\n    "
+  return "<header>\n  <h2>Menu</h2>\n</header>\n<div class=\"panel panel-default\">\n  <div class=\"panel-heading\"><h1>Submenu 1 heading</h1></div>\n  <div class=\"panel-body\">\n\n    <div class=\"list-style-group\">\n      "
     + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
     'body': ("Populate"),
     'href': ("#populate"),
-    'class': ("btn btn-block")
+    'class': ("list-group-item")
   },"data":data})))
-    + "\n    "
+    + "\n      "
     + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
     'body': ("Slashed"),
     'href': ("#slashed/path"),
-    'class': ("btn btn-block")
+    'class': ("list-group-item")
   },"data":data})))
-    + "\n\n\n  </div>\n</div>\n";
+    + "\n    </div>\n\n\n  </div>\n</div>\n";
 },"useData":true});
 (function() {
   var Lokitest, Tracktime,
@@ -29491,6 +29491,7 @@ this["JST"]["layout/menu"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1
     };
 
     AppView.prototype.render = function() {
+      this.$el.html(this.layoutTemplate(this.model.toJSON()));
       return this.renderChilds();
     };
 

@@ -1,11 +1,10 @@
 #panel {
-  background: #fff;
+  background: $c-main-fon;
+  color: $c-main;
   height: 100%;
   padding-top: $header-height;
   .scrollWrapper {
     overflow: auto;
     height: 100%;
-    outline: 1px solid red;
-    background-color: #f99;
   }
 }

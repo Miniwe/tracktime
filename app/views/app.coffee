@@ -10,7 +10,7 @@ class Tracktime.AppView extends Backbone.View
 
   render: ->
     # $(document).title @model.get 'title'
-    # @$el.html @layoutTemplate @model.toJSON()
+    @$el.html @layoutTemplate @model.toJSON()
     @renderChilds()
 
   renderChilds: ->
