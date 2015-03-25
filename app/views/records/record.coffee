@@ -10,7 +10,7 @@ class Tracktime.RecordView extends Backbone.View
     id: @model.cid
 
   render: () ->
-    @$el.html @template model: @model.toJSON()
+    @$el.html @template @model.toJSON()
 
 (module?.exports = Tracktime.RecordView) or @Tracktime.RecordView = Tracktime.RecordView
 
