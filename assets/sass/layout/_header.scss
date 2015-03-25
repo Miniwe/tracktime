@@ -1,3 +1,5 @@
+@import "compass/css3/box-shadow";
+
 #header {
   height: $header-height;
   left: 0;
@@ -5,4 +7,18 @@
   top: 0;
   width: 100%;
   z-index: 100;
+
+  .navbar {
+    height: $header-height;
+  }
+
+  .btn {
+    z-index: 100;
+  }
+  .btn-link{
+    @include box-shadow(none);
+  }
+  #menuToggler {
+    margin: .4em;
+  }
 }
