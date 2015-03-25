@@ -15,6 +15,11 @@
         margin: 0 auto;
         width: 100%;
         height: 2.7em;
+        min-height: 2.7em;
+        box-sizing: border-box;
+        max-height: 20em; /* optional, but recommended */
+        overflow-x: hidden; /* for Firefox (issue #5) */
+
       }
       .floating-label {
         left: 70px;

@@ -7,6 +7,10 @@ class Tracktime.AppView.Header extends Backbone.View
   initialize: (options) ->
     @options = options
     @render()
+    @initUI()
+
+  initUI: () ->
+    $('textarea', @el).textareaAutoSize();
 
   render: () ->
     @$el.html @template @model?.toJSON()
