@@ -24,11 +24,12 @@ class Tracktime.AppView extends Backbone.View
 
   initUI: ->
     $.material.init()
-    @slideout = new Slideout
+    slideout = new Slideout
       'panel': $('#panel')[0]
       'menu': $('#menu')[0]
       'padding': 256
       'tolerance': 70
+    $("#menuToggler").on 'click', () -> slideout.toggle()
 
 
 (module?.exports = Tracktime.AppView) or @Tracktime.AppView = Tracktime.AppView

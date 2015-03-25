@@ -1,24 +1,31 @@
-@import "compass/css3/box-shadow";
+@import 'compass/css3/box-shadow';
+@import 'compass/css3/transition';
 
-#header {
-  height: $header-height;
-  left: 0;
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 100;
-
-  .navbar {
-    height: $header-height;
-  }
-
-  .btn {
+#header
+{
+    position: fixed;
     z-index: 100;
-  }
-  .btn-link{
-    @include box-shadow(none);
-  }
-  #menuToggler {
-    margin: .4em;
-  }
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    .navbar
+    {
+        height: $header-height;
+        margin-bottom: 0;
+
+        @include transition(background-color .5s);
+    }
+    .btn
+    {
+        z-index: 100;
+    }
+    .btn-link
+    {
+        @include box-shadow(none);
+    }
+    #menuToggler
+    {
+        margin: .4em;
+    }
 }

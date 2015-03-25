@@ -1,15 +1,32 @@
-<header>
+<header class="hidden">
   <h2>Menu</h2>
 </header>
-<div class="panel panel-default">
-  <div class="panel-heading"><h1>Submenu 1 heading</h1></div>
-  <div class="panel-body">
+<div class="panel panel-primary">
+  <div class="panel-heading"><h3>Menu</h3></div>
 
+  <div class="panel-body">
     <div class="list-style-group">
       {{link_to class="list-group-item" href='#populate' body='Populate'}}
       {{link_to class="list-group-item" href='#slashed/path' body='Slashed'}}
     </div>
-
-
   </div>
+
+  <div class="panel-body">
+    <div class="list-style-group">
+      {{link_to class="list-group-item" href='#records/inprogress' body='In Progress'}}
+      {{link_to class="list-group-item" href='#records/notfinished' body='Not Finished'}}
+      {{link_to class="list-group-item" href='#records/finished' body='Finished'}}
+    </div>
+  </div>
+
+  <div class="panel-body">
+    <div class="list-style-group">
+      {{link_to class="list-group-item" href='#project/1' body='Projects 1'}}
+      {{link_to class="list-group-item" href='#project/2' body='Projects 2'}}
+      {{link_to class="list-group-item" href='#project/3' body='Projects 3'}}
+      {{link_to class="list-group-item" href='#project/4' body='Projects 4'}}
+    </div>
+  </div>
+
+
 </div>

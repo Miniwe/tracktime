@@ -1,0 +1,68 @@
+@import 'compass/css3/box-shadow';
+@import 'compass/css3/transform';
+@import 'compass/css3/transition';
+
+.select-action-type-dropdown
+{
+  .dropdown-menu
+  {
+    border: none;
+    background: none;
+
+    @include box-shadow(none);
+    li
+    {
+      overflow: visible;
+
+      margin-bottom: .6em;
+      &.active
+      {
+        display: none;
+      }
+      .btn
+      {
+        font-size: 20px;
+
+        width: 46px;
+        height: 46px;
+        margin: 0;
+        margin-left: 5px;
+        padding: 13px;
+
+        @include transform(scale(0));
+        @include transition-property(all);
+        @include transition-duration(5s);
+        i
+        {
+          font-size: 22px;
+
+          margin-top: 2px;
+          margin-left: -1px;
+        }
+      }
+    }
+  }
+  &.open
+  {
+    .dropdown-menu
+    {
+      @for $i from 1 through 10 {
+        li:nth-child(#{$i}) .btn {
+          @include transition-duration(#{$i * 0.1}s);
+          @include transform(scale(1));
+        }
+      }
+      li
+      {
+        .btn
+        {
+          &:hover
+          {
+            @include transition(all .2s);
+            @include transform(scale(1.1));
+          }
+        }
+      }
+    }
+  }
+}

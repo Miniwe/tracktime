@@ -6,9 +6,15 @@
 @import 'layout/header';
 @import 'layout/footer';
 
-@import 'blocks/head-form';
+@import 'blocks/actions-form';
+@import 'blocks/select-action-type-dropdown';
 
-html, body {
-  height: 100%;
-  overflow: hidden;
+@import 'records/records-group';
+
+html,
+body
+{
+    overflow: hidden;
+
+    height: 100%;
 }

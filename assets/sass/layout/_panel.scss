@@ -1,11 +1,14 @@
-#panel {
-  background: $c-main-fon;
-  color: $c-main;
-  height: 100%;
-  padding-top: $header-height;
-  .scrollWrapper {
-    overflow: auto;
+#panel
+{
     height: 100%;
-    padding: 1em;
-  }
+    padding-top: $header-height;
+
+    color: $c-main;
+    background: $c-main-fon;
+    .scrollWrapper
+    {
+        overflow: auto;
+
+        height: 100%;
+    }
 }

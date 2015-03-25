@@ -29062,7 +29062,7 @@ function toArray(list, index) {
 this["JST"] = this["JST"] || {};
 
 this["JST"]["global/app"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  return "<header id=\"header\">\n</header>\n<div class=\"scrollWrapper\">\n  <div id=\"main\">\n  </div>\n  <footer id=\"footer\">\n  </footer>\n</div>\n";
+  return "<header id=\"header\">\n</header>\n<div class=\"scrollWrapper\">\n  <div class=\"container\" style=\"padding: 0\">\n    <div id=\"main\" style=\"right: 10%; left: 10%; padding: .8em 1em;\">\n\n    </div>\n  </div>\n  <footer id=\"footer\">\n  </footer>\n</div>\n";
   },"useData":true});
 
 this["JST"]["layout/footer"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
@@ -29077,11 +29077,8 @@ this["JST"]["layout/footer"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta
 },"useData":true});
 
 this["JST"]["layout/header"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  var helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-  return "<div class=\"navbar navbar-material-amber\">\n  <a id=\"menuToggler\" class=\"btn btn-fab btn-link pull-left\" href=\"javascript:void(0)\">\n    <i class=\"mdi-action-view-list\"></i>\n  </a>\n  <div class=\"container\">\n    <div id=\"headForm\">\n\n      <a id=\"actionType\" class=\"btn btn-fab btn-primary pull-left\" href=\"javascript:void(0)\">\n        <i class=\"mdi-editor-mode-edit\"></i>\n      </a>\n\n      <a id=\"detailsNew\" class=\"btn btn-fab btn-link pull-right\" href=\"javascript:void(0)\">\n        <i class=\"mdi-navigation-more-vert\"></i>\n      </a>\n\n      <div class=\"form-control-wrapper\">\n        <textarea class=\"form-control\" name=\"action\"></textarea>\n        <div class=\"floating-label\">Selected Action Hint</div>\n        <span class=\"material-input\"></span></div>\n      </div>\n    </div>\n  </div>\n<!--\n<div class=\"hidden navbar-collapse collapse navbar-material-amber-collapse\" style=\"display: none !important;\">\n  <ul class=\"nav navbar-nav\">\n    <li class=\"dropdown\">\n      <a href=\"index.html\" data-target=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" aria-expanded=\"false\">Action type <b class=\"caret\"></b><div class=\"ripple-wrapper\"></div></a>\n      <ul class=\"dropdown-menu\">\n        <li><a href=\"javascript:void(0)\">Add track</a></li>\n        <li class=\"divider\"></li>\n        <li class=\"dropdown-header\">Recent projects</li>\n        <li><a href=\"javascript:void(0)\">Project name 1</a></li>\n        <li><a href=\"javascript:void(0)\">Another project 2</a></li>\n        <li class=\"divider\"></li>\n        <li><a href=\"javascript:void(0)\">Search</a></li>\n        <li><a href=\"javascript:void(0)\">Something else here</a></li>\n      </ul>\n    </li>\n  </ul>\n  <form class=\"navbar-form navbar-left\">\n    <div class=\"form-control-wrapper\"><input type=\"text\" class=\"form-control empty\"><div class=\"floating-label\">Selected Action Hint</div><span class=\"material-input\"></span></div>\n    <!- -  - ->\n  </form>\n  <ul class=\"nav navbar-nav navbar-right\">\n    <li class=\"active\"><a href=\"javascript:void(0)\">Active</a></li>\n    <li><a href=\"javascript:void(0)\">Link</a></li>\n    <li><a href=\"#\">"
-    + escapeExpression(((helpers.safe_val || (depth0 && depth0.safe_val) || helperMissing).call(depth0, (depth0 != null ? depth0.title : depth0), "Project title default", {"name":"safe_val","hash":{},"data":data})))
-    + "</a></li>\n  </ul>\n</div>\n</div>\n -->";
-},"useData":true});
+  return "<div class=\"navbar navbar-material-amber\">\n  <a id=\"menuToggler\" class=\"btn btn-fab btn-link pull-left\" href=\"javascript:void(0)\">\n    <i class=\"mdi-action-view-list\"></i>\n  </a>\n  <div class=\"container\">\n    <div id=\"actions-form\">\n\n      <div class=\"select-action-type-dropdown dropdown pull-left\">\n        <button id=\"action_type\" type=\"button\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\" class=\"btn btn-fab btn-primary dropdown-toggle\">\n          <i class=\"mdi-editor-mode-edit\"></i>\n        </button>\n\n        <ul class=\"dropdown-menu\" role=\"menu\" aria-labelledby=\"dLabel\">\n          <li class=\"active\">\n            <a class=\"btn btn-fab btn-primary\" role=\"menuitem\" tabindex=\"-1\" href=\"#fat\"  data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\"Add record\">\n              <i class=\"mdi-editor-mode-edit\"></i>\n            </a>\n          </li>\n          <li>\n            <a class=\"btn btn-fab btn-white\" role=\"menuitem\" tabindex=\"-1\" href=\"#fat\"  data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\"Search\">\n              <i class=\"mdi-action-search\"></i>\n            </a>\n          </li>\n          <li>\n            <a class=\"btn btn-fab btn-info\" role=\"menuitem\" tabindex=\"-1\" href=\"#fat\"  data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\"Add record to project 1\">\n              <i class=\"\" style=\"line-height: 1.4em; font-weight: bold;\">P</i>\n            </a>\n          </li>\n          <li>\n            <a  class=\"btn btn-fab btn-info\" role=\"menuitem\" tabindex=\"-1\" href=\"#fat\"  data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\"Other wroject will be thouched\">\n              <i class=\"mdi-action-group-work\"></i>\n            </a>\n          </li>\n          <!-- <li>\n            <a  class=\"btn btn-fab btn-warning\" role=\"menuitem\" tabindex=\"-1\" href=\"#fat\"  data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\"Add task to user\">\n              <i class=\"mdi-social-person-outline\"></i>\n            </a>\n          </li> -->\n\n        </ul>\n      </div>\n\n\n      <a id=\"detailsNew\" class=\"btn btn-fab btn-link pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Action details\">\n        <i class=\"mdi-navigation-more-vert\"></i>\n      </a>\n\n      <div class=\"form-control-wrapper\">\n        <textarea class=\"form-control\" name=\"action\"></textarea>\n        <div class=\"floating-label\">Selected Action Hint</div>\n        <span class=\"material-input\"></span>\n      </div>\n    </div>\n  </div>\n</div>\n\n";
+  },"useData":true});
 
 this["JST"]["layout/main"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
@@ -29092,7 +29089,7 @@ this["JST"]["layout/main"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1
 
 this["JST"]["layout/menu"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-  return "<header>\n  <h2>Menu</h2>\n</header>\n<div class=\"panel panel-default\">\n  <div class=\"panel-heading\"><h1>Submenu 1 heading</h1></div>\n  <div class=\"panel-body\">\n\n    <div class=\"list-style-group\">\n      "
+  return "<header class=\"hidden\">\n  <h2>Menu</h2>\n</header>\n<div class=\"panel panel-primary\">\n  <div class=\"panel-heading\"><h3>Menu</h3></div>\n\n  <div class=\"panel-body\">\n    <div class=\"list-style-group\">\n      "
     + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
     'body': ("Populate"),
     'href': ("#populate"),
@@ -29104,12 +29101,66 @@ this["JST"]["layout/menu"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1
     'href': ("#slashed/path"),
     'class': ("list-group-item")
   },"data":data})))
-    + "\n    </div>\n\n\n  </div>\n</div>\n";
+    + "\n    </div>\n  </div>\n\n  <div class=\"panel-body\">\n    <div class=\"list-style-group\">\n      "
+    + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
+    'body': ("In Progress"),
+    'href': ("#records/inprogress"),
+    'class': ("list-group-item")
+  },"data":data})))
+    + "\n      "
+    + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
+    'body': ("Not Finished"),
+    'href': ("#records/notfinished"),
+    'class': ("list-group-item")
+  },"data":data})))
+    + "\n      "
+    + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
+    'body': ("Finished"),
+    'href': ("#records/finished"),
+    'class': ("list-group-item")
+  },"data":data})))
+    + "\n    </div>\n  </div>\n\n  <div class=\"panel-body\">\n    <div class=\"list-style-group\">\n      "
+    + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
+    'body': ("Projects 1"),
+    'href': ("#project/1"),
+    'class': ("list-group-item")
+  },"data":data})))
+    + "\n      "
+    + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
+    'body': ("Projects 2"),
+    'href': ("#project/2"),
+    'class': ("list-group-item")
+  },"data":data})))
+    + "\n      "
+    + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
+    'body': ("Projects 3"),
+    'href': ("#project/3"),
+    'class': ("list-group-item")
+  },"data":data})))
+    + "\n      "
+    + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
+    'body': ("Projects 4"),
+    'href': ("#project/4"),
+    'class': ("list-group-item")
+  },"data":data})))
+    + "\n    </div>\n  </div>\n\n\n</div>\n";
+},"useData":true});
+
+this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+  return "<div>"
+    + escapeExpression(((helper = (helper = helpers.cid || (depth0 != null ? depth0.cid : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"cid","hash":{},"data":data}) : helper)))
+    + "</div>\n<h4>"
+    + escapeExpression(((helper = (helper = helpers.subject || (depth0 != null ? depth0.subject : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"subject","hash":{},"data":data}) : helper)))
+    + "</h4>\n<p>"
+    + escapeExpression(((helper = (helper = helpers.description || (depth0 != null ? depth0.description : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"description","hash":{},"data":data}) : helper)))
+    + "</p>\n";
 },"useData":true});
 (function() {
   var Lokitest, Tracktime,
     extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-    hasProp = {}.hasOwnProperty;
+    hasProp = {}.hasOwnProperty,
+    bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   Tracktime = (function(superClass) {
     extend(Tracktime, superClass);
@@ -29567,12 +29618,16 @@ this["JST"]["layout/menu"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1
     };
 
     AppView.prototype.initUI = function() {
+      var slideout;
       $.material.init();
-      return this.slideout = new Slideout({
+      slideout = new Slideout({
         'panel': $('#panel')[0],
         'menu': $('#menu')[0],
         'padding': 256,
         'tolerance': 70
+      });
+      return $("#menuToggler").on('click', function() {
+        return slideout.toggle();
       });
     };
 
@@ -29581,38 +29636,6 @@ this["JST"]["layout/menu"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1
   })(Backbone.View);
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AppView : void 0) || (this.Tracktime.AppView = Tracktime.AppView);
-
-  Tracktime.AppView2 = (function(superClass) {
-    extend(AppView2, superClass);
-
-    function AppView2() {
-      return AppView2.__super__.constructor.apply(this, arguments);
-    }
-
-    AppView2.prototype.el = '#app-content';
-
-    AppView2.prototype.template = JST['header'];
-
-    AppView2.prototype.initialize = function() {
-      return this.render();
-    };
-
-    AppView2.prototype.render = function() {
-      this.$el.html('').append($("<h1>").html((this.model.get('title')) + " Alternative"));
-      return this.$el.append(this.template({
-        text: 'Olala',
-        obj: {
-          url: '#hello-world',
-          body: 'Hello World'
-        }
-      }));
-    };
-
-    return AppView2;
-
-  })(Backbone.View);
-
-  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AppView2 : void 0) || (this.Tracktime.AppView2 = Tracktime.AppView2);
 
   Tracktime.AppView.Global = (function(superClass) {
     extend(Global, superClass);
@@ -29679,16 +29702,13 @@ this["JST"]["layout/menu"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1
     extend(Header, superClass);
 
     function Header() {
+      this.fixEnter = bind(this.fixEnter, this);
       return Header.__super__.constructor.apply(this, arguments);
     }
 
     Header.prototype.el = '#header';
 
     Header.prototype.template = JST['layout/header'];
-
-    Header.prototype.events = {
-      'click #menuToggler': 'slideoutToggle'
-    };
 
     Header.prototype.initialize = function(options) {
       this.options = options;
@@ -29697,7 +29717,11 @@ this["JST"]["layout/menu"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1
     };
 
     Header.prototype.initUI = function() {
-      return $('textarea', this.el).textareaAutoSize();
+      $('[data-toggle="tooltip"]', this.el).tooltip();
+      $('textarea', this.el).on('keydown', this.fixEnter).textareaAutoSize();
+      return $('.dropdown', this.el).hover(function() {
+        return $('.dropdown-toggle', this).trigger('click');
+      });
     };
 
     Header.prototype.render = function() {
@@ -29705,8 +29729,13 @@ this["JST"]["layout/menu"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1
       return this.$el.html(this.template((ref = this.model) != null ? ref.toJSON() : void 0));
     };
 
-    Header.prototype.slideoutToggle = function() {
-      return this.options.container.slideout.toggle();
+    Header.prototype.fixEnter = function(event) {
+      if (event.keyCode === 13) {
+        if (!event.shiftKey) {
+          $.alert('will submit');
+          return event.preventDefault();
+        }
+      }
     };
 
     return Header;
@@ -29797,7 +29826,9 @@ this["JST"]["layout/menu"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1
 
     RecordView.prototype.tagName = 'li';
 
-    RecordView.prototype.className = 'list-group-item';
+    RecordView.prototype.className = 'records-group-item';
+
+    RecordView.prototype.template = JST['records/record'];
 
     RecordView.prototype.initialize = function() {
       return this.render();
@@ -29810,13 +29841,9 @@ this["JST"]["layout/menu"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1
     };
 
     RecordView.prototype.render = function() {
-      return this.$el.html('').append($("<div>", {
-        "class": 'least-content'
-      }).html(this.model.cid)).append($("<h4>", {
-        "class": 'list-group-item-heading'
-      }).html(this.model.get('subject'))).append($("<p>", {
-        "class": 'list-group-item-text'
-      }).html(this.model.get('description')));
+      return this.$el.html(this.template({
+        model: this.model.toJSON()
+      }));
     };
 
     return RecordView;
@@ -29834,22 +29861,10 @@ this["JST"]["layout/menu"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1
 
     RecordsView.prototype.tagName = 'ul';
 
-    RecordsView.prototype.className = 'list-group';
+    RecordsView.prototype.className = 'records-group';
 
     RecordsView.prototype.initialize = function() {
-      this.$el.append("<hr>0</hr>");
-      this.render();
-      this.$el.append("<hr>1</hr>");
-      this.render();
-      this.$el.append("<hr>2</hr>");
-      this.render();
-      this.$el.append("<hr>3</hr>");
-      this.render();
-      this.$el.append("<hr>4</hr>");
-      this.render();
-      this.$el.append("<hr>5</hr>");
-      this.render();
-      return this.$el.append("<hr>6</hr>");
+      return this.render();
     };
 
     RecordsView.prototype.render = function() {
@@ -29869,33 +29884,6 @@ this["JST"]["layout/menu"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1
   })(Backbone.View);
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.RecordsView : void 0) || (this.Tracktime.RecordsView = Tracktime.RecordsView);
-
-  Tracktime.View = (function(superClass) {
-    extend(View, superClass);
-
-    function View() {
-      return View.__super__.constructor.apply(this, arguments);
-    }
-
-    View.prototype.tagName = 'div';
-
-    View.prototype.className = 'class';
-
-    View.prototype.id = 'view';
-
-    View.prototype.initialize = function() {
-      return this.render();
-    };
-
-    View.prototype.render = function() {
-      return this.$el.html((this.model.get('field')) + " (" + (this.model.get('someAttribute')) + ")");
-    };
-
-    return View;
-
-  })(Backbone.View);
-
-  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.View : void 0) || (this.Tracktime.View = Tracktime.View);
 
 }).call(this);
 
