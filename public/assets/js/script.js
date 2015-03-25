@@ -29077,7 +29077,7 @@ this["JST"]["layout/footer"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta
 },"useData":true});
 
 this["JST"]["layout/header"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  return "<div class=\"navbar navbar-material-amber\">\n  <a id=\"menuToggler\" class=\"btn btn-fab btn-link pull-left\" href=\"javascript:void(0)\">\n    <i class=\"mdi-action-view-list\"></i>\n  </a>\n  <div class=\"container\">\n    <div id=\"actions-form\">\n\n      <div class=\"select-action-type-dropdown dropdown pull-left\">\n        <button id=\"action_type\" type=\"button\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\" class=\"btn btn-fab btn-primary dropdown-toggle\">\n          <i class=\"mdi-editor-mode-edit\"></i>\n        </button>\n\n        <ul class=\"dropdown-menu\" role=\"menu\" aria-labelledby=\"dLabel\">\n          <li class=\"active\">\n            <a class=\"btn btn-fab btn-primary\" role=\"menuitem\" tabindex=\"-1\" href=\"#fat\"  data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\"Add record\">\n              <i class=\"mdi-editor-mode-edit\"></i>\n            </a>\n          </li>\n          <li>\n            <a class=\"btn btn-fab btn-white\" role=\"menuitem\" tabindex=\"-1\" href=\"#fat\"  data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\"Search\">\n              <i class=\"mdi-action-search\"></i>\n            </a>\n          </li>\n          <li>\n            <a class=\"btn btn-fab btn-info\" role=\"menuitem\" tabindex=\"-1\" href=\"#fat\"  data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\"Add record to project 1\">\n              <i class=\"\" style=\"line-height: 1.4em; font-weight: bold;\">P</i>\n            </a>\n          </li>\n          <li>\n            <a  class=\"btn btn-fab btn-info\" role=\"menuitem\" tabindex=\"-1\" href=\"#fat\"  data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\"Other wroject will be thouched\">\n              <i class=\"mdi-action-group-work\"></i>\n            </a>\n          </li>\n          <!-- <li>\n            <a  class=\"btn btn-fab btn-warning\" role=\"menuitem\" tabindex=\"-1\" href=\"#fat\"  data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\"Add task to user\">\n              <i class=\"mdi-social-person-outline\"></i>\n            </a>\n          </li> -->\n\n        </ul>\n      </div>\n\n\n      <a id=\"detailsNew\" class=\"btn btn-fab btn-link pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Action details\">\n        <i class=\"mdi-navigation-more-vert\"></i>\n      </a>\n\n      <div class=\"form-control-wrapper\">\n        <textarea class=\"form-control\" name=\"action\"></textarea>\n        <div class=\"floating-label\">Selected Action Hint</div>\n        <span class=\"material-input\"></span>\n      </div>\n    </div>\n  </div>\n</div>\n\n";
+  return "<div class=\"navbar navbar-material-amber shadow-z-1\">\n  <a id=\"menuToggler\" class=\"btn btn-fab btn-link pull-left\" href=\"javascript:void(0)\">\n    <i class=\"mdi-action-view-headline\"></i>\n  </a>\n  <div class=\"container\">\n    <div id=\"actions-form\">\n\n      <div class=\"select-action-type-dropdown dropdown pull-left\">\n        <button id=\"action_type\" type=\"button\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\" class=\"btn btn-fab btn-primary dropdown-toggle\">\n          <i class=\"mdi-editor-mode-edit\"></i>\n        </button>\n\n        <ul class=\"dropdown-menu\" role=\"menu\" aria-labelledby=\"dLabel\">\n          <li class=\"active\">\n            <a class=\"btn btn-fab btn-primary\" role=\"menuitem\" tabindex=\"-1\" href=\"#fat\"  data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\"Add record\">\n              <i class=\"mdi-editor-mode-edit\"></i>\n            </a>\n          </li>\n          <li>\n            <a class=\"btn btn-fab btn-white\" role=\"menuitem\" tabindex=\"-1\" href=\"#fat\"  data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\"Search\">\n              <i class=\"mdi-action-search\"></i>\n            </a>\n          </li>\n          <li>\n            <a class=\"btn btn-fab btn-info\" role=\"menuitem\" tabindex=\"-1\" href=\"#fat\"  data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\"Add record to project 1\">\n              <i class=\"\" style=\"line-height: 1.4em; font-weight: bold;\">P</i>\n            </a>\n          </li>\n          <li>\n            <a  class=\"btn btn-fab btn-info\" role=\"menuitem\" tabindex=\"-1\" href=\"#fat\"  data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\"Other wroject will be thouched\">\n              <i class=\"mdi-action-group-work\"></i>\n            </a>\n          </li>\n          <!-- <li>\n            <a  class=\"btn btn-fab btn-warning\" role=\"menuitem\" tabindex=\"-1\" href=\"#fat\"  data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\"Add task to user\">\n              <i class=\"mdi-social-person-outline\"></i>\n            </a>\n          </li> -->\n\n        </ul>\n      </div>\n\n\n      <a id=\"detailsNew\" class=\"btn btn-fab btn-link pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Action details\">\n        <i class=\"mdi-navigation-more-vert\"></i>\n      </a>\n\n      <div class=\"form-control-wrapper\">\n        <textarea class=\"form-control\" name=\"action\"></textarea>\n        <div class=\"floating-label\">Selected Action Hint</div>\n        <span class=\"material-input\"></span>\n      </div>\n    </div>\n  </div>\n</div>\n\n";
   },"useData":true});
 
 this["JST"]["layout/main"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
@@ -29089,7 +29089,7 @@ this["JST"]["layout/main"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1
 
 this["JST"]["layout/menu"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-  return "<header class=\"hidden\">\n  <h2>Menu</h2>\n</header>\n<div class=\"panel panel-info\">\n  <div class=\"panel-heading\"><h3>State</h3></div>\n\n  <div class=\"panel-body\">\n\n    <table class=\"table table-condensed>\n      <tbody><tr class=\"active\">\n        <td class=\"when\">Today:</td>\n        <td class=\"time\">0:00</td>\n        <td class=\"pounds\">£0.0</td>\n      </tr>\n      <tr class=\"nonactual\">\n        <td class=\"when\">Yesterday:</td>\n        <td class=\"time\">8:00</td>\n        <td class=\"pounds\">£8.0</td>\n      </tr>\n      <tr class=\"active\">\n        <td class=\"when\">This week:</td>\n        <td class=\"time\">16:00</td>\n        <td class=\"pounds\">£16.0</td>\n      </tr>\n      <tr class=\"nonactual\">\n        <td class=\"when\">Previous week:</td>\n        <td class=\"time\">32:00</td>\n        <td class=\"pounds\">£32.0</td>\n      </tr>\n      <tr class=\"active\">\n        <td class=\"when\">This month:</td>\n        <td class=\"time\">48:00</td>\n        <td class=\"pounds\">£48.0</td>\n      </tr>\n      <tr class=\"nonactual\">\n        <td class=\"when\">Previous month:</td>\n        <td class=\"time\">0:00</td>\n        <td class=\"pounds\">£0.0</td>\n      </tr>\n\n\n    </tbody></table>\n  </div>\n\n\n</div>\n<div class=\"panel panel-primary\">\n  <div class=\"panel-heading\"><h3>Menu</h3></div>\n\n  <div class=\"panel-body\">\n    <div class=\"list-style-group\">\n      "
+  return "<header class=\"hidden\">\n  <h2>Menu</h2>\n</header>\n<div class=\"panel panel-info\">\n  <div class=\"panel-heading\"><h3>State</h3></div>\n\n  <div class=\"panel-body\">\n\n    <table class=\"table table-condensed\">\n      <tbody>\n        <tr class=\"active\">\n          <td class=\"when\">Today:</td>\n          <td class=\"time\">0:00</td>\n          <td class=\"pounds\">£0.0</td>\n        </tr>\n        <tr class=\"nonactual\">\n          <td class=\"when\">Yesterday:</td>\n          <td class=\"time\">8:00</td>\n          <td class=\"pounds\">£8.0</td>\n        </tr>\n        <tr class=\"active\">\n          <td class=\"when\">This week:</td>\n          <td class=\"time\">16:00</td>\n          <td class=\"pounds\">£16.0</td>\n        </tr>\n        <tr class=\"nonactual\">\n          <td class=\"when\">Previous week:</td>\n          <td class=\"time\">32:00</td>\n          <td class=\"pounds\">£32.0</td>\n        </tr>\n        <tr class=\"active\">\n          <td class=\"when\">This month:</td>\n          <td class=\"time\">48:00</td>\n          <td class=\"pounds\">£48.0</td>\n        </tr>\n        <tr class=\"nonactual\">\n          <td class=\"when\">Previous month:</td>\n          <td class=\"time\">0:00</td>\n          <td class=\"pounds\">£0.0</td>\n        </tr>\n\n\n      </tbody>\n    </table>\n  </div>\n\n\n</div>\n<div class=\"panel panel-primary\">\n  <div class=\"panel-heading\"><h3>Menu</h3></div>\n\n  <div class=\"panel-body\">\n    <div class=\"list-style-group\">\n      "
     + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
     'body': ("Populate"),
     'href': ("#populate"),
@@ -29148,13 +29148,11 @@ this["JST"]["layout/menu"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1
 
 this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-  return "<div>"
-    + escapeExpression(((helper = (helper = helpers.cid || (depth0 != null ? depth0.cid : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"cid","hash":{},"data":data}) : helper)))
-    + "</div>\n<h4>"
+  return "<div class=\"icon\">\n  <a  class=\"btn btn-fab btn-fab-mini btn-info\" role=\"menuitem\" tabindex=\"-1\" href=\"#fat\"  data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\"Other wroject will be thouched\">\n    <i class=\"mdi-action-group-work\"></i>\n  </a>\n\n</div>\n<div class=\"date\">"
+    + escapeExpression(((helper = (helper = helpers.date || (depth0 != null ? depth0.date : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"date","hash":{},"data":data}) : helper)))
+    + "</div>\n<div class=\"subject\">"
     + escapeExpression(((helper = (helper = helpers.subject || (depth0 != null ? depth0.subject : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"subject","hash":{},"data":data}) : helper)))
-    + "</h4>\n<p>"
-    + escapeExpression(((helper = (helper = helpers.description || (depth0 != null ? depth0.description : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"description","hash":{},"data":data}) : helper)))
-    + "</p>\n";
+    + "</div>\n<div class=\"menu\">\n\n  <a class=\"details btn btn-fab btn-link pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Action details\">\n    <i class=\"mdi-navigation-more-vert\"></i>\n  </a>\n\n\n</div>\n";
 },"useData":true});
 (function() {
   var Lokitest, Tracktime,
@@ -29702,6 +29700,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     extend(Header, superClass);
 
     function Header() {
+      this.checkHeight = bind(this.checkHeight, this);
       this.fixEnter = bind(this.fixEnter, this);
       return Header.__super__.constructor.apply(this, arguments);
     }
@@ -29709,6 +29708,10 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     Header.prototype.el = '#header';
 
     Header.prototype.template = JST['layout/header'];
+
+    Header.prototype.events = {
+      'click .select-action-type-dropdown li a': 'changeActionTypeTmp'
+    };
 
     Header.prototype.initialize = function(options) {
       this.options = options;
@@ -29718,10 +29721,18 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
     Header.prototype.initUI = function() {
       $('[data-toggle="tooltip"]', this.el).tooltip();
-      $('textarea', this.el).on('keydown', this.fixEnter).textareaAutoSize();
-      return $('.dropdown', this.el).hover(function() {
-        return $('.dropdown-toggle', this).trigger('click');
-      });
+      return $('textarea', this.el).on('keydown', this.fixEnter).on('change, keyup', this.checkHeight).textareaAutoSize();
+    };
+
+    Header.prototype.changeActionTypeTmp = function(event) {
+      event.preventDefault();
+      $('#action_type').html($(event.currentTarget).html());
+      $('.floating-label').html($(event.currentTarget).data('original-title'));
+      $('textarea', this.$el).focus();
+      $('#action_type').removeClass();
+      $('#action_type').addClass($(event.currentTarget).attr('class'));
+      $('.dropdown-menu li', this.$el).removeClass('active');
+      return $(event.currentTarget).parent().addClass('active');
     };
 
     Header.prototype.render = function() {
@@ -29731,11 +29742,19 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
     Header.prototype.fixEnter = function(event) {
       if (event.keyCode === 13) {
-        if (!event.shiftKey) {
-          $.alert('will submit');
+        if (event.shiftKey) {
+          if (!_.isEmpty($(event.target).val())) {
+            $.alert('will submit - generate trigger with value');
+          }
           return event.preventDefault();
         }
       }
+    };
+
+    Header.prototype.checkHeight = function(event) {
+      var diff;
+      diff = $('#actions-form').outerHeight(true) - $('.navbar').outerHeight(true);
+      return $('#actions-form').toggleClass("shadow-z-2", diff > 10);
     };
 
     return Header;
