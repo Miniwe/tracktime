@@ -29077,8 +29077,27 @@ this["JST"]["layout/footer"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta
 },"useData":true});
 
 this["JST"]["layout/header"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  return "<div class=\"navbar navbar-material-amber shadow-z-1\">\n  <a id=\"menuToggler\" class=\"btn btn-fab btn-link pull-left\" href=\"javascript:void(0)\">\n    <i class=\"mdi-action-view-headline\"></i>\n  </a>\n  <div class=\"container\">\n    <div id=\"actions-form\">\n\n      <div class=\"select-action-type-dropdown dropdown pull-left\">\n        <button id=\"action_type\" type=\"button\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\" class=\"btn btn-fab btn-primary dropdown-toggle\">\n          <i class=\"mdi-editor-mode-edit\"></i>\n        </button>\n\n        <ul class=\"dropdown-menu\" role=\"menu\" aria-labelledby=\"dLabel\">\n          <li class=\"active\">\n            <a class=\"btn btn-fab btn-primary\" role=\"menuitem\" tabindex=\"-1\" href=\"#fat\"  data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\"Add record\">\n              <i class=\"mdi-editor-mode-edit\"></i>\n            </a>\n          </li>\n          <li>\n            <a class=\"btn btn-fab btn-white\" role=\"menuitem\" tabindex=\"-1\" href=\"#fat\"  data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\"Search\">\n              <i class=\"mdi-action-search\"></i>\n            </a>\n          </li>\n          <li>\n            <a class=\"btn btn-fab btn-info\" role=\"menuitem\" tabindex=\"-1\" href=\"#fat\"  data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\"Add record to project 1\">\n              <i class=\"\" style=\"line-height: 1.4em; font-weight: bold;\">P</i>\n            </a>\n          </li>\n          <li>\n            <a  class=\"btn btn-fab btn-info\" role=\"menuitem\" tabindex=\"-1\" href=\"#fat\"  data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\"Other wroject will be thouched\">\n              <i class=\"mdi-action-group-work\"></i>\n            </a>\n          </li>\n          <!-- <li>\n            <a  class=\"btn btn-fab btn-warning\" role=\"menuitem\" tabindex=\"-1\" href=\"#fat\"  data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\"Add task to user\">\n              <i class=\"mdi-social-person-outline\"></i>\n            </a>\n          </li> -->\n\n        </ul>\n      </div>\n\n\n      <a id=\"detailsNew\" class=\"btn btn-fab btn-link pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Action details\">\n        <i class=\"mdi-navigation-more-vert\"></i>\n      </a>\n\n      <div class=\"form-control-wrapper\">\n        <textarea class=\"form-control\" name=\"action\"></textarea>\n        <div class=\"floating-label\">Selected Action Hint</div>\n        <span class=\"material-input\"></span>\n      </div>\n    </div>\n  </div>\n</div>\n\n";
+  return "<div class=\"navbar navbar-material-amber shadow-z-1\">\n  <a id=\"menuToggler\" class=\"btn btn-fab btn-link pull-left\" href=\"javascript:void(0)\">\n    <i class=\"mdi-action-view-headline\"></i>\n  </a>\n  <div class=\"container\">\n    <div id=\"actions-form\">\n\n    </div>\n  </div>\n</div>\n\n";
   },"useData":true});
+
+this["JST"]["layout/header/actions"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  return "<div class=\"select-action-type-dropdown dropdown pull-left\">\n  <button id=\"action_type\" type=\"button\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\" class=\"btn btn-fab btn-warning dropdown-toggle\">\n    <i class=\"\"></i>\n  </button>\n\n  <ul class=\"dropdown-menu\" role=\"menu\" aria-labelledby=\"dLabel\">\n\n\n  </ul>\n</div>\n\n\n<a id=\"detailsNew\" class=\"btn btn-fab btn-link pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Action details\">\n  <i class=\"mdi-navigation-more-vert\"></i>\n</a>\n\n<div class=\"form-control-wrapper\">\n  <textarea class=\"form-control\" name=\"action\"></textarea>\n  <div class=\"floating-label\">Selected Action Hint</div>\n  <span class=\"material-input\"></span>\n</div>\n\n\n";
+  },"useData":true});
+
+this["JST"]["layout/header/listbtn"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var stack1, helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, lambda=this.lambda;
+  return "<a class=\"btn btn-fab "
+    + escapeExpression(((helper = (helper = helpers.btnClass || (depth0 != null ? depth0.btnClass : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"btnClass","hash":{},"data":data}) : helper)))
+    + "\" role=\"menuitem\" tabindex=\"-1\" href=\""
+    + escapeExpression(((helper = (helper = helpers.formAction || (depth0 != null ? depth0.formAction : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"formAction","hash":{},"data":data}) : helper)))
+    + "\"  data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\""
+    + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
+    + "\">\n  <i class=\""
+    + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.icon : depth0)) != null ? stack1.className : stack1), depth0))
+    + "\">"
+    + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.icon : depth0)) != null ? stack1.letter : stack1), depth0))
+    + "</i>\n</a>";
+},"useData":true});
 
 this["JST"]["layout/main"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
@@ -29148,11 +29167,11 @@ this["JST"]["layout/menu"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1
 
 this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-  return "<div class=\"icon\">\n  <a  class=\"btn btn-fab btn-fab-mini btn-info\" role=\"menuitem\" tabindex=\"-1\" href=\"#fat\"  data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\"Other wroject will be thouched\">\n    <i class=\"mdi-action-group-work\"></i>\n  </a>\n\n</div>\n<div class=\"date\">"
+  return "<div class=\"icon\">\n  <a  class=\"btn btn-fab btn-fab-mini btn-info\" role=\"menuitem\" tabindex=\"-1\" href=\"#fat\"  data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\"Other wroject will be thouched\">\n    <i class=\"mdi-action-group-work\"></i>\n  </a>\n</div>\n\n<div class=\"date\">"
     + escapeExpression(((helper = (helper = helpers.date || (depth0 != null ? depth0.date : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"date","hash":{},"data":data}) : helper)))
-    + "</div>\n<div class=\"subject\">"
+    + "</div>\n\n<div class=\"subject\">"
     + escapeExpression(((helper = (helper = helpers.subject || (depth0 != null ? depth0.subject : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"subject","hash":{},"data":data}) : helper)))
-    + "</div>\n<div class=\"menu\">\n\n  <a class=\"details btn btn-fab btn-link pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Action details\">\n    <i class=\"mdi-navigation-more-vert\"></i>\n  </a>\n\n\n</div>\n";
+    + "</div>\n\n<div class=\"menu\">\n  <a class=\"details btn btn-fab btn-link pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Action details\">\n    <i class=\"mdi-navigation-more-vert\"></i>\n  </a>\n</div>";
 },"useData":true});
 (function() {
   var Lokitest, Tracktime,
@@ -29170,29 +29189,20 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     Tracktime.prototype.urlRoot = "/";
 
     Tracktime.prototype.defaults = {
-      title: "TrackTime App - from",
-      tmpRecords: [
-        {
-          subject: 'Lorem',
-          description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nam, culpa, deleniti, temporibus, itaque similique suscipit saepe rerum voluptates voluptatum asperiores modi possimus vitae inventore dolore illo incidunt dolorem animi iure provident labore minima delectus unde nihil soluta recusandae ut dicta explicabo perspiciatis dolores eum. Numquam molestias reiciendis quibusdam sunt suscipit fugit temporibus asperiores quia. Cum, vel, molestias, sapiente ex nisi blanditiis dolorem quod beatae obcaecati culpa eos eius at vitae sed modi explicabo tempore. Harum, error nam veritatis maiores est at incidunt quae magni amet non qui eum. Aperiam, harum, tenetur facere officia delectus omnis odio totam consequatur obcaecati tempora. '
-        }, {
-          subject: 'Tempore',
-          description: 'Accusamus, cumque, aperiam velit quos quisquam ex officiis obcaecati totam ipsa saepe fugiat in. Corrupti, soluta, aliquid cumque adipisci nihil omnis explicabo itaque commodi neque dolorum fugit quibusdam deserunt voluptates corporis amet hic quod blanditiis nesciunt dignissimos vero iure. Omnis, provident ducimus delectus sed in incidunt expedita quae accusantium cum culpa recusandae rerum ipsum vitae aliquid ratione ea architecto optio accusamus similique saepe nobis vel deleniti tempora iure consequatur. Debitis laborum accusantium omnis iure velit necessitatibus quod veniam sequi! Excepturi, praesentium, porro ducimus fugit provident repellendus quibusdam dolorum nisi autem tenetur. Non, neque reiciendis eius sequi accusamus. Quam, nostrum, nesciunt. '
-        }, {
-          subject: 'Consequuntur',
-          description: 'Obcaecati, incidunt, optio deleniti earum odio nobis dolore sapiente delectus. Accusamus sequi voluptatibus magni fuga fugit nisi aut nam rem repellat possimus! Delectus, harum nisi eos nostrum necessitatibus ducimus eius odio dolores ratione quas quos laboriosam magnam reprehenderit itaque nihil! Dolor, hic, asperiores alias aut voluptas odit illum voluptatem quod! Pariatur, nesciunt distinctio aliquam quam voluptatibus temporibus voluptate placeat quaerat nemo quidem. Asperiores, nihil quasi molestias suscipit sunt. Itaque, sapiente voluptatibus qui non fugit impedit voluptatem beatae repellat at nulla dignissimos esse doloribus. Officiis, dolorem, id, officia sapiente eius ullam vel dolorum numquam et aspernatur illo deleniti enim quam autem! '
-        }, {
-          subject: 'Rem',
-          description: 'Quisquam ab soluta dicta amet possimus iure deserunt expedita facere maxime nemo. Laudantium, quod, dignissimos, quos perspiciatis illo numquam est hic qui totam eligendi aut in provident dolor. Libero, dolores, cumque ut molestiae iusto nostrum tempore voluptatum laborum iure quae? Culpa, et, deserunt, explicabo a assumenda voluptate commodi voluptatum possimus omnis totam libero ipsum delectus? Harum, facilis, suscipit perspiciatis dolorum sapiente quae voluptas assumenda cumque atque accusamus blanditiis ullam doloribus enim placeat saepe dolorem sed quos architecto error vero odit deserunt autem? Sunt, cumque, similique voluptatem quis voluptatum non explicabo quibusdam porro in nihil quae sint rem molestias vero beatae!'
-        }
-      ]
+      title: "TrackTime App - from"
     };
 
-    Tracktime.prototype.initialize = function() {};
+    Tracktime.prototype.initialize = function() {
+      this.populateActions();
+    };
 
     Tracktime.prototype.populateRecords = function() {
-      this.set('records', new Tracktime.RecordsCollection(this.get('tmpRecords')));
+      this.set('records', new Tracktime.RecordsCollection(Tracktime.initdata.tmpRecords));
       return this.trigger('update_records');
+    };
+
+    Tracktime.prototype.populateActions = function() {
+      return this.set('actions', new Tracktime.ActionsCollection(Tracktime.initdata.tmpActions));
     };
 
     return Tracktime;
@@ -29200,6 +29210,45 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
   })(Backbone.Model);
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime : void 0) || (this.Tracktime = Tracktime);
+
+  Tracktime.Action = (function(superClass) {
+    extend(Action, superClass);
+
+    function Action() {
+      return Action.__super__.constructor.apply(this, arguments);
+    }
+
+    Action.prototype.urlRoot = '/actions';
+
+    Action.prototype.defaults = {
+      _id: null,
+      title: 'Action title',
+      formAction: '#',
+      btnClass: 'btn-default',
+      navbarClass: 'navbar-material-amber',
+      icon: {
+        className: 'mdi-editor-mode-edit',
+        letter: ''
+      },
+      isActive: false,
+      isVisible: false,
+      inputValue: '',
+      details: null
+    };
+
+    Action.prototype.validation = function() {};
+
+    Action.prototype.initialize = function() {};
+
+    Action.prototype.setActive = function() {
+      return this.collection.setActive(this);
+    };
+
+    return Action;
+
+  })(Backbone.Model);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.Action : void 0) || (this.Tracktime.Action = Tracktime.Action);
 
   Lokitest = (function() {
     function Lokitest() {
@@ -29336,6 +29385,48 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.Record : void 0) || (this.Tracktime.Record = Tracktime.Record);
 
+  Tracktime.ActionsCollection = (function(superClass) {
+    extend(ActionsCollection, superClass);
+
+    function ActionsCollection() {
+      return ActionsCollection.__super__.constructor.apply(this, arguments);
+    }
+
+    ActionsCollection.prototype.model = Tracktime.Action;
+
+    ActionsCollection.prototype.url = '/actions';
+
+    ActionsCollection.prototype.localStorage = new Backbone.LocalStorage('records-backbone');
+
+    ActionsCollection.prototype.active = null;
+
+    ActionsCollection.prototype.initialize = function() {};
+
+    ActionsCollection.prototype.setActive = function(active) {
+      var ref;
+      if ((ref = this.active) != null) {
+        ref.set('isActive', false);
+      }
+      active.set('isActive', true);
+      return this.active = active;
+    };
+
+    ActionsCollection.prototype.getActive = function() {
+      return this.active != null;
+    };
+
+    ActionsCollection.prototype.getVisible = function() {
+      return _.filter(this.models, function(model) {
+        return model.get('isVisible');
+      });
+    };
+
+    return ActionsCollection;
+
+  })(Backbone.Collection);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.ActionsCollection : void 0) || (this.Tracktime.ActionsCollection = Tracktime.ActionsCollection);
+
   Tracktime.RecordsCollection = (function(superClass) {
     extend(RecordsCollection, superClass);
 
@@ -29443,6 +29534,86 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     out = value || safeValue;
     return new Handlebars.SafeString(out);
   });
+
+  Tracktime.initdata = {};
+
+  Tracktime.initdata.tmpActions = [
+    {
+      title: 'Add record +++',
+      formAction: '#',
+      btnClass: 'btn-primary',
+      navbarClass: 'navbar-material-amber',
+      icon: {
+        className: 'mdi-editor-mode-edit',
+        letter: ''
+      },
+      isActive: true,
+      isVisible: true
+    }, {
+      title: 'Search',
+      formAction: '#',
+      btnClass: 'btn-white',
+      navbarClass: 'navbar-material-light-blue',
+      icon: {
+        className: 'mdi-action-search',
+        letter: ''
+      },
+      isActive: false,
+      isVisible: true,
+      details: 'have any'
+    }, {
+      title: 'Add record to project 1',
+      formAction: '#',
+      btnClass: 'btn-info',
+      navbarClass: 'navbar-material-indogo',
+      icon: {
+        className: 'letter',
+        letter: 'P'
+      },
+      isActive: false,
+      isVisible: true
+    }, {
+      title: 'Other wroject will be thouched',
+      formAction: '#',
+      btnClass: 'btn-info',
+      navbarClass: 'navbar-material-indogo',
+      icon: {
+        className: 'mdi-action-group-work',
+        letter: ''
+      },
+      isActive: false,
+      isVisible: true
+    }, {
+      title: 'Add task to user',
+      formAction: '#',
+      btnClass: 'btn-warning',
+      navbarClass: 'navbar-material-deep-purple',
+      icon: {
+        className: 'mdi-social-person-outline',
+        letter: ''
+      },
+      isActive: false,
+      isVisible: true
+    }
+  ];
+
+  Tracktime.initdata.tmpRecords = [
+    {
+      subject: 'Lorem',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nam, culpa, deleniti, temporibus, itaque similique suscipit saepe rerum voluptates voluptatum asperiores modi possimus vitae inventore dolore illo incidunt dolorem animi iure provident labore minima delectus unde nihil soluta recusandae ut dicta explicabo perspiciatis dolores eum. Numquam molestias reiciendis quibusdam sunt suscipit fugit temporibus asperiores quia. Cum, vel, molestias, sapiente ex nisi blanditiis dolorem quod beatae obcaecati culpa eos eius at vitae sed modi explicabo tempore. Harum, error nam veritatis maiores est at incidunt quae magni amet non qui eum. Aperiam, harum, tenetur facere officia delectus omnis odio totam consequatur obcaecati tempora. '
+    }, {
+      subject: 'Tempore',
+      description: 'Accusamus, cumque, aperiam velit quos quisquam ex officiis obcaecati totam ipsa saepe fugiat in. Corrupti, soluta, aliquid cumque adipisci nihil omnis explicabo itaque commodi neque dolorum fugit quibusdam deserunt voluptates corporis amet hic quod blanditiis nesciunt dignissimos vero iure. Omnis, provident ducimus delectus sed in incidunt expedita quae accusantium cum culpa recusandae rerum ipsum vitae aliquid ratione ea architecto optio accusamus similique saepe nobis vel deleniti tempora iure consequatur. Debitis laborum accusantium omnis iure velit necessitatibus quod veniam sequi! Excepturi, praesentium, porro ducimus fugit provident repellendus quibusdam dolorum nisi autem tenetur. Non, neque reiciendis eius sequi accusamus. Quam, nostrum, nesciunt. '
+    }, {
+      subject: 'Consequuntur',
+      description: 'Obcaecati, incidunt, optio deleniti earum odio nobis dolore sapiente delectus. Accusamus sequi voluptatibus magni fuga fugit nisi aut nam rem repellat possimus! Delectus, harum nisi eos nostrum necessitatibus ducimus eius odio dolores ratione quas quos laboriosam magnam reprehenderit itaque nihil! Dolor, hic, asperiores alias aut voluptas odit illum voluptatem quod! Pariatur, nesciunt distinctio aliquam quam voluptatibus temporibus voluptate placeat quaerat nemo quidem. Asperiores, nihil quasi molestias suscipit sunt. Itaque, sapiente voluptatibus qui non fugit impedit voluptatem beatae repellat at nulla dignissimos esse doloribus. Officiis, dolorem, id, officia sapiente eius ullam vel dolorum numquam et aspernatur illo deleniti enim quam autem! '
+    }, {
+      subject: 'Rem',
+      description: 'Quisquam ab soluta dicta amet possimus iure deserunt expedita facere maxime nemo. Laudantium, quod, dignissimos, quos perspiciatis illo numquam est hic qui totam eligendi aut in provident dolor. Libero, dolores, cumque ut molestiae iusto nostrum tempore voluptatum laborum iure quae? Culpa, et, deserunt, explicabo a assumenda voluptate commodi voluptatum possimus omnis totam libero ipsum delectus? Harum, facilis, suscipit perspiciatis dolorum sapiente quae voluptas assumenda cumque atque accusamus blanditiis ullam doloribus enim placeat saepe dolorem sed quos architecto error vero odit deserunt autem? Sunt, cumque, similique voluptatem quis voluptatum non explicabo quibusdam porro in nihil quae sint rem molestias vero beatae!'
+    }
+  ];
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.initdata : void 0) || (this.Tracktime.initdata = Tracktime.initdata);
 
   (function($) {
     var snackbarOptions;
@@ -29574,6 +29745,178 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.RecordsRouter : void 0) || (this.Tracktime.RecordsRouter = Tracktime.RecordsRouter);
 
+  Tracktime.ActionView = (function(superClass) {
+    extend(ActionView, superClass);
+
+    function ActionView() {
+      return ActionView.__super__.constructor.apply(this, arguments);
+    }
+
+    ActionView.prototype.tagName = 'li';
+
+    ActionView.prototype.className = 'btn';
+
+    ActionView.prototype.events = {
+      'click a': 'setActive'
+    };
+
+    ActionView.prototype.initialize = function() {};
+
+    ActionView.prototype.attributes = function() {
+      return {
+        id: this.model.cid
+      };
+    };
+
+    ActionView.prototype.setActive = function(event) {
+      return this.model.setActive();
+    };
+
+    return ActionView;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.ActionView : void 0) || (this.Tracktime.ActionView = Tracktime.ActionView);
+
+  Tracktime.ActionsView = (function(superClass) {
+    extend(ActionsView, superClass);
+
+    function ActionsView() {
+      return ActionsView.__super__.constructor.apply(this, arguments);
+    }
+
+    ActionsView.prototype.el = '#actions-form';
+
+    ActionsView.prototype.className = 'actions-group';
+
+    ActionsView.prototype.template = JST['layout/header/actions'];
+
+    ActionsView.prototype.initialize = function() {
+      return this.render();
+    };
+
+    ActionsView.prototype.render = function() {
+      var dropdown, ul;
+      this.$el.html(this.template());
+      dropdown = $('.select-action-type-dropdown', this.$el);
+      ul = dropdown.find('.dropdown-menu');
+      return _.each(this.collection.getVisible(), function(action) {
+        var listBtn;
+        listBtn = new Tracktime.ActionView.ListBtn({
+          model: action,
+          container: dropdown
+        });
+        ul.append(listBtn.$el);
+        if (action.get('isActive')) {
+          return $(listBtn.$el).click();
+        }
+      });
+    };
+
+    return ActionsView;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.ActionsView : void 0) || (this.Tracktime.ActionsView = Tracktime.ActionsView);
+
+  Tracktime.ActionView.ActiveBtn = (function(superClass) {
+    extend(ActiveBtn, superClass);
+
+    function ActiveBtn() {
+      return ActiveBtn.__super__.constructor.apply(this, arguments);
+    }
+
+    ActiveBtn.prototype.el = '#action_type';
+
+    ActiveBtn.prototype.initialize = function() {
+      return this.render();
+    };
+
+    ActiveBtn.prototype.render = function() {
+      return this.$el.attr('class', "btn btn-fab " + (this.model.get('btnClass')) + " dropdown-toggle ").find('i').attr('class', this.model.get('icon').className).html(this.model.get('icon').letter);
+    };
+
+    return ActiveBtn;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.ActionView.ActiveBtn : void 0) || (this.Tracktime.ActionView.ActiveBtn = Tracktime.ActionView.ActiveBtn);
+
+  Tracktime.ActionView.DetailsBtn = (function(superClass) {
+    extend(DetailsBtn, superClass);
+
+    function DetailsBtn() {
+      return DetailsBtn.__super__.constructor.apply(this, arguments);
+    }
+
+    DetailsBtn.prototype.el = '#detailsNew';
+
+    DetailsBtn.prototype.events = {
+      'click': 'detailsShow'
+    };
+
+    DetailsBtn.prototype.initialize = function() {};
+
+    DetailsBtn.prototype.detailsShow = function() {
+      return $.alert("Show details on " + (this.model.get('title')));
+    };
+
+    return DetailsBtn;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.ActionView.DetailsBtn : void 0) || (this.Tracktime.ActionView.DetailsBtn = Tracktime.ActionView.DetailsBtn);
+
+  Tracktime.ActionView.ListBtn = (function(superClass) {
+    extend(ListBtn, superClass);
+
+    function ListBtn() {
+      return ListBtn.__super__.constructor.apply(this, arguments);
+    }
+
+    ListBtn.prototype.tagName = 'li';
+
+    ListBtn.prototype.template = JST['layout/header/listbtn'];
+
+    ListBtn.prototype.events = {
+      'click': 'makeActionActive'
+    };
+
+    ListBtn.prototype.initialize = function(options) {
+      _.extend(this, options);
+      return this.render();
+    };
+
+    ListBtn.prototype.render = function() {
+      this.$el.toggleClass('active', this.model.get('isActive'));
+      return this.$el.html(this.template(this.model.toJSON()));
+    };
+
+    ListBtn.prototype.makeActionActive = function() {
+      var ref;
+      this.$el.siblings().removeClass('active');
+      this.$el.addClass('active');
+      this.container.find("#action_type").replaceWith((new Tracktime.ActionView.ActiveBtn({
+        model: this.model
+      })).$el);
+      if (this.model.get('details') !== null) {
+        this.container.parent().find("#detailsNew").show().replaceWith((new Tracktime.ActionView.DetailsBtn({
+          model: this.model
+        })).el);
+      } else {
+        this.container.parent().find("#detailsNew").hide();
+      }
+      $('.floating-label', '#actions-form').html(this.model.get('title'));
+      this.container.parents('.navbar').attr('class', "navbar " + (this.model.get('navbarClass')) + " shadow-z-1");
+      return (ref = $('textarea', '#actions-form')) != null ? ref.focus() : void 0;
+    };
+
+    return ListBtn;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.ActionView.ListBtn : void 0) || (this.Tracktime.ActionView.ListBtn = Tracktime.ActionView.ListBtn);
+
   Tracktime.AppView = (function(superClass) {
     extend(AppView, superClass);
 
@@ -29601,6 +29944,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
     AppView.prototype.renderChilds = function() {
       this.childViews['header'] = new Tracktime.AppView.Header({
+        model: this.model,
         container: this
       });
       this.childViews['main'] = new Tracktime.AppView.Main({
@@ -29709,9 +30053,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
     Header.prototype.template = JST['layout/header'];
 
-    Header.prototype.events = {
-      'click .select-action-type-dropdown li a': 'changeActionTypeTmp'
-    };
+    Header.prototype.childViews = {};
 
     Header.prototype.initialize = function(options) {
       this.options = options;
@@ -29720,24 +30062,17 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
 
     Header.prototype.initUI = function() {
-      $('[data-toggle="tooltip"]', this.el).tooltip();
+      $('[data-toggle="tooltip"]', this.$el).tooltip();
       return $('textarea', this.el).on('keydown', this.fixEnter).on('change, keyup', this.checkHeight).textareaAutoSize();
-    };
-
-    Header.prototype.changeActionTypeTmp = function(event) {
-      event.preventDefault();
-      $('#action_type').html($(event.currentTarget).html());
-      $('.floating-label').html($(event.currentTarget).data('original-title'));
-      $('textarea', this.$el).focus();
-      $('#action_type').removeClass();
-      $('#action_type').addClass($(event.currentTarget).attr('class'));
-      $('.dropdown-menu li', this.$el).removeClass('active');
-      return $(event.currentTarget).parent().addClass('active');
     };
 
     Header.prototype.render = function() {
       var ref;
-      return this.$el.html(this.template((ref = this.model) != null ? ref.toJSON() : void 0));
+      this.$el.html(this.template((ref = this.model) != null ? ref.toJSON() : void 0));
+      return this.childViews['actions'] = new Tracktime.ActionsView({
+        collection: this.model.get('actions'),
+        container: this
+      });
     };
 
     Header.prototype.fixEnter = function(event) {

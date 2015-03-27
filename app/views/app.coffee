@@ -14,8 +14,7 @@ class Tracktime.AppView extends Backbone.View
     @renderChilds()
 
   renderChilds: ->
-    @childViews['header'] = new Tracktime.AppView.Header
-      container: @
+    @childViews['header'] = new Tracktime.AppView.Header model: @model, container: @
     @childViews['main'] = new Tracktime.AppView.Main model: @model, container: @
     @childViews['footer'] = new Tracktime.AppView.Footer
       container: @

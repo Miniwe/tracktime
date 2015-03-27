@@ -1,5 +1,5 @@
 {
-  "jss": {
+  "scripts": {
     "src": [
       ".tmp/bower_components.js",
       ".tmp/templates.js",
@@ -7,7 +7,7 @@
     ],
     "dest": ".tmp/script.js"
   },
-  "css": {
+  "styles": {
     "src": [
       ".tmp/*.css",
       ".tmp/css/vendor.css",

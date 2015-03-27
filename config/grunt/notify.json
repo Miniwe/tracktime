@@ -1,0 +1,8 @@
+{
+  "client_complete": {
+    "options": {
+      "title": "Timetrack",
+      "message": "Client is ready!"
+    }
+  }
+}

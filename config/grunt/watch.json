@@ -1,0 +1,24 @@
+{
+    "scripts":
+    {
+        "files": ["app/**/*.coffee"],
+        "tasks": ["coffee_jshint", "coffee", "handlebars", "concat:scripts", "copy:scripts"],
+        "options":
+        {
+            "spawn": false,
+            "livereload": 6573
+        }
+    },
+    "styles":
+    {
+        "files": ["app/assets/sass/**/*.scss"],
+        "tasks": ["compass:dev", "concat:styles", "copy:styles"],
+        "options":
+        {
+            "spawn": false,
+            "livereload": 6573
+        }
+    }
+}
+
+

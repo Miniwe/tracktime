@@ -6,10 +6,10 @@
     "coffee",
     "bower_concat",
     "handlebars",
-    "compass",
+    "compass:dev",
     "concat",
     "copy",
-    "app:start"
+    "notify:client_complete"
   ],
   "serve": [
     "express:dev:stop",

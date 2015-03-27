@@ -9,8 +9,11 @@
 
     padding: .8em 1em;
 
-    background: #feda6f;
-    @include transition(box-shadow 1s .2s);
+    background: rgba(255,255,255,.7);
+    @include transition(box-shadow 1s .2s, background 1s .2s);
+    &.shadow-z-2 {
+        background: rgba(255,255,255, .95);
+    }
     .form-control-wrapper
     {
         margin-top: 1em;
@@ -22,11 +25,12 @@
 
             box-sizing: border-box;
             width: 100%;
-            height: 2.7em;
-            min-height: 2.7em;
+            height: 2.4em;
+            min-height: 2.4em;
             max-height: 20em; /* optional, but recommended */
             margin: 0 auto;
-            padding: .5em 0;
+            padding: .2em 0;
+            font-size: 18px;
         }
         .floating-label
         {

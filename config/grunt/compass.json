@@ -1,14 +1,14 @@
 {
   "dist": {
     "options": {
-      "sassDir": "assets/sass",
+      "sassDir": "app/assets/sass",
       "cssDir": ".tmp/css",
       "environment": "production"
     }
   },
   "dev": {
     "options": {
-      "sassDir": "assets/sass",
+      "sassDir": "app/assets/sass",
       "cssDir": ".tmp/css"
     }
   }

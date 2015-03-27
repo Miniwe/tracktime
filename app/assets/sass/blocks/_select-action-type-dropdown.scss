@@ -4,6 +4,14 @@
 
 .select-action-type-dropdown
 {
+  .btn {
+    i.letter
+    {
+        font-weight: 700;
+        font-style: normal;
+    }
+
+  }
   .dropdown-menu
   {
     border: none;
@@ -34,10 +42,10 @@
         @include transition-duration(5s);
         i
         {
-          font-size: 22px;
+            font-size: 22px;
 
-          margin-top: 2px;
-          margin-left: -1px;
+            margin-top: 2px;
+            margin-left: -1px;
         }
       }
     }
