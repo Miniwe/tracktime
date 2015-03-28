@@ -12,6 +12,7 @@ _.extend Tracktime.AppChannel,
       'start':           @startApp
       'populateRecords': @populateRecords
       'altView':         @altView
+      'newRecord':       @newRecord
 
   startApp: () ->
     @view = new Tracktime.AppView {model: @model}
@@ -21,6 +22,9 @@ _.extend Tracktime.AppChannel,
 
   populateRecords: () ->
     @model.populateRecords()
+
+  newRecord: (params) ->
+    @model.addRecord(params)
 
   altView: () ->
     @model.set 'title', 'Mody App'

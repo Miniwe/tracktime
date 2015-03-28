@@ -3,7 +3,7 @@ class Tracktime.Model extends Backbone.Model
   url: '/models'
 
   validation:
-    field: ->
+    field:
       required: true
     someAttribute: (value) ->
       return 'Error message' if value isnt 'somevalue'

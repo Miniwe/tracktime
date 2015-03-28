@@ -15,11 +15,11 @@ class Tracktime.AppView.Main extends Backbone.View
     $.alert 'Clicked' + $(event.target).attr 'href'
 
   bindEvents: ->
-    @listenTo @model, 'update_records', @renderRecords
+    @listenTo @model, 'render_records', @renderRecords
 
   renderRecords: ->
     recordsView = new Tracktime.RecordsView {collection: @model.get('records')}
-    @$el.append recordsView.el
+    @$el.html recordsView.el
 
 
 (module?.exports = Tracktime.AppView.Main) or @Tracktime.AppView.Main = Tracktime.AppView.Main

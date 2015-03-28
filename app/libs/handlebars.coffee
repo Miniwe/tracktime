@@ -12,3 +12,7 @@ Handlebars.registerHelper 'safe_val', (value, safeValue) ->
   out = value || safeValue
   new Handlebars.SafeString(out)
 
+
+Handlebars.registerHelper 'nl2br', (text) ->
+  nl2br = (text + '').replace /([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + '<br>' + '$2'
+  return new Handlebars.SafeString nl2br

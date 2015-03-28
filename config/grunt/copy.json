@@ -9,6 +9,7 @@
           "bower_components.js",
           "templates.js",
           "app.coffee.js",
+          "app.coffee.src.coffee",
           "*.map"
         ],
         "dest": "public/assets/js/"

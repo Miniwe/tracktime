@@ -19,7 +19,6 @@ class Tracktime.AppRouter extends Backbone.Router
     @navigate "", true
 
   pagepopulate: () ->
-    $.alert 'populateRecords'
     Tracktime.AppChannel.command 'populateRecords'
 
   slashed: () ->

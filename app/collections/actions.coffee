@@ -6,6 +6,7 @@ class Tracktime.ActionsCollection extends Backbone.Collection
 
   initialize: () ->
     # @router = new Tracktime.ActionsRouter {controller: @}
+    # @setActive @models.findWhere isActive: true
 
   setActive: (active) ->
     @active?.set 'isActive', false
@@ -13,9 +14,10 @@ class Tracktime.ActionsCollection extends Backbone.Collection
     @active = active
 
   getActive: () ->
-    @active?
+    @active
 
   getVisible: () ->
     _.filter @models, (model) -> model.get('isVisible')
+
 
 (module?.exports = Tracktime.ActionsCollection) or @Tracktime.ActionsCollection = Tracktime.ActionsCollection

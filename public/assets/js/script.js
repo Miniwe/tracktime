@@ -29062,7 +29062,7 @@ function toArray(list, index) {
 this["JST"] = this["JST"] || {};
 
 this["JST"]["global/app"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  return "<header id=\"header\">\n</header>\n<div class=\"scrollWrapper\">\n  <div class=\"container\" style=\"padding: 0\">\n    <div id=\"main\" style=\"right: 10%; left: 10%; padding: .8em 1em;\">\n\n    </div>\n  </div>\n  <footer id=\"footer\">\n  </footer>\n</div>\n";
+  return "<header id=\"header\">\n</header>\n<div class=\"scrollWrapper\">\n  <div class=\"container\" style=\"padding: 0\">\n    <div id=\"main\">\n\n    </div>\n  </div>\n  <footer id=\"footer\">\n  </footer>\n</div>\n";
   },"useData":true});
 
 this["JST"]["layout/footer"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
@@ -29077,11 +29077,11 @@ this["JST"]["layout/footer"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta
 },"useData":true});
 
 this["JST"]["layout/header"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  return "<div class=\"navbar navbar-material-amber shadow-z-1\">\n  <a id=\"menuToggler\" class=\"btn btn-fab btn-link pull-left\" href=\"javascript:void(0)\">\n    <i class=\"mdi-action-view-headline\"></i>\n  </a>\n  <div class=\"container\">\n    <div id=\"actions-form\">\n\n    </div>\n  </div>\n</div>\n\n";
+  return "<div class=\"navbar navbar-material-amber shadow-z-1\" style=\"-webkit-app-region: drag\">\n  <a id=\"menuToggler\" class=\"btn btn-fab btn-link pull-left\" href=\"javascript:void(0)\">\n    <i class=\"mdi-action-view-headline\"></i>\n  </a>\n  <div class=\"container\">\n    <div id=\"actions-form\">\n\n    </div>\n  </div>\n</div>\n\n";
   },"useData":true});
 
 this["JST"]["layout/header/actions"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  return "<div class=\"select-action-type-dropdown dropdown pull-left\">\n  <button id=\"action_type\" type=\"button\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\" class=\"btn btn-fab btn-warning dropdown-toggle\">\n    <i class=\"\"></i>\n  </button>\n\n  <ul class=\"dropdown-menu\" role=\"menu\" aria-labelledby=\"dLabel\">\n\n\n  </ul>\n</div>\n\n\n<a id=\"detailsNew\" class=\"btn btn-fab btn-link pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Action details\">\n  <i class=\"mdi-navigation-more-vert\"></i>\n</a>\n\n<div class=\"form-control-wrapper\">\n  <textarea class=\"form-control\" name=\"action\"></textarea>\n  <div class=\"floating-label\">Selected Action Hint</div>\n  <span class=\"material-input\"></span>\n</div>\n\n\n";
+  return "<div class=\"select-action-type-dropdown dropdown pull-left\">\n  <button id=\"action_type\" type=\"button\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\" class=\"btn btn-fab btn-warning dropdown-toggle\" title=\"SHIFT + ENTER to submit\">\n    <i class=\"\"></i>\n  </button>\n\n  <ul class=\"dropdown-menu\" role=\"menu\" aria-labelledby=\"dLabel\">\n\n\n  </ul>\n</div>\n\n\n<a id=\"detailsNew\" class=\"btn btn-fab btn-link pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Action details\">\n  <i class=\"mdi-navigation-more-vert\"></i>\n</a>\n\n<div class=\"form-control-wrapper\">\n  <textarea class=\"form-control\" name=\"action\"></textarea>\n  <div class=\"floating-label\">Selected Action Hint</div>\n  <span class=\"material-input\"></span>\n</div>\n\n\n";
   },"useData":true});
 
 this["JST"]["layout/header/listbtn"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
@@ -29100,10 +29100,7 @@ this["JST"]["layout/header/listbtn"] = Handlebars.template({"compiler":[6,">= 2.
 },"useData":true});
 
 this["JST"]["layout/main"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-  return "<h1>Main:: "
-    + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
-    + "</h1>\n\n<hr />\n";
+  return "";
 },"useData":true});
 
 this["JST"]["layout/menu"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
@@ -29167,11 +29164,11 @@ this["JST"]["layout/menu"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1
 
 this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-  return "<div class=\"icon\">\n  <a  class=\"btn btn-fab btn-fab-mini btn-info\" role=\"menuitem\" tabindex=\"-1\" href=\"#fat\"  data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\"Other wroject will be thouched\">\n    <i class=\"mdi-action-group-work\"></i>\n  </a>\n</div>\n\n<div class=\"date\">"
+  return "<div class=\"row\">\n\n  <div class=\"icon col-md-1\">\n    <a  class=\"btn btn-fab btn-fab-mini btn-info\" role=\"menuitem\" tabindex=\"-1\" href=\"#fat\"  data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\"Other wroject will be thouched\">\n      <i class=\"mdi-action-group-work\"></i>\n    </a>\n  </div>\n\n  <div class=\"date col-md-2\">"
     + escapeExpression(((helper = (helper = helpers.date || (depth0 != null ? depth0.date : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"date","hash":{},"data":data}) : helper)))
-    + "</div>\n\n<div class=\"subject\">"
-    + escapeExpression(((helper = (helper = helpers.subject || (depth0 != null ? depth0.subject : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"subject","hash":{},"data":data}) : helper)))
-    + "</div>\n\n<div class=\"menu\">\n  <a class=\"details btn btn-fab btn-link pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Action details\">\n    <i class=\"mdi-navigation-more-vert\"></i>\n  </a>\n</div>";
+    + "</div>\n\n  <div class=\"subject col-md-8\">"
+    + escapeExpression(((helpers.nl2br || (depth0 && depth0.nl2br) || helperMissing).call(depth0, (depth0 != null ? depth0.subject : depth0), {"name":"nl2br","hash":{},"data":data})))
+    + "</div>\n\n  <div class=\"menu col-md-1\">\n    <a class=\"details btn btn-fab btn-fab-mini btn-flat pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Edit action\">\n      <i class=\"mdi-editor-mode-edit\"></i>\n    </a>\n  </div>\n</div>";
 },"useData":true});
 (function() {
   var Lokitest, Tracktime,
@@ -29198,7 +29195,20 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
     Tracktime.prototype.populateRecords = function() {
       this.set('records', new Tracktime.RecordsCollection(Tracktime.initdata.tmpRecords));
-      return this.trigger('update_records');
+      return this.trigger('render_records');
+    };
+
+    Tracktime.prototype.addRecord = function(params) {
+      var newRecord;
+      newRecord = new Tracktime.Record(_.extend({
+        date: new Date()
+      }, params));
+      if (newRecord.isValid()) {
+        this.get('records').add(newRecord);
+        return this.get('actions').getActive().successAdd();
+      } else {
+        return $.alert('Erros from add record to collection');
+      }
     };
 
     Tracktime.prototype.populateActions = function() {
@@ -29238,10 +29248,37 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
     Action.prototype.validation = function() {};
 
+    Action.prototype.attributes = function() {
+      return {
+        id: this.model.cid
+      };
+    };
+
     Action.prototype.initialize = function() {};
 
     Action.prototype.setActive = function() {
       return this.collection.setActive(this);
+    };
+
+    Action.prototype.processAction = function(params) {
+      this.set('inputValue', params != null ? params.text : void 0);
+      return this.newRecord();
+    };
+
+    Action.prototype.newRecord = function() {
+      return Tracktime.AppChannel.command('newRecord', {
+        subject: this.get('inputValue'),
+        project: 0,
+        details: {}
+      });
+    };
+
+    Action.prototype.search = function() {
+      return console.log('call search');
+    };
+
+    Action.prototype.successAdd = function() {
+      return this.set('inputValue', '');
     };
 
     return Action;
@@ -29325,10 +29362,8 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     Model.prototype.url = '/models';
 
     Model.prototype.validation = {
-      field: function() {
-        return {
-          required: true
-        };
+      field: {
+        required: true
       },
       someAttribute: function(value) {
         if (value !== 'somevalue') {
@@ -29356,12 +29391,12 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
       return Record.__super__.constructor.apply(this, arguments);
     }
 
-    Record.prototype.urlRoot = "/records";
+    Record.prototype.urlRoot = '/records';
 
     Record.prototype.defaults = {
       _id: null,
-      subject: "",
-      description: "",
+      subject: '',
+      description: '',
       date: function() {
         return new Date();
       },
@@ -29369,15 +29404,18 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
 
     Record.prototype.validation = {
-      subject: function() {
-        return {
-          required: true,
-          msg: 'Please enter a valid subject'
-        };
+      subject: {
+        required: true,
+        minLength: 4,
+        msg: 'Please enter a valid subject'
       }
     };
 
     Record.prototype.initialize = function() {};
+
+    Record.prototype.isValid = function() {
+      return true;
+    };
 
     return Record;
 
@@ -29412,7 +29450,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
 
     ActionsCollection.prototype.getActive = function() {
-      return this.active != null;
+      return this.active;
     };
 
     ActionsCollection.prototype.getVisible = function() {
@@ -29440,8 +29478,11 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
     RecordsCollection.prototype.localStorage = new Backbone.LocalStorage('records-backbone');
 
+    RecordsCollection.prototype.comparator = function(model) {
+      return -model.get('date');
+    };
+
     RecordsCollection.prototype.initialize = function() {
-      $.alert('initialize RecordsCollection');
       return this.router = new Tracktime.RecordsRouter({
         controller: this
       });
@@ -29475,7 +29516,8 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
       return this.comply({
         'start': this.startApp,
         'populateRecords': this.populateRecords,
-        'altView': this.altView
+        'altView': this.altView,
+        'newRecord': this.newRecord
       });
     },
     startApp: function() {
@@ -29489,6 +29531,9 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     },
     populateRecords: function() {
       return this.model.populateRecords();
+    },
+    newRecord: function(params) {
+      return this.model.addRecord(params);
     },
     altView: function() {
       this.model.set('title', 'Mody App');
@@ -29533,6 +29578,12 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     var out;
     out = value || safeValue;
     return new Handlebars.SafeString(out);
+  });
+
+  Handlebars.registerHelper('nl2br', function(text) {
+    var nl2br;
+    nl2br = (text + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + '<br>' + '$2');
+    return new Handlebars.SafeString(nl2br);
   });
 
   Tracktime.initdata = {};
@@ -29599,17 +29650,21 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
   Tracktime.initdata.tmpRecords = [
     {
-      subject: 'Lorem',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nam, culpa, deleniti, temporibus, itaque similique suscipit saepe rerum voluptates voluptatum asperiores modi possimus vitae inventore dolore illo incidunt dolorem animi iure provident labore minima delectus unde nihil soluta recusandae ut dicta explicabo perspiciatis dolores eum. Numquam molestias reiciendis quibusdam sunt suscipit fugit temporibus asperiores quia. Cum, vel, molestias, sapiente ex nisi blanditiis dolorem quod beatae obcaecati culpa eos eius at vitae sed modi explicabo tempore. Harum, error nam veritatis maiores est at incidunt quae magni amet non qui eum. Aperiam, harum, tenetur facere officia delectus omnis odio totam consequatur obcaecati tempora. '
+      description: 'Lorem',
+      subject: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nam, culpa, deleniti, temporibus, itaque similique suscipit saepe rerum voluptates voluptatum asperiores modi possimus vitae inventore dolore illo incidunt dolorem animi iure provident labore minima delectus unde nihil soluta recusandae ut dicta explicabo perspiciatis dolores eum. Numquam molestias reiciendis quibusdam sunt suscipit fugit temporibus asperiores quia. Cum, vel, molestias, sapiente ex nisi blanditiis dolorem quod beatae obcaecati culpa eos eius at vitae sed modi explicabo tempore. Harum, error nam veritatis maiores est at incidunt quae magni amet non qui eum. Aperiam, harum, tenetur facere officia delectus omnis odio totam consequatur obcaecati tempora. ',
+      date: new Date()
     }, {
-      subject: 'Tempore',
-      description: 'Accusamus, cumque, aperiam velit quos quisquam ex officiis obcaecati totam ipsa saepe fugiat in. Corrupti, soluta, aliquid cumque adipisci nihil omnis explicabo itaque commodi neque dolorum fugit quibusdam deserunt voluptates corporis amet hic quod blanditiis nesciunt dignissimos vero iure. Omnis, provident ducimus delectus sed in incidunt expedita quae accusantium cum culpa recusandae rerum ipsum vitae aliquid ratione ea architecto optio accusamus similique saepe nobis vel deleniti tempora iure consequatur. Debitis laborum accusantium omnis iure velit necessitatibus quod veniam sequi! Excepturi, praesentium, porro ducimus fugit provident repellendus quibusdam dolorum nisi autem tenetur. Non, neque reiciendis eius sequi accusamus. Quam, nostrum, nesciunt. '
+      description: 'Tempore',
+      subject: 'Accusamus, cumque, aperiam velit quos quisquam ex officiis obcaecati totam ipsa saepe fugiat in. Corrupti, soluta, aliquid cumque adipisci nihil omnis explicabo itaque commodi neque dolorum fugit quibusdam deserunt voluptates corporis amet hic quod blanditiis nesciunt dignissimos vero iure. Omnis, provident ducimus delectus sed in incidunt expedita quae accusantium cum culpa recusandae rerum ipsum vitae aliquid ratione ea architecto optio accusamus similique saepe nobis vel deleniti tempora iure consequatur. Debitis laborum accusantium omnis iure velit necessitatibus quod veniam sequi! Excepturi, praesentium, porro ducimus fugit provident repellendus quibusdam dolorum nisi autem tenetur. Non, neque reiciendis eius sequi accusamus. Quam, nostrum, nesciunt. ',
+      date: new Date()
     }, {
-      subject: 'Consequuntur',
-      description: 'Obcaecati, incidunt, optio deleniti earum odio nobis dolore sapiente delectus. Accusamus sequi voluptatibus magni fuga fugit nisi aut nam rem repellat possimus! Delectus, harum nisi eos nostrum necessitatibus ducimus eius odio dolores ratione quas quos laboriosam magnam reprehenderit itaque nihil! Dolor, hic, asperiores alias aut voluptas odit illum voluptatem quod! Pariatur, nesciunt distinctio aliquam quam voluptatibus temporibus voluptate placeat quaerat nemo quidem. Asperiores, nihil quasi molestias suscipit sunt. Itaque, sapiente voluptatibus qui non fugit impedit voluptatem beatae repellat at nulla dignissimos esse doloribus. Officiis, dolorem, id, officia sapiente eius ullam vel dolorum numquam et aspernatur illo deleniti enim quam autem! '
+      description: 'Consequuntur',
+      subject: 'Obcaecati, incidunt, optio deleniti earum odio nobis dolore sapiente delectus. Accusamus sequi voluptatibus magni fuga fugit nisi aut nam rem repellat possimus! Delectus, harum nisi eos nostrum necessitatibus ducimus eius odio dolores ratione quas quos laboriosam magnam reprehenderit itaque nihil! Dolor, hic, asperiores alias aut voluptas odit illum voluptatem quod! Pariatur, nesciunt distinctio aliquam quam voluptatibus temporibus voluptate placeat quaerat nemo quidem. Asperiores, nihil quasi molestias suscipit sunt. Itaque, sapiente voluptatibus qui non fugit impedit voluptatem beatae repellat at nulla dignissimos esse doloribus. Officiis, dolorem, id, officia sapiente eius ullam vel dolorum numquam et aspernatur illo deleniti enim quam autem! ',
+      date: new Date()
     }, {
-      subject: 'Rem',
-      description: 'Quisquam ab soluta dicta amet possimus iure deserunt expedita facere maxime nemo. Laudantium, quod, dignissimos, quos perspiciatis illo numquam est hic qui totam eligendi aut in provident dolor. Libero, dolores, cumque ut molestiae iusto nostrum tempore voluptatum laborum iure quae? Culpa, et, deserunt, explicabo a assumenda voluptate commodi voluptatum possimus omnis totam libero ipsum delectus? Harum, facilis, suscipit perspiciatis dolorum sapiente quae voluptas assumenda cumque atque accusamus blanditiis ullam doloribus enim placeat saepe dolorem sed quos architecto error vero odit deserunt autem? Sunt, cumque, similique voluptatem quis voluptatum non explicabo quibusdam porro in nihil quae sint rem molestias vero beatae!'
+      description: 'Rem',
+      subject: 'Quisquam ab soluta dicta amet possimus iure deserunt expedita facere maxime nemo. Laudantium, quod, dignissimos, quos perspiciatis illo numquam est hic qui totam eligendi aut in provident dolor. Libero, dolores, cumque ut molestiae iusto nostrum tempore voluptatum laborum iure quae? Culpa, et, deserunt, explicabo a assumenda voluptate commodi voluptatum possimus omnis totam libero ipsum delectus? Harum, facilis, suscipit perspiciatis dolorum sapiente quae voluptas assumenda cumque atque accusamus blanditiis ullam doloribus enim placeat saepe dolorem sed quos architecto error vero odit deserunt autem? Sunt, cumque, similique voluptatem quis voluptatum non explicabo quibusdam porro in nihil quae sint rem molestias vero beatae!',
+      date: new Date()
     }
   ];
 
@@ -29665,7 +29720,6 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
 
     AppRouter.prototype.pagepopulate = function() {
-      $.alert('populateRecords');
       return Tracktime.AppChannel.command('populateRecords');
     };
 
@@ -29705,7 +29759,6 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
 
     RecordsRouter.prototype.initialize = function(options) {
-      $.alert('init RecordsRouter');
       return _.extend(this, options);
     };
 
@@ -29762,13 +29815,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
     ActionView.prototype.initialize = function() {};
 
-    ActionView.prototype.attributes = function() {
-      return {
-        id: this.model.cid
-      };
-    };
-
-    ActionView.prototype.setActive = function(event) {
+    ActionView.prototype.setActive = function() {
       return this.model.setActive();
     };
 
@@ -29791,7 +29838,8 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
     ActionsView.prototype.template = JST['layout/header/actions'];
 
-    ActionsView.prototype.initialize = function() {
+    ActionsView.prototype.initialize = function(options) {
+      _.extend(this, options);
       return this.render();
     };
 
@@ -29879,12 +29927,14 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     ListBtn.prototype.template = JST['layout/header/listbtn'];
 
     ListBtn.prototype.events = {
-      'click': 'makeActionActive'
+      'click': 'actionActive'
     };
 
     ListBtn.prototype.initialize = function(options) {
       _.extend(this, options);
-      return this.render();
+      this.render();
+      this.listenTo(this.model, 'change:isActive', this.updateHeader);
+      return this.listenTo(this.model, 'change:inputValue', this.setInputVal);
     };
 
     ListBtn.prototype.render = function() {
@@ -29892,8 +29942,12 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
       return this.$el.html(this.template(this.model.toJSON()));
     };
 
-    ListBtn.prototype.makeActionActive = function() {
-      var ref;
+    ListBtn.prototype.actionActive = function() {
+      this.updateHeader();
+      return this.model.setActive();
+    };
+
+    ListBtn.prototype.updateHeader = function() {
       this.$el.siblings().removeClass('active');
       this.$el.addClass('active');
       this.container.find("#action_type").replaceWith((new Tracktime.ActionView.ActiveBtn({
@@ -29908,7 +29962,12 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
       }
       $('.floating-label', '#actions-form').html(this.model.get('title'));
       this.container.parents('.navbar').attr('class', "navbar " + (this.model.get('navbarClass')) + " shadow-z-1");
-      return (ref = $('textarea', '#actions-form')) != null ? ref.focus() : void 0;
+      return this.setInputVal();
+    };
+
+    ListBtn.prototype.setInputVal = function() {
+      var ref;
+      return (ref = $('textarea', '#actions-form')) != null ? ref.val(this.model.get('inputValue')).focus() : void 0;
     };
 
     return ListBtn;
@@ -30076,10 +30135,15 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
 
     Header.prototype.fixEnter = function(event) {
+      var val;
       if (event.keyCode === 13) {
         if (event.shiftKey) {
-          if (!_.isEmpty($(event.target).val())) {
-            $.alert('will submit - generate trigger with value');
+          val = $(event.target).val();
+          if (!_.isEmpty(val)) {
+            $(event.target).val('');
+            this.model.get('actions').getActive().processAction({
+              text: val
+            });
           }
           return event.preventDefault();
         }
@@ -30128,7 +30192,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
 
     Main.prototype.bindEvents = function() {
-      return this.listenTo(this.model, 'update_records', this.renderRecords);
+      return this.listenTo(this.model, 'render_records', this.renderRecords);
     };
 
     Main.prototype.renderRecords = function() {
@@ -30136,7 +30200,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
       recordsView = new Tracktime.RecordsView({
         collection: this.model.get('records')
       });
-      return this.$el.append(recordsView.el);
+      return this.$el.html(recordsView.el);
     };
 
     return Main;
@@ -30216,7 +30280,8 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     RecordsView.prototype.className = 'records-group';
 
     RecordsView.prototype.initialize = function() {
-      return this.render();
+      this.render();
+      return this.listenTo(this.collection, "add remove", this.updateRecordsList);
     };
 
     RecordsView.prototype.render = function() {
@@ -30229,6 +30294,11 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
           return _this.$el.append(recordView.el);
         };
       })(this), this);
+    };
+
+    RecordsView.prototype.updateRecordsList = function() {
+      this.$el.html('');
+      return this.render();
     };
 
     return RecordsView;

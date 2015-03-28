@@ -2,18 +2,24 @@ class Tracktime.ActionView.ListBtn extends Backbone.View
   tagName: 'li'
   template: JST['layout/header/listbtn']
   events:
-    'click': 'makeActionActive'
+    'click': 'actionActive'
 
   initialize: (options) ->
     _.extend @, options
     @render()
 
+    @listenTo @model, 'change:isActive', @updateHeader
+    @listenTo @model, 'change:inputValue', @setInputVal
+
   render: () ->
     @$el.toggleClass('active', @model.get('isActive'))
     @$el.html @template @model.toJSON()
 
-  makeActionActive: () ->
+  actionActive: () ->
+    @updateHeader()
+    @model.setActive()
 
+  updateHeader: () ->
     @$el.siblings().removeClass 'active'
     @$el.addClass 'active'
 
@@ -30,7 +36,11 @@ class Tracktime.ActionView.ListBtn extends Backbone.View
 
     @container.parents('.navbar').attr 'class', "navbar #{@model.get('navbarClass')} shadow-z-1"
 
-    $('textarea', '#actions-form')?.focus()
+    @setInputVal()
+
+  setInputVal: () ->
+    $('textarea', '#actions-form')?.val(@model.get('inputValue')).focus()
+
 
 (module?.exports = Tracktime.ActionView.ListBtn) or @Tracktime.ActionView.ListBtn = Tracktime.ActionView.ListBtn
 

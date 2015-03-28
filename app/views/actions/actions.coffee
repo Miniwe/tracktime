@@ -3,7 +3,8 @@ class Tracktime.ActionsView extends Backbone.View
   className: 'actions-group'
   template: JST['layout/header/actions']
 
-  initialize: () ->
+  initialize: (options) ->
+    _.extend @, options
     @render()
 
   render: () ->

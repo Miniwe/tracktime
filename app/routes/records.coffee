@@ -8,7 +8,6 @@ class Tracktime.RecordsRouter extends Backbone.Router
     'records/:id/save':    'save'
 
   initialize: (options) ->
-    $.alert 'init RecordsRouter'
     _.extend @, options
 
   list: () ->

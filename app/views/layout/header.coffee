@@ -24,8 +24,10 @@ class Tracktime.AppView.Header extends Backbone.View
   fixEnter: (event) =>
     if event.keyCode == 13
       if event.shiftKey
-        unless _.isEmpty $(event.target).val()
-          $.alert 'will submit - generate trigger with value'
+        val = $(event.target).val()
+        unless _.isEmpty val
+          $(event.target).val('')
+          @model.get('actions').getActive().processAction(text: val)
         event.preventDefault()
 
   checkHeight: (event) =>

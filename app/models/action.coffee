@@ -19,12 +19,31 @@ class Tracktime.Action extends Backbone.Model
   validation: () ->
     # @todo make details validation
 
+  attributes: () ->
+    id: @model.cid
+
   initialize: () ->
     # @to
 
   setActive: () ->
     @collection.setActive @
 
+  processAction: (params) ->
+    @set 'inputValue', params?.text
+    @newRecord() #@todo эта функция будет определятся в зависимости от типа action
+    # @search() #@todo эта функция будет определятся в зависимости от типа action
+
+  newRecord: () ->
+    Tracktime.AppChannel.command 'newRecord',
+      subject: @get('inputValue')
+      project: 0 # @todo @get('project')
+      details: {} # @todo @get('details')
+
+  search: () ->
+    console.log 'call search'
+
+  successAdd: () ->
+    @set 'inputValue', ''
 
 (module?.exports = Tracktime.Action) or @Tracktime.Action = Tracktime.Action
 

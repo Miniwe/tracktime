@@ -10,9 +10,11 @@
     padding: .8em 1em;
 
     background: rgba(255,255,255,.7);
+
     @include transition(box-shadow 1s .2s, background 1s .2s);
-    &.shadow-z-2 {
-        background: rgba(255,255,255, .95);
+    &.shadow-z-2
+    {
+        background: rgba(255,255,255, .98);
     }
     .form-control-wrapper
     {
@@ -20,6 +22,8 @@
         padding: 0 5em;
         textarea
         {
+            font-size: 18px;
+
             display: block;
             overflow-x: hidden; /* for Firefox (issue #5) */
 
@@ -30,7 +34,6 @@
             max-height: 20em; /* optional, but recommended */
             margin: 0 auto;
             padding: .2em 0;
-            font-size: 18px;
         }
         .floating-label
         {

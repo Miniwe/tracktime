@@ -1,0 +1,63 @@
+@import 'compass/css3/transition';
+@import 'compass/css3/opacity';
+
+.records-group
+{
+    margin: 0;
+    margin-bottom: 1em;
+    padding: 0;
+
+    list-style-type: none;
+    .records-group-item
+    {
+        position: relative;
+
+        display: block;
+
+        width: 100%;
+        min-height: 1em;
+        max-height: 20em;
+        margin: 0 auto .2em;
+        padding: 1em;
+
+        border: 1px solid #eee;
+
+        @include transition(all .4s);
+        * {
+            @include opacity(1);
+            @include transition(opacity .2s .4s);
+        }
+        .btn.details
+        {
+            visibility: hidden;
+
+            @include transition(opacity .8s .4s);
+            @include opacity(0);
+        }
+        &:hover
+        {
+            .btn.details
+            {
+                visibility: visible;
+
+                @include opacity(1);
+            }
+        }
+        &.on-show
+        {
+            overflow: hidden;
+
+            box-sizing: border-box;
+            width: 0;
+            min-height: 0;
+            max-height: 0;
+            margin: 0 auto .2em;
+            padding: 0;
+
+            border-color: #f00;
+            * {
+                @include opacity(0);
+            }
+        }
+    }
+}
