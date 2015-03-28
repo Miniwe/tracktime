@@ -9,16 +9,22 @@ class Tracktime extends Backbone.Model
     return
 
   populateRecords: () ->
-    @set 'records', new Tracktime.RecordsCollection Tracktime.initdata.tmpRecords
+    @set 'records', new Tracktime.RecordsCollection()
     @trigger 'render_records'
 
   addRecord: (params) ->
-    newRecord = new Tracktime.Record _.extend {date: new Date()}, params
+    newRecord = new Tracktime.Record _.extend {date: (new Date()).getTime()}, params
     if newRecord.isValid()
       @get('records').add newRecord
-      @get('actions').getActive().successAdd()
+      newRecord.save null,
+        success: () =>
+          $.alert 'save success'
+          @get('actions').getActive().successAdd()
+        error: () =>
+          $.alert 'save error'
+
     else
-      $.alert 'Erros from add record to collection'
+      $.alert 'Erros validation from add record to collection'
 
 
   populateActions: () ->

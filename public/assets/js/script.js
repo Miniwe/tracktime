@@ -29194,20 +29194,32 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
 
     Tracktime.prototype.populateRecords = function() {
-      this.set('records', new Tracktime.RecordsCollection(Tracktime.initdata.tmpRecords));
+      this.set('records', new Tracktime.RecordsCollection());
       return this.trigger('render_records');
     };
 
     Tracktime.prototype.addRecord = function(params) {
       var newRecord;
       newRecord = new Tracktime.Record(_.extend({
-        date: new Date()
+        date: (new Date()).getTime()
       }, params));
       if (newRecord.isValid()) {
         this.get('records').add(newRecord);
-        return this.get('actions').getActive().successAdd();
+        return newRecord.save(null, {
+          success: (function(_this) {
+            return function() {
+              $.alert('save success');
+              return _this.get('actions').getActive().successAdd();
+            };
+          })(this),
+          error: (function(_this) {
+            return function() {
+              return $.alert('save error');
+            };
+          })(this)
+        });
       } else {
-        return $.alert('Erros from add record to collection');
+        return $.alert('Erros validation from add record to collection');
       }
     };
 
@@ -29393,12 +29405,14 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
     Record.prototype.urlRoot = '/records';
 
+    Record.prototype.localStorage = new Backbone.LocalStorage('records-backbone');
+
     Record.prototype.defaults = {
       _id: null,
       subject: '',
       description: '',
       date: function() {
-        return new Date();
+        return (new Date()).getTime();
       },
       project: 0
     };
@@ -29411,10 +29425,14 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
       }
     };
 
-    Record.prototype.initialize = function() {};
+    Record.prototype.initialize = function(options, params, any) {};
 
     Record.prototype.isValid = function() {
       return true;
+    };
+
+    Record.prototype.fetch = function(params, options) {
+      return console.log('fetch:', params, options);
     };
 
     return Record;
@@ -29483,19 +29501,31 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
 
     RecordsCollection.prototype.initialize = function() {
-      return this.router = new Tracktime.RecordsRouter({
+      var models;
+      this.router = new Tracktime.RecordsRouter({
         controller: this
       });
+      models = this.localStorage.findAll();
+      if (!models.length) {
+        _.each(Tracktime.initdata.tmpRecords, function(record) {
+          var newRecord;
+          newRecord = new Tracktime.Record(_.extend({
+            date: (new Date()).getTime()
+          }, record));
+          return newRecord.save();
+        });
+        models = this.localStorage.findAll();
+      }
+      return this.add(models);
     };
 
-    RecordsCollection.prototype.nextOrder = function() {
-      var order;
-      if (!this.length) {
-        order = 1;
-      } else {
-        order = this.last().get('order') + 1;
-      }
-      return order;
+    RecordsCollection.prototype.clearLocalstorage = function() {
+      var models;
+      models = this.localStorage.findAll();
+      this.add(models);
+      return _.each(_.clone(this.models), function(model) {
+        return model.destroy();
+      });
     };
 
     return RecordsCollection;
@@ -29652,19 +29682,19 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     {
       description: 'Lorem',
       subject: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nam, culpa, deleniti, temporibus, itaque similique suscipit saepe rerum voluptates voluptatum asperiores modi possimus vitae inventore dolore illo incidunt dolorem animi iure provident labore minima delectus unde nihil soluta recusandae ut dicta explicabo perspiciatis dolores eum. Numquam molestias reiciendis quibusdam sunt suscipit fugit temporibus asperiores quia. Cum, vel, molestias, sapiente ex nisi blanditiis dolorem quod beatae obcaecati culpa eos eius at vitae sed modi explicabo tempore. Harum, error nam veritatis maiores est at incidunt quae magni amet non qui eum. Aperiam, harum, tenetur facere officia delectus omnis odio totam consequatur obcaecati tempora. ',
-      date: new Date()
+      date: (new Date()).getTime()
     }, {
       description: 'Tempore',
       subject: 'Accusamus, cumque, aperiam velit quos quisquam ex officiis obcaecati totam ipsa saepe fugiat in. Corrupti, soluta, aliquid cumque adipisci nihil omnis explicabo itaque commodi neque dolorum fugit quibusdam deserunt voluptates corporis amet hic quod blanditiis nesciunt dignissimos vero iure. Omnis, provident ducimus delectus sed in incidunt expedita quae accusantium cum culpa recusandae rerum ipsum vitae aliquid ratione ea architecto optio accusamus similique saepe nobis vel deleniti tempora iure consequatur. Debitis laborum accusantium omnis iure velit necessitatibus quod veniam sequi! Excepturi, praesentium, porro ducimus fugit provident repellendus quibusdam dolorum nisi autem tenetur. Non, neque reiciendis eius sequi accusamus. Quam, nostrum, nesciunt. ',
-      date: new Date()
+      date: (new Date()).getTime()
     }, {
       description: 'Consequuntur',
       subject: 'Obcaecati, incidunt, optio deleniti earum odio nobis dolore sapiente delectus. Accusamus sequi voluptatibus magni fuga fugit nisi aut nam rem repellat possimus! Delectus, harum nisi eos nostrum necessitatibus ducimus eius odio dolores ratione quas quos laboriosam magnam reprehenderit itaque nihil! Dolor, hic, asperiores alias aut voluptas odit illum voluptatem quod! Pariatur, nesciunt distinctio aliquam quam voluptatibus temporibus voluptate placeat quaerat nemo quidem. Asperiores, nihil quasi molestias suscipit sunt. Itaque, sapiente voluptatibus qui non fugit impedit voluptatem beatae repellat at nulla dignissimos esse doloribus. Officiis, dolorem, id, officia sapiente eius ullam vel dolorum numquam et aspernatur illo deleniti enim quam autem! ',
-      date: new Date()
+      date: (new Date()).getTime()
     }, {
       description: 'Rem',
       subject: 'Quisquam ab soluta dicta amet possimus iure deserunt expedita facere maxime nemo. Laudantium, quod, dignissimos, quos perspiciatis illo numquam est hic qui totam eligendi aut in provident dolor. Libero, dolores, cumque ut molestiae iusto nostrum tempore voluptatum laborum iure quae? Culpa, et, deserunt, explicabo a assumenda voluptate commodi voluptatum possimus omnis totam libero ipsum delectus? Harum, facilis, suscipit perspiciatis dolorum sapiente quae voluptas assumenda cumque atque accusamus blanditiis ullam doloribus enim placeat saepe dolorem sed quos architecto error vero odit deserunt autem? Sunt, cumque, similique voluptatem quis voluptatum non explicabo quibusdam porro in nihil quae sint rem molestias vero beatae!',
-      date: new Date()
+      date: (new Date()).getTime()
     }
   ];
 
@@ -29755,7 +29785,8 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
       'records/:id/edit': 'edit',
       'records/:id/delete': 'delete',
       'records/:id/add': 'add',
-      'records/:id/save': 'save'
+      'records/:id/save': 'save',
+      'records/all/clear': 'actions'
     };
 
     RecordsRouter.prototype.initialize = function(options) {
@@ -29790,6 +29821,11 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     RecordsRouter.prototype.save = function(id) {
       $.alert('save');
       return console.log('save', id);
+    };
+
+    RecordsRouter.prototype.allClear = function() {
+      $.alert('clear local storage');
+      return this.controller.clearLocalstorage();
     };
 
     return RecordsRouter;
@@ -30259,7 +30295,10 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
 
     RecordView.prototype.render = function() {
-      return this.$el.html(this.template(this.model.toJSON()));
+      var mjson;
+      mjson = this.model.toJSON();
+      mjson.date = (new Date(parseInt(mjson.date, 10))).toLocaleString();
+      return this.$el.html(this.template(mjson));
     };
 
     return RecordView;

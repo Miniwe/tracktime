@@ -7,11 +7,22 @@ class Tracktime.RecordsCollection extends Backbone.Collection
   initialize: () ->
     @router = new Tracktime.RecordsRouter {controller: @}
 
-  nextOrder: () ->
-    if not @length
-      order = 1
-    else
-      order = @last().get('order') + 1
-    return order
+    # @clearLocalstorage()
+    models = @localStorage.findAll()
+
+    unless models.length
+      _.each Tracktime.initdata.tmpRecords, (record) ->
+        newRecord = new Tracktime.Record _.extend {date: (new Date()).getTime()}, record
+        newRecord.save()
+      models = @localStorage.findAll()
+
+    @add models
+
+  clearLocalstorage: () ->
+    models = @localStorage.findAll()
+    @add models
+    _.each _.clone(@models), (model) ->
+      model.destroy()
+
 
 (module?.exports = Tracktime.RecordsCollection) or @Tracktime.RecordsCollection = Tracktime.RecordsCollection
