@@ -7,7 +7,9 @@
   },
   "dev": {
     "options": {
-      "script": "server/server.js"
+      "script": "server/server.js",
+      "background": true,
+      "debug": true
     }
   },
   "prod": {

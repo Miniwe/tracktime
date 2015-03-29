@@ -48,6 +48,6 @@ app.get('/users', function (req, res) {
 })
 
 
-server.listen(app.get('port'), function(){
+app.listen(app.get('port'), function(){
     // console.log('Listening on port ' + app.get('port'));
 });
