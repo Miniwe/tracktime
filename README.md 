@@ -1,12 +1,26 @@
 TrackTime Pro
 
-15-03-27:
-☐ base list design
-☐ save record actions
-☐ update list with new record
-☐ save list to local storage
-☐ load list on start
-☐ save actions list to local storage
-☐ load actions list on start
+15-03-29:
+☐ отправки и синхронизация с сервером
+☐ поиск фильтрация
+☐ add model main with params filter
+☐ refresh main with filter on add new Record
 ☐ sync on server
 ☐ search by list
+
+15-03-27:
+✔ base list design @done (15-03-27 13:51)
+✔ update list with new record @done (15-03-29 01:01)
+✔ validate new record @done (15-03-29 01:01)
+✔ save record actions @done (15-03-29 01:01)
+  ✔ on submit @done (15-03-29 01:01)
+    ✔ generate data tosubmit @done (15-03-29 01:01)
+      ✔ from action @done (15-03-29 01:01)
+        ✔ get target @done (15-03-29 01:01)
+        ✔ get subject @done (15-03-29 01:01)
+        ✔ get details @done (15-03-29 01:01)
+      ☐
+✔ save list to local storage @done (15-03-29 01:01)
+✔ load list on start @done (15-03-29 01:01)
+✔ save actions list to local storage @done (15-03-29 01:01)
+✔ load actions list on start @done (15-03-29 01:01)
