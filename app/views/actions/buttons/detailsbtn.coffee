@@ -1,12 +1,13 @@
 class Tracktime.ActionView.DetailsBtn extends Backbone.View
   el: '#detailsNew'
-  events:
-    'click': 'detailsShow'
+  template: JST['blocks/action']
 
   initialize: () ->
+    @$el.popover
+      template: @template @model.toJSON()
 
-  detailsShow: () ->
-    $.alert "Show details on #{@model.get('title')}"
+  remove: () ->
+    @$el.popover 'destroy'
 
 (module?.exports = Tracktime.ActionView.DetailsBtn) or @Tracktime.ActionView.DetailsBtn = Tracktime.ActionView.DetailsBtn
 

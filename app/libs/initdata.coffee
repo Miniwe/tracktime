@@ -34,6 +34,7 @@ Tracktime.initdata.tmpActions = [
       letter: 'P'
     isActive: false
     isVisible: true
+    details: 'have any'
   }
   {
     title: 'Other wroject will be thouched'

@@ -6,6 +6,7 @@ class Tracktime extends Backbone.Model
 
   initialize: () ->
     @populateActions()
+    @populateRecords()
     return
 
   populateRecords: () ->
@@ -25,7 +26,6 @@ class Tracktime extends Backbone.Model
 
     else
       $.alert 'Erros validation from add record to collection'
-
 
   populateActions: () ->
     @set 'actions', new Tracktime.ActionsCollection Tracktime.initdata.tmpActions

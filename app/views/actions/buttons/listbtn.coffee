@@ -27,6 +27,7 @@ class Tracktime.ActionView.ListBtn extends Backbone.View
     @container.find("#action_type").replaceWith (new Tracktime.ActionView.ActiveBtn model: @model).$el
 
     #add selected detais if exist - will change from action modell call
+    @container.parent().find("#detailsNew").popover('destroy')
     unless @model.get('details') is null
       @container.parent().find("#detailsNew").show().replaceWith (new Tracktime.ActionView.DetailsBtn model: @model).el
     else
