@@ -12,7 +12,6 @@ class Tracktime.AppView extends Backbone.View
     # $(document).title @model.get 'title'
     @$el.html @layoutTemplate @model.toJSON()
     @renderChilds()
-    @model.populateRecords()
 
   renderChilds: ->
     @childViews['header'] = new Tracktime.AppView.Header model: @model, container: @

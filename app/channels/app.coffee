@@ -19,6 +19,7 @@ _.extend Tracktime.AppChannel,
     @router = new Tracktime.AppRouter()
     Backbone.history.start
       pushState: false
+    @populateRecords()
 
   populateRecords: () ->
     @model.populateRecords()

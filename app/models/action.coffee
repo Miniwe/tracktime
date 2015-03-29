@@ -4,7 +4,7 @@ class Tracktime.Action extends Backbone.Model
 
   defaults:
     _id: null
-    title: 'Action title'
+    title: 'Default action title'
     formAction: '#'
     btnClass: 'btn-default'
     navbarClass: 'navbar-material-amber'
@@ -51,28 +51,14 @@ class Tracktime.Action extends Backbone.Model
 
 # actions
 #   options
-#     btn-class = btn-primary
-#     color = classColor
-#     href (target) = #search
-#     title = Add record
-#     icon mdi-editor-mode-edit
-#     isActive
-#     inputValue
-#     isDetails
 #     details = view and model
-#   onChangeInput: function to run
 #   onChangeDetails: function to apply details
 #   save and restore selectedAction
 # actinView:
-#   changeAll for options
-#     changeIcon
-#     changeMenu state
-#     ...
-#  when детали open icon is крестик
+#  when детали openicon is крестик
 #   сохраняются данные деталей автоматически
-#   крестик очищает
+#   крестик очищает и закрывает
 #   при потере фокуса с деталей сохранненые автоматичеки выводятся рядом с subject
-#  shift + Enter на форме отправляет ее на сохранение
 
 
 

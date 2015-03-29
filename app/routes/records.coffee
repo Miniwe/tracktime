@@ -36,7 +36,7 @@ class Tracktime.RecordsRouter extends Backbone.Router
     console.log 'save', id
 
   allClear: () ->
-    $.alert 'clear local storage'
+    $.alert 'clear local storage @tmp'
     @controller.clearLocalstorage()
 
 (module?.exports = Tracktime.RecordsRouter) or @Tracktime.RecordsRouter = Tracktime.RecordsRouter

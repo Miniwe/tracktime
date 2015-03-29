@@ -11,7 +11,6 @@ class Tracktime.RecordView extends Backbone.View
 
   render: () ->
     mjson = @model.toJSON()
-    mjson.date = (new Date(parseInt(mjson.date,10))).toLocaleString()
     @$el.html @template mjson
 
 (module?.exports = Tracktime.RecordView) or @Tracktime.RecordView = Tracktime.RecordView

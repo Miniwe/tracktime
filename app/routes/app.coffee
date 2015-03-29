@@ -12,7 +12,6 @@ class Tracktime.AppRouter extends Backbone.Router
   index: () ->
     $.alert 'index'
 
-
   default: (actions) ->
     $.alert 'Unknown page'
     console.log 'actions', actions
