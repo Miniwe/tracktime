@@ -29456,7 +29456,19 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
     ActionsCollection.prototype.active = null;
 
-    ActionsCollection.prototype.initialize = function() {};
+    ActionsCollection.prototype.initialize = function() {
+      var models;
+      models = this.localStorage.findAll();
+      if (!models.length) {
+        _.each(Tracktime.initdata.tmpActions, function(action) {
+          var newAction;
+          newAction = new Tracktime.Action(action);
+          return newAction.save();
+        });
+        models = this.localStorage.findAll();
+      }
+      return this.add(models);
+    };
 
     ActionsCollection.prototype.setActive = function(active) {
       var ref;

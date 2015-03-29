@@ -8,6 +8,16 @@ class Tracktime.ActionsCollection extends Backbone.Collection
     # @router = new Tracktime.ActionsRouter {controller: @}
     # @setActive @models.findWhere isActive: true
 
+    models = @localStorage.findAll()
+
+    unless models.length
+      _.each Tracktime.initdata.tmpActions, (action) ->
+        newAction = new Tracktime.Action action
+        newAction.save()
+      models = @localStorage.findAll()
+
+    @add models
+
   setActive: (active) ->
     @active?.set 'isActive', false
     active.set 'isActive', true
