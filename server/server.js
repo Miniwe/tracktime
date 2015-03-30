@@ -1,53 +1,84 @@
 var express = require('express');
-var server = require("http").Server(express);
-var io = require("socket.io")(server);
-var app = module.exports = express();
+var bodyParser = require('body-parser');
+var app = express();
+
+var config = require('./config.json');
+var cors = require('./libs/cors.js');
+var records = require('./records');
+
+
+app.use(cors);
+
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+
+// app.use(express.cookieParser());
+// app.use(express.session({ secret: 'cool beans' }));
+// app.use(express.methodOverride());
+// app.use(allowCrossDomain);
+// app.use(app.router);
+// app.use(express.static(__dirname + '/public'));
 
 
 
-var handleClient = function (socket) {
-socket.on( 'connect', function() {
-    console.log('Connection Established! Ready to send/receive data!');
-    socket.send('my message here');
-    socket.send(1234567);
-    socket.send([1,2,3,4,5]);
-    socket.send({ apples : 'bananas' });
-} );
-
-socket.on( 'message', function(message) {
-    console.log(message);
-} );
-
-socket.on( 'disconnect', function() {
-    console.log('my connection dropped');
-} );
-
-// Extra event in Socket.IO provided by PubNub
-socket.on( 'reconnect', function() {
-    console.log('my connection has been restored!');
-} );
-
-
-};
-
-io.on("connection", handleClient);
-
-
-app.set('port', process.env.PORT || 3000);
-// app.configure(function () {
+// @todo handling 404 errors
+// app.use(function(err, req, res, next) {
+//   if(err.status !== 404) {
+//     next();
+//   }
+//   res.send(err.message || '** no unicorns here **');
 // });
 
-//define routes
+// app.get('*', function(req, res, next) {
+//   var err = {}; //new Error();
+//   err.status = 404;
+//   err.message = 'Have 404';
+//   next(err);
+// });
+
+
+// app.configure(function () {
+//     app.use(express.methodOverride());
+//     app.use(express.bodyParser());
+//     app.use(function(req, res, next) {
+//       res.header("Access-Control-Allow-Origin", "*");
+//       res.header("Access-Control-Allow-Headers", "X-Requested-With");
+//       next();
+//     });
+//     app.use(app.router);
+// });
+
+// app.configure('development', function () {
+//     app.use(express.static(__dirname + '/public'));
+//     app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+// });
+
+// app.configure('production', function () {
+//     app.use(express.static(__dirname + '/public'));
+//     app.use(express.errorHandler());
+// });
+
 app.get('/', function (req, res) {
-  res.send('Hello World!');
+  res.send('Hello World! 2')
 })
 
-//define routes
-app.get('/users', function (req, res) {
-  res.send('tweet!');
+app.get('/records', function (req, res) {
+  res.send(records);
+})
+
+app.post('/records', function (req, res) {
+  res.setHeader('Content-Type', 'text/plain');
+  res.write('any will posted');
+  res.end(JSON.stringify(req.body, null, 2));
 })
 
 
-app.listen(app.get('port'), function(){
-    // console.log('Listening on port ' + app.get('port'));
+var server = app.listen(config.port, function () {
+
+  var host = server.address().address
+  var port = server.address().port
+
+  // console.log('Example app listening at http://%s:%s', host, port)
 });

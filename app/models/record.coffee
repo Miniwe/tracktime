@@ -1,7 +1,6 @@
 class Tracktime.Record extends Backbone.Model
-
-  urlRoot: '/records'
-  localStorage: new Backbone.LocalStorage ('records-backbone')
+  idAttribute: "_id"
+  # localStorage: new Backbone.LocalStorage ('records-backbone')
 
   defaults:
     _id: null
@@ -31,8 +30,8 @@ class Tracktime.Record extends Backbone.Model
     # @
     # _.extend @attributes, {date: +@get('date')}
 
-  fetch: (params, options) ->
-    console.log 'fetch:', params, options
+  # fetch: (params, options) ->
+    # console.log 'fetch:', params, options
     # @set 'date', new Date parseInt @get('date'), 10
 
 (module?.exports = Tracktime.Record) or @Tracktime.Record = Tracktime.Record

@@ -17,7 +17,7 @@ class Tracktime extends Backbone.Model
     newRecord = new Tracktime.Record _.extend {date: (new Date()).getTime()}, params
     if newRecord.isValid()
       @get('records').add newRecord
-      newRecord.save null,
+      newRecord.save {ajaxSync: true},
         success: () =>
           $.alert 'save success'
           @get('actions').getActive().successAdd()
