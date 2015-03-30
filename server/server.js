@@ -1,23 +1,30 @@
 var express = require('express');
-var bodyParser = require('body-parser');
 var app = express();
 
-var config = require('./config.json');
+var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
+var methodOverride = require('method-override');
+var morgan = require('morgan');
+var fs = require('fs');
+
+var config = require('../config/config.json');
 var cors = require('./libs/cors.js');
 var records = require('./records');
 
 
-app.use(cors);
 
+app.use(cors);
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({
   extended: true
 }));
+app.use(cookieParser());
+app.use(methodOverride());
 
-// app.use(express.cookieParser());
+var accessLogStream = fs.createWriteStream(__dirname + '/../'+config.logPath+'/server_access.log',{flags: 'a'});
+app.use(morgan('combined', {stream: accessLogStream}))
+
 // app.use(express.session({ secret: 'cool beans' }));
-// app.use(express.methodOverride());
-// app.use(allowCrossDomain);
 // app.use(app.router);
 // app.use(express.static(__dirname + '/public'));
 
@@ -69,13 +76,12 @@ app.get('/records', function (req, res) {
 })
 
 app.post('/records', function (req, res) {
-  res.setHeader('Content-Type', 'text/plain');
-  res.write('any will posted');
-  res.end(JSON.stringify(req.body, null, 2));
+  res.setHeader('Content-Type', 'application/json');
+  res.end(JSON.stringify({body: req.body}, null, 2));
 })
 
 
-var server = app.listen(config.port, function () {
+var server = app.listen(config.server.port, function () {
 
   var host = server.address().address
   var port = server.address().port

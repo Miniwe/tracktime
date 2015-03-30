@@ -6,8 +6,8 @@
     },
     "files": {
       ".tmp/app.coffee.js": [
-        "app/models/*.coffee",
-        "app/collections/*.coffee",
+        "app/models/**/*.coffee",
+        "app/collections/**/*.coffee",
         "app/channels/**/*.coffee",
         "app/**/*.coffee"
       ]

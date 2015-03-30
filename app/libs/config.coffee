@@ -1,4 +1,4 @@
-Tracktime.config =
+window.config =
   ROOT: 'http://localhost:3000'
 
-(module?.exports = Tracktime.config) or @Tracktime.config = Tracktime.config
+(module?.exports = window.config) or @window.config = window.config

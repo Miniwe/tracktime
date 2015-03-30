@@ -1,0 +1,7 @@
+{
+  "tmpPath": ".tmp",
+  "logPath": ".logs",
+  "server": {
+    "port": "3000"
+  }
+}

@@ -16,10 +16,11 @@ class Tracktime extends Backbone.Model
   addRecord: (params) ->
     newRecord = new Tracktime.Record _.extend {date: (new Date()).getTime()}, params
     if newRecord.isValid()
-      @get('records').add newRecord
       newRecord.save {ajaxSync: true},
-        success: () =>
+        success: (result) =>
           $.alert 'save success'
+          # @todo next 2 lines remove - all update  only on update localstorage (!)
+          @get('records').add newRecord
           @get('actions').getActive().successAdd()
         error: () =>
           $.alert 'save error'

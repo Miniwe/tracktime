@@ -1,2 +1,2 @@
-_.extend Backbone.Collection.prototype,
+_.extend Backbone.Model.prototype,
   urlRoot: (url) -> [window.config.ROOT, url].join ''

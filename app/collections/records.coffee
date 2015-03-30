@@ -1,13 +1,12 @@
 class Tracktime.RecordsCollection extends Backbone.Collection
   model: Tracktime.Record
   url: () -> @urlRoot('/records')
-  # localStorage: new Backbone.LocalStorage ('records-backbone')
+  localStorage: new Backbone.LocalStorage ('records-backbone')
+
   comparator: (model) -> -model.get('date')
 
   initialize: () ->
     @router = new Tracktime.RecordsRouter {controller: @}
-
-    # console.log @, @url()
     @fetch ajaxSync: true
     # # @clearLocalstorage()
     # models = @localStorage.findAll()

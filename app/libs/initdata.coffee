@@ -2,7 +2,7 @@ Tracktime.initdata = {}
 
 Tracktime.initdata.tmpActions = [
   {
-    title: 'Add record +++'
+    title: 'Add record +4'
     formAction: '#'
     btnClass: 'btn-primary'
     navbarClass: 'navbar-material-amber'

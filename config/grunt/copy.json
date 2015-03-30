@@ -26,6 +26,22 @@
       }
     ]
   },
+  "maps": {
+    "files": [
+      {
+        "expand": true,
+        "cwd": "bower_components/bootstrap-material-design/dist",
+        "src": "css/*.css.map",
+        "dest": "public/assets"
+      },
+      {
+        "expand": true,
+        "cwd": "bower_components/snackbarjs/dist",
+        "src": "snackbar.min.js.map",
+        "dest": "public/assets/js/"
+      }
+    ]
+  },
   "bootstrap": {
     "files": [
       {

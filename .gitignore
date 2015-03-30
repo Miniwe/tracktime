@@ -1,6 +1,7 @@
 *.sw?
 .grunt
 logs
+.logs
 *.seed
 build/Release
 raw

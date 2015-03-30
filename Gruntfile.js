@@ -1,12 +1,10 @@
 'use strict';
 
 var path = require('path');
+var config = require('./config/config.json');
 
 module.exports = function (grunt) {
 
-  var config = {
-    'tmpPath': '.tmp'
-  };
 
   // Load grunt config and tasks automatically
   require('load-grunt-config')(grunt, {
@@ -40,6 +38,7 @@ module.exports = function (grunt) {
   grunt.registerTask('tmp:create', 'Create tmp folder', function() {
     grunt.task.run('tmp:delete');
     grunt.file.mkdir(path.join(process.cwd(), config.tmpPath));
+    grunt.file.mkdir(path.join(process.cwd(), config.logPath));
   });
 
   grunt.registerTask('tmp:delete', 'Delete tmp folder', function() {

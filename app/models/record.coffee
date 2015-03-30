@@ -1,6 +1,7 @@
 class Tracktime.Record extends Backbone.Model
   idAttribute: "_id"
-  # localStorage: new Backbone.LocalStorage ('records-backbone')
+  url: () -> @urlRoot('/records')
+  localStorage: new Backbone.LocalStorage ('records-backbone')
 
   defaults:
     _id: null
@@ -18,6 +19,7 @@ class Tracktime.Record extends Backbone.Model
 
 
   initialize: (options, params, any) ->
+    # @url  = @collection.url
     # @set 'date', new Date(parseInt(options.date || (new Date()).getTime(), 10))
 
   isValid: () ->
