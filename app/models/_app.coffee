@@ -6,7 +6,6 @@ class Tracktime extends Backbone.Model
 
   initialize: () ->
     @populateActions()
-    @populateRecords()
     return
 
   populateRecords: () ->
@@ -19,7 +18,9 @@ class Tracktime extends Backbone.Model
       newRecord.save {ajaxSync: true},
         success: (result) =>
           $.alert 'save success'
-          # @todo next 2 lines remove - all update  only on update localstorage (!)
+          # @todo next 2 lines remove - all update  only on update
+          #     localstorage from server sync (!)
+          #     if no sync will be sync on online and update views
           @get('records').add newRecord
           @get('actions').getActive().successAdd()
         error: () =>

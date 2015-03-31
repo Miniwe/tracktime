@@ -8,14 +8,16 @@
   "dev": {
     "options": {
       "script": "server/server.js",
-      "background": true,
+      "background": false,
       "debug": true
     }
   },
   "prod": {
     "options": {
       "script": "server/server.js",
-      "node_env": "production"
+      "node_env": "production",
+      "background": true,
+      "debug": false
     }
   },
   "test": {

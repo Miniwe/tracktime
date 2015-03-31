@@ -1,4 +1,5 @@
 {
+  "env": "development",
   "tmpPath": ".tmp",
   "logPath": ".logs",
   "server": {

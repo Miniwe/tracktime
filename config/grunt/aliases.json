@@ -11,9 +11,9 @@
     "copy",
     "notify:client_complete"
   ],
-  "serve": [
-    "express:dev:stop",
-    "express:dev:start"
+  "server": [
+    "express:dev",
+    "watch"
   ]
 }
 

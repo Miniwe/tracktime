@@ -28,7 +28,16 @@
             "spawn": false,
             "livereload": 6573
         }
+    },
+    "express": {
+      "files":  [ "server/**/*.js", "server/**/*.coffee" ],
+      "tasks":  [ "express:dev:stop", "express:dev:start" ],
+      "options": {
+        "spawn": true,
+        "livereload": true
+      }
     }
+
 }
 
 

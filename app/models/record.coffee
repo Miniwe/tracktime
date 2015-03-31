@@ -23,7 +23,7 @@ class Tracktime.Record extends Backbone.Model
     # @set 'date', new Date(parseInt(options.date || (new Date()).getTime(), 10))
 
   isValid: () ->
-    # @todo add good vliedation
+    # @todo add good validation
     true
 
   # save: () ->

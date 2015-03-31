@@ -10,7 +10,6 @@ _.extend Tracktime.AppChannel,
   bindComply: () ->
     @comply
       'start':           @startApp
-      'populateRecords': @populateRecords
       'altView':         @altView
       'newRecord':       @newRecord
 
@@ -19,9 +18,6 @@ _.extend Tracktime.AppChannel,
     @router = new Tracktime.AppRouter()
     Backbone.history.start
       pushState: false
-    @populateRecords()
-
-  populateRecords: () ->
     @model.populateRecords()
 
   newRecord: (params) ->

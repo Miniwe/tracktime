@@ -29408,7 +29408,6 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
     Tracktime.prototype.initialize = function() {
       this.populateActions();
-      this.populateRecords();
     };
 
     Tracktime.prototype.populateRecords = function() {
@@ -29777,9 +29776,6 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
       Backbone.history.start({
         pushState: false
       });
-      return this.populateRecords();
-    },
-    populateRecords: function() {
       return this.model.populateRecords();
     },
     newRecord: function(params) {
