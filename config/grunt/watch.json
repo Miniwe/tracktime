@@ -33,7 +33,7 @@
       "files":  [ "server/**/*.js", "server/**/*.coffee" ],
       "tasks":  [ "express:dev:stop", "express:dev:start" ],
       "options": {
-        "spawn": true,
+        "spawn": false,
         "livereload": true
       }
     }

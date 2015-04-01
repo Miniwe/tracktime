@@ -29403,7 +29403,8 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     Tracktime.prototype.urlRoot = "/";
 
     Tracktime.prototype.defaults = {
-      title: "TrackTime App - from"
+      title: "TrackTime App - from",
+      isOnline: false
     };
 
     Tracktime.prototype.initialize = function() {
@@ -29421,9 +29422,8 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
         date: (new Date()).getTime()
       }, params));
       if (newRecord.isValid()) {
-        return newRecord.save({
-          ajaxSync: true
-        }, {
+        return newRecord.save({}, {
+          ajaxSync: Tracktime.AppChannel.request('isOnline'),
           success: (function(_this) {
             return function(result) {
               $.alert('save success');
@@ -29740,7 +29740,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
         controller: this
       });
       return this.fetch({
-        ajaxSync: true
+        ajaxSync: Tracktime.AppChannel.request('isOnline')
       });
     };
 
@@ -29758,15 +29758,18 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     init: function() {
       this.model = new Tracktime();
       this.bindComply();
+      this.bindRequest();
       return this;
     },
     bindComply: function() {
       return this.comply({
         'start': this.startApp,
-        'populateRecords': this.populateRecords,
         'altView': this.altView,
         'newRecord': this.newRecord
       });
+    },
+    bindRequest: function() {
+      return this.reply('isOnline', this.model.get('isOnline'));
     },
     startApp: function() {
       this.view = new Tracktime.AppView({

@@ -19,21 +19,10 @@ class Tracktime.Record extends Backbone.Model
 
 
   initialize: (options, params, any) ->
-    # @url  = @collection.url
     # @set 'date', new Date(parseInt(options.date || (new Date()).getTime(), 10))
 
   isValid: () ->
     # @todo add good validation
     true
-
-  # save: () ->
-    # console.log 'save:', @, +@get('date')
-    # @set 'date', +@get('date')
-    # @
-    # _.extend @attributes, {date: +@get('date')}
-
-  # fetch: (params, options) ->
-    # console.log 'fetch:', params, options
-    # @set 'date', new Date parseInt @get('date'), 10
 
 (module?.exports = Tracktime.Record) or @Tracktime.Record = Tracktime.Record
