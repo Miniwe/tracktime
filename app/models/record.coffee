@@ -1,6 +1,6 @@
 class Tracktime.Record extends Backbone.Model
   idAttribute: "_id"
-  url: () -> @urlRoot('/records')
+  urlRoot: config.ROOT + '/records'
   localStorage: new Backbone.LocalStorage ('records-backbone')
 
   defaults:

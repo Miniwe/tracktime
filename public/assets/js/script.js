@@ -29284,13 +29284,13 @@ this["JST"]["global/app"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
 this["JST"]["layout/footer"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-  return "<div class=\"well\" style=\"margin: 0;\">\n  <p>I'am footer partial</p>\n\n  <p>"
+  return "<div class=\"container\">\n  <div class=\"well\" style=\"margin: 0;\">\n\n\n    <p>I'am footer partial</p>\n\n    <p>"
     + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
     'body': ("Click on subview"),
     'id': ("click-me"),
     'href': ("#click-me")
   },"data":data})))
-    + "</p>\n</div>\n";
+    + "</p>\n  </div>\n</div>\n";
 },"useData":true});
 
 this["JST"]["layout/header"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
@@ -29320,9 +29320,13 @@ this["JST"]["layout/main"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1
   return "";
 },"useData":true});
 
-this["JST"]["layout/menu"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  var helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-  return "<header class=\"hidden\">\n  <h2>Menu</h2>\n</header>\n<div class=\"panel panel-info\">\n  <div class=\"well\">\n    <h5>Sync apps over internet only</h5>\n    <div class=\"checkbox\">\n      <label>\n        <input type=\"checkbox\" id=\"isOnline\"> Sync\n      </label>\n    </div>\n  </div>\n  <div class=\"panel-heading\"><h3>State</h3></div>\n\n  <div class=\"panel-body\">\n\n    <table class=\"table table-condensed\">\n      <tbody>\n        <tr class=\"active\">\n          <td class=\"when\">Today:</td>\n          <td class=\"time\">0:00</td>\n          <td class=\"pounds\">£0.0</td>\n        </tr>\n        <tr class=\"nonactual\">\n          <td class=\"when\">Yesterday:</td>\n          <td class=\"time\">8:00</td>\n          <td class=\"pounds\">£8.0</td>\n        </tr>\n        <tr class=\"active\">\n          <td class=\"when\">This week:</td>\n          <td class=\"time\">16:00</td>\n          <td class=\"pounds\">£16.0</td>\n        </tr>\n        <tr class=\"nonactual\">\n          <td class=\"when\">Previous week:</td>\n          <td class=\"time\">32:00</td>\n          <td class=\"pounds\">£32.0</td>\n        </tr>\n        <tr class=\"active\">\n          <td class=\"when\">This month:</td>\n          <td class=\"time\">48:00</td>\n          <td class=\"pounds\">£48.0</td>\n        </tr>\n        <tr class=\"nonactual\">\n          <td class=\"when\">Previous month:</td>\n          <td class=\"time\">0:00</td>\n          <td class=\"pounds\">£0.0</td>\n        </tr>\n\n\n      </tbody>\n    </table>\n  </div>\n\n\n</div>\n<div class=\"panel panel-primary\">\n  <div class=\"panel-heading\"><h3>Menu</h3></div>\n\n  <div class=\"panel-body\">\n    <div class=\"list-style-group\">\n      "
+this["JST"]["layout/menu"] = Handlebars.template({"1":function(depth0,helpers,partials,data) {
+  return " checked=\"checked\"";
+  },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var stack1, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, buffer = "<header class=\"hidden\">\n  <h2>Menu</h2>\n</header>\n<div class=\"panel panel-info\">\n  <div class=\"well\">\n    <h5>Sync apps over internet only</h5>\n    <div class=\"checkbox\">\n      <label>\n        <input type=\"checkbox\" id=\"isOnline\" ";
+  stack1 = helpers['if'].call(depth0, (depth0 != null ? depth0.isOnline : depth0), {"name":"if","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});
+  if (stack1 != null) { buffer += stack1; }
+  return buffer + "> Sync\n\n      </label>\n    </div>\n  </div>\n  <div class=\"panel-heading\"><h3>State</h3></div>\n\n  <div class=\"panel-body\">\n\n    <table class=\"table table-condensed\">\n      <tbody>\n        <tr class=\"active\">\n          <td class=\"when\">Today:</td>\n          <td class=\"time\">0:00</td>\n          <td class=\"pounds\">£0.0</td>\n        </tr>\n        <tr class=\"nonactual\">\n          <td class=\"when\">Yesterday:</td>\n          <td class=\"time\">8:00</td>\n          <td class=\"pounds\">£8.0</td>\n        </tr>\n        <tr class=\"active\">\n          <td class=\"when\">This week:</td>\n          <td class=\"time\">16:00</td>\n          <td class=\"pounds\">£16.0</td>\n        </tr>\n        <tr class=\"nonactual\">\n          <td class=\"when\">Previous week:</td>\n          <td class=\"time\">32:00</td>\n          <td class=\"pounds\">£32.0</td>\n        </tr>\n        <tr class=\"active\">\n          <td class=\"when\">This month:</td>\n          <td class=\"time\">48:00</td>\n          <td class=\"pounds\">£48.0</td>\n        </tr>\n        <tr class=\"nonactual\">\n          <td class=\"when\">Previous month:</td>\n          <td class=\"time\">0:00</td>\n          <td class=\"pounds\">£0.0</td>\n        </tr>\n\n\n      </tbody>\n    </table>\n  </div>\n\n\n</div>\n<div class=\"panel panel-primary\">\n  <div class=\"panel-heading\"><h3>Menu</h3></div>\n\n  <div class=\"panel-body\">\n    <div class=\"list-style-group\">\n      "
     + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
     'body': ("Populate"),
     'href': ("#populate"),
@@ -29380,18 +29384,28 @@ this["JST"]["layout/menu"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1
 },"useData":true});
 
 this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  var helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-  return "<div class=\"row\">\n\n  <div class=\"icon col-md-1 col-sm-2\">\n    <a  class=\"btn btn-fab btn-fab-mini btn-info\" role=\"menuitem\" tabindex=\"-1\" href=\"#fat\"  data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\"Other wroject will be thouched\">\n      <i class=\"mdi-action-group-work\"></i>\n    </a>\n  </div>\n\n  <div class=\"date col-md-2 col-sm-3\">"
+  var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+  return "<div class=\"row\" id=\""
+    + escapeExpression(((helper = (helper = helpers._id || (depth0 != null ? depth0._id : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"_id","hash":{},"data":data}) : helper)))
+    + "\">\n\n  <div class=\"icon col-md-1 col-sm-2\">\n    <a  class=\"type btn btn-fab btn-fab-mini btn-info\" role=\"menuitem\" tabindex=\"-1\" href=\"#fat\"  data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\"Other wroject will be thouched\">\n      <i class=\"mdi-action-group-work\"></i>\n    </a>\n    <a class=\"edit btn btn-fab btn-fab-mini btn-flat pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Edit action\">\n      <i class=\"mdi-editor-mode-edit\"></i>\n    </a>\n  </div>\n\n  <div class=\"subject col-md-10 col-sm-9\">\n    <p class=\"text-info\">\n      <small><time datetime=\""
     + escapeExpression(((helpers.timestampToDate || (depth0 && depth0.timestampToDate) || helperMissing).call(depth0, (depth0 != null ? depth0.date : depth0), {"name":"timestampToDate","hash":{},"data":data})))
-    + "</div>\n\n  <div class=\"subject col-md-8 col-sm-6\">"
+    + "\">"
+    + escapeExpression(((helpers.timestampToDate || (depth0 && depth0.timestampToDate) || helperMissing).call(depth0, (depth0 != null ? depth0.date : depth0), {"name":"timestampToDate","hash":{},"data":data})))
+    + "</time></small>\n    </p>\n    "
     + escapeExpression(((helpers.nl2br || (depth0 && depth0.nl2br) || helperMissing).call(depth0, (depth0 != null ? depth0.subject : depth0), {"name":"nl2br","hash":{},"data":data})))
-    + "</div>\n\n  <div class=\"menu col-md-1 col-sm-1\">\n    <a class=\"details btn btn-fab btn-fab-mini btn-flat pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Edit action\">\n      <i class=\"mdi-editor-mode-edit\"></i>\n    </a>\n  </div>\n</div>";
+    + "\n  </div>\n\n  <div class=\"menu col-md-1 col-sm-1\">\n    <ul class=\"actions\">\n      <li><a class=\"delete btn btn-fab btn-danger btn-fab-mini pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Delete action\">\n        <i class=\"mdi-navigation-cancel\"></i>\n      </a></li>\n    </ul>\n  </div>\n</div>";
 },"useData":true});
 (function() {
-  var Lokitest, Tracktime,
+  var Lokitest, Tracktime, config,
     extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     hasProp = {}.hasOwnProperty,
     bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
+  config = {
+    ROOT: 'http://localhost:3000'
+  };
+
+  (typeof module !== "undefined" && module !== null ? module.exports = config : void 0) || (this.config = config);
 
   Tracktime = (function(superClass) {
     extend(Tracktime, superClass);
@@ -29400,11 +29414,11 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
       return Tracktime.__super__.constructor.apply(this, arguments);
     }
 
-    Tracktime.prototype.urlRoot = "/";
+    Tracktime.prototype.urlRoot = config.ROOT;
 
     Tracktime.prototype.defaults = {
       title: "TrackTime App - from",
-      isOnline: false
+      isOnline: true
     };
 
     Tracktime.prototype.initialize = function() {
@@ -29627,9 +29641,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
     Record.prototype.idAttribute = "_id";
 
-    Record.prototype.url = function() {
-      return this.urlRoot('/records');
-    };
+    Record.prototype.urlRoot = config.ROOT + '/records';
 
     Record.prototype.localStorage = new Backbone.LocalStorage('records-backbone');
 
@@ -29726,9 +29738,9 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
     RecordsCollection.prototype.model = Tracktime.Record;
 
-    RecordsCollection.prototype.url = function() {
-      return this.urlRoot('/records');
-    };
+    RecordsCollection.prototype.url = (config != null ? config.ROOT : void 0) + '/records';
+
+    RecordsCollection.prototype.urlRoot = (config != null ? config.ROOT : void 0) + '/records';
 
     RecordsCollection.prototype.localStorage = new Backbone.LocalStorage('records-backbone');
 
@@ -29803,12 +29815,6 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     Tracktime.AppChannel.init().command('start');
   });
 
-  _.extend(Backbone.Collection.prototype, {
-    urlRoot: function(url) {
-      return [window.config.ROOT, url].join('');
-    }
-  });
-
   (function() {
     var proxiedSync;
     proxiedSync = Backbone.sync;
@@ -29826,24 +29832,12 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
   })();
 
-  _.extend(Backbone.Model.prototype, {
-    urlRoot: function(url) {
-      return [window.config.ROOT, url].join('');
-    }
-  });
-
   Backbone.Validation.configure({
     selector: 'class_v',
     labelFormatter: 'label_v'
   });
 
   _.extend(Backbone.Model.prototype, Backbone.Validation.mixin);
-
-  window.config = {
-    ROOT: 'http://localhost:3000'
-  };
-
-  (typeof module !== "undefined" && module !== null ? module.exports = window.config : void 0) || (this.window.config = window.config);
 
   Handlebars.registerHelper('link_to', function(options) {
     var attrs, body, key, ref, value;
@@ -30317,6 +30311,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
         container: this
       });
       return this.childViews['menu'] = new Tracktime.AppView.Menu({
+        model: this.model,
         container: this
       });
     };
@@ -30485,10 +30480,6 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
     Main.prototype.template = JST['layout/main'];
 
-    Main.prototype.events = {
-      'click a': 'testLinks'
-    };
-
     Main.prototype.initialize = function() {
       this.render();
       return this.bindEvents();
@@ -30497,10 +30488,6 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     Main.prototype.render = function() {
       var ref;
       return this.$el.html(this.template((ref = this.model) != null ? ref.toJSON() : void 0));
-    };
-
-    Main.prototype.testLinks = function(event) {
-      return $.alert('Clicked' + $(event.target).attr('href'));
     };
 
     Main.prototype.bindEvents = function() {
@@ -30556,9 +30543,13 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
     RecordView.prototype.tagName = 'li';
 
-    RecordView.prototype.className = 'records-group-item';
+    RecordView.prototype.className = 'records-group-item shadow-z-1';
 
     RecordView.prototype.template = JST['records/record'];
+
+    RecordView.prototype.events = {
+      'click .btn.delete': "deleteRecord"
+    };
 
     RecordView.prototype.initialize = function() {
       return this.render();
@@ -30574,6 +30565,16 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
       var mjson;
       mjson = this.model.toJSON();
       return this.$el.html(this.template(mjson));
+    };
+
+    RecordView.prototype.deleteRecord = function(event) {
+      $.alert('was click');
+      event.preventDefault();
+      this.model.set('id', this.model.id);
+      console.log('stat', this.model);
+      return this.model.destroy({
+        ajaxSync: Tracktime.AppChannel.request('isOnline')
+      });
     };
 
     return RecordView;

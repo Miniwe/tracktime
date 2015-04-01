@@ -9,6 +9,7 @@
       "console",
       "window",
       "document",
+      "config",
       "Tracktime",
       "Handlebars",
       "Slideout",

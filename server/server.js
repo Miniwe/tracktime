@@ -33,7 +33,6 @@ if ('development' == app.get('env')) {
 // app.use(express.session({ secret: 'cool beans' }));
 // app.use(express.static(__dirname + '/public'));
 
-
 app.use('/', require('./routes/index')(express));
 app.use('/records', require('./routes/records')(express, db.get()));
 

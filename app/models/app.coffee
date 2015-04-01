@@ -1,9 +1,9 @@
 class Tracktime extends Backbone.Model
-  urlRoot: "/"
+  urlRoot: config.ROOT
 
   defaults:
     title: "TrackTime App - from"
-    isOnline: false
+    isOnline: true
 
   initialize: () ->
     @populateActions()

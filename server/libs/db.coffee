@@ -1,7 +1,7 @@
 module.exports = do ->
   # Instance stores a reference to the Singleton
   instance = undefined
-  base = undefined
+  db = undefined
   BSON = undefined
 
   init = ->
@@ -21,17 +21,16 @@ module.exports = do ->
     server = new Server('localhost', 27017, {auto_reconnect: true})
     db = new Db('trackime', server, {safe: true});
     db.open(open)
-    base = db
 
     privateMethod = ->
-      console.log 'I am private'
+      # console.log 'I am private'
       return
 
     {
       publicMethod: ->
-        console.log 'The public can see me!'
+        # console.log 'The public can see me!'
         return
-      base: base
+      base: db
       bson: BSON.ObjectId
     }
 

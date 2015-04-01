@@ -1,6 +1,7 @@
 class Tracktime.RecordsCollection extends Backbone.Collection
   model: Tracktime.Record
-  url: () -> @urlRoot('/records')
+  url: config?.ROOT + '/records'
+  urlRoot: config?.ROOT + '/records'
   localStorage: new Backbone.LocalStorage ('records-backbone')
 
   comparator: (model) -> -model.get('date')

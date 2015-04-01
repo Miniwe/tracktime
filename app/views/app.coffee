@@ -20,6 +20,7 @@ class Tracktime.AppView extends Backbone.View
     @childViews['footer'] = new Tracktime.AppView.Footer
       container: @
     @childViews['menu'] = new Tracktime.AppView.Menu
+      model: @model,
       container: @
 
   initUI: ->
