@@ -8,6 +8,8 @@ var morgan = require('morgan');
 var fs = require('fs');
 
 // var records = require('./records');
+var db = require('./libs/db');
+
 
 app.use(require('./libs/cors'));
 app.use(require('express-uncapitalize')());
@@ -33,7 +35,7 @@ if ('development' == app.get('env')) {
 
 
 app.use('/', require('./routes/index')(express));
-app.use('/records', require('./routes/records')(express));
+app.use('/records', require('./routes/records')(express, db.get()));
 
 app.use(require('./libs/errors-handlers'));
 
