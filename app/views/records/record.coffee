@@ -17,9 +17,13 @@ class Tracktime.RecordView extends Backbone.View
     @$el.html @template mjson
 
   deleteRecord: (event) ->
-    $.alert 'was click'
+    $.alert
+      content: 'delete record'
+      timeout: 4000
+      style: 'btn-danger'
+
     event.preventDefault()
-    @model.set 'id', @model.id
+    # @model.set 'id', @model.id
     console.log 'stat', @model
     @model.destroy ajaxSync: Tracktime.AppChannel.request 'isOnline'
 

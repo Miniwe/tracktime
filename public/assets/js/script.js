@@ -29441,7 +29441,11 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
           ajaxSync: Tracktime.AppChannel.request('isOnline'),
           success: (function(_this) {
             return function(result) {
-              $.alert('save success');
+              $.alert({
+                content: 'save success',
+                timeout: 4000,
+                style: 'btn-primary'
+              });
               _this.get('records').add(newRecord);
               return _this.get('actions').getActive().successAdd();
             };
@@ -30568,9 +30572,12 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
 
     RecordView.prototype.deleteRecord = function(event) {
-      $.alert('was click');
+      $.alert({
+        content: 'delete record',
+        timeout: 4000,
+        style: 'btn-danger'
+      });
       event.preventDefault();
-      this.model.set('id', this.model.id);
       console.log('stat', this.model);
       return this.model.destroy({
         ajaxSync: Tracktime.AppChannel.request('isOnline')

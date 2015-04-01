@@ -20,7 +20,11 @@ class Tracktime extends Backbone.Model
       newRecord.save {},
         ajaxSync: Tracktime.AppChannel.request 'isOnline'
         success: (result) =>
-          $.alert 'save success'
+          $.alert
+            content: 'save success'
+            timeout: 4000
+            style: 'btn-primary'
+
           # @todo next 2 lines remove - all update  only on update
           #     localstorage from server sync (!)
           #     if no sync will be sync on online and update views
