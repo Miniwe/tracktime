@@ -15,7 +15,7 @@ _.extend Tracktime.AppChannel,
       'newRecord':       @newRecord
 
   bindRequest: () ->
-    @reply 'isOnline', @model.get('isOnline')
+    @reply 'isOnline', () => @model.get('isOnline')
 
   startApp: () ->
     @view = new Tracktime.AppView {model: @model}

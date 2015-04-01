@@ -7,6 +7,7 @@ class Tracktime extends Backbone.Model
 
   initialize: () ->
     @populateActions()
+    @listenTo @, "change:isOnline", @populateRecords
     return
 
   populateRecords: () ->

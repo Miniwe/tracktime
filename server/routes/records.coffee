@@ -7,4 +7,7 @@ module.exports = (express) ->
   router.post '/', (req, res) ->
     res.json JSON.stringify({body: req.body}, null, 2)
 
+  router.put '/:id', (req, res) ->
+    res.send 'any was posted'
+
   router

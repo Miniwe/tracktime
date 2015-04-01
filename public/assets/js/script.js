@@ -29322,7 +29322,7 @@ this["JST"]["layout/main"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1
 
 this["JST"]["layout/menu"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-  return "<header class=\"hidden\">\n  <h2>Menu</h2>\n</header>\n<div class=\"panel panel-info\">\n  <div class=\"panel-heading\"><h3>State</h3></div>\n\n  <div class=\"panel-body\">\n\n    <table class=\"table table-condensed\">\n      <tbody>\n        <tr class=\"active\">\n          <td class=\"when\">Today:</td>\n          <td class=\"time\">0:00</td>\n          <td class=\"pounds\">£0.0</td>\n        </tr>\n        <tr class=\"nonactual\">\n          <td class=\"when\">Yesterday:</td>\n          <td class=\"time\">8:00</td>\n          <td class=\"pounds\">£8.0</td>\n        </tr>\n        <tr class=\"active\">\n          <td class=\"when\">This week:</td>\n          <td class=\"time\">16:00</td>\n          <td class=\"pounds\">£16.0</td>\n        </tr>\n        <tr class=\"nonactual\">\n          <td class=\"when\">Previous week:</td>\n          <td class=\"time\">32:00</td>\n          <td class=\"pounds\">£32.0</td>\n        </tr>\n        <tr class=\"active\">\n          <td class=\"when\">This month:</td>\n          <td class=\"time\">48:00</td>\n          <td class=\"pounds\">£48.0</td>\n        </tr>\n        <tr class=\"nonactual\">\n          <td class=\"when\">Previous month:</td>\n          <td class=\"time\">0:00</td>\n          <td class=\"pounds\">£0.0</td>\n        </tr>\n\n\n      </tbody>\n    </table>\n  </div>\n\n\n</div>\n<div class=\"panel panel-primary\">\n  <div class=\"panel-heading\"><h3>Menu</h3></div>\n\n  <div class=\"panel-body\">\n    <div class=\"list-style-group\">\n      "
+  return "<header class=\"hidden\">\n  <h2>Menu</h2>\n</header>\n<div class=\"panel panel-info\">\n  <div class=\"well\">\n    <h5>Sync apps over internet only</h5>\n    <div class=\"checkbox\">\n      <label>\n        <input type=\"checkbox\" id=\"isOnline\"> Sync\n      </label>\n    </div>\n  </div>\n  <div class=\"panel-heading\"><h3>State</h3></div>\n\n  <div class=\"panel-body\">\n\n    <table class=\"table table-condensed\">\n      <tbody>\n        <tr class=\"active\">\n          <td class=\"when\">Today:</td>\n          <td class=\"time\">0:00</td>\n          <td class=\"pounds\">£0.0</td>\n        </tr>\n        <tr class=\"nonactual\">\n          <td class=\"when\">Yesterday:</td>\n          <td class=\"time\">8:00</td>\n          <td class=\"pounds\">£8.0</td>\n        </tr>\n        <tr class=\"active\">\n          <td class=\"when\">This week:</td>\n          <td class=\"time\">16:00</td>\n          <td class=\"pounds\">£16.0</td>\n        </tr>\n        <tr class=\"nonactual\">\n          <td class=\"when\">Previous week:</td>\n          <td class=\"time\">32:00</td>\n          <td class=\"pounds\">£32.0</td>\n        </tr>\n        <tr class=\"active\">\n          <td class=\"when\">This month:</td>\n          <td class=\"time\">48:00</td>\n          <td class=\"pounds\">£48.0</td>\n        </tr>\n        <tr class=\"nonactual\">\n          <td class=\"when\">Previous month:</td>\n          <td class=\"time\">0:00</td>\n          <td class=\"pounds\">£0.0</td>\n        </tr>\n\n\n      </tbody>\n    </table>\n  </div>\n\n\n</div>\n<div class=\"panel panel-primary\">\n  <div class=\"panel-heading\"><h3>Menu</h3></div>\n\n  <div class=\"panel-body\">\n    <div class=\"list-style-group\">\n      "
     + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
     'body': ("Populate"),
     'href': ("#populate"),
@@ -29409,6 +29409,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
     Tracktime.prototype.initialize = function() {
       this.populateActions();
+      this.listenTo(this, "change:isOnline", this.populateRecords);
     };
 
     Tracktime.prototype.populateRecords = function() {
@@ -29769,7 +29770,11 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
       });
     },
     bindRequest: function() {
-      return this.reply('isOnline', this.model.get('isOnline'));
+      return this.reply('isOnline', (function(_this) {
+        return function() {
+          return _this.model.get('isOnline');
+        };
+      })(this));
     },
     startApp: function() {
       this.view = new Tracktime.AppView({
@@ -30325,9 +30330,18 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
         'padding': 256,
         'tolerance': 70
       });
-      return $("#menuToggler").on('click', function() {
+      $("#menuToggler").on('click', function() {
         return slideout.toggle();
       });
+      return $("#isOnline").on('change', (function(_this) {
+        return function(event) {
+          return _this.updateOnlineStatus(event);
+        };
+      })(this));
+    };
+
+    AppView.prototype.updateOnlineStatus = function(event) {
+      return this.model.set('isOnline', $(event.target).is(":checked"));
     };
 
     return AppView;
