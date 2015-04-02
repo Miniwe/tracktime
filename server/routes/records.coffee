@@ -55,7 +55,7 @@ module.exports = (express, db) ->
           res.send 'error': 'An error has occurred - ' + err
         else
           # console.log '' + result + ' document(s) deleted'
-          res.send req.body
+          res.json {record: id}
         return
       return
 

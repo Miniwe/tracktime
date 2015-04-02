@@ -29678,7 +29678,8 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
       date: function() {
         return (new Date()).getTime();
       },
-      project: 0
+      project: 0,
+      isDeleted: false
     };
 
     Record.prototype.validation = {
@@ -29711,14 +29712,27 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
               return Backbone.sync(method, _model, options);
             };
           }
-          break;
+          return Backbone.sync(method, model, options);
         case 'delete':
-          $.alert('will delete');
-          break;
+          model.save({
+            'isDeleted': true
+          }, {
+            ajaxSync: false
+          });
+          if (options.ajaxSync) {
+            _success = options.success;
+            _model = model;
+            options.success = function(model, response) {
+              options.ajaxSync = !options.ajaxSync;
+              options.success = _success;
+              return Backbone.sync(method, _model, options);
+            };
+          }
+          return Backbone.sync(method, model, options);
         default:
           $.alert("unknown method " + method);
+          return Backbone.sync(method, model, options);
       }
-      return Backbone.sync(method, model, options);
     };
 
     return Record;
@@ -30618,7 +30632,11 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
 
     RecordView.prototype.initialize = function() {
-      return this.render();
+      if (!this.model.get('isDeleted')) {
+        this.$el.parent().remove();
+        this.render();
+      }
+      return this.listenTo(this.model, "change:isDeleted", this.change_isDeleted);
     };
 
     RecordView.prototype.attributes = function() {
@@ -30628,19 +30646,23 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
 
     RecordView.prototype.render = function() {
-      var mjson;
-      mjson = this.model.toJSON();
-      return this.$el.html(this.template(mjson));
+      return this.$el.html(this.template(this.model.toJSON()));
+    };
+
+    RecordView.prototype.change_isDeleted = function() {
+      this.$el.remove();
+      if (this.model.get('isDeleted')) {
+        return this.remove();
+      }
     };
 
     RecordView.prototype.deleteRecord = function(event) {
+      event.preventDefault();
       $.alert({
         content: 'delete record',
         timeout: 4000,
         style: 'btn-danger'
       });
-      event.preventDefault();
-      console.log('stat', this.model);
       return this.model.destroy({
         ajaxSync: Tracktime.AppChannel.request('isOnline')
       });

@@ -9,6 +9,7 @@ class Tracktime.Record extends Backbone.Model
     description: ''
     date: () -> (new Date()).getTime()
     project: 0
+    isDeleted: false
     # order: Tracktime.RecordsCollection.nextOrder()
 
   validation:
@@ -38,10 +39,20 @@ class Tracktime.Record extends Backbone.Model
             _model.id = model._id
             _model.set '_id', model._id
             Backbone.sync method, _model, options
+        Backbone.sync method, model, options
       when 'delete'
-        $.alert 'will delete'
+        model.save {'isDeleted': true}, {ajaxSync: false}
+        if options.ajaxSync
+          _success = options.success
+          _model = model
+          options.success = (model, response) ->
+            options.ajaxSync = !options.ajaxSync
+            options.success = _success
+            Backbone.sync method, _model, options
+
+        Backbone.sync method, model, options
       else
         $.alert "unknown method #{method}"
-    Backbone.sync method, model, options
+        Backbone.sync method, model, options
 
 (module?.exports = Tracktime.Record) or @Tracktime.Record = Tracktime.Record
