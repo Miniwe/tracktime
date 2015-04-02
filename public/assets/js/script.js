@@ -29459,9 +29459,25 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
         date: (new Date()).getTime()
       }, params));
       if (newRecord.isValid()) {
-        return this.get('records').add({
-          date: (new Date()).getTime()
-        }, params);
+        this.get('records').add(newRecord);
+        return newRecord.save({}, {
+          ajaxSync: Tracktime.AppChannel.request('isOnline'),
+          success: (function(_this) {
+            return function(result) {
+              $.alert({
+                content: 'save success',
+                timeout: 4000,
+                style: 'btn-primary'
+              });
+              return _this.get('actions').getActive().successAdd();
+            };
+          })(this),
+          error: (function(_this) {
+            return function() {
+              return $.alert('save error');
+            };
+          })(this)
+        });
       } else {
         return $.alert('Erros validation from add record to collection');
       }
@@ -29679,6 +29695,32 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
       return true;
     };
 
+    Record.prototype.sync = function(method, model, options) {
+      var _model, _success;
+      options = options || {};
+      switch (method) {
+        case 'create':
+          if (options.ajaxSync) {
+            _success = options.success;
+            _model = model.clone();
+            options.success = function(model, response) {
+              options.ajaxSync = !options.ajaxSync;
+              options.success = _success;
+              _model.id = model._id;
+              _model.set('_id', model._id);
+              return Backbone.sync(method, _model, options);
+            };
+          }
+          break;
+        case 'delete':
+          $.alert('will delete');
+          break;
+        default:
+          $.alert("unknown method " + method);
+      }
+      return Backbone.sync(method, model, options);
+    };
+
     return Record;
 
   })(Backbone.Model);
@@ -29700,19 +29742,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
     ActionsCollection.prototype.active = null;
 
-    ActionsCollection.prototype.initialize = function() {
-      var models;
-      models = this.localStorage.findAll();
-      if (!models.length) {
-        _.each(Tracktime.initdata.tmpActions, function(action) {
-          var newAction;
-          newAction = new Tracktime.Action(action);
-          return newAction.save();
-        });
-        models = this.localStorage.findAll();
-      }
-      return this.add(models);
-    };
+    ActionsCollection.prototype.initialize = function() {};
 
     ActionsCollection.prototype.setActive = function(active) {
       var ref;
@@ -29731,6 +29761,20 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
       return _.filter(this.models, function(model) {
         return model.get('isVisible');
       });
+    };
+
+    ActionsCollection.prototype.fetch = function() {
+      var models;
+      models = this.localStorage.findAll();
+      if (!models.length) {
+        _.each(Tracktime.initdata.tmpActions, function(action) {
+          var newAction;
+          newAction = new Tracktime.Action(action);
+          return newAction.save();
+        });
+        models = this.localStorage.findAll();
+      }
+      return this.add(models);
     };
 
     return ActionsCollection;
@@ -29754,10 +29798,6 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
     RecordsCollection.prototype.localStorage = new Backbone.LocalStorage('records-backbone');
 
-    RecordsCollection.prototype.comparator = function(model) {
-      return -model.get('date');
-    };
-
     RecordsCollection.prototype.initialize = function() {
       this.router = new Tracktime.RecordsRouter({
         controller: this
@@ -29765,6 +29805,10 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
       return this.fetch({
         ajaxSync: Tracktime.AppChannel.request('isOnline')
       });
+    };
+
+    RecordsCollection.prototype.comparator = function(model) {
+      return -model.get('date');
     };
 
     RecordsCollection.prototype.clearLocalstorage = function() {};
@@ -30520,20 +30564,23 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
     Menu.prototype.template = JST['layout/menu'];
 
+    Menu.prototype.events = {
+      'change #isOnline': 'updateOnlineStatus'
+    };
+
     Menu.prototype.initialize = function() {
       this.render();
       return this.bindEvents();
     };
 
     Menu.prototype.bindEvents = function() {
-      return this.listenTo(this.model, 'change:isOnline', (function(_this) {
-        return function() {
-          return $('#isOnline').prop('checked', _this.model.get('isOnline'));
-        };
-      })(this));
+      return this.listenTo(this.model, 'change:isOnline', function() {
+        return $('#isOnline').prop('checked', this.model.get('isOnline'));
+      });
     };
 
     Menu.prototype.updateOnlineStatus = function(event) {
+      console.log('set new stat', $(event.target).is(":checked"));
       return this.model.set('isOnline', $(event.target).is(":checked"));
     };
 
@@ -30631,7 +30678,6 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     RecordsView.prototype.updateRecordsList = function() {
       var args;
       args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-      console.log.apply(console, ["call add/remove"].concat(slice.call(args)));
       this.$el.html('');
       return this.render();
     };

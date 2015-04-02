@@ -13,7 +13,6 @@ class Tracktime.RecordsView extends Backbone.View
     , @
 
   updateRecordsList: (args...) ->
-    console.log "call add/remove", args...
     @$el.html('')
     @render()
 

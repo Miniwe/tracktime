@@ -25,4 +25,23 @@ class Tracktime.Record extends Backbone.Model
     # @todo add good validation
     true
 
+  sync: (method, model, options) ->
+    options = options or {}
+    switch method
+      when 'create'
+        if options.ajaxSync
+          _success = options.success
+          _model = model.clone()
+          options.success = (model, response) ->
+            options.ajaxSync = !options.ajaxSync
+            options.success = _success
+            _model.id = model._id
+            _model.set '_id', model._id
+            Backbone.sync method, _model, options
+      when 'delete'
+        $.alert 'will delete'
+      else
+        $.alert "unknown method #{method}"
+    Backbone.sync method, model, options
+
 (module?.exports = Tracktime.Record) or @Tracktime.Record = Tracktime.Record

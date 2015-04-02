@@ -4,11 +4,10 @@ class Tracktime.RecordsCollection extends Backbone.Collection
   urlRoot: config?.ROOT + '/records'
   localStorage: new Backbone.LocalStorage ('records-backbone')
 
-  comparator: (model) -> -model.get('date')
-
   initialize: () ->
     @router = new Tracktime.RecordsRouter {controller: @}
     @fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
+
     # # @clearLocalstorage()
     # models = @localStorage.findAll()
 
@@ -19,6 +18,8 @@ class Tracktime.RecordsCollection extends Backbone.Collection
     #   models = @localStorage.findAll()
 
     # @add models
+
+  comparator: (model) -> -model.get('date')
 
   clearLocalstorage: () ->
     # models = @localStorage.findAll()

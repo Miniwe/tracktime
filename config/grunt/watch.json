@@ -30,7 +30,7 @@
         }
     },
     "express": {
-      "files":  [ "server/**/*.js", "server/**/*.coffee" ],
+      "files":  [ "server/**/*._js", "server/**/*._coffee" ],
       "tasks":  [ "express:dev:stop", "express:dev:start" ],
       "options": {
         "spawn": false,
