@@ -29418,12 +29418,33 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
     Tracktime.prototype.defaults = {
       title: "TrackTime App - from",
-      isOnline: true
+      isOnline: false
     };
 
     Tracktime.prototype.initialize = function() {
+      this.set('isOnline', this.checkOnline());
       this.populateActions();
       this.listenTo(this, "change:isOnline", this.populateRecords);
+      return this.setWindowListeners();
+    };
+
+    Tracktime.prototype.checkOnline = function() {
+      return (window.navigator.onLine === true) || false;
+    };
+
+    Tracktime.prototype.setWindowListeners = function() {
+      window.addEventListener("offline", (function(_this) {
+        return function(e) {
+          $.alert("offline");
+          return _this.set('isOnline', false);
+        };
+      })(this), false);
+      return window.addEventListener("online", (function(_this) {
+        return function(e) {
+          $.alert("online");
+          return _this.set('isOnline', true);
+        };
+      })(this), false);
     };
 
     Tracktime.prototype.populateRecords = function() {

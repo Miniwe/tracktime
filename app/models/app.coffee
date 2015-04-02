@@ -3,12 +3,28 @@ class Tracktime extends Backbone.Model
 
   defaults:
     title: "TrackTime App - from"
-    isOnline: true
+    isOnline: false
 
   initialize: () ->
+    @set 'isOnline', @checkOnline()
     @populateActions()
     @listenTo @, "change:isOnline", @populateRecords
-    return
+    @setWindowListeners()
+
+  checkOnline: () ->
+    (window.navigator.onLine == true) or false
+
+  setWindowListeners: () ->
+    window.addEventListener "offline", (e) =>
+      $.alert "offline"
+      @set 'isOnline', false
+    , false
+
+    window.addEventListener "online", (e) =>
+      $.alert "online"
+      @set 'isOnline', true
+    , false
+
 
   populateRecords: () ->
     @set 'records', new Tracktime.RecordsCollection()

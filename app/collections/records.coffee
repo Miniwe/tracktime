@@ -8,7 +8,7 @@ class Tracktime.RecordsCollection extends Backbone.Collection
 
   initialize: () ->
     @router = new Tracktime.RecordsRouter {controller: @}
-    @fetch ajaxSync:  Tracktime.AppChannel.request 'isOnline'
+    @fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
     # # @clearLocalstorage()
     # models = @localStorage.findAll()
 

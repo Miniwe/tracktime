@@ -67,9 +67,3 @@ module.exports = (express, db) ->
   router.delete '/:id', deleteRecord
 
   router
-
-
-
-
-
-# curl 'http://localhost:3000/records/551bed5aa15f0e4d6aea340c' -H 'Pragma: no-cache' -H 'Origin: null' -H 'Accept-Encoding: gzip, deflate, sdch' -H 'Accept-Language: ru,en-US;q=0.8,en;q=0.6' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.104 Safari/537.36' -H 'Accept: application/json, text/javascript, */*; q=0.01' -H 'Cache-Control: no-cache' -H 'Cookie: PHPSESSID=bec910e6332d168d8dffa0e0a0009deb' -H 'Connection: keep-alive' --compressed
