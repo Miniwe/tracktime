@@ -1,7 +1,7 @@
 class Tracktime.Action extends Backbone.Model
 
   idAttribute: "_id"
-  urlRoot: '/actions' #receive on activate actions for user (!)
+  url: '/actions' #receive on activate actions for user (!)
 
   defaults:
     _id: null

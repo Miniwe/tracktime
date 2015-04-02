@@ -29399,7 +29399,8 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
   var Lokitest, Tracktime, config,
     extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     hasProp = {}.hasOwnProperty,
-    bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+    bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    slice = [].slice;
 
   config = {
     ROOT: 'http://localhost:3000'
@@ -29458,25 +29459,9 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
         date: (new Date()).getTime()
       }, params));
       if (newRecord.isValid()) {
-        return newRecord.save({}, {
-          ajaxSync: Tracktime.AppChannel.request('isOnline'),
-          success: (function(_this) {
-            return function(result) {
-              $.alert({
-                content: 'save success',
-                timeout: 4000,
-                style: 'btn-primary'
-              });
-              _this.get('records').add(newRecord);
-              return _this.get('actions').getActive().successAdd();
-            };
-          })(this),
-          error: (function(_this) {
-            return function() {
-              return $.alert('save error');
-            };
-          })(this)
-        });
+        return this.get('records').add({
+          date: (new Date()).getTime()
+        }, params);
       } else {
         return $.alert('Erros validation from add record to collection');
       }
@@ -29501,7 +29486,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
     Action.prototype.idAttribute = "_id";
 
-    Action.prototype.urlRoot = '/actions';
+    Action.prototype.url = '/actions';
 
     Action.prototype.defaults = {
       _id: null,
@@ -30350,18 +30335,9 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
         'padding': 256,
         'tolerance': 70
       });
-      $("#menuToggler").on('click', function() {
+      return $("#menuToggler").on('click', function() {
         return slideout.toggle();
       });
-      return $("#isOnline").on('change', (function(_this) {
-        return function(event) {
-          return _this.updateOnlineStatus(event);
-        };
-      })(this));
-    };
-
-    AppView.prototype.updateOnlineStatus = function(event) {
-      return this.model.set('isOnline', $(event.target).is(":checked"));
     };
 
     return AppView;
@@ -30545,7 +30521,20 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     Menu.prototype.template = JST['layout/menu'];
 
     Menu.prototype.initialize = function() {
-      return this.render();
+      this.render();
+      return this.bindEvents();
+    };
+
+    Menu.prototype.bindEvents = function() {
+      return this.listenTo(this.model, 'change:isOnline', (function(_this) {
+        return function() {
+          return $('#isOnline').prop('checked', _this.model.get('isOnline'));
+        };
+      })(this));
+    };
+
+    Menu.prototype.updateOnlineStatus = function(event) {
+      return this.model.set('isOnline', $(event.target).is(":checked"));
     };
 
     Menu.prototype.render = function() {
@@ -30640,6 +30629,9 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
 
     RecordsView.prototype.updateRecordsList = function() {
+      var args;
+      args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+      console.log.apply(console, ["call add/remove"].concat(slice.call(args)));
       this.$el.html('');
       return this.render();
     };

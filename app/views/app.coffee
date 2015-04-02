@@ -31,10 +31,6 @@ class Tracktime.AppView extends Backbone.View
       'padding': 256
       'tolerance': 70
     $("#menuToggler").on 'click', () -> slideout.toggle()
-    $("#isOnline").on 'change', (event) => @updateOnlineStatus(event)
-
-  updateOnlineStatus: (event) ->
-    @model.set 'isOnline', $(event.target).is(":checked")
 
 
 (module?.exports = Tracktime.AppView) or @Tracktime.AppView = Tracktime.AppView

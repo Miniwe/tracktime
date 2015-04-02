@@ -33,21 +33,22 @@ class Tracktime extends Backbone.Model
   addRecord: (params) ->
     newRecord = new Tracktime.Record _.extend {date: (new Date()).getTime()}, params
     if newRecord.isValid()
-      newRecord.save {},
-        ajaxSync: Tracktime.AppChannel.request 'isOnline'
-        success: (result) =>
-          $.alert
-            content: 'save success'
-            timeout: 4000
-            style: 'btn-primary'
+      @get('records').add {date: (new Date()).getTime()}, params
+      # newRecord.save {},
+      #   ajaxSync: Tracktime.AppChannel.request 'isOnline'
+      #   success: (result) =>
+      #     $.alert
+      #       content: 'save success'
+      #       timeout: 4000
+      #       style: 'btn-primary'
 
-          # @todo next 2 lines remove - all update  only on update
-          #     localstorage from server sync (!)
-          #     if no sync will be sync on online and update views
-          @get('records').add newRecord
-          @get('actions').getActive().successAdd()
-        error: () =>
-          $.alert 'save error'
+      #     # @todo next 2 lines remove - all update  only on update
+      #     #     localstorage from server sync (!)
+      #     #     if no sync will be sync on online and update views
+      #     @get('records').add newRecord
+      #     @get('actions').getActive().successAdd()
+      #   error: () =>
+      #     $.alert 'save error'
 
     else
       $.alert 'Erros validation from add record to collection'
