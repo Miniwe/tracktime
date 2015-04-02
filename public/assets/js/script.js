@@ -29796,12 +29796,17 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
     RecordsCollection.prototype.urlRoot = (config != null ? config.ROOT : void 0) + '/records';
 
-    RecordsCollection.prototype.localStorage = new Backbone.LocalStorage('records-backbone');
+    RecordsCollection.prototype.localStorage = null;
 
     RecordsCollection.prototype.initialize = function() {
-      this.router = new Tracktime.RecordsRouter({
+      return this.router = new Tracktime.RecordsRouter({
         controller: this
       });
+    };
+
+    RecordsCollection.prototype.resetRecords = function() {
+      delete this.localStorage;
+      this.localStorage = new Backbone.LocalStorage('records-backbone');
       return this.fetch({
         ajaxSync: Tracktime.AppChannel.request('isOnline')
       });
@@ -30541,6 +30546,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
     Main.prototype.renderRecords = function() {
       var recordsView;
+      this.model.get('records').resetRecords();
       recordsView = new Tracktime.RecordsView({
         collection: this.model.get('records')
       });
@@ -30580,7 +30586,6 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
 
     Menu.prototype.updateOnlineStatus = function(event) {
-      console.log('set new stat', $(event.target).is(":checked"));
       return this.model.set('isOnline', $(event.target).is(":checked"));
     };
 

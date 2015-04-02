@@ -13,7 +13,6 @@ class Tracktime.AppView.Menu extends Backbone.View
       $('#isOnline').prop 'checked', @model.get 'isOnline'
 
   updateOnlineStatus: (event) ->
-    console.log 'set new stat', $(event.target).is(":checked")
     @model.set 'isOnline', $(event.target).is(":checked")
 
   render: () ->
