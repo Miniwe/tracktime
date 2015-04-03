@@ -1,7 +1,7 @@
 class Tracktime.Record extends Backbone.Model
   idAttribute: "_id"
   urlRoot: config.ROOT + '/records'
-  localStorage: new Backbone.LocalStorage ('records-backbone')
+  localStorage: new Backbone.LocalStorage (config.collection.records)
 
   defaults:
     _id: null
@@ -39,6 +39,8 @@ class Tracktime.Record extends Backbone.Model
             _model.id = model._id
             _model.set '_id', model._id
             Backbone.sync method, _model, options
+        Backbone.sync method, model, options
+      when 'read'
         Backbone.sync method, model, options
       when 'update'
         if options.ajaxSync

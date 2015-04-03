@@ -29407,12 +29407,15 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
   var Lokitest, Tracktime, config,
     extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     hasProp = {}.hasOwnProperty,
-    bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    slice = [].slice;
+    slice = [].slice,
+    bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   config = {
     ROOT: 'http://localhost:3000',
-    SERVER: 'http://localhost:3000'
+    SERVER: 'http://localhost:3000',
+    collection: {
+      records: 'records-backbone'
+    }
   };
 
   (typeof module !== "undefined" && module !== null ? module.exports = config : void 0) || (this.config = config);
@@ -29458,24 +29461,35 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
 
     Tracktime.prototype.checkServer = function() {
-      var deferred;
+      var callback, deferred, exception_var;
       deferred = $.Deferred();
-      $.ajax({
-        url: config.SERVER,
-        async: false,
-        success: (function(_this) {
-          return function(result) {
-            _this.set('isOnline', true);
-            return deferred.resolve();
-          };
-        })(this),
-        error: (function(_this) {
-          return function(result) {
-            _this.set('isOnline', false);
-            return deferred.resolve();
-          };
-        })(this)
-      });
+      callback = function() {
+        var args;
+        args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+        return console.log.apply(console, ['call'].concat(slice.call(args)));
+      };
+      try {
+        $.ajax({
+          url: config.SERVER + "/status",
+          async: false,
+          dataType: 'jsonp',
+          jsonp: 'callback',
+          success: (function(_this) {
+            return function(result) {
+              _this.set('isOnline', true);
+              return deferred.resolve();
+            };
+          })(this),
+          error: (function(_this) {
+            return function(result) {
+              return deferred.resolve();
+            };
+          })(this)
+        });
+      } catch (_error) {
+        exception_var = _error;
+        this.set('isOnline', false);
+      }
       return deferred.promise();
     };
 
@@ -29493,7 +29507,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
         return function(result) {
           $.alert({
             content: 'save success',
-            timeout: 4000,
+            timeout: 2000,
             style: 'btn-primary'
           });
           return _this.get('actions').getActive().successAdd();
@@ -29696,7 +29710,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
     Record.prototype.urlRoot = config.ROOT + '/records';
 
-    Record.prototype.localStorage = new Backbone.LocalStorage('records-backbone');
+    Record.prototype.localStorage = new Backbone.LocalStorage(config.collection.records);
 
     Record.prototype.defaults = {
       _id: null,
@@ -29739,6 +29753,8 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
               return Backbone.sync(method, _model, options);
             };
           }
+          return Backbone.sync(method, model, options);
+        case 'read':
           return Backbone.sync(method, model, options);
         case 'update':
           if (options.ajaxSync) {
@@ -29848,41 +29864,41 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
     RecordsCollection.prototype.urlRoot = (config != null ? config.ROOT : void 0) + '/records';
 
-    RecordsCollection.prototype.localStorage = null;
+    RecordsCollection.prototype.localStorage = new Backbone.LocalStorage(config.collection.records);
 
     RecordsCollection.prototype.initialize = function() {
-      return this.router = new Tracktime.RecordsRouter({
+      this.router = new Tracktime.RecordsRouter({
         controller: this
-      });
-    };
-
-    RecordsCollection.prototype.resetRecords = function() {
-      delete this.localStorage;
-      this.localStorage = new Backbone.LocalStorage('records-backbone');
-      this.fetch({
-        ajaxSync: Tracktime.AppChannel.request('isOnline')
       });
       if (Tracktime.AppChannel.request('isOnline')) {
         return this.syncCollection();
       }
     };
 
+    RecordsCollection.prototype.resetRecords = function() {
+      delete this.localStorage;
+      this.localStorage = new Backbone.LocalStorage(config.collection.records);
+      if (Tracktime.AppChannel.request('isOnline')) {
+        this.syncCollection();
+      }
+      return this.fetch({
+        ajaxSync: Tracktime.AppChannel.request('isOnline')
+      });
+    };
+
     RecordsCollection.prototype.comparator = function(model) {
       return -model.get('date');
     };
-
-    RecordsCollection.prototype.clearLocalstorage = function() {};
 
     RecordsCollection.prototype.addRecord = function(params, options) {
       var newRecord;
       newRecord = new Tracktime.Record(params);
       if (newRecord.isValid()) {
         this.add(newRecord);
-        return newRecord.save({}, {
-          ajaxSync: options.ajaxSync || Tracktime.AppChannel.request('isOnline'),
-          success: options.success,
-          error: options.error
-        });
+        if (options.ajaxSync == null) {
+          options.ajaxSync = Tracktime.AppChannel.request('isOnline');
+        }
+        return newRecord.save({}, options);
       } else {
         return $.alert('Erros validation from add record to collection');
       }
@@ -29894,18 +29910,24 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
       _localStorage = this.localStorage;
       return _.each(_.clone(models), (function(_this) {
         return function(model) {
-          var modelData;
+          var badModel, newModel;
           if (model.isDeleted) {
             _this.localStorage.destroy(new Tracktime.Record(model));
           }
           if (model._id.length > 24) {
-            modelData = model;
-            delete modelData._id;
-            return _this.addRecord(modelData, {
-              ajaxSync: false,
+            badModel = new Tracktime.Record({
+              _id: model._id
+            });
+            badModel.fetch({
+              ajaxSync: false
+            });
+            newModel = badModel.toJSON();
+            delete newModel._id;
+            return _this.addRecord(newModel, {
               success: function(model, response) {
-                console.log('add success', 'will delete');
-                return _this.localStorage.destroy(model);
+                return badModel.destroy({
+                  ajaxSync: false
+                });
               }
             });
           }
@@ -29931,8 +29953,8 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     bindComply: function() {
       return this.comply({
         'start': this.startApp,
-        'altView': this.altView,
-        'newRecord': this.newRecord
+        'newRecord': this.newRecord,
+        'serverOnline': this.serverOnline
       });
     },
     bindRequest: function() {
@@ -29955,11 +29977,8 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     newRecord: function(params) {
       return this.model.addRecord(params);
     },
-    altView: function() {
-      this.model.set('title', 'Mody App');
-      return this.view2 = new Tracktime.AppView2({
-        model: this.model
-      });
+    serverOnline: function() {
+      return this.model.set('isOnline', true);
     }
   });
 
@@ -30165,7 +30184,6 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
     AppRouter.prototype["default"] = function(actions) {
       $.alert('Unknown page');
-      console.log('actions', actions);
       return this.navigate("", true);
     };
 
@@ -30182,8 +30200,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
 
     AppRouter.prototype.withParams = function(param1, param2) {
-      $.alert('withParams');
-      return console.log('withParams', param1, param2);
+      return $.alert('withParams');
     };
 
     return AppRouter;
@@ -30205,8 +30222,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
       'records/:id/edit': 'edit',
       'records/:id/delete': 'delete',
       'records/:id/add': 'add',
-      'records/:id/save': 'save',
-      'records/all/clear': 'actions'
+      'records/:id/save': 'save'
     };
 
     RecordsRouter.prototype.initialize = function(options) {
@@ -30214,38 +30230,27 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
 
     RecordsRouter.prototype.list = function() {
-      $.alert('list');
-      return console.log('list', this);
+      return $.alert("records list");
     };
 
     RecordsRouter.prototype.details = function(id) {
-      $.alert('details');
-      return console.log('details', id);
+      return $.alert("records detaids " + id);
     };
 
     RecordsRouter.prototype.edit = function(id) {
-      $.alert('edit');
-      return console.log('edit', id);
+      return $.alert("records edit " + id);
     };
 
     RecordsRouter.prototype["delete"] = function(id) {
-      $.alert('delete');
-      return console.log('delete', id);
+      return $.alert("records delete " + id);
     };
 
     RecordsRouter.prototype.add = function(id) {
-      $.alert('add');
-      return console.log('add', id);
+      return $.alert("records add " + id);
     };
 
     RecordsRouter.prototype.save = function(id) {
-      $.alert('save');
-      return console.log('save', id);
-    };
-
-    RecordsRouter.prototype.allClear = function() {
-      $.alert('clear local storage @tmp');
-      return this.controller.clearLocalstorage();
+      return $.alert("records save " + id);
     };
 
     return RecordsRouter;

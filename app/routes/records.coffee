@@ -6,37 +6,26 @@ class Tracktime.RecordsRouter extends Backbone.Router
     'records/:id/delete':  'delete'
     'records/:id/add':     'add'
     'records/:id/save':    'save'
-    'records/all/clear':   'actions'
 
   initialize: (options) ->
     _.extend @, options
 
   list: () ->
-    $.alert 'list'
-    console.log 'list', @
+    $.alert "records list"
 
   details: (id) ->
-    $.alert 'details'
-    console.log 'details', id
+    $.alert "records detaids #{id}"
 
   edit: (id) ->
-    $.alert 'edit'
-    console.log 'edit', id
+    $.alert "records edit #{id}"
 
   delete: (id) ->
-    $.alert 'delete'
-    console.log 'delete', id
+    $.alert "records delete #{id}"
 
   add: (id) ->
-    $.alert 'add'
-    console.log 'add', id
+    $.alert "records add #{id}"
 
   save: (id) ->
-    $.alert 'save'
-    console.log 'save', id
-
-  allClear: () ->
-    $.alert 'clear local storage @tmp'
-    @controller.clearLocalstorage()
+    $.alert "records save #{id}"
 
 (module?.exports = Tracktime.RecordsRouter) or @Tracktime.RecordsRouter = Tracktime.RecordsRouter

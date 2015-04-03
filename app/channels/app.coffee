@@ -1,4 +1,3 @@
-# https://github.com/marionettejs/backbone.radio
 Tracktime.AppChannel = Backbone.Radio.channel 'app'
 
 _.extend Tracktime.AppChannel,
@@ -11,8 +10,8 @@ _.extend Tracktime.AppChannel,
   bindComply: () ->
     @comply
       'start':           @startApp
-      'altView':         @altView
       'newRecord':       @newRecord
+      'serverOnline':    @serverOnline
 
   bindRequest: () ->
     @reply 'isOnline', () => @model.get('isOnline')
@@ -27,9 +26,8 @@ _.extend Tracktime.AppChannel,
   newRecord: (params) ->
     @model.addRecord(params)
 
-  altView: () ->
-    @model.set 'title', 'Mody App'
-    @view2 = new Tracktime.AppView2 {model: @model}
+  serverOnline: () ->
+    @model.set 'isOnline', true
 
 
 (module?.exports = Tracktime.AppChannel) or @Tracktime.AppChannel = Tracktime.AppChannel

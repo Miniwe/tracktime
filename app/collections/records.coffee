@@ -2,44 +2,27 @@ class Tracktime.RecordsCollection extends Backbone.Collection
   model: Tracktime.Record
   url: config?.ROOT + '/records'
   urlRoot: config?.ROOT + '/records'
-  localStorage: null
+  localStorage: new Backbone.LocalStorage (config.collection.records)
 
   initialize: () ->
     @router = new Tracktime.RecordsRouter {controller: @}
-    # @resetRecords()
-    # # @clearLocalstorage()
-    # models = @localStorage.findAll()
-
-    # unless models.length
-    #   _.each Tracktime.initdata.tmpRecords, (record) ->
-    #     newRecord = new Tracktime.Record _.extend {date: (new Date()).getTime()}, record
-    #     newRecord.save()
-    #   models = @localStorage.findAll()
-
-    # @add models
+    @syncCollection() if Tracktime.AppChannel.request 'isOnline'
 
   resetRecords: () ->
     delete @localStorage
-    @localStorage = new Backbone.LocalStorage ('records-backbone')
-    @fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
+    @localStorage = new Backbone.LocalStorage (config.collection.records)
     @syncCollection() if Tracktime.AppChannel.request 'isOnline'
+    @fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
 
   comparator: (model) -> -model.get('date')
-
-  clearLocalstorage: () ->
-    # models = @localStorage.findAll()
-    # @add models
-    # _.each _.clone(@models), (model) ->
-    #   model.destroy()
 
   addRecord: (params, options) ->
     newRecord = new Tracktime.Record params
     if newRecord.isValid()
       @add newRecord
-      newRecord.save {},
-        ajaxSync: options.ajaxSync || Tracktime.AppChannel.request 'isOnline'
-        success: options.success
-        error: options.error
+      unless options.ajaxSync?
+        options.ajaxSync = Tracktime.AppChannel.request 'isOnline'
+      newRecord.save {}, options
     else
       $.alert 'Erros validation from add record to collection'
 
@@ -50,13 +33,13 @@ class Tracktime.RecordsCollection extends Backbone.Collection
       if model.isDeleted
         @localStorage.destroy (new Tracktime.Record(model))
       if model._id.length > 24
-        modelData = model
-        delete modelData._id
-        @addRecord modelData,
-          ajaxSync: false
+        badModel = new Tracktime.Record {_id: model._id}
+        badModel.fetch {ajaxSync: false}
+        newModel = badModel.toJSON()
+        delete newModel._id
+        @addRecord newModel,
           success: (model, response) =>
-            console.log 'add success', 'will delete'
-            @localStorage.destroy model
+            badModel.destroy {ajaxSync: false}
 
 
 (module?.exports = Tracktime.RecordsCollection) or @Tracktime.RecordsCollection = Tracktime.RecordsCollection

@@ -26,15 +26,21 @@ class Tracktime extends Backbone.Model
 
   checkServer: () ->
     deferred = $.Deferred()
-    $.ajax
-      url: config.SERVER
-      async: false
-      success: (result) =>
-        @set 'isOnline', true
-        deferred.resolve()
-      error: (result) =>
-        @set 'isOnline', false
-        deferred.resolve()
+    callback = (args...) -> console.log 'call', args...
+    try
+      $.ajax
+        url: "#{config.SERVER}/status"
+        async: false
+        dataType: 'jsonp'
+        jsonp: 'callback'
+        success: (result) =>
+          @set 'isOnline', true
+          deferred.resolve()
+        error: (result) =>
+          # @set 'isOnline', false
+          deferred.resolve()
+    catch exception_var
+      @set 'isOnline', false
     return deferred.promise()
 
 
@@ -48,7 +54,7 @@ class Tracktime extends Backbone.Model
     success = (result) =>
       $.alert
         content: 'save success'
-        timeout: 4000
+        timeout: 2000
         style: 'btn-primary'
       @get('actions').getActive().successAdd()
     error = () =>

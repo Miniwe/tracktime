@@ -14,7 +14,6 @@ class Tracktime.AppRouter extends Backbone.Router
 
   default: (actions) ->
     $.alert 'Unknown page'
-    console.log 'actions', actions
     @navigate "", true
 
   pagepopulate: () ->
@@ -28,6 +27,5 @@ class Tracktime.AppRouter extends Backbone.Router
 
   withParams: (param1, param2) ->
     $.alert 'withParams'
-    console.log 'withParams', param1, param2
 
 (module?.exports = Tracktime.AppRouter) or @Tracktime.AppRouter = Tracktime.AppRouter
