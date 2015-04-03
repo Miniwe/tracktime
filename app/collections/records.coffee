@@ -32,23 +32,31 @@ class Tracktime.RecordsCollection extends Backbone.Collection
     # _.each _.clone(@models), (model) ->
     #   model.destroy()
 
+  addRecord: (params, options) ->
+    newRecord = new Tracktime.Record params
+    if newRecord.isValid()
+      @add newRecord
+      newRecord.save {},
+        ajaxSync: options.ajaxSync || Tracktime.AppChannel.request 'isOnline'
+        success: options.success
+        error: options.error
+    else
+      $.alert 'Erros validation from add record to collection'
+
   syncCollection: () ->
     models = @localStorage.findAll()
     _localStorage = @localStorage
     _.each _.clone(models), (model) =>
-      console.log 'will be checked', model
       if model.isDeleted
         @localStorage.destroy (new Tracktime.Record(model))
-
-        # @localstorage.destroy(model)
-    # удалить isDeleted
-    #   а так же удалить из коллекции если есть
-    # при неверном номере
-      # отправить на remote сохранение данные из неверного номера
-        # при успешном сохранении
-        # удалить исходное
-        # сохранить на локалке и добавить в коллекцию
-
+      if model._id.length > 24
+        modelData = model
+        delete modelData._id
+        @addRecord modelData,
+          ajaxSync: false
+          success: (model, response) =>
+            console.log 'add success', 'will delete'
+            @localStorage.destroy model
 
 
 (module?.exports = Tracktime.RecordsCollection) or @Tracktime.RecordsCollection = Tracktime.RecordsCollection

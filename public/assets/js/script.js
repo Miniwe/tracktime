@@ -29411,7 +29411,8 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     slice = [].slice;
 
   config = {
-    ROOT: 'http://localhost:3000'
+    ROOT: 'http://localhost:3000',
+    SERVER: 'http://localhost:3000'
   };
 
   (typeof module !== "undefined" && module !== null ? module.exports = config : void 0) || (this.config = config);
@@ -29431,7 +29432,9 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
 
     Tracktime.prototype.initialize = function() {
-      this.set('isOnline', this.checkOnline());
+      if (this.checkOnline()) {
+        this.checkServer();
+      }
       this.populateActions();
       this.listenTo(this, "change:isOnline", this.populateRecords);
       return this.setWindowListeners();
@@ -29444,16 +29447,36 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     Tracktime.prototype.setWindowListeners = function() {
       window.addEventListener("offline", (function(_this) {
         return function(e) {
-          $.alert("offline");
           return _this.set('isOnline', false);
         };
       })(this), false);
       return window.addEventListener("online", (function(_this) {
         return function(e) {
-          $.alert("online");
-          return _this.set('isOnline', true);
+          return _this.checkServer();
         };
       })(this), false);
+    };
+
+    Tracktime.prototype.checkServer = function() {
+      var deferred;
+      deferred = $.Deferred();
+      $.ajax({
+        url: config.SERVER,
+        async: false,
+        success: (function(_this) {
+          return function(result) {
+            _this.set('isOnline', true);
+            return deferred.resolve();
+          };
+        })(this),
+        error: (function(_this) {
+          return function(result) {
+            _this.set('isOnline', false);
+            return deferred.resolve();
+          };
+        })(this)
+      });
+      return deferred.promise();
     };
 
     Tracktime.prototype.populateRecords = function() {
@@ -29462,33 +29485,29 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
 
     Tracktime.prototype.addRecord = function(params) {
-      var newRecord;
-      newRecord = new Tracktime.Record(_.extend({
+      var error, success;
+      _.extend(params, {
         date: (new Date()).getTime()
-      }, params));
-      if (newRecord.isValid()) {
-        this.get('records').add(newRecord);
-        return newRecord.save({}, {
-          ajaxSync: Tracktime.AppChannel.request('isOnline'),
-          success: (function(_this) {
-            return function(result) {
-              $.alert({
-                content: 'save success',
-                timeout: 4000,
-                style: 'btn-primary'
-              });
-              return _this.get('actions').getActive().successAdd();
-            };
-          })(this),
-          error: (function(_this) {
-            return function() {
-              return $.alert('save error');
-            };
-          })(this)
-        });
-      } else {
-        return $.alert('Erros validation from add record to collection');
-      }
+      });
+      success = (function(_this) {
+        return function(result) {
+          $.alert({
+            content: 'save success',
+            timeout: 4000,
+            style: 'btn-primary'
+          });
+          return _this.get('actions').getActive().successAdd();
+        };
+      })(this);
+      error = (function(_this) {
+        return function() {
+          return $.alert('save error');
+        };
+      })(this);
+      return this.get('records').addRecord(params, {
+        success: success,
+        error: error
+      });
     };
 
     Tracktime.prototype.populateActions = function() {
@@ -29854,15 +29873,41 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
     RecordsCollection.prototype.clearLocalstorage = function() {};
 
+    RecordsCollection.prototype.addRecord = function(params, options) {
+      var newRecord;
+      newRecord = new Tracktime.Record(params);
+      if (newRecord.isValid()) {
+        this.add(newRecord);
+        return newRecord.save({}, {
+          ajaxSync: options.ajaxSync || Tracktime.AppChannel.request('isOnline'),
+          success: options.success,
+          error: options.error
+        });
+      } else {
+        return $.alert('Erros validation from add record to collection');
+      }
+    };
+
     RecordsCollection.prototype.syncCollection = function() {
       var _localStorage, models;
       models = this.localStorage.findAll();
       _localStorage = this.localStorage;
       return _.each(_.clone(models), (function(_this) {
         return function(model) {
-          console.log('will be checked', model);
+          var modelData;
           if (model.isDeleted) {
-            return _this.localStorage.destroy(new Tracktime.Record(model));
+            _this.localStorage.destroy(new Tracktime.Record(model));
+          }
+          if (model._id.length > 24) {
+            modelData = model;
+            delete modelData._id;
+            return _this.addRecord(modelData, {
+              ajaxSync: false,
+              success: function(model, response) {
+                console.log('add success', 'will delete');
+                return _this.localStorage.destroy(model);
+              }
+            });
           }
         };
       })(this));

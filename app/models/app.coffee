@@ -6,7 +6,7 @@ class Tracktime extends Backbone.Model
     isOnline: false
 
   initialize: () ->
-    @set 'isOnline', @checkOnline()
+    @checkServer() if @checkOnline()
     @populateActions()
     @listenTo @, "change:isOnline", @populateRecords
     @setWindowListeners()
@@ -16,38 +16,47 @@ class Tracktime extends Backbone.Model
 
   setWindowListeners: () ->
     window.addEventListener "offline", (e) =>
-      $.alert "offline"
       @set 'isOnline', false
     , false
 
     window.addEventListener "online", (e) =>
-      $.alert "online"
-      @set 'isOnline', true
+      @checkServer()
     , false
+
+
+  checkServer: () ->
+    deferred = $.Deferred()
+    $.ajax
+      url: config.SERVER
+      async: false
+      success: (result) =>
+        @set 'isOnline', true
+        deferred.resolve()
+      error: (result) =>
+        @set 'isOnline', false
+        deferred.resolve()
+    return deferred.promise()
 
 
   populateRecords: () ->
     @set 'records', new Tracktime.RecordsCollection()
     @trigger 'render_records'
 
+
   addRecord: (params) ->
-    newRecord = new Tracktime.Record _.extend {date: (new Date()).getTime()}, params
-    if newRecord.isValid()
-      @get('records').add newRecord
-      newRecord.save {},
-        ajaxSync: Tracktime.AppChannel.request 'isOnline'
-        success: (result) =>
-          $.alert
-            content: 'save success'
-            timeout: 4000
-            style: 'btn-primary'
+    _.extend params, {date: (new Date()).getTime()}
+    success = (result) =>
+      $.alert
+        content: 'save success'
+        timeout: 4000
+        style: 'btn-primary'
+      @get('actions').getActive().successAdd()
+    error = () =>
+      $.alert 'save error'
+    @get('records').addRecord params,
+      success: success,
+      error: error
 
-          @get('actions').getActive().successAdd()
-        error: () =>
-          $.alert 'save error'
-
-    else
-      $.alert 'Erros validation from add record to collection'
 
   populateActions: () ->
     @set 'actions', new Tracktime.ActionsCollection Tracktime.initdata.tmpActions
