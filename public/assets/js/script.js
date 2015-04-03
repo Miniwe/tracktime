@@ -29387,13 +29387,15 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
   return "<div class=\"row\" id=\""
     + escapeExpression(((helper = (helper = helpers._id || (depth0 != null ? depth0._id : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"_id","hash":{},"data":data}) : helper)))
-    + "\">\n\n  <div class=\"icon col-md-1 col-sm-2\">\n    <a  class=\"type btn btn-fab btn-fab-mini btn-info\" role=\"menuitem\" tabindex=\"-1\" href=\"#fat\"  data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\"Other wroject will be thouched\">\n      <i class=\"mdi-action-group-work\"></i>\n    </a>\n    <a class=\"edit btn btn-fab btn-fab-mini btn-flat pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Edit action\">\n      <i class=\"mdi-editor-mode-edit\"></i>\n    </a>\n  </div>\n\n  <div class=\"subject col-md-10 col-sm-9\">\n    <p class=\"text-info\">\n      <small><time datetime=\""
+    + "\">\n\n  <div class=\"col-icon col-md-1 col-sm-2\">\n    <a  class=\"type btn btn-fab btn-fab-mini btn-info\" role=\"menuitem\" tabindex=\"-1\" href=\"#fat\"  data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\"Other wroject will be thouched\">\n      <i class=\"mdi-action-group-work\"></i>\n    </a>\n    <a class=\"edit btn btn-fab btn-fab-mini btn-flat pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Edit action\">\n      <i class=\"mdi-editor-mode-edit\"></i>\n    </a>\n  </div>\n\n  <div class=\"col-subject col-md-10 col-sm-9\">\n    <p class=\"text-info\">\n      <small><time datetime=\""
     + escapeExpression(((helpers.timestampToDate || (depth0 && depth0.timestampToDate) || helperMissing).call(depth0, (depth0 != null ? depth0.date : depth0), {"name":"timestampToDate","hash":{},"data":data})))
     + "\">"
     + escapeExpression(((helpers.timestampToDate || (depth0 && depth0.timestampToDate) || helperMissing).call(depth0, (depth0 != null ? depth0.date : depth0), {"name":"timestampToDate","hash":{},"data":data})))
-    + "</time></small>\n    </p>\n    "
+    + "</time></small>\n    </p>\n    <textarea class=\"subject_edit hidden\" style=\"width: 100%; border: none; padding: 0;\">"
+    + escapeExpression(((helper = (helper = helpers.subject || (depth0 != null ? depth0.subject : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"subject","hash":{},"data":data}) : helper)))
+    + "</textarea>\n    <div class=\"subject\" style=\"border: none;\">"
     + escapeExpression(((helpers.nl2br || (depth0 && depth0.nl2br) || helperMissing).call(depth0, (depth0 != null ? depth0.subject : depth0), {"name":"nl2br","hash":{},"data":data})))
-    + "\n  </div>\n\n  <div class=\"menu col-md-1 col-sm-1\">\n    <ul class=\"actions\">\n      <li><a class=\"delete btn btn-fab btn-danger btn-fab-mini pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Delete action\">\n        <i class=\"mdi-navigation-cancel\"></i>\n      </a></li>\n    </ul>\n  </div>\n</div>";
+    + "</div>\n  </div>\n\n  <div class=\"col-menu col-md-1 col-sm-1\">\n    <ul class=\"actions\">\n      <li><a class=\"delete btn btn-fab btn-danger btn-fab-mini pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Delete action\">\n        <i class=\"mdi-navigation-cancel\"></i>\n      </a></li>\n    </ul>\n  </div>\n</div>";
 },"useData":true});
 (function() {
   var Lokitest, Tracktime, config,
@@ -30051,6 +30053,14 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     });
   })(jQuery);
 
+  Tracktime.utils = {};
+
+  Tracktime.utils.nl2br = function(text) {
+    return (text + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + '<br>' + '$2');
+  };
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.utils : void 0) || (this.Tracktime.utils = Tracktime.utils);
+
   Tracktime.AppRouter = (function(superClass) {
     extend(AppRouter, superClass);
 
@@ -30618,6 +30628,8 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     extend(RecordView, superClass);
 
     function RecordView() {
+      this.checkHeight = bind(this.checkHeight, this);
+      this.fixEnter = bind(this.fixEnter, this);
       return RecordView.__super__.constructor.apply(this, arguments);
     }
 
@@ -30628,15 +30640,16 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     RecordView.prototype.template = JST['records/record'];
 
     RecordView.prototype.events = {
-      'click .btn.delete': "deleteRecord"
+      'click .btn.delete': "deleteRecord",
+      'click .subject': "toggleEdit"
     };
 
     RecordView.prototype.initialize = function() {
       if (!this.model.get('isDeleted')) {
-        this.$el.parent().remove();
         this.render();
       }
-      return this.listenTo(this.model, "change:isDeleted", this.change_isDeleted);
+      this.listenTo(this.model, "change:isDeleted", this.change_isDeleted);
+      return this.listenTo(this.model, "change:subject", this.change_subject);
     };
 
     RecordView.prototype.attributes = function() {
@@ -30646,14 +30659,39 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
 
     RecordView.prototype.render = function() {
-      return this.$el.html(this.template(this.model.toJSON()));
+      this.$el.html(this.template(this.model.toJSON()));
+      return $('.subject_edit', this.$el).on('keydown', this.fixEnter).on('change, keyup', this.checkHeight).textareaAutoSize();
     };
 
     RecordView.prototype.change_isDeleted = function() {
-      this.$el.remove();
-      if (this.model.get('isDeleted')) {
-        return this.remove();
+      return this.$el.remove();
+    };
+
+    RecordView.prototype.change_subject = function() {
+      $('.subject', this.$el).html(Tracktime.utils.nl2br(this.model.get('subject')));
+      return $('.subject_edit', this.$el).val(this.model.get('subject'));
+    };
+
+    RecordView.prototype.fixEnter = function(event) {
+      var val;
+      if (event.keyCode === 13) {
+        if (event.shiftKey) {
+          val = $(event.target).val();
+          if (!_.isEmpty(val)) {
+            this.model.set('subject', val);
+            this.toggleEdit();
+          }
+          return event.preventDefault();
+        }
       }
+    };
+
+    RecordView.prototype.checkHeight = function(event) {};
+
+    RecordView.prototype.toggleEdit = function(event) {
+      $.alert('click');
+      this.$el.find('.subject_edit').css('min-height', this.$el.find('.subject').height());
+      return this.$el.find('.subject, .subject_edit').css('border', 'apx solid blue').toggleClass('hidden');
     };
 
     RecordView.prototype.deleteRecord = function(event) {
@@ -30691,7 +30729,9 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
 
     RecordsView.prototype.render = function() {
-      return _.each(this.collection.models, (function(_this) {
+      return _.each(this.collection.where({
+        isDeleted: false
+      }), (function(_this) {
         return function(record) {
           var recordView;
           recordView = new Tracktime.RecordView({

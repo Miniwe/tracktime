@@ -16,7 +16,7 @@
 
         width: 100%;
         min-height: 1em;
-        max-height: 20em;
+        // max-height: 20em;
         margin: 0 auto .2em;
         padding: 1em;
 
@@ -57,7 +57,7 @@
 
                 @include opacity(1);
             }
-            .icon {
+            .col-icon {
                 .btn {
                     position: absolute;
                     &.type {
@@ -89,7 +89,7 @@
                 @include opacity(0);
             }
         }
-        .icon {
+        .col-icon {
             .btn {
                 position: absolute;
                 &.type {

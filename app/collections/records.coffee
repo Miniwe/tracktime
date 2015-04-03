@@ -17,6 +17,7 @@ class Tracktime.RecordsCollection extends Backbone.Collection
     #   models = @localStorage.findAll()
 
     # @add models
+
   resetRecords: () ->
     delete @localStorage
     @localStorage = new Backbone.LocalStorage ('records-backbone')

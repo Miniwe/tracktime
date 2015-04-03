@@ -1,6 +1,6 @@
 <div class="row" id="{{_id}}">
 
-  <div class="icon col-md-1 col-sm-2">
+  <div class="col-icon col-md-1 col-sm-2">
     <a  class="type btn btn-fab btn-fab-mini btn-info" role="menuitem" tabindex="-1" href="#fat"  data-toggle="tooltip" data-placement="right" title="" data-original-title="Other wroject will be thouched">
       <i class="mdi-action-group-work"></i>
     </a>
@@ -9,14 +9,15 @@
     </a>
   </div>
 
-  <div class="subject col-md-10 col-sm-9">
+  <div class="col-subject col-md-10 col-sm-9">
     <p class="text-info">
       <small><time datetime="{{timestampToDate date}}">{{timestampToDate date}}</time></small>
     </p>
-    {{nl2br subject}}
+    <textarea class="subject_edit hidden" style="width: 100%; border: none; padding: 0;">{{subject}}</textarea>
+    <div class="subject" style="border: none;">{{nl2br subject}}</div>
   </div>
 
-  <div class="menu col-md-1 col-sm-1">
+  <div class="col-menu col-md-1 col-sm-1">
     <ul class="actions">
       <li><a class="delete btn btn-fab btn-danger btn-fab-mini pull-right" href="javascript:void(0)" data-toggle="tooltip" data-placement="left" title="" data-original-title="Delete action">
         <i class="mdi-navigation-cancel"></i>
