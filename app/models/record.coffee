@@ -40,6 +40,15 @@ class Tracktime.Record extends Backbone.Model
             _model.set '_id', model._id
             Backbone.sync method, _model, options
         Backbone.sync method, model, options
+      when 'update'
+        if options.ajaxSync
+          _success = options.success
+          _model = model
+          options.success = (model, response) ->
+            options.ajaxSync = !options.ajaxSync
+            options.success = _success
+            Backbone.sync method, _model, options
+        Backbone.sync method, model, options
       when 'delete'
         model.save {'isDeleted': true}, {ajaxSync: false}
         if options.ajaxSync

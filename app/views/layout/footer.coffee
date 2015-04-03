@@ -3,6 +3,7 @@ class Tracktime.AppView.Footer extends Backbone.View
   template: JST['layout/footer']
   events:
     'click #click-me': 'clickMe'
+    'click #window-close': 'windowClose'
 
   initialize: () ->
     @render()
@@ -13,6 +14,11 @@ class Tracktime.AppView.Footer extends Backbone.View
   clickMe: (event) ->
     event.preventDefault()
     $.alert 'Subview :: ' + $(event.target).attr 'href'
+
+  windowClose: (event) ->
+    event.preventDefault()
+    $.alert 'Close window'
+    window.close()
 
 
 (module?.exports = Tracktime.AppView.Footer) or @Tracktime.AppView.Footer = Tracktime.AppView.Footer

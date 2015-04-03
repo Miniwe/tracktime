@@ -29290,6 +29290,12 @@ this["JST"]["layout/footer"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta
     'id': ("click-me"),
     'href': ("#click-me")
   },"data":data})))
+    + "</p>\n\n    <p>"
+    + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
+    'body': ("Close window"),
+    'id': ("window-close"),
+    'href': ("#window-close")
+  },"data":data})))
     + "</p>\n  </div>\n</div>\n";
 },"useData":true});
 
@@ -29391,7 +29397,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     + escapeExpression(((helpers.timestampToDate || (depth0 && depth0.timestampToDate) || helperMissing).call(depth0, (depth0 != null ? depth0.date : depth0), {"name":"timestampToDate","hash":{},"data":data})))
     + "\">"
     + escapeExpression(((helpers.timestampToDate || (depth0 && depth0.timestampToDate) || helperMissing).call(depth0, (depth0 != null ? depth0.date : depth0), {"name":"timestampToDate","hash":{},"data":data})))
-    + "</time></small>\n    </p>\n    <textarea class=\"subject_edit hidden\" style=\"width: 100%; border: none; padding: 0;\">"
+    + "</time></small>\n    </p>\n    <textarea class=\"subject_edit form-control hidden\" style=\"width: 100%; border: none; padding: 0;\">"
     + escapeExpression(((helper = (helper = helpers.subject || (depth0 != null ? depth0.subject : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"subject","hash":{},"data":data}) : helper)))
     + "</textarea>\n    <div class=\"subject\" style=\"border: none;\">"
     + escapeExpression(((helpers.nl2br || (depth0 && depth0.nl2br) || helperMissing).call(depth0, (depth0 != null ? depth0.subject : depth0), {"name":"nl2br","hash":{},"data":data})))
@@ -29711,6 +29717,17 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
               options.success = _success;
               _model.id = model._id;
               _model.set('_id', model._id);
+              return Backbone.sync(method, _model, options);
+            };
+          }
+          return Backbone.sync(method, model, options);
+        case 'update':
+          if (options.ajaxSync) {
+            _success = options.success;
+            _model = model;
+            options.success = function(model, response) {
+              options.ajaxSync = !options.ajaxSync;
+              options.success = _success;
               return Backbone.sync(method, _model, options);
             };
           }
@@ -30457,7 +30474,8 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     Footer.prototype.template = JST['layout/footer'];
 
     Footer.prototype.events = {
-      'click #click-me': 'clickMe'
+      'click #click-me': 'clickMe',
+      'click #window-close': 'windowClose'
     };
 
     Footer.prototype.initialize = function() {
@@ -30472,6 +30490,12 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     Footer.prototype.clickMe = function(event) {
       event.preventDefault();
       return $.alert('Subview :: ' + $(event.target).attr('href'));
+    };
+
+    Footer.prototype.windowClose = function(event) {
+      event.preventDefault();
+      $.alert('Close window');
+      return window.close();
     };
 
     return Footer;
@@ -30628,7 +30652,6 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     extend(RecordView, superClass);
 
     function RecordView() {
-      this.checkHeight = bind(this.checkHeight, this);
       this.fixEnter = bind(this.fixEnter, this);
       return RecordView.__super__.constructor.apply(this, arguments);
     }
@@ -30660,7 +30683,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
     RecordView.prototype.render = function() {
       this.$el.html(this.template(this.model.toJSON()));
-      return $('.subject_edit', this.$el).on('keydown', this.fixEnter).on('change, keyup', this.checkHeight).textareaAutoSize();
+      return $('.subject_edit', this.$el).on('keydown', this.fixEnter).textareaAutoSize();
     };
 
     RecordView.prototype.change_isDeleted = function() {
@@ -30679,6 +30702,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
           val = $(event.target).val();
           if (!_.isEmpty(val)) {
             this.model.set('subject', val);
+            this.saveRecord();
             this.toggleEdit();
           }
           return event.preventDefault();
@@ -30686,23 +30710,35 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
       }
     };
 
-    RecordView.prototype.checkHeight = function(event) {};
-
     RecordView.prototype.toggleEdit = function(event) {
-      $.alert('click');
       this.$el.find('.subject_edit').css('min-height', this.$el.find('.subject').height());
       return this.$el.find('.subject, .subject_edit').css('border', 'apx solid blue').toggleClass('hidden');
     };
 
+    RecordView.prototype.saveRecord = function() {
+      return this.model.save({}, {
+        ajaxSync: Tracktime.AppChannel.request('isOnline'),
+        success: function(model, respond) {
+          return $.alert({
+            content: 'update record',
+            timeout: 2000,
+            style: 'btn-info'
+          });
+        }
+      });
+    };
+
     RecordView.prototype.deleteRecord = function(event) {
       event.preventDefault();
-      $.alert({
-        content: 'delete record',
-        timeout: 4000,
-        style: 'btn-danger'
-      });
       return this.model.destroy({
-        ajaxSync: Tracktime.AppChannel.request('isOnline')
+        ajaxSync: Tracktime.AppChannel.request('isOnline'),
+        success: function(model, respond) {
+          return $.alert({
+            content: 'delete record',
+            timeout: 2000,
+            style: 'btn-danger'
+          });
+        }
       });
     };
 

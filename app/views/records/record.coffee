@@ -20,7 +20,6 @@ class Tracktime.RecordView extends Backbone.View
     @$el.html @template @model.toJSON()
     $('.subject_edit', @$el)
       .on('keydown', @fixEnter)
-      .on('change, keyup', @checkHeight)
       .textareaAutoSize()
 
   change_isDeleted: () ->
@@ -37,26 +36,33 @@ class Tracktime.RecordView extends Backbone.View
         unless _.isEmpty val
           # $(event.target).val('')
           @model.set 'subject', val
+          @saveRecord()
           @toggleEdit()
         event.preventDefault()
 
-  checkHeight: (event) =>
-    # diff = $('#actions-form').outerHeight(true) - $('.navbar').outerHeight(true)
-    # $('#actions-form').toggleClass "shadow-z-2", (diff > 10)
-
   toggleEdit: (event) ->
-    $.alert 'click'
     @$el.find('.subject_edit').css 'min-height', @$el.find('.subject').height()
     @$el.find('.subject, .subject_edit').css('border', 'apx solid blue').toggleClass 'hidden'
 
+  saveRecord: () ->
+    @model.save {},
+      ajaxSync: Tracktime.AppChannel.request 'isOnline'
+      success: (model, respond) ->
+        $.alert
+          content: 'update record'
+          timeout: 2000
+          style: 'btn-info'
+
   deleteRecord: (event) ->
     event.preventDefault()
-    $.alert
-      content: 'delete record'
-      timeout: 4000
-      style: 'btn-danger'
 
-    @model.destroy ajaxSync: Tracktime.AppChannel.request 'isOnline'
+    @model.destroy
+      ajaxSync: Tracktime.AppChannel.request 'isOnline'
+      success: (model, respond) ->
+        $.alert
+          content: 'delete record'
+          timeout: 2000
+          style: 'btn-danger'
 
 (module?.exports = Tracktime.RecordView) or @Tracktime.RecordView = Tracktime.RecordView
 
