@@ -29840,9 +29840,12 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     RecordsCollection.prototype.resetRecords = function() {
       delete this.localStorage;
       this.localStorage = new Backbone.LocalStorage('records-backbone');
-      return this.fetch({
+      this.fetch({
         ajaxSync: Tracktime.AppChannel.request('isOnline')
       });
+      if (Tracktime.AppChannel.request('isOnline')) {
+        return this.syncCollection();
+      }
     };
 
     RecordsCollection.prototype.comparator = function(model) {
@@ -29850,6 +29853,20 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
 
     RecordsCollection.prototype.clearLocalstorage = function() {};
+
+    RecordsCollection.prototype.syncCollection = function() {
+      var _localStorage, models;
+      models = this.localStorage.findAll();
+      _localStorage = this.localStorage;
+      return _.each(_.clone(models), (function(_this) {
+        return function(model) {
+          console.log('will be checked', model);
+          if (model.isDeleted) {
+            return _this.localStorage.destroy(new Tracktime.Record(model));
+          }
+        };
+      })(this));
+    };
 
     return RecordsCollection;
 

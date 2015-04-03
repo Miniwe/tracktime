@@ -34,7 +34,6 @@ class Tracktime.RecordView extends Backbone.View
       if event.shiftKey
         val = $(event.target).val()
         unless _.isEmpty val
-          # $(event.target).val('')
           @model.set 'subject', val
           @saveRecord()
           @toggleEdit()

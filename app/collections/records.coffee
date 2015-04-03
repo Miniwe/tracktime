@@ -22,6 +22,7 @@ class Tracktime.RecordsCollection extends Backbone.Collection
     delete @localStorage
     @localStorage = new Backbone.LocalStorage ('records-backbone')
     @fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
+    @syncCollection() if Tracktime.AppChannel.request 'isOnline'
 
   comparator: (model) -> -model.get('date')
 
@@ -30,6 +31,24 @@ class Tracktime.RecordsCollection extends Backbone.Collection
     # @add models
     # _.each _.clone(@models), (model) ->
     #   model.destroy()
+
+  syncCollection: () ->
+    models = @localStorage.findAll()
+    _localStorage = @localStorage
+    _.each _.clone(models), (model) =>
+      console.log 'will be checked', model
+      if model.isDeleted
+        @localStorage.destroy (new Tracktime.Record(model))
+
+        # @localstorage.destroy(model)
+    # удалить isDeleted
+    #   а так же удалить из коллекции если есть
+    # при неверном номере
+      # отправить на remote сохранение данные из неверного номера
+        # при успешном сохранении
+        # удалить исходное
+        # сохранить на локалке и добавить в коллекцию
+
 
 
 (module?.exports = Tracktime.RecordsCollection) or @Tracktime.RecordsCollection = Tracktime.RecordsCollection
