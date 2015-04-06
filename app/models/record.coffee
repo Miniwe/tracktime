@@ -7,7 +7,7 @@ class Tracktime.Record extends Backbone.Model
     _id: null
     subject: ''
     description: ''
-    date: () -> (new Date()).getTime()
+    date: () -> (new Date()).toISOString()
     project: 0
     isDeleted: false
     # order: Tracktime.RecordsCollection.nextOrder()
@@ -20,7 +20,6 @@ class Tracktime.Record extends Backbone.Model
 
 
   initialize: (options, params, any) ->
-    # @set 'date', new Date(parseInt(options.date || (new Date()).getTime(), 10))
 
   isValid: () ->
     # @todo add good validation

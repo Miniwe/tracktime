@@ -26,9 +26,9 @@ class Tracktime.AppView.Header extends Backbone.View
       if event.shiftKey
         val = $(event.target).val()
         unless _.isEmpty val
+          event.preventDefault()
           $(event.target).val('')
           @model.get('actions').getActive().processAction(text: val)
-        event.preventDefault()
 
   checkHeight: (event) =>
     diff = $('#actions-form').outerHeight(true) - $('.navbar').outerHeight(true)

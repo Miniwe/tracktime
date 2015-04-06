@@ -18,4 +18,4 @@ Handlebars.registerHelper 'nl2br', (text) ->
   return new Handlebars.SafeString nl2br
 
 Handlebars.registerHelper 'timestampToDate', (date) ->
-    (new Date(parseInt(date,10))).toLocaleString()
+  date

@@ -3,6 +3,6 @@
   "tmpPath": ".tmp",
   "logPath": ".logs",
   "server": {
-    "port": "3000"
+    "port": "5000"
   }
 }

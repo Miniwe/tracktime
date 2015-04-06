@@ -1,13 +1,25 @@
 {
   "default": [],
-  "client": [
-    "tmp:create",
+  "scripts": [
     "coffee_jshint",
     "coffee",
     "bower_concat",
-    "handlebars",
+    "handlebars"
+  ],
+  "client": [
+    "tmp:create",
+    "scripts",
     "compass:dev",
     "concat",
+    "copy",
+    "notify:client_complete"
+  ],
+  "client:prod": [
+    "tmp:create",
+    "scripts",
+    "compass:dev",
+    "concat",
+    "uglify",
     "copy",
     "notify:client_complete"
   ],

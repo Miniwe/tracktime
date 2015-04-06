@@ -50,7 +50,7 @@ class Tracktime extends Backbone.Model
 
 
   addRecord: (params) ->
-    _.extend params, {date: (new Date()).getTime()}
+    _.extend params, {date: (new Date()).toISOString()}
     success = (result) =>
       $.alert
         content: 'save success'

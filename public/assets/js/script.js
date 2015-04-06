@@ -29404,19 +29404,34 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     + "</div>\n  </div>\n\n  <div class=\"col-menu col-md-1 col-sm-1\">\n    <ul class=\"actions\">\n      <li><a class=\"delete btn btn-fab btn-danger btn-fab-mini pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Delete action\">\n        <i class=\"mdi-navigation-cancel\"></i>\n      </a></li>\n    </ul>\n  </div>\n</div>";
 },"useData":true});
 (function() {
-  var Lokitest, Tracktime, config,
+  var Lokitest, Tracktime, config, env, global_config,
     extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     hasProp = {}.hasOwnProperty,
     slice = [].slice,
     bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-  config = {
-    ROOT: 'http://localhost:3000',
-    SERVER: 'http://localhost:3000',
-    collection: {
-      records: 'records-backbone'
+  env = (typeof process !== "undefined" && process !== null ? process.env.NODE_ENV : void 0) || 'dev';
+
+  env = 'production';
+
+  global_config = {
+    production: {
+      ROOT: 'https://ttpms.herokuapp.com',
+      SERVER: 'https://ttpms.herokuapp.com',
+      collection: {
+        records: 'records-backbone'
+      }
+    },
+    dev: {
+      ROOT: 'http://localhost:5000',
+      SERVER: 'http://localhost:5000',
+      collection: {
+        records: 'records-backbone'
+      }
     }
   };
+
+  config = global_config[env];
 
   (typeof module !== "undefined" && module !== null ? module.exports = config : void 0) || (this.config = config);
 
@@ -29501,7 +29516,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     Tracktime.prototype.addRecord = function(params) {
       var error, success;
       _.extend(params, {
-        date: (new Date()).getTime()
+        date: (new Date()).toISOString()
       });
       success = (function(_this) {
         return function(result) {
@@ -29717,7 +29732,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
       subject: '',
       description: '',
       date: function() {
-        return (new Date()).getTime();
+        return (new Date()).toISOString();
       },
       project: 0,
       isDeleted: false
@@ -29887,7 +29902,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
 
     RecordsCollection.prototype.comparator = function(model) {
-      return -model.get('date');
+      return -(new Date(model.get('date'))).getTime();
     };
 
     RecordsCollection.prototype.addRecord = function(params, options) {
@@ -30043,7 +30058,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
   });
 
   Handlebars.registerHelper('timestampToDate', function(date) {
-    return (new Date(parseInt(date, 10))).toLocaleString();
+    return date;
   });
 
   Tracktime.initdata = {};
@@ -30113,19 +30128,19 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     {
       description: 'Lorem',
       subject: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nam, culpa, deleniti, temporibus, itaque similique suscipit saepe rerum voluptates voluptatum asperiores modi possimus vitae inventore dolore illo incidunt dolorem animi iure provident labore minima delectus unde nihil soluta recusandae ut dicta explicabo perspiciatis dolores eum. Numquam molestias reiciendis quibusdam sunt suscipit fugit temporibus asperiores quia. Cum, vel, molestias, sapiente ex nisi blanditiis dolorem quod beatae obcaecati culpa eos eius at vitae sed modi explicabo tempore. Harum, error nam veritatis maiores est at incidunt quae magni amet non qui eum. Aperiam, harum, tenetur facere officia delectus omnis odio totam consequatur obcaecati tempora. ',
-      date: (new Date()).getTime()
+      date: (new Date()).toISOString()
     }, {
       description: 'Tempore',
       subject: 'Accusamus, cumque, aperiam velit quos quisquam ex officiis obcaecati totam ipsa saepe fugiat in. Corrupti, soluta, aliquid cumque adipisci nihil omnis explicabo itaque commodi neque dolorum fugit quibusdam deserunt voluptates corporis amet hic quod blanditiis nesciunt dignissimos vero iure. Omnis, provident ducimus delectus sed in incidunt expedita quae accusantium cum culpa recusandae rerum ipsum vitae aliquid ratione ea architecto optio accusamus similique saepe nobis vel deleniti tempora iure consequatur. Debitis laborum accusantium omnis iure velit necessitatibus quod veniam sequi! Excepturi, praesentium, porro ducimus fugit provident repellendus quibusdam dolorum nisi autem tenetur. Non, neque reiciendis eius sequi accusamus. Quam, nostrum, nesciunt. ',
-      date: (new Date()).getTime()
+      date: (new Date()).toISOString()
     }, {
       description: 'Consequuntur',
       subject: 'Obcaecati, incidunt, optio deleniti earum odio nobis dolore sapiente delectus. Accusamus sequi voluptatibus magni fuga fugit nisi aut nam rem repellat possimus! Delectus, harum nisi eos nostrum necessitatibus ducimus eius odio dolores ratione quas quos laboriosam magnam reprehenderit itaque nihil! Dolor, hic, asperiores alias aut voluptas odit illum voluptatem quod! Pariatur, nesciunt distinctio aliquam quam voluptatibus temporibus voluptate placeat quaerat nemo quidem. Asperiores, nihil quasi molestias suscipit sunt. Itaque, sapiente voluptatibus qui non fugit impedit voluptatem beatae repellat at nulla dignissimos esse doloribus. Officiis, dolorem, id, officia sapiente eius ullam vel dolorum numquam et aspernatur illo deleniti enim quam autem! ',
-      date: (new Date()).getTime()
+      date: (new Date()).toISOString()
     }, {
       description: 'Rem',
       subject: 'Quisquam ab soluta dicta amet possimus iure deserunt expedita facere maxime nemo. Laudantium, quod, dignissimos, quos perspiciatis illo numquam est hic qui totam eligendi aut in provident dolor. Libero, dolores, cumque ut molestiae iusto nostrum tempore voluptatum laborum iure quae? Culpa, et, deserunt, explicabo a assumenda voluptate commodi voluptatum possimus omnis totam libero ipsum delectus? Harum, facilis, suscipit perspiciatis dolorum sapiente quae voluptas assumenda cumque atque accusamus blanditiis ullam doloribus enim placeat saepe dolorem sed quos architecto error vero odit deserunt autem? Sunt, cumque, similique voluptatem quis voluptatum non explicabo quibusdam porro in nihil quae sint rem molestias vero beatae!',
-      date: (new Date()).getTime()
+      date: (new Date()).toISOString()
     }
   ];
 
@@ -30612,12 +30627,12 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
         if (event.shiftKey) {
           val = $(event.target).val();
           if (!_.isEmpty(val)) {
+            event.preventDefault();
             $(event.target).val('');
-            this.model.get('actions').getActive().processAction({
+            return this.model.get('actions').getActive().processAction({
               text: val
             });
           }
-          return event.preventDefault();
         }
       }
     };

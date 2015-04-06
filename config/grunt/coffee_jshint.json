@@ -1,6 +1,7 @@
 {
   "options": {
       "globals": [
+      "process",
       "$",
       "jQuery",
       "_",

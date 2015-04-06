@@ -6,6 +6,7 @@
         "cwd": ".tmp",
         "src": [
           "script.js",
+          "script.min.js",
           "bower_components.js",
           "templates.js",
           "app.coffee.js",

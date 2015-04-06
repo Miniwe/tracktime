@@ -14,7 +14,7 @@ class Tracktime.RecordsCollection extends Backbone.Collection
     @syncCollection() if Tracktime.AppChannel.request 'isOnline'
     @fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
 
-  comparator: (model) -> -model.get('date')
+  comparator: (model) -> - (new Date(model.get('date'))).getTime()
 
   addRecord: (params, options) ->
     newRecord = new Tracktime.Record params
