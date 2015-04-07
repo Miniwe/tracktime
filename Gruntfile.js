@@ -1,7 +1,13 @@
 'use strict';
 
 var path = require('path');
-var config = require('./config/config.json');
+var config = {
+  "tmpPath": ".tmp",
+  "logPath": ".logs",
+  "server": {
+    "port": "5000"
+  }
+};
 
 module.exports = function (grunt) {
 

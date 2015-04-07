@@ -1,8 +1,0 @@
-{
-  "env": "development",
-  "tmpPath": ".tmp",
-  "logPath": ".logs",
-  "server": {
-    "port": "5000"
-  }
-}

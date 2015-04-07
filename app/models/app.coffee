@@ -1,28 +1,21 @@
 class Tracktime extends Backbone.Model
-  urlRoot: config.ROOT
+  urlRoot: config.SERVER
 
   defaults:
     title: "TrackTime App - from"
-    isOnline: false
+    isOnline: null
 
   initialize: () ->
     @checkServer() if @checkOnline()
-    @populateActions()
-    @listenTo @, "change:isOnline", @populateRecords
     @setWindowListeners()
+
+    @populateActions()
+    @set 'records', new Tracktime.RecordsCollection()
+
+    @listenTo @, "change:isOnline", @updateApp
 
   checkOnline: () ->
     (window.navigator.onLine == true) or false
-
-  setWindowListeners: () ->
-    window.addEventListener "offline", (e) =>
-      @set 'isOnline', false
-    , false
-
-    window.addEventListener "online", (e) =>
-      @checkServer()
-    , false
-
 
   checkServer: () ->
     deferred = $.Deferred()
@@ -37,17 +30,24 @@ class Tracktime extends Backbone.Model
           @set 'isOnline', true
           deferred.resolve()
         error: (result) =>
-          # @set 'isOnline', false
           deferred.resolve()
     catch exception_var
       @set 'isOnline', false
     return deferred.promise()
 
+  setWindowListeners: () ->
+    window.addEventListener "offline", (e) =>
+      @set 'isOnline', false
+    , false
 
-  populateRecords: () ->
-    @set 'records', new Tracktime.RecordsCollection()
-    @trigger 'render_records'
+    window.addEventListener "online", (e) =>
+      @checkServer()
+    , false
 
+  updateApp: () ->
+    @get('records').fetch
+      ajaxSync: Tracktime.AppChannel.request 'isOnline'
+      success: () => @trigger 'render_records'
 
   addRecord: (params) ->
     _.extend params, {date: (new Date()).toISOString()}

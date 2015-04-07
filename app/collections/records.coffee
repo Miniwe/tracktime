@@ -1,35 +1,11 @@
 class Tracktime.RecordsCollection extends Backbone.Collection
   model: Tracktime.Record
-  url: config?.ROOT + '/records'
-  urlRoot: config?.ROOT + '/records'
+  url: config?.SERVER + '/records'
+  urlRoot: config?.SERVER + '/records'
   localStorage: new Backbone.LocalStorage (config.collection.records)
 
   initialize: () ->
     @router = new Tracktime.RecordsRouter {controller: @}
-    @syncCollection() if Tracktime.AppChannel.request 'isOnline'
-
-  resetRecords: () ->
-    delete @localStorage
-    @localStorage = new Backbone.LocalStorage (config.collection.records)
-    @syncCollection() if Tracktime.AppChannel.request 'isOnline'
-    @fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
-
-  fetch: (options) ->
-    options.success = @fetchSuccess if options.ajaxSync == true
-    super options
-
-  fetchSuccess: (collection, models, options) =>
-    _.each models, (model) =>
-      #find model local
-      record = new Tracktime.Record(model)
-      localModel = @localStorage.find record
-      if localModel?
-        if localModel.lastAccess < record.get('lastAccess')
-          record.save(model)
-        else if localModel.lastAccess > record.get('lastAccess')
-          record = @get(record.id).save localModel, {patch: true}
-      else
-        record.save()
 
   comparator: (model) -> - (new Date(model.get('date'))).getTime()
 
@@ -43,19 +19,72 @@ class Tracktime.RecordsCollection extends Backbone.Collection
     else
       $.alert 'Erros validation from add record to collection'
 
-  syncCollection: () ->
-    models = @localStorage.findAll()
-    _.each _.clone(models), (model) =>
+  fetch: (options) ->
+    @resetLocalStorage()
+    if options? and options.ajaxSync == true
+      _success = options.success
+      options.success = (collection, response, optionsSuccess) =>
+        @syncRecords(response)
+        _success.apply(@, collection, response, options) if _.isFunction(_success)
+    super options
+
+  syncRecords: (models) ->
+
+    # по всем remote model которые вроде как в коллекции уже
+    _.each models, (model) =>
+      record = @get(model._id)
+      localModel = @localStorage.find record
+      # если нет локальной то сохраняем (локально)
+      unless localModel
+        record.save ajaxSync: false
+      # иначе
+      else
+        # если локальная старее то обновляем с новых данных (локально)
+        modelLastAccess = (new Date(model.lastAccess)).getTime()
+        localLastAccess = (new Date(localModel.lastAccess)).getTime()
+        if localModel.isDeleted
+          # do nothing
+          record.set {'isDeleted': true},  {trigger: false}
+        else if localLastAccess < modelLastAccess
+          record.save model, ajaxSync: false
+        # иначе есть если локальная новее то
+        else if localLastAccess > modelLastAccess
+          # обновляем модель пришедшую в коллекции
+          # сохраняем ее удаленно
+          record.save localModel, ajaxSync: true
+
+    # по всем local моделям
+    localModels = @localStorage.findAll()
+    _.each _.clone(localModels), (model) =>
+      collectionModel = @get(model._id)
+      # если удалена
       if model.isDeleted
-        @localStorage.destroy (new Tracktime.Record(model))
-      if model._id.length > 24
-        badModel = new Tracktime.Record {_id: model._id}
-        badModel.fetch {ajaxSync: false}
-        newModel = badModel.toJSON()
-        delete newModel._id
-        @addRecord newModel,
-          success: (model, response) =>
-            badModel.destroy {ajaxSync: false}
+        modelLastAccess = (new Date(model.lastAccess)).getTime()
+        if collectionModel? and modelLastAccess > (new Date(collectionModel.get('lastAccess'))).getTime()
+          destroedModel = collectionModel
+        else
+          destroedModel = new Tracktime.Record(model)
+        # то удаляем локально и удаленно
+        # и из коллекции если есть
+        destroedModel.destroy ajaxSync: true
+      else
+        # если нет в коллекции
+        unless collectionModel
+          replacedModel = new Tracktime.Record {_id: model._id}
+          replacedModel.fetch {ajaxSync: false}
+          newModel = replacedModel.toJSON()
+          delete newModel._id
+          # то сохраняем ее удаленно
+          # добавляем в коллекцию
+          @addRecord newModel,
+            success: (model, response) =>
+              # заменяем на новосохраненную
+              replacedModel.destroy {ajaxSync: false}
+
+
+  resetLocalStorage: () ->
+    @localStorage = new Backbone.LocalStorage (config.collection.records)
+
 
 
 (module?.exports = Tracktime.RecordsCollection) or @Tracktime.RecordsCollection = Tracktime.RecordsCollection

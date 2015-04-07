@@ -1,6 +1,6 @@
 class Tracktime.Record extends Backbone.Model
   idAttribute: "_id"
-  urlRoot: config.ROOT + '/records'
+  urlRoot: config.SERVER + '/records'
   localStorage: new Backbone.LocalStorage (config.collection.records)
 
   defaults:
@@ -8,7 +8,7 @@ class Tracktime.Record extends Backbone.Model
     subject: ''
     description: ''
     date: () -> (new Date()).toISOString()
-    lastAccess: (new Date()).getTime()
+    lastAccess: (new Date()).toISOString()
     project: 0
     isDeleted: false
     # order: Tracktime.RecordsCollection.nextOrder()
@@ -21,14 +21,18 @@ class Tracktime.Record extends Backbone.Model
 
 
   initialize: (options, params, any) ->
-    @listenTo @, 'change', @updateLastAccess
+    @listenTo @, 'change:subject', @updateLastAccess
 
   isValid: () ->
     # @todo add good validation
     true
 
+  # parse: (response) ->
+  #   response.lastAccess = (new Date(response.lastAccess)).getTime()
+  #   response
+
   updateLastAccess: () ->
-    @set 'lastAccess', (new Date()).getTime()
+    @set 'lastAccess', (new Date()).toISOString()
 
   sync: (method, model, options) ->
     options = options or {}
@@ -67,7 +71,7 @@ class Tracktime.Record extends Backbone.Model
             options.success = _success
             Backbone.sync method, _model, options
 
-        Backbone.sync method, model, options
+          Backbone.sync method, model, options
       else
         $.alert "unknown method #{method}"
         Backbone.sync method, model, options

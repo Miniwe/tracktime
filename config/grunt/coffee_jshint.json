@@ -1,6 +1,8 @@
 {
-  "options": {
-      "globals": [
+  "options":
+  {
+    "globals":
+    [
       "process",
       "$",
       "jQuery",
@@ -19,7 +21,8 @@
       "module"
     ]
   },
-  "files": [
+  "files":
+  [
     "app/**/*.coffee"
   ]
 }

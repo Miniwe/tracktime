@@ -29404,34 +29404,35 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     + "</div>\n  </div>\n\n  <div class=\"col-menu col-md-1 col-sm-1\">\n    <ul class=\"actions\">\n      <li><a class=\"delete btn btn-fab btn-danger btn-fab-mini pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Delete action\">\n        <i class=\"mdi-navigation-cancel\"></i>\n      </a></li>\n    </ul>\n  </div>\n</div>";
 },"useData":true});
 (function() {
-  var Lokitest, Tracktime, config, env, global_config,
+  var Lokitest, Tracktime, config, development, process, production, ref,
     extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     hasProp = {}.hasOwnProperty,
     slice = [].slice,
     bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-  env = (typeof process !== "undefined" && process !== null ? process.env.NODE_ENV : void 0) || 'dev';
+  process = process || {};
 
-  env = 'production';
-
-  global_config = {
-    production: {
-      ROOT: 'https://ttpms.herokuapp.com',
-      SERVER: 'https://ttpms.herokuapp.com',
-      collection: {
-        records: 'records-backbone'
-      }
-    },
-    dev: {
-      ROOT: 'http://localhost:5000',
-      SERVER: 'http://localhost:5000',
-      collection: {
-        records: 'records-backbone'
-      }
+  production = {
+    SERVER: 'https://ttpms.herokuapp.com',
+    collection: {
+      records: 'records-backbone',
+      actions: 'actions-backbone'
     }
   };
 
-  config = global_config[env];
+  development = {
+    SERVER: 'http://localhost:5000',
+    collection: {
+      records: 'records-backbone',
+      actions: 'actions-backbone'
+    }
+  };
+
+  if (((ref = process.env) != null ? ref.NODE_ENV : void 0) === 'production') {
+    config = production;
+  } else {
+    config = development;
+  }
 
   (typeof module !== "undefined" && module !== null ? module.exports = config : void 0) || (this.config = config);
 
@@ -29442,37 +29443,25 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
       return Tracktime.__super__.constructor.apply(this, arguments);
     }
 
-    Tracktime.prototype.urlRoot = config.ROOT;
+    Tracktime.prototype.urlRoot = config.SERVER;
 
     Tracktime.prototype.defaults = {
       title: "TrackTime App - from",
-      isOnline: false
+      isOnline: null
     };
 
     Tracktime.prototype.initialize = function() {
       if (this.checkOnline()) {
         this.checkServer();
       }
+      this.setWindowListeners();
       this.populateActions();
-      this.listenTo(this, "change:isOnline", this.populateRecords);
-      return this.setWindowListeners();
+      this.set('records', new Tracktime.RecordsCollection());
+      return this.listenTo(this, "change:isOnline", this.updateApp);
     };
 
     Tracktime.prototype.checkOnline = function() {
       return (window.navigator.onLine === true) || false;
-    };
-
-    Tracktime.prototype.setWindowListeners = function() {
-      window.addEventListener("offline", (function(_this) {
-        return function(e) {
-          return _this.set('isOnline', false);
-        };
-      })(this), false);
-      return window.addEventListener("online", (function(_this) {
-        return function(e) {
-          return _this.checkServer();
-        };
-      })(this), false);
     };
 
     Tracktime.prototype.checkServer = function() {
@@ -29508,9 +29497,28 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
       return deferred.promise();
     };
 
-    Tracktime.prototype.populateRecords = function() {
-      this.set('records', new Tracktime.RecordsCollection());
-      return this.trigger('render_records');
+    Tracktime.prototype.setWindowListeners = function() {
+      window.addEventListener("offline", (function(_this) {
+        return function(e) {
+          return _this.set('isOnline', false);
+        };
+      })(this), false);
+      return window.addEventListener("online", (function(_this) {
+        return function(e) {
+          return _this.checkServer();
+        };
+      })(this), false);
+    };
+
+    Tracktime.prototype.updateApp = function() {
+      return this.get('records').fetch({
+        ajaxSync: Tracktime.AppChannel.request('isOnline'),
+        success: (function(_this) {
+          return function() {
+            return _this.trigger('render_records');
+          };
+        })(this)
+      });
     };
 
     Tracktime.prototype.addRecord = function(params) {
@@ -29723,7 +29731,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
     Record.prototype.idAttribute = "_id";
 
-    Record.prototype.urlRoot = config.ROOT + '/records';
+    Record.prototype.urlRoot = config.SERVER + '/records';
 
     Record.prototype.localStorage = new Backbone.LocalStorage(config.collection.records);
 
@@ -29734,6 +29742,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
       date: function() {
         return (new Date()).toISOString();
       },
+      lastAccess: (new Date()).toISOString(),
       project: 0,
       isDeleted: false
     };
@@ -29746,10 +29755,16 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
       }
     };
 
-    Record.prototype.initialize = function(options, params, any) {};
+    Record.prototype.initialize = function(options, params, any) {
+      return this.listenTo(this, 'change:subject', this.updateLastAccess);
+    };
 
     Record.prototype.isValid = function() {
       return true;
+    };
+
+    Record.prototype.updateLastAccess = function() {
+      return this.set('lastAccess', (new Date()).toISOString());
     };
 
     Record.prototype.sync = function(method, model, options) {
@@ -29770,6 +29785,8 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
           }
           return Backbone.sync(method, model, options);
         case 'read':
+          return Backbone.sync(method, model, options);
+        case 'patch':
           return Backbone.sync(method, model, options);
         case 'update':
           if (options.ajaxSync) {
@@ -29796,8 +29813,9 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
               options.success = _success;
               return Backbone.sync(method, _model, options);
             };
+            return Backbone.sync(method, model, options);
           }
-          return Backbone.sync(method, model, options);
+          break;
         default:
           $.alert("unknown method " + method);
           return Backbone.sync(method, model, options);
@@ -29828,9 +29846,9 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     ActionsCollection.prototype.initialize = function() {};
 
     ActionsCollection.prototype.setActive = function(active) {
-      var ref;
-      if ((ref = this.active) != null) {
-        ref.set('isActive', false);
+      var ref1;
+      if ((ref1 = this.active) != null) {
+        ref1.set('isActive', false);
       }
       active.set('isActive', true);
       return this.active = active;
@@ -29875,29 +29893,15 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
     RecordsCollection.prototype.model = Tracktime.Record;
 
-    RecordsCollection.prototype.url = (config != null ? config.ROOT : void 0) + '/records';
+    RecordsCollection.prototype.url = (config != null ? config.SERVER : void 0) + '/records';
 
-    RecordsCollection.prototype.urlRoot = (config != null ? config.ROOT : void 0) + '/records';
+    RecordsCollection.prototype.urlRoot = (config != null ? config.SERVER : void 0) + '/records';
 
     RecordsCollection.prototype.localStorage = new Backbone.LocalStorage(config.collection.records);
 
     RecordsCollection.prototype.initialize = function() {
-      this.router = new Tracktime.RecordsRouter({
+      return this.router = new Tracktime.RecordsRouter({
         controller: this
-      });
-      if (Tracktime.AppChannel.request('isOnline')) {
-        return this.syncCollection();
-      }
-    };
-
-    RecordsCollection.prototype.resetRecords = function() {
-      delete this.localStorage;
-      this.localStorage = new Backbone.LocalStorage(config.collection.records);
-      if (Tracktime.AppChannel.request('isOnline')) {
-        this.syncCollection();
-      }
-      return this.fetch({
-        ajaxSync: Tracktime.AppChannel.request('isOnline')
       });
     };
 
@@ -29919,35 +29923,95 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
       }
     };
 
-    RecordsCollection.prototype.syncCollection = function() {
-      var _localStorage, models;
-      models = this.localStorage.findAll();
-      _localStorage = this.localStorage;
-      return _.each(_.clone(models), (function(_this) {
+    RecordsCollection.prototype.fetch = function(options) {
+      var _success;
+      this.resetLocalStorage();
+      if ((options != null) && options.ajaxSync === true) {
+        _success = options.success;
+        options.success = (function(_this) {
+          return function(collection, response, optionsSuccess) {
+            _this.syncRecords(response);
+            if (_.isFunction(_success)) {
+              return _success.apply(_this, collection, response, options);
+            }
+          };
+        })(this);
+      }
+      return RecordsCollection.__super__.fetch.call(this, options);
+    };
+
+    RecordsCollection.prototype.syncRecords = function(models) {
+      var localModels;
+      _.each(models, (function(_this) {
         return function(model) {
-          var badModel, newModel;
-          if (model.isDeleted) {
-            _this.localStorage.destroy(new Tracktime.Record(model));
-          }
-          if (model._id.length > 24) {
-            badModel = new Tracktime.Record({
-              _id: model._id
-            });
-            badModel.fetch({
+          var localLastAccess, localModel, modelLastAccess, record;
+          record = _this.get(model._id);
+          localModel = _this.localStorage.find(record);
+          if (!localModel) {
+            return record.save({
               ajaxSync: false
             });
-            newModel = badModel.toJSON();
-            delete newModel._id;
-            return _this.addRecord(newModel, {
-              success: function(model, response) {
-                return badModel.destroy({
-                  ajaxSync: false
-                });
-              }
-            });
+          } else {
+            modelLastAccess = (new Date(model.lastAccess)).getTime();
+            localLastAccess = (new Date(localModel.lastAccess)).getTime();
+            if (localModel.isDeleted) {
+              return record.set({
+                'isDeleted': true
+              }, {
+                trigger: false
+              });
+            } else if (localLastAccess < modelLastAccess) {
+              return record.save(model, {
+                ajaxSync: false
+              });
+            } else if (localLastAccess > modelLastAccess) {
+              return record.save(localModel, {
+                ajaxSync: true
+              });
+            }
           }
         };
       })(this));
+      localModels = this.localStorage.findAll();
+      return _.each(_.clone(localModels), (function(_this) {
+        return function(model) {
+          var collectionModel, destroedModel, modelLastAccess, newModel, replacedModel;
+          collectionModel = _this.get(model._id);
+          if (model.isDeleted) {
+            modelLastAccess = (new Date(model.lastAccess)).getTime();
+            if ((collectionModel != null) && modelLastAccess > (new Date(collectionModel.get('lastAccess'))).getTime()) {
+              destroedModel = collectionModel;
+            } else {
+              destroedModel = new Tracktime.Record(model);
+            }
+            return destroedModel.destroy({
+              ajaxSync: true
+            });
+          } else {
+            if (!collectionModel) {
+              replacedModel = new Tracktime.Record({
+                _id: model._id
+              });
+              replacedModel.fetch({
+                ajaxSync: false
+              });
+              newModel = replacedModel.toJSON();
+              delete newModel._id;
+              return _this.addRecord(newModel, {
+                success: function(model, response) {
+                  return replacedModel.destroy({
+                    ajaxSync: false
+                  });
+                }
+              });
+            }
+          }
+        };
+      })(this));
+    };
+
+    RecordsCollection.prototype.resetLocalStorage = function() {
+      return this.localStorage = new Backbone.LocalStorage(config.collection.records);
     };
 
     return RecordsCollection;
@@ -29984,10 +30048,9 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
         model: this.model
       });
       this.router = new Tracktime.AppRouter();
-      Backbone.history.start({
+      return Backbone.history.start({
         pushState: false
       });
-      return this.model.populateRecords();
     },
     newRecord: function(params) {
       return this.model.addRecord(params);
@@ -30028,14 +30091,14 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
   _.extend(Backbone.Model.prototype, Backbone.Validation.mixin);
 
   Handlebars.registerHelper('link_to', function(options) {
-    var attrs, body, key, ref, value;
+    var attrs, body, key, ref1, value;
     attrs = {
       href: ''
     };
-    ref = options.hash;
-    for (key in ref) {
-      if (!hasProp.call(ref, key)) continue;
-      value = ref[key];
+    ref1 = options.hash;
+    for (key in ref1) {
+      if (!hasProp.call(ref1, key)) continue;
+      value = ref1[key];
       if (key === 'body') {
         body = Handlebars.Utils.escapeExpression(value);
       } else {
@@ -30445,8 +30508,8 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
 
     ListBtn.prototype.setInputVal = function() {
-      var ref;
-      return (ref = $('textarea', '#actions-form')) != null ? ref.val(this.model.get('inputValue')).focus() : void 0;
+      var ref1;
+      return (ref1 = $('textarea', '#actions-form')) != null ? ref1.val(this.model.get('inputValue')).focus() : void 0;
     };
 
     return ListBtn;
@@ -30534,8 +30597,8 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
 
     Global.prototype.render = function() {
-      var ref;
-      return this.$el.html(this.template((ref = this.model) != null ? ref.toJSON() : void 0));
+      var ref1;
+      return this.$el.html(this.template((ref1 = this.model) != null ? ref1.toJSON() : void 0));
     };
 
     return Global;
@@ -30565,8 +30628,8 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
 
     Footer.prototype.render = function() {
-      var ref;
-      return this.$el.html(this.template((ref = this.model) != null ? ref.toJSON() : void 0));
+      var ref1;
+      return this.$el.html(this.template((ref1 = this.model) != null ? ref1.toJSON() : void 0));
     };
 
     Footer.prototype.clickMe = function(event) {
@@ -30613,8 +30676,8 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
 
     Header.prototype.render = function() {
-      var ref;
-      this.$el.html(this.template((ref = this.model) != null ? ref.toJSON() : void 0));
+      var ref1;
+      this.$el.html(this.template((ref1 = this.model) != null ? ref1.toJSON() : void 0));
       return this.childViews['actions'] = new Tracktime.ActionsView({
         collection: this.model.get('actions'),
         container: this
@@ -30666,8 +30729,8 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
 
     Main.prototype.render = function() {
-      var ref;
-      return this.$el.html(this.template((ref = this.model) != null ? ref.toJSON() : void 0));
+      var ref1;
+      return this.$el.html(this.template((ref1 = this.model) != null ? ref1.toJSON() : void 0));
     };
 
     Main.prototype.bindEvents = function() {
@@ -30676,7 +30739,6 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
     Main.prototype.renderRecords = function() {
       var recordsView;
-      this.model.get('records').resetRecords();
       recordsView = new Tracktime.RecordsView({
         collection: this.model.get('records')
       });
@@ -30720,8 +30782,8 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
 
     Menu.prototype.render = function() {
-      var ref;
-      return this.$el.html(this.template((ref = this.model) != null ? ref.toJSON() : void 0));
+      var ref1;
+      return this.$el.html(this.template((ref1 = this.model) != null ? ref1.toJSON() : void 0));
     };
 
     return Menu;

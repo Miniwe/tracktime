@@ -13,7 +13,6 @@ class Tracktime.AppView.Main extends Backbone.View
     @listenTo @model, 'render_records', @renderRecords
 
   renderRecords: ->
-    @model.get('records').resetRecords()
     recordsView = new Tracktime.RecordsView {collection: @model.get('records')}
     @$el.html recordsView.el
 
