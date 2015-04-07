@@ -14,6 +14,23 @@ class Tracktime.RecordsCollection extends Backbone.Collection
     @syncCollection() if Tracktime.AppChannel.request 'isOnline'
     @fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
 
+  fetch: (options) ->
+    options.success = @fetchSuccess if options.ajaxSync == true
+    super options
+
+  fetchSuccess: (collection, models, options) =>
+    _.each models, (model) =>
+      #find model local
+      record = new Tracktime.Record(model)
+      localModel = @localStorage.find record
+      if localModel?
+        if localModel.lastAccess < record.get('lastAccess')
+          record.save(model)
+        else if localModel.lastAccess > record.get('lastAccess')
+          record = @get(record.id).save localModel, {patch: true}
+      else
+        record.save()
+
   comparator: (model) -> - (new Date(model.get('date'))).getTime()
 
   addRecord: (params, options) ->
@@ -28,7 +45,6 @@ class Tracktime.RecordsCollection extends Backbone.Collection
 
   syncCollection: () ->
     models = @localStorage.findAll()
-    _localStorage = @localStorage
     _.each _.clone(models), (model) =>
       if model.isDeleted
         @localStorage.destroy (new Tracktime.Record(model))

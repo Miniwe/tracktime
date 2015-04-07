@@ -8,6 +8,7 @@ class Tracktime.Record extends Backbone.Model
     subject: ''
     description: ''
     date: () -> (new Date()).toISOString()
+    lastAccess: (new Date()).getTime()
     project: 0
     isDeleted: false
     # order: Tracktime.RecordsCollection.nextOrder()
@@ -20,10 +21,14 @@ class Tracktime.Record extends Backbone.Model
 
 
   initialize: (options, params, any) ->
+    @listenTo @, 'change', @updateLastAccess
 
   isValid: () ->
     # @todo add good validation
     true
+
+  updateLastAccess: () ->
+    @set 'lastAccess', (new Date()).getTime()
 
   sync: (method, model, options) ->
     options = options or {}
@@ -40,6 +45,8 @@ class Tracktime.Record extends Backbone.Model
             Backbone.sync method, _model, options
         Backbone.sync method, model, options
       when 'read'
+        Backbone.sync method, model, options
+      when 'patch'
         Backbone.sync method, model, options
       when 'update'
         if options.ajaxSync

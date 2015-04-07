@@ -25,6 +25,7 @@ class Tracktime.AppView.Header extends Backbone.View
     if event.keyCode == 13
       if event.shiftKey
         val = $(event.target).val()
+        # console.log 'val', val
         unless _.isEmpty val
           event.preventDefault()
           $(event.target).val('')
