@@ -23,8 +23,10 @@ class Tracktime.Action extends Backbone.Model
   attributes: () ->
     id: @model.cid
 
-  initialize: () ->
-    # @to
+  constructor: () ->
+    @set 'details', new Tracktime.Action.Details()
+
+  # initialize: () ->
 
   setActive: () ->
     @collection.setActive @
@@ -41,10 +43,11 @@ class Tracktime.Action extends Backbone.Model
       details: {} # @todo @get('details')
 
   search: () ->
-    console.log 'call search'
+    $.alert 'search under construction'
 
   successAdd: () ->
     @set 'inputValue', ''
+    # @details.reset() # @todo on change details change view controls
 
 (module?.exports = Tracktime.Action) or @Tracktime.Action = Tracktime.Action
 

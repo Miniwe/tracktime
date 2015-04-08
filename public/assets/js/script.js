@@ -29301,7 +29301,7 @@ this["JST"]["layout/header"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta
   },"useData":true});
 
 this["JST"]["layout/header/actions"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  return "<div class=\"select-action-type-dropdown dropdown pull-left\">\n  <button id=\"action_type\" type=\"button\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\" class=\"btn btn-fab btn-warning dropdown-toggle\" title=\"SHIFT + ENTER to submit\">\n    <i class=\"\"></i>\n  </button>\n\n  <ul class=\"dropdown-menu\" role=\"menu\" aria-labelledby=\"dLabel\">\n\n\n  </ul>\n</div>\n\n\n<a id=\"detailsNew\" class=\"btn btn-fab btn-link pull-right\" href=\"javascript:void(0)\" data-toggle=\"popover\" title=\"Popover title\" data-content=\"And here's some amazing content. It's very engaging. Right?\" data-placement=\"left\">\n  <i class=\"mdi-navigation-more-vert\"></i>\n</a>\n\n<div class=\"form-control-wrapper\">\n  <textarea class=\"form-control\" name=\"action\"></textarea>\n  <div class=\"floating-label\">Selected Action Hint</div>\n  <span class=\"material-input\"></span>\n\n  <div class=\"controls-container hidden\">\n    <div class=\"row\">\n      <div class=\"col-md-2\">\n\n\n<div class=\"btn-group btn-block select-date\">\n    <a href=\"javascript:void(0)\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\" id=\"open-cal\"  data-target=\"#\" style=\"padding-left: 15px;\"><i class=\"mdi-action-event pull-left\"></i><div class=\"caption\" style=\"display: inline-block;\"><ruby>Сегодня<rt> 03.01.2015 </rt> </ruby></div> <span class=\"caret\"></span></a>\n    <ul class=\"dropdown-menu\">\n        <li><a href=\"javascript:void(0)\" class=\"btn btn-default\">\n          <ruby>Позавчера<rt> 01.01.2015 </rt> </ruby>\n        </a></li>\n        <li><a href=\"javascript:void(0)\" class=\"btn btn-default\">\n          <ruby>Вчера<rt> 02.01.2015 </rt> </ruby>\n        </a></li>\n        <li><a href=\"javascript:void(0)\" class=\"btn btn-default\">\n          <ruby>Сегодня<rt> 03.01.2015 </rt> </ruby>\n        </a></li>\n        <li><a href=\"javascript:void(0)\" class=\"btn btn-default disabled\">Выбрать дату</a></li>\n    </ul>\n</div>\n\n      </div>\n      <div class=\"col-md-8\">\n\n  <div class=\"slider shor btn-primary slider-material-orange\"></div>\n\n      </div>\n      <div class=\"col-md-2\">\n  <button href=\"#send-form\" id=\"send-form\" class=\"btn btn-primary btn-block\"><i class=\"mdi-action-done pull-left\"></i>Send</button>\n      </div>\n    </div>\n  </div>\n\n\n</div>\n\n";
+  return "<div class=\"select-action-type-dropdown dropdown pull-left\">\n  <button id=\"action_type\" type=\"button\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\" class=\"btn btn-fab btn-warning dropdown-toggle\" title=\"SHIFT + ENTER to submit\">\n    <i class=\"\"></i>\n  </button>\n\n  <ul class=\"dropdown-menu\" role=\"menu\" aria-labelledby=\"dLabel\">\n\n\n  </ul>\n</div>\n\n\n<a id=\"detailsNew\" class=\"btn btn-fab btn-link pull-right\" href=\"javascript:void(0)\" data-toggle=\"popover\" title=\"Popover title\" data-content=\"And here's some amazing content. It's very engaging. Right?\" data-placement=\"left\">\n  <i class=\"mdi-navigation-more-vert\"></i>\n</a>\n\n<div class=\"form-control-wrapper\">\n  <textarea class=\"form-control\" name=\"action\"></textarea>\n  <div class=\"floating-label\">Selected Action Hint</div>\n  <span class=\"material-input\"></span>\n\n  <div class=\"controls-container hidden\">\n    <div class=\"row\">\n      <div class=\"col-md-2\">\n\n\n<div class=\"btn-group btn-block select-date\">\n    <a href=\"javascript:void(0)\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\" id=\"open-cal\"  data-target=\"#\" style=\"padding-left: 15px;\"><i class=\"mdi-action-event pull-left\"></i><div class=\"caption\" style=\"display: inline-block;\"><ruby>Сегодня<rt>03.01.2015</rt> </ruby></div> <span class=\"caret\"></span></a>\n    <ul class=\"dropdown-menu\">\n        <li><a href=\"javascript:void(0)\" class=\"btn btn-default\">\n          <ruby>Позавчера<rt>01.01.2015</rt> </ruby>\n        </a></li>\n        <li><a href=\"javascript:void(0)\" class=\"btn btn-default\">\n          <ruby>Вчера<rt>02.01.2015</rt> </ruby>\n        </a></li>\n        <li><a href=\"javascript:void(0)\" class=\"btn btn-default\">\n          <ruby>Сегодня<rt>03.01.2015</rt> </ruby>\n        </a></li>\n        <li><a href=\"javascript:void(0)\" class=\"btn btn-default disabled\">Выбрать дату</a></li>\n    </ul>\n</div>\n\n      </div>\n      <div class=\"col-md-8\">\n\n  <div class=\"slider shor btn-primary slider-material-orange\"></div>\n\n      </div>\n      <div class=\"col-md-2\">\n  <button href=\"#send-form\" id=\"send-form\" class=\"btn btn-primary btn-block\"><i class=\"mdi-action-done pull-left\"></i>Send</button>\n      </div>\n    </div>\n  </div>\n\n\n</div>\n\n";
   },"useData":true});
 
 this["JST"]["layout/header/listbtn"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
@@ -29398,7 +29398,11 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     + escapeExpression(((helper = (helper = helpers.subject || (depth0 != null ? depth0.subject : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"subject","hash":{},"data":data}) : helper)))
     + "</textarea>\n    <div class=\"subject\" style=\"border: none;\">"
     + escapeExpression(((helpers.nl2br || (depth0 && depth0.nl2br) || helperMissing).call(depth0, (depth0 != null ? depth0.subject : depth0), {"name":"nl2br","hash":{},"data":data})))
-    + "</div>\n  </div>\n\n  <div class=\"col-menu col-md-1 col-sm-1\">\n    <ul class=\"actions\">\n      <li><a class=\"delete btn btn-fab btn-danger btn-fab-mini pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Delete action\">\n        <i class=\"mdi-navigation-cancel\"></i>\n      </a></li>\n    </ul>\n  </div>\n</div>";
+    + "</div>\n    <ul>\n      <li>Date: "
+    + escapeExpression(((helper = (helper = helpers.recordDate || (depth0 != null ? depth0.recordDate : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"recordDate","hash":{},"data":data}) : helper)))
+    + "</li>\n      <li>Time: "
+    + escapeExpression(((helper = (helper = helpers.recordTime || (depth0 != null ? depth0.recordTime : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"recordTime","hash":{},"data":data}) : helper)))
+    + "</li>\n    </ul>\n\n  </div>\n\n  <div class=\"col-menu col-md-1 col-sm-1\">\n    <ul class=\"actions\">\n      <li><a class=\"delete btn btn-fab btn-danger btn-fab-mini pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Delete action\">\n        <i class=\"mdi-navigation-cancel\"></i>\n      </a></li>\n    </ul>\n  </div>\n</div>";
 },"useData":true});
 (function() {
   var Lokitest, Tracktime, config, development, process, production, ref, ref1, test,
@@ -29527,9 +29531,9 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
       });
     };
 
-    Tracktime.prototype.addRecord = function(params) {
+    Tracktime.prototype.addRecord = function(options) {
       var error, success;
-      _.extend(params, {
+      _.extend(options, {
         date: (new Date()).toISOString()
       });
       success = (function(_this) {
@@ -29547,7 +29551,8 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
           return $.alert('save error');
         };
       })(this);
-      return this.get('records').addRecord(params, {
+      console.log('addRecord: options', options);
+      return this.get('records').addRecord(options, {
         success: success,
         error: error
       });
@@ -29565,10 +29570,6 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
   Tracktime.Action = (function(superClass) {
     extend(Action, superClass);
-
-    function Action() {
-      return Action.__super__.constructor.apply(this, arguments);
-    }
 
     Action.prototype.idAttribute = "_id";
 
@@ -29598,7 +29599,9 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
       };
     };
 
-    Action.prototype.initialize = function() {};
+    function Action() {
+      this.set('details', new Tracktime.Action.Details());
+    }
 
     Action.prototype.setActive = function() {
       return this.collection.setActive(this);
@@ -29618,7 +29621,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
 
     Action.prototype.search = function() {
-      return console.log('call search');
+      return $.alert('search under construction');
     };
 
     Action.prototype.successAdd = function() {
@@ -29630,6 +29633,19 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
   })(Backbone.Model);
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.Action : void 0) || (this.Tracktime.Action = Tracktime.Action);
+
+  Tracktime.Action.Details = (function(superClass) {
+    extend(Details, superClass);
+
+    function Details() {
+      return Details.__super__.constructor.apply(this, arguments);
+    }
+
+    return Details;
+
+  })(Backbone.Model);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.Action.Details : void 0) || (this.Tracktime.Action.Details = Tracktime.Action.Details);
 
   Lokitest = (function() {
     function Lokitest() {
@@ -29749,6 +29765,8 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
         return (new Date()).toISOString();
       },
       lastAccess: (new Date()).toISOString(),
+      recordDate: '',
+      recordTime: 0,
       project: 0,
       isDeleted: false
     };
@@ -30058,8 +30076,9 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
         pushState: false
       });
     },
-    newRecord: function(params) {
-      return this.model.addRecord(params);
+    newRecord: function(options) {
+      console.log('newRecord: options', options);
+      return this.model.addRecord(options);
     },
     serverOnline: function() {
       return this.model.set('isOnline', true);
@@ -30671,6 +30690,8 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
     Header.prototype.childViews = {};
 
+    Header.prototype.tmpDetails = {};
+
     Header.prototype.initialize = function(options) {
       this.options = options;
       this.render();
@@ -30681,10 +30702,14 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
       $('[data-toggle="tooltip"]', this.$el).tooltip();
       $('textarea', this.el).on('keydown', this.fixEnter).on('change, keyup', this.checkContent).textareaAutoSize();
       $('#send-form').on('click', this.sendForm);
-      $(".select-date .dropdown-menu .btn").on('click', function(event) {
-        event.preventDefault();
-        return $(".select-date > .btn .caption ruby").html($(this).find('ruby').html());
-      });
+      this.tmpDetails.date = $(".select-date > .btn .caption ruby rt").html();
+      $(".select-date .dropdown-menu .btn").on('click', (function(_this) {
+        return function(event) {
+          event.preventDefault();
+          $(".select-date > .btn .caption ruby").html($(event.target).find('ruby').html());
+          return _this.tmpDetails.date = $(".select-date > .btn .caption ruby rt").html();
+        };
+      })(this));
       return $(".slider").noUiSlider({
         start: [1],
         range: {
@@ -30692,14 +30717,17 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
           'max': [720]
         }
       }).on({
-        slide: function(event, val) {
-          var currentHour, hour, minute;
-          currentHour = val / 720 * 12;
-          hour = Math.floor(currentHour);
-          minute = (currentHour - hour) * 60;
-          $('.slider .noUi-handle').attr('data-before', hour);
-          return $('.slider .noUi-handle').attr('data-after', Math.round(minute));
-        }
+        slide: (function(_this) {
+          return function(event, val) {
+            var currentHour, hour, minute;
+            _this.tmpDetails.time = val;
+            currentHour = val / 720 * 12;
+            hour = Math.floor(currentHour);
+            minute = (currentHour - hour) * 60;
+            $('.slider .noUi-handle').attr('data-before', hour);
+            return $('.slider .noUi-handle').attr('data-after', Math.round(minute));
+          };
+        })(this)
       });
     };
 
@@ -30713,32 +30741,27 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
 
     Header.prototype.fixEnter = function(event) {
-      var val;
       if (event.keyCode === 13) {
         if (event.shiftKey) {
           event.preventDefault();
-          val = $(event.target).val();
-          this.actionSubmit(val);
-          return $(event.target).val('');
+          this.tmpDetails.subject = $('textarea', this.el).val();
+          return this.actionSubmit();
         }
       }
     };
 
     Header.prototype.sendForm = function(event) {
-      var val;
       event.preventDefault();
-      console.log('call #send-form', $('textarea', this.el).val());
-      val = $('textarea', this.el).val();
-      this.actionSubmit(val);
-      $('textarea', this.el).val('');
+      this.tmpDetails.subject = $('textarea', this.el).val();
+      this.actionSubmit();
       return this.checkContent();
     };
 
     Header.prototype.actionSubmit = function(val) {
-      if (!_.isEmpty(val)) {
-        return this.model.get('actions').getActive().processAction({
-          text: val
-        });
+      if (!_.isEmpty(this.tmpDetails.subject)) {
+        $('textarea', this.el).val('');
+        console.log('@tmpDetails', this.tmpDetails);
+        return this.model.get('actions').getActive().processAction(this.tmpDetails);
       }
     };
 

@@ -22,8 +22,9 @@ _.extend Tracktime.AppChannel,
     Backbone.history.start
       pushState: false
 
-  newRecord: (params) ->
-    @model.addRecord(params)
+  newRecord: (options) ->
+    console.log 'newRecord: options', options
+    @model.addRecord(options)
 
   serverOnline: () ->
     @model.set 'isOnline', true

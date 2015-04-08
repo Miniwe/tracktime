@@ -9,6 +9,8 @@ class Tracktime.Record extends Backbone.Model
     description: ''
     date: () -> (new Date()).toISOString()
     lastAccess: (new Date()).toISOString()
+    recordDate: ''
+    recordTime: 0
     project: 0
     isDeleted: false
     # order: Tracktime.RecordsCollection.nextOrder()

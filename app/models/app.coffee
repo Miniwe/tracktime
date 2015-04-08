@@ -48,8 +48,8 @@ class Tracktime extends Backbone.Model
       ajaxSync: Tracktime.AppChannel.request 'isOnline'
       success: () => @trigger 'render_records'
 
-  addRecord: (params) ->
-    _.extend params, {date: (new Date()).toISOString()}
+  addRecord: (options) ->
+    _.extend options, {date: (new Date()).toISOString()}
     success = (result) =>
       $.alert
         content: 'save success'
@@ -58,7 +58,8 @@ class Tracktime extends Backbone.Model
       @get('actions').getActive().successAdd()
     error = () =>
       $.alert 'save error'
-    @get('records').addRecord params,
+    console.log 'addRecord: options', options
+    @get('records').addRecord options,
       success: success,
       error: error
 
