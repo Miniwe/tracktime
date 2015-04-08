@@ -23,7 +23,6 @@ _.extend Tracktime.AppChannel,
       pushState: false
 
   newRecord: (options) ->
-    console.log 'channel newRecord: options', options
     @model.addRecord(options)
 
   serverOnline: () ->

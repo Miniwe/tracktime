@@ -35,7 +35,6 @@ class Tracktime.Action extends Backbone.Model
   processAction: (options) ->
     @set 'inputValue', options.subject
     @get('details').set(options) # @todo remove possible
-    console.log 'processAction details', @get('details')
     @newRecord() #@todo эта функция будет определятся в зависимости от типа action
     # @search() #@todo эта функция будет определятся в зависимости от типа action
 

@@ -56,7 +56,6 @@ class Tracktime.AppView.Header extends Backbone.View
   actionSubmit: (val) ->
     unless _.isEmpty @tmpDetails.subject
       $('textarea', @el).val('')
-      console.log '@tmpDetails', @tmpDetails
       @model.get('actions').getActive().processAction @tmpDetails
 
   checkContent: () =>
