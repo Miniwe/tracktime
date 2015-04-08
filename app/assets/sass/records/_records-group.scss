@@ -57,20 +57,25 @@
 
                 @include opacity(1);
             }
-            .col-icon {
-                .btn {
+            .col-icon
+            {
+                .btn
+                {
                     position: absolute;
-                    &.type {
-                        @include opacity(0);
+                    &.type
+                    {
                         z-index: 9;
+
+                        @include opacity(0);
                     }
-                    &.edit {
-                        @include opacity(1);
+                    &.edit
+                    {
                         z-index: 10;
+
+                        @include opacity(1);
                     }
                 }
             }
-
         }
         &.on-show
         {
@@ -89,18 +94,52 @@
                 @include opacity(0);
             }
         }
-        .col-icon {
-            .btn {
+        .date-time
+        {
+            i
+            {
+                font-size: 1.3em;
+
+                position: relative;
+                top: .1em;
+
+                margin-right: .2em;
+            }
+        }
+        .last-update
+        {
+            margin-top: .6em;
+            .text-muted
+            {
+                font-size: .85em;
+
+                color: #b4b4b4;
+                &:before
+                {
+                    content: 'Last Update: ';
+
+                    color: #c4c4c4;
+                }
+            }
+        }
+        .col-icon
+        {
+            .btn
+            {
                 position: absolute;
-                &.type {
+                &.type
+                {
+                    z-index: 10;
+
                     @include transition(opacity .8s .4s);
                     @include opacity(1);
-                    z-index: 10;
                 }
-                &.edit {
+                &.edit
+                {
+                    z-index: 9;
+
                     @include transition(opacity .8s .4s);
                     @include opacity(0);
-                    z-index: 9;
                 }
             }
         }

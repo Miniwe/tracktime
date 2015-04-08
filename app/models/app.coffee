@@ -58,7 +58,7 @@ class Tracktime extends Backbone.Model
       @get('actions').getActive().successAdd()
     error = () =>
       $.alert 'save error'
-    console.log 'addRecord: options', options
+    console.log 'app addRecord: options', options
     @get('records').addRecord options,
       success: success,
       error: error

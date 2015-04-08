@@ -23,24 +23,24 @@ class Tracktime.Action extends Backbone.Model
   attributes: () ->
     id: @model.cid
 
-  constructor: () ->
-    @set 'details', new Tracktime.Action.Details()
+  constructor: (args...) ->
+    super args...
 
-  # initialize: () ->
+  initialize: () ->
+    @set 'details', new Tracktime.Action.Details()
 
   setActive: () ->
     @collection.setActive @
 
-  processAction: (params) ->
-    @set 'inputValue', params?.text
+  processAction: (options) ->
+    @set 'inputValue', options.subject
+    @get('details').set(options) # @todo remove possible
+    console.log 'processAction details', @get('details')
     @newRecord() #@todo эта функция будет определятся в зависимости от типа action
     # @search() #@todo эта функция будет определятся в зависимости от типа action
 
   newRecord: () ->
-    Tracktime.AppChannel.command 'newRecord',
-      subject: @get('inputValue')
-      project: 0 # @todo @get('project')
-      details: {} # @todo @get('details')
+    Tracktime.AppChannel.command 'newRecord', _.extend {project: 0}, @get('details').attributes
 
   search: () ->
     $.alert 'search under construction'

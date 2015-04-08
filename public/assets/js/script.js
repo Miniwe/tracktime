@@ -29301,7 +29301,7 @@ this["JST"]["layout/header"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta
   },"useData":true});
 
 this["JST"]["layout/header/actions"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  return "<div class=\"select-action-type-dropdown dropdown pull-left\">\n  <button id=\"action_type\" type=\"button\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\" class=\"btn btn-fab btn-warning dropdown-toggle\" title=\"SHIFT + ENTER to submit\">\n    <i class=\"\"></i>\n  </button>\n\n  <ul class=\"dropdown-menu\" role=\"menu\" aria-labelledby=\"dLabel\">\n\n\n  </ul>\n</div>\n\n\n<a id=\"detailsNew\" class=\"btn btn-fab btn-link pull-right\" href=\"javascript:void(0)\" data-toggle=\"popover\" title=\"Popover title\" data-content=\"And here's some amazing content. It's very engaging. Right?\" data-placement=\"left\">\n  <i class=\"mdi-navigation-more-vert\"></i>\n</a>\n\n<div class=\"form-control-wrapper\">\n  <textarea class=\"form-control\" name=\"action\"></textarea>\n  <div class=\"floating-label\">Selected Action Hint</div>\n  <span class=\"material-input\"></span>\n\n  <div class=\"controls-container hidden\">\n    <div class=\"row\">\n      <div class=\"col-md-2\">\n\n\n<div class=\"btn-group btn-block select-date\">\n    <a href=\"javascript:void(0)\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\" id=\"open-cal\"  data-target=\"#\" style=\"padding-left: 15px;\"><i class=\"mdi-action-event pull-left\"></i><div class=\"caption\" style=\"display: inline-block;\"><ruby>Сегодня<rt>03.01.2015</rt> </ruby></div> <span class=\"caret\"></span></a>\n    <ul class=\"dropdown-menu\">\n        <li><a href=\"javascript:void(0)\" class=\"btn btn-default\">\n          <ruby>Позавчера<rt>01.01.2015</rt> </ruby>\n        </a></li>\n        <li><a href=\"javascript:void(0)\" class=\"btn btn-default\">\n          <ruby>Вчера<rt>02.01.2015</rt> </ruby>\n        </a></li>\n        <li><a href=\"javascript:void(0)\" class=\"btn btn-default\">\n          <ruby>Сегодня<rt>03.01.2015</rt> </ruby>\n        </a></li>\n        <li><a href=\"javascript:void(0)\" class=\"btn btn-default disabled\">Выбрать дату</a></li>\n    </ul>\n</div>\n\n      </div>\n      <div class=\"col-md-8\">\n\n  <div class=\"slider shor btn-primary slider-material-orange\"></div>\n\n      </div>\n      <div class=\"col-md-2\">\n  <button href=\"#send-form\" id=\"send-form\" class=\"btn btn-primary btn-block\"><i class=\"mdi-action-done pull-left\"></i>Send</button>\n      </div>\n    </div>\n  </div>\n\n\n</div>\n\n";
+  return "<div class=\"select-action-type-dropdown dropdown pull-left\">\n  <button id=\"action_type\" type=\"button\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\" class=\"btn btn-fab btn-warning dropdown-toggle\" title=\"SHIFT + ENTER to submit\">\n    <i class=\"\"></i>\n  </button>\n\n  <ul class=\"dropdown-menu\" role=\"menu\" aria-labelledby=\"dLabel\">\n\n\n  </ul>\n</div>\n\n\n<a id=\"detailsNew\" class=\"btn btn-fab btn-link pull-right\" href=\"javascript:void(0)\" data-toggle=\"popover\" title=\"Popover title\" data-content=\"And here's some amazing content. It's very engaging. Right?\" data-placement=\"left\">\n  <i class=\"mdi-navigation-more-vert\"></i>\n</a>\n\n<div class=\"form-control-wrapper\">\n  <textarea class=\"form-control\" name=\"action\"></textarea>\n  <div class=\"floating-label\">Selected Action Hint</div>\n  <span class=\"material-input\"></span>\n\n  <div class=\"controls-container hidden\">\n    <div class=\"row\">\n      <div class=\"col-md-2\">\n\n\n<div class=\"btn-group select-date\">\n    <a href=\"javascript:void(0)\" class=\"btn btn-block btn-default dropdown-toggle\" data-toggle=\"dropdown\" id=\"open-cal\"  data-target=\"#\" style=\"padding-left: 15px;\"><i class=\"mdi-action-event pull-left\"></i><div class=\"caption\" style=\"display: inline-block;\"><ruby>Сегодня<rt>03.01.2015</rt> </ruby></div> <span class=\"caret\"></span></a>\n    <ul class=\"dropdown-menu\">\n        <li><a href=\"javascript:void(0)\" class=\"btn btn-default\">\n          <ruby>Позавчера<rt>01.01.2015</rt> </ruby>\n        </a></li>\n        <li><a href=\"javascript:void(0)\" class=\"btn btn-default\">\n          <ruby>Вчера<rt>02.01.2015</rt> </ruby>\n        </a></li>\n        <li><a href=\"javascript:void(0)\" class=\"btn btn-default\">\n          <ruby>Сегодня<rt>03.01.2015</rt> </ruby>\n        </a></li>\n        <li><a href=\"javascript:void(0)\" class=\"btn btn-default disabled\">Выбрать дату</a></li>\n    </ul>\n</div>\n\n      </div>\n      <div class=\"col-md-8\">\n\n  <div class=\"slider shor btn-primary slider-material-orange\"></div>\n\n      </div>\n      <div class=\"col-md-2\">\n  <button href=\"#send-form\" id=\"send-form\" class=\"btn btn-primary btn-block\"><i class=\"mdi-action-done pull-left\"></i>Send</button>\n      </div>\n    </div>\n  </div>\n\n\n</div>\n\n";
   },"useData":true});
 
 this["JST"]["layout/header/listbtn"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
@@ -29390,19 +29390,19 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
   return "<div class=\"row\" id=\""
     + escapeExpression(((helper = (helper = helpers._id || (depth0 != null ? depth0._id : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"_id","hash":{},"data":data}) : helper)))
-    + "\">\n\n  <div class=\"col-icon col-md-1 col-sm-2\">\n    <a  class=\"type btn btn-fab btn-fab-mini btn-info\" role=\"menuitem\" tabindex=\"-1\" href=\"#fat\"  data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\"Other wroject will be thouched\">\n      <i class=\"mdi-action-group-work\"></i>\n    </a>\n    <a class=\"edit btn btn-fab btn-fab-mini btn-flat pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Edit action\">\n      <i class=\"mdi-editor-mode-edit\"></i>\n    </a>\n  </div>\n\n  <div class=\"col-subject col-md-10 col-sm-9\">\n    <p class=\"text-info\">\n      <small><time datetime=\""
-    + escapeExpression(((helper = (helper = helpers.date || (depth0 != null ? depth0.date : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"date","hash":{},"data":data}) : helper)))
-    + "\">"
-    + escapeExpression(((helpers.dateFormat || (depth0 && depth0.dateFormat) || helperMissing).call(depth0, (depth0 != null ? depth0.date : depth0), {"name":"dateFormat","hash":{},"data":data})))
-    + "</time></small>\n    </p>\n    <textarea class=\"subject_edit form-control hidden\" style=\"width: 100%; border: none; padding: 0;\">"
+    + "\">\n\n  <div class=\"col-icon col-md-1 col-sm-2\">\n    <a  class=\"type btn btn-fab btn-fab-mini btn-info\" role=\"menuitem\" tabindex=\"-1\" href=\"#fat\"  data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\"Other wroject will be thouched\">\n      <i class=\"mdi-action-group-work\"></i>\n    </a>\n    <a class=\"edit btn btn-fab btn-fab-mini btn-flat pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Edit action\">\n      <i class=\"mdi-editor-mode-edit\"></i>\n    </a>\n  </div>\n\n  <div class=\"col-subject col-md-10 col-sm-9\">\n    <p class=\"text-info\">\n      <span title=\"Record Date\"><i class=\"mdi-navigation-cancel\"></i>"
+    + escapeExpression(((helper = (helper = helpers.recordDate || (depth0 != null ? depth0.recordDate : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"recordDate","hash":{},"data":data}) : helper)))
+    + "</span>\n      |\n      <span title=\"Record Time\"><i class=\"mdi-navigation-cancel\"></i>"
+    + escapeExpression(((helpers.minuteFormat || (depth0 && depth0.minuteFormat) || helperMissing).call(depth0, (depth0 != null ? depth0.recordTime : depth0), {"name":"minuteFormat","hash":{},"data":data})))
+    + "</span>\n    </p>\n    <textarea class=\"subject_edit form-control hidden\" style=\"width: 100%; border: none; padding: 0;\">"
     + escapeExpression(((helper = (helper = helpers.subject || (depth0 != null ? depth0.subject : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"subject","hash":{},"data":data}) : helper)))
     + "</textarea>\n    <div class=\"subject\" style=\"border: none;\">"
     + escapeExpression(((helpers.nl2br || (depth0 && depth0.nl2br) || helperMissing).call(depth0, (depth0 != null ? depth0.subject : depth0), {"name":"nl2br","hash":{},"data":data})))
-    + "</div>\n    <ul>\n      <li>Date: "
-    + escapeExpression(((helper = (helper = helpers.recordDate || (depth0 != null ? depth0.recordDate : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"recordDate","hash":{},"data":data}) : helper)))
-    + "</li>\n      <li>Time: "
-    + escapeExpression(((helper = (helper = helpers.recordTime || (depth0 != null ? depth0.recordTime : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"recordTime","hash":{},"data":data}) : helper)))
-    + "</li>\n    </ul>\n\n  </div>\n\n  <div class=\"col-menu col-md-1 col-sm-1\">\n    <ul class=\"actions\">\n      <li><a class=\"delete btn btn-fab btn-danger btn-fab-mini pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Delete action\">\n        <i class=\"mdi-navigation-cancel\"></i>\n      </a></li>\n    </ul>\n  </div>\n</div>";
+    + "</div>\n\n    <p>\n      <small><hr>\n        <em><time class=\"text-muted\" datetime=\""
+    + escapeExpression(((helper = (helper = helpers.date || (depth0 != null ? depth0.date : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"date","hash":{},"data":data}) : helper)))
+    + "\">"
+    + escapeExpression(((helpers.dateFormat || (depth0 && depth0.dateFormat) || helperMissing).call(depth0, (depth0 != null ? depth0.date : depth0), {"name":"dateFormat","hash":{},"data":data})))
+    + "</time></em></small>\n    </p>\n\n  </div>\n\n  <div class=\"col-menu col-md-1 col-sm-1\">\n    <ul class=\"actions\">\n      <li><a class=\"delete btn btn-fab btn-danger btn-fab-mini pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Delete action\">\n        <i class=\"mdi-navigation-cancel\"></i>\n      </a></li>\n    </ul>\n  </div>\n</div>";
 },"useData":true});
 (function() {
   var Lokitest, Tracktime, config, development, process, production, ref, ref1, test,
@@ -29551,7 +29551,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
           return $.alert('save error');
         };
       })(this);
-      console.log('addRecord: options', options);
+      console.log('app addRecord: options', options);
       return this.get('records').addRecord(options, {
         success: success,
         error: error
@@ -29600,24 +29600,30 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
 
     function Action() {
-      this.set('details', new Tracktime.Action.Details());
+      var args;
+      args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+      Action.__super__.constructor.apply(this, args);
     }
+
+    Action.prototype.initialize = function() {
+      return this.set('details', new Tracktime.Action.Details());
+    };
 
     Action.prototype.setActive = function() {
       return this.collection.setActive(this);
     };
 
-    Action.prototype.processAction = function(params) {
-      this.set('inputValue', params != null ? params.text : void 0);
+    Action.prototype.processAction = function(options) {
+      this.set('inputValue', options.subject);
+      this.get('details').set(options);
+      console.log('processAction details', this.get('details'));
       return this.newRecord();
     };
 
     Action.prototype.newRecord = function() {
-      return Tracktime.AppChannel.command('newRecord', {
-        subject: this.get('inputValue'),
-        project: 0,
-        details: {}
-      });
+      return Tracktime.AppChannel.command('newRecord', _.extend({
+        project: 0
+      }, this.get('details').attributes));
     };
 
     Action.prototype.search = function() {
@@ -30077,7 +30083,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
       });
     },
     newRecord: function(options) {
-      console.log('newRecord: options', options);
+      console.log('channel newRecord: options', options);
       return this.model.addRecord(options);
     },
     serverOnline: function() {
@@ -30147,6 +30153,14 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
   Handlebars.registerHelper('dateFormat', function(date) {
     return date;
+  });
+
+  Handlebars.registerHelper('minuteFormat', function(val) {
+    var currentHour, hour, minute;
+    currentHour = val / 720 * 12;
+    hour = Math.floor(currentHour);
+    minute = Math.round((currentHour - hour) * 60);
+    return hour + ":" + minute;
   });
 
   Tracktime.initdata = {};
@@ -30702,12 +30716,12 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
       $('[data-toggle="tooltip"]', this.$el).tooltip();
       $('textarea', this.el).on('keydown', this.fixEnter).on('change, keyup', this.checkContent).textareaAutoSize();
       $('#send-form').on('click', this.sendForm);
-      this.tmpDetails.date = $(".select-date > .btn .caption ruby rt").html();
-      $(".select-date .dropdown-menu .btn").on('click', (function(_this) {
+      this.tmpDetails.recordDate = $(".select-date > .btn .caption ruby rt").html();
+      $(".select-date .dropdown-menu").on('click', '.btn', (function(_this) {
         return function(event) {
           event.preventDefault();
-          $(".select-date > .btn .caption ruby").html($(event.target).find('ruby').html());
-          return _this.tmpDetails.date = $(".select-date > .btn .caption ruby rt").html();
+          $(".select-date > .btn .caption ruby").html($(event.currentTarget).find('ruby').html());
+          return _this.tmpDetails.recordDate = $(".select-date > .btn .caption ruby rt").html();
         };
       })(this));
       return $(".slider").noUiSlider({
@@ -30720,7 +30734,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
         slide: (function(_this) {
           return function(event, val) {
             var currentHour, hour, minute;
-            _this.tmpDetails.time = val;
+            _this.tmpDetails.recordTime = val;
             currentHour = val / 720 * 12;
             hour = Math.floor(currentHour);
             minute = (currentHour - hour) * 60;

@@ -10,15 +10,17 @@
   </div>
 
   <div class="col-subject col-md-10 col-sm-9">
-    <p class="text-info">
-      <small><time datetime="{{date}}">{{dateFormat date}}</time></small>
+    <p class="date-time text-info">
+      <span title="Record Date"><i class="mdi-action-event"></i>{{recordDate}}</span>
+      &#0160;
+      <span title="Record Time"><i class="mdi-action-schedule"></i>{{minuteFormat recordTime}}</span>
     </p>
     <textarea class="subject_edit form-control hidden" style="width: 100%; border: none; padding: 0;">{{subject}}</textarea>
     <div class="subject" style="border: none;">{{nl2br subject}}</div>
-    <ul>
-      <li>Date: {{recordDate}}</li>
-      <li>Time: {{recordTime}}</li>
-    </ul>
+
+    <p class="last-update">
+        <time class="text-muted" datetime="{{date}}">{{dateFormat date}}</time>
+    </p>
 
   </div>
 

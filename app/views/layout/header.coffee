@@ -17,16 +17,16 @@ class Tracktime.AppView.Header extends Backbone.View
       .textareaAutoSize()
     $('#send-form').on 'click', @sendForm
 
-    @tmpDetails.date = $(".select-date > .btn .caption ruby rt").html()
-    $(".select-date .dropdown-menu .btn").on 'click', (event) =>
+    @tmpDetails.recordDate = $(".select-date > .btn .caption ruby rt").html()
+    $(".select-date .dropdown-menu").on 'click', '.btn', (event) =>
       event.preventDefault()
-      $(".select-date > .btn .caption ruby").html $(event.target).find('ruby').html()
-      @tmpDetails.date = $(".select-date > .btn .caption ruby rt").html()
+      $(".select-date > .btn .caption ruby").html $(event.currentTarget).find('ruby').html()
+      @tmpDetails.recordDate = $(".select-date > .btn .caption ruby rt").html()
     $(".slider")
       .noUiSlider start: [1], range: {'min': [ 0 ], 'max': [ 720 ] }
       .on
         slide: (event, val) =>
-          @tmpDetails.time = val
+          @tmpDetails.recordTime = val
           currentHour = val / 720 * 12
           hour = Math.floor(currentHour)
           minute = (currentHour - hour) * 60

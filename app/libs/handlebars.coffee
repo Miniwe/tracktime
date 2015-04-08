@@ -19,6 +19,13 @@ Handlebars.registerHelper 'nl2br', (text) ->
 
 Handlebars.registerHelper 'dateFormat', (date) ->
   date
+
+Handlebars.registerHelper 'minuteFormat', (val) ->
+  currentHour = val / 720 * 12
+  hour = Math.floor(currentHour)
+  minute = Math.round((currentHour - hour) * 60)
+  "#{hour}:#{minute}"
+
   # timestamp = Date.parse date
   # unless _.isNaN(timestamp)
   #   (new Date(timestamp)).toLocalString()
