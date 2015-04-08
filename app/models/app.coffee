@@ -29,6 +29,7 @@ class Tracktime extends Backbone.Model
           @set 'isOnline', true
           deferred.resolve()
         error: (result) =>
+          @set 'isOnline', false
           deferred.resolve()
     catch exception_var
       @set 'isOnline', false

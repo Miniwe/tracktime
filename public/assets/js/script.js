@@ -29496,6 +29496,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
           })(this),
           error: (function(_this) {
             return function(result) {
+              _this.set('isOnline', false);
               return deferred.resolve();
             };
           })(this)
