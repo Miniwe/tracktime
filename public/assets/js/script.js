@@ -29301,7 +29301,7 @@ this["JST"]["layout/header"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta
   },"useData":true});
 
 this["JST"]["layout/header/actions"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  return "<div class=\"select-action-type-dropdown dropdown pull-left\">\n  <button id=\"action_type\" type=\"button\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\" class=\"btn btn-fab btn-warning dropdown-toggle\" title=\"SHIFT + ENTER to submit\">\n    <i class=\"\"></i>\n  </button>\n\n  <ul class=\"dropdown-menu\" role=\"menu\" aria-labelledby=\"dLabel\">\n\n\n  </ul>\n</div>\n\n\n<a id=\"detailsNew\" class=\"btn btn-fab btn-link pull-right\" href=\"javascript:void(0)\" data-toggle=\"popover\" title=\"Popover title\" data-content=\"And here's some amazing content. It's very engaging. Right?\" data-placement=\"left\">\n  <i class=\"mdi-navigation-more-vert\"></i>\n</a>\n\n<div class=\"form-control-wrapper\">\n  <textarea class=\"form-control\" name=\"action\"></textarea>\n  <div class=\"floating-label\">Selected Action Hint</div>\n  <span class=\"material-input\"></span>\n\n  <div class=\"controls-container hidden\">\n    <div class=\"row\">\n      <div class=\"col-md-2\">\n  <button href=\"#open-cal\" id=\"open-cal\" class=\"btn btn-default btn-block\"><i class=\"mdi-action-event\"></i>08.05.2015</button>\n      </div>\n      <div class=\"col-md-8\">\n\n  <div class=\"slider shor btn-primary slider-material-orange\"></div>\n\n      </div>\n      <div class=\"col-md-2\">\n  <button href=\"#send-form\" id=\"send-form\" class=\"btn btn-primary btn-block\"><i class=\"mdi-action-done pull-left\"></i>Send</button>\n      </div>\n    </div>\n  </div>\n\n\n</div>\n\n";
+  return "<div class=\"select-action-type-dropdown dropdown pull-left\">\n  <button id=\"action_type\" type=\"button\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\" class=\"btn btn-fab btn-warning dropdown-toggle\" title=\"SHIFT + ENTER to submit\">\n    <i class=\"\"></i>\n  </button>\n\n  <ul class=\"dropdown-menu\" role=\"menu\" aria-labelledby=\"dLabel\">\n\n\n  </ul>\n</div>\n\n\n<a id=\"detailsNew\" class=\"btn btn-fab btn-link pull-right\" href=\"javascript:void(0)\" data-toggle=\"popover\" title=\"Popover title\" data-content=\"And here's some amazing content. It's very engaging. Right?\" data-placement=\"left\">\n  <i class=\"mdi-navigation-more-vert\"></i>\n</a>\n\n<div class=\"form-control-wrapper\">\n  <textarea class=\"form-control\" name=\"action\"></textarea>\n  <div class=\"floating-label\">Selected Action Hint</div>\n  <span class=\"material-input\"></span>\n\n  <div class=\"controls-container hidden\">\n    <div class=\"row\">\n      <div class=\"col-md-2\">\n\n\n<div class=\"btn-group btn-block select-date\">\n    <a href=\"javascript:void(0)\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\" id=\"open-cal\"  data-target=\"#\" style=\"padding-left: 15px;\"><i class=\"mdi-action-event pull-left\"></i><div class=\"caption\" style=\"display: inline-block;\"><ruby>Сегодня<rt> 03.01.2015 </rt> </ruby></div> <span class=\"caret\"></span></a>\n    <ul class=\"dropdown-menu\">\n        <li><a href=\"javascript:void(0)\" class=\"btn btn-default\">\n          <ruby>Позавчера<rt> 01.01.2015 </rt> </ruby>\n        </a></li>\n        <li><a href=\"javascript:void(0)\" class=\"btn btn-default\">\n          <ruby>Вчера<rt> 02.01.2015 </rt> </ruby>\n        </a></li>\n        <li><a href=\"javascript:void(0)\" class=\"btn btn-default\">\n          <ruby>Сегодня<rt> 03.01.2015 </rt> </ruby>\n        </a></li>\n        <li><a href=\"javascript:void(0)\" class=\"btn btn-default disabled\">Выбрать дату</a></li>\n    </ul>\n</div>\n\n      </div>\n      <div class=\"col-md-8\">\n\n  <div class=\"slider shor btn-primary slider-material-orange\"></div>\n\n      </div>\n      <div class=\"col-md-2\">\n  <button href=\"#send-form\" id=\"send-form\" class=\"btn btn-primary btn-block\"><i class=\"mdi-action-done pull-left\"></i>Send</button>\n      </div>\n    </div>\n  </div>\n\n\n</div>\n\n";
   },"useData":true});
 
 this["JST"]["layout/header/listbtn"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
@@ -30681,17 +30681,24 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
       $('[data-toggle="tooltip"]', this.$el).tooltip();
       $('textarea', this.el).on('keydown', this.fixEnter).on('change, keyup', this.checkContent).textareaAutoSize();
       $('#send-form').on('click', this.sendForm);
+      $(".select-date .dropdown-menu .btn").on('click', function(event) {
+        event.preventDefault();
+        return $(".select-date > .btn .caption ruby").html($(this).find('ruby').html());
+      });
       return $(".slider").noUiSlider({
         start: [1],
         range: {
           'min': [0],
-          'max': [1140]
+          'max': [720]
         }
       }).on({
         slide: function(event, val) {
-          var hour;
-          hour = Math.floor(val / 1140 * 12);
-          return $('.slider .noUi-handle').attr('data-before', hour);
+          var currentHour, hour, minute;
+          currentHour = val / 720 * 12;
+          hour = Math.floor(currentHour);
+          minute = (currentHour - hour) * 60;
+          $('.slider .noUi-handle').attr('data-before', hour);
+          return $('.slider .noUi-handle').attr('data-after', Math.round(minute));
         }
       });
     };
@@ -30723,8 +30730,8 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
       console.log('call #send-form', $('textarea', this.el).val());
       val = $('textarea', this.el).val();
       this.actionSubmit(val);
-      $('textarea', this.el).val('').trigger('change').blur();
-      return this.checkContent(event);
+      $('textarea', this.el).val('');
+      return this.checkContent();
     };
 
     Header.prototype.actionSubmit = function(val) {
@@ -30735,11 +30742,15 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
       }
     };
 
-    Header.prototype.checkContent = function(event) {
-      var diff;
-      diff = $('#actions-form').outerHeight(true) - $('.navbar').outerHeight(true);
-      $('#actions-form').toggleClass("shadow-z-2", diff > 10);
-      return $(".controls-container").toggleClass('hidden', _.isEmpty($('textarea').val()));
+    Header.prototype.checkContent = function() {
+      return window.setTimeout((function(_this) {
+        return function() {
+          var diff;
+          diff = $('#actions-form').outerHeight() - $('.navbar').outerHeight(true);
+          $('#actions-form').toggleClass("shadow-z-2", diff > 10);
+          return $(".controls-container").toggleClass('hidden', _.isEmpty($('textarea').val()));
+        };
+      })(this), 500);
     };
 
     return Header;

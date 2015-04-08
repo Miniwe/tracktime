@@ -6,19 +6,20 @@
     right: 10%;
     left: 10%;
 
-    padding: .8em 1em;
+    padding: .7em 1em;
 
     background: rgba(255,255,255,.7);
 
     @include transition(box-shadow 1s .2s, background 1s .2s);
     &.shadow-z-2
     {
-        background: rgba(255,255,255, .98);
+        background: rgba(255,255,255, .95);
     }
     .form-control-wrapper
     {
         margin-top: 1em;
         padding: 0 5em;
+        overflow: visible;
         textarea
         {
             font-size: 18px;
@@ -50,7 +51,7 @@
         }
 
         .controls-container {
-            overflow: hidden;
+            // overflow: hidden;
             height: 54px;
             @include opacity(1);
             @include transition(all .2s .1s);
