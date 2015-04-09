@@ -1,13 +1,30 @@
 class Tracktime.AppRouter extends Backbone.Router
   routes:
     '':                            'index'        #index
-    'populate':                    'pagepopulate' #populate
-    'slashed/path':                'slashed'      #slashed/path
-    'with-params/:param1/:param2': 'withParams'   #with-params/any/50
+    'projects*subroute':           'invokeProjectsRouter' #Projects
+    'reports*subroute':            'invokeReportsRouter' #Reports
+    'user*subroute':               'invokeUserRouter' #User
+    'admin*subroute':              'invokeAdminRouter' #Admin
     '*actions':                    'default'      #???
 
   initialize: (options) ->
     _.extend @, options
+
+  invokeProjectsRouter: (subroute) ->
+    unless @projectsRouter
+      @projectsRouter = new Tracktime.ProjectsRouter "projects"
+
+  invokeReportsRouter: (subroute) ->
+    unless @reportsRouter
+      @reportsRouter = new Tracktime.ReportsRouter "reports"
+
+  invokeUserRouter: (subroute) ->
+    unless @userRouter
+      @userRouter = new Tracktime.UserRouter "user"
+
+  invokeAdminRouter: (subroute) ->
+    unless @adminRouter
+      @adminRouter = new Tracktime.AdminRouter "admin"
 
   index: () ->
     $.alert 'index'
@@ -16,16 +33,5 @@ class Tracktime.AppRouter extends Backbone.Router
     $.alert 'Unknown page'
     @navigate "", true
 
-  pagepopulate: () ->
-    Tracktime.AppChannel.command 'populateRecords'
-
-  slashed: () ->
-    $.alert
-      content: 'slashed (4s)'
-      timeout: 4000
-    Tracktime.AppChannel.command 'altView'
-
-  withParams: (param1, param2) ->
-    $.alert 'withParams'
-
 (module?.exports = Tracktime.AppRouter) or @Tracktime.AppRouter = Tracktime.AppRouter
+

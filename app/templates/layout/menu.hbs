@@ -1,86 +1,102 @@
 <header class="hidden">
-  <h2>Menu</h2>
+    <h2>Menu</h2>
 </header>
-<div class="panel panel-info">
-  <div class="well">
+<div class="well">
     <h5>Sync apps over internet only</h5>
     <div class="checkbox">
-      <label>
-        <input type="checkbox" id="isOnline" {{#if isOnline}} checked="checked"{{/if}}> Sync
-
-      </label>
+        <label>
+            <input type="checkbox" id="isOnline" {{#if isOnline}} checked="checked" {{/if}}> Sync
+        </label>
     </div>
-  </div>
-  <div class="panel-heading"><h3>State</h3></div>
-
-  <div class="panel-body">
-
-    <table class="table table-condensed">
-      <tbody>
-        <tr class="active">
-          <td class="when">Today:</td>
-          <td class="time">0:00</td>
-          <td class="pounds">£0.0</td>
-        </tr>
-        <tr class="nonactual">
-          <td class="when">Yesterday:</td>
-          <td class="time">8:00</td>
-          <td class="pounds">£8.0</td>
-        </tr>
-        <tr class="active">
-          <td class="when">This week:</td>
-          <td class="time">16:00</td>
-          <td class="pounds">£16.0</td>
-        </tr>
-        <tr class="nonactual">
-          <td class="when">Previous week:</td>
-          <td class="time">32:00</td>
-          <td class="pounds">£32.0</td>
-        </tr>
-        <tr class="active">
-          <td class="when">This month:</td>
-          <td class="time">48:00</td>
-          <td class="pounds">£48.0</td>
-        </tr>
-        <tr class="nonactual">
-          <td class="when">Previous month:</td>
-          <td class="time">0:00</td>
-          <td class="pounds">£0.0</td>
-        </tr>
-
-
-      </tbody>
-    </table>
-  </div>
-
-
 </div>
-<div class="panel panel-primary">
-  <div class="panel-heading"><h3>Menu</h3></div>
-
-  <div class="panel-body">
-    <div class="list-style-group">
-      {{link_to class="list-group-item" href='#populate' body='Populate'}}
-      {{link_to class="list-group-item" href='#slashed/path' body='Slashed'}}
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+    <div class="panel panel-default">
+        <a class="btn btn-info btn-block" data-toggle="collapse" data-parent="#accordion" href="#user-section" aria-expanded="true" aria-controls="user-section" role="tab" id="headingUser">
+      User
+    </a>
+        <div id="user-section" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingUser">
+            <div class="list-style-group">
+                {{link_to class="list-group-item" href='#user' body='Settings'}}
+                {{link_to class="list-group-item" href='#user/rates' body='Rates'}}
+                {{link_to class="list-group-item" href='#user/logout' body='Logout'}}
+            </div>
+        </div>
     </div>
-  </div>
-
-  <div class="panel-body">
-    <div class="list-style-group">
-      {{link_to class="list-group-item" href='#records/inprogress' body='In Progress'}}
-      {{link_to class="list-group-item" href='#records/notfinished' body='Not Finished'}}
-      {{link_to class="list-group-item" href='#records/finished' body='Finished'}}
+    <div class="panel panel-default">
+        <a class="btn btn-primary btn-block" data-toggle="collapse" data-parent="#accordion" href="#projects-section" aria-expanded="true" aria-controls="projects-section" role="tab" id="headingProjects">
+      Projects
+    </a>
+        <div id="projects-section" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingProjects">
+            <div class="list-style-group">
+                {{link_to class="list-group-item" href='#projects' body='Projects list'}}
+                {{link_to class="list-group-item" href='#projects/1' body='Project 1'}}
+                {{link_to class="list-group-item" href='#projects/2' body='Project 2'}}
+            </div>
+        </div>
     </div>
-  </div>
-
-  <div class="panel-body">
-    <div class="list-style-group">
-      {{link_to class="list-group-item" href='#project/1' body='Projects 1'}}
-      {{link_to class="list-group-item" href='#project/2' body='Projects 2'}}
-      {{link_to class="list-group-item" href='#project/3' body='Projects 3'}}
-      {{link_to class="list-group-item" href='#project/4' body='Projects 4'}}
+    <div class="panel panel-default">
+        <a class="btn btn-material-purple btn-block" data-toggle="collapse" data-parent="#accordion" href="#reports-section" aria-expanded="true" aria-controls="reports-section" role="tab" id="headingReports">
+      Reports
+    </a>
+        <div id="reports-section" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingReports">
+            <div class="list-style-group">
+                {{link_to class="list-group-item" href='#reports' body='Reports list'}}
+                {{link_to class="list-group-item" href='#reports/1' body='Report 1'}}
+                {{link_to class="list-group-item" href='#reports/2' body='Report 2'}}
+            </div>
+        </div>
     </div>
-  </div>
-
-
+    <div class="panel panel-default">
+        <a class="btn btn-warning btn-block" data-toggle="collapse" data-parent="#accordion" href="#admin-section" aria-expanded="true" aria-controls="admin-section" role="tab" id="headingAdmin">
+      Admin
+    </a>
+        <div id="admin-section" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingAdmin">
+            <div class="list-style-group">
+                {{link_to class="list-group-item" href='#admin/users' body='Users list'}}
+                {{link_to class="list-group-item" href='#admin/projects' body='Projects list'}}
+                {{link_to class="list-group-item" href='#admin/actions' body='Actions list'}}
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <a class="btn btn-material-yellow btn-block" data-parent="#accordion" href="#stats-section" aria-expanded="true" aria-controls="stats-section" role="tab" id="headingStats">
+      Stats
+    </a>
+        <div id="stats-section" role="tabpanel" aria-labelledby="headingStats">
+            <table class="table table-condensed">
+                <tbody>
+                    <tr class="active">
+                        <td class="when">Today:</td>
+                        <td class="time">0:00</td>
+                        <td class="pounds">£0.0</td>
+                    </tr>
+                    <tr class="nonactual">
+                        <td class="when">Yesterday:</td>
+                        <td class="time">8:00</td>
+                        <td class="pounds">£8.0</td>
+                    </tr>
+                    <tr class="active">
+                        <td class="when">This week:</td>
+                        <td class="time">16:00</td>
+                        <td class="pounds">£16.0</td>
+                    </tr>
+                    <tr class="nonactual">
+                        <td class="when">Previous week:</td>
+                        <td class="time">32:00</td>
+                        <td class="pounds">£32.0</td>
+                    </tr>
+                    <tr class="active">
+                        <td class="when">This month:</td>
+                        <td class="time">48:00</td>
+                        <td class="pounds">£48.0</td>
+                    </tr>
+                    <tr class="nonactual">
+                        <td class="when">Previous month:</td>
+                        <td class="time">0:00</td>
+                        <td class="pounds">£0.0</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>

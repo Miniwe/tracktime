@@ -364,7 +364,7 @@ class Tracktime.RecordsCollection extends Backbone.Collection
   localStorage: new Backbone.LocalStorage (config.collection.records)
 
   initialize: () ->
-    @router = new Tracktime.RecordsRouter {controller: @}
+    # @router = new Tracktime.RecordsRouter {controller: @}
 
   comparator: (model) -> - (new Date(model.get('date'))).getTime()
 
@@ -670,16 +670,53 @@ Tracktime.utils.nl2br = (text) ->
 
 (module?.exports = Tracktime.utils) or @Tracktime.utils = Tracktime.utils
 
+class Tracktime.AdminRouter extends Backbone.SubRoute
+  routes:
+    'users':    'users'
+    'projects': 'projects'
+    'actions':  'actions'
+
+  users: () ->
+    $.alert "admin users"
+
+  projects: () ->
+    $.alert "admin projects"
+
+  actions: () ->
+    $.alert "admin actions"
+
+
+
+
+(module?.exports = Tracktime.AdminRouter) or @Tracktime.AdminRouter = Tracktime.AdminRouter
+
 class Tracktime.AppRouter extends Backbone.Router
   routes:
     '':                            'index'        #index
-    'populate':                    'pagepopulate' #populate
-    'slashed/path':                'slashed'      #slashed/path
-    'with-params/:param1/:param2': 'withParams'   #with-params/any/50
+    'projects*subroute':           'invokeProjectsRouter' #Projects
+    'reports*subroute':            'invokeReportsRouter' #Reports
+    'user*subroute':               'invokeUserRouter' #User
+    'admin*subroute':              'invokeAdminRouter' #Admin
     '*actions':                    'default'      #???
 
   initialize: (options) ->
     _.extend @, options
+
+  invokeProjectsRouter: (subroute) ->
+    unless @projectsRouter
+      @projectsRouter = new Tracktime.ProjectsRouter "projects"
+
+  invokeReportsRouter: (subroute) ->
+    unless @reportsRouter
+      @reportsRouter = new Tracktime.ReportsRouter "reports"
+
+  invokeUserRouter: (subroute) ->
+    unless @userRouter
+      @userRouter = new Tracktime.UserRouter "user"
+
+  invokeAdminRouter: (subroute) ->
+    unless @adminRouter
+      @adminRouter = new Tracktime.AdminRouter "admin"
 
   index: () ->
     $.alert 'index'
@@ -688,28 +725,46 @@ class Tracktime.AppRouter extends Backbone.Router
     $.alert 'Unknown page'
     @navigate "", true
 
-  pagepopulate: () ->
-    Tracktime.AppChannel.command 'populateRecords'
-
-  slashed: () ->
-    $.alert
-      content: 'slashed (4s)'
-      timeout: 4000
-    Tracktime.AppChannel.command 'altView'
-
-  withParams: (param1, param2) ->
-    $.alert 'withParams'
-
 (module?.exports = Tracktime.AppRouter) or @Tracktime.AppRouter = Tracktime.AppRouter
+
+
+class Tracktime.ProjectsRouter extends Backbone.SubRoute
+  routes:
+    '':             'list'
+    ':id':          'details'
+    ':id/edit':     'edit'
+    ':id/delete':   'delete'
+    ':id/add':      'add'
+    ':id/save':     'save'
+
+  list: () ->
+    $.alert "projects list"
+
+  details: (id) ->
+    $.alert "projects details #{id}"
+
+  edit: (id) ->
+    $.alert "projects edit #{id}"
+
+  delete: (id) ->
+    $.alert "projects delete #{id}"
+
+  add: (id) ->
+    $.alert "projects add #{id}"
+
+  save: (id) ->
+    $.alert "projects save #{id}"
+
+(module?.exports = Tracktime.ProjectsRouter) or @Tracktime.ProjectsRouter = Tracktime.ProjectsRouter
 
 class Tracktime.RecordsRouter extends Backbone.Router
   routes:
-    'records':             'list'
-    'records/:id':         'details'
-    'records/:id/edit':    'edit'
-    'records/:id/delete':  'delete'
-    'records/:id/add':     'add'
-    'records/:id/save':    'save'
+    '':             'list'
+    '/:id':         'details'
+    '/:id/edit':    'edit'
+    '/:id/delete':  'delete'
+    '/:id/add':     'add'
+    '/:id/save':    'save'
 
   initialize: (options) ->
     _.extend @, options
@@ -733,6 +788,55 @@ class Tracktime.RecordsRouter extends Backbone.Router
     $.alert "records save #{id}"
 
 (module?.exports = Tracktime.RecordsRouter) or @Tracktime.RecordsRouter = Tracktime.RecordsRouter
+
+class Tracktime.ReportsRouter extends Backbone.SubRoute
+  routes:
+    '':             'list'
+    ':id':          'details'
+    ':id/edit':     'edit'
+    ':id/delete':   'delete'
+    ':id/add':      'add'
+    ':id/save':     'save'
+
+  list: () ->
+    $.alert "reports list"
+
+  details: (id) ->
+    $.alert "reports details #{id}"
+
+  edit: (id) ->
+    $.alert "reports edit #{id}"
+
+  delete: (id) ->
+    $.alert "reports delete #{id}"
+
+  add: (id) ->
+    $.alert "reports add #{id}"
+
+  save: (id) ->
+    $.alert "reports save #{id}"
+
+(module?.exports = Tracktime.ReportsRouter) or @Tracktime.ReportsRouter = Tracktime.ReportsRouter
+
+class Tracktime.UserRouter extends Backbone.SubRoute
+  routes:
+    '':       'details'
+    'rates':  'rates'
+    'logout': 'logout'
+
+  details: () ->
+    $.alert "user details"
+
+  rates: () ->
+    $.alert "user rates"
+
+  logout: () ->
+    $.alert "user logout"
+
+
+
+
+(module?.exports = Tracktime.UserRouter) or @Tracktime.UserRouter = Tracktime.UserRouter
 
 class Tracktime.ActionView extends Backbone.View
   tagName: 'li'

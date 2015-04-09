@@ -27,6 +27,7 @@
     "decouple": "~0.0.1",
     "slideout": "https://github.com/mango/slideout.git#~0.1.5",
     "textarea-autosize": "~0.4.0",
-    "nouislider": "~7.0.10"
+    "nouislider": "~7.0.10",
+    "backbone.subroute": "~0.4.5"
   }
 }

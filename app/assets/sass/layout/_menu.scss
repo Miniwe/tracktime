@@ -1,3 +1,6 @@
 #menu {
   background: $c-shadow-menu;
+  [role=tab] {
+    margin-bottom: 0;
+  }
 }

@@ -5,7 +5,7 @@ class Tracktime.RecordsCollection extends Backbone.Collection
   localStorage: new Backbone.LocalStorage (config.collection.records)
 
   initialize: () ->
-    @router = new Tracktime.RecordsRouter {controller: @}
+    # @router = new Tracktime.RecordsRouter {controller: @}
 
   comparator: (model) -> - (new Date(model.get('date'))).getTime()
 

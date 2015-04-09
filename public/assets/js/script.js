@@ -13825,6 +13825,7 @@ return Backbone.LocalStorage;
   return Radio;
 }));
 
+!function(a){"function"==typeof define&&define.amd?define(["underscore","backbone"],a):"object"==typeof exports?module.exports=a(require("underscore"),require("backbone")):a(_,Backbone)}(function(a,b){return b.SubRoute=b.Router.extend({constructor:function(c,d){this.routes=a.clone(this.routes)||{},this.prefix=c=c||"",this.separator="/"===c.slice(-1)?"":"/",this.createTrailingSlashRoutes=d&&d.createTrailingSlashRoutes,b.Router.prototype.constructor.call(this,d);var e;e=b.history.fragment?b.history.getFragment():b.history.getHash(),a.every(this.routes,function(a,c){return e.match(b.Router.prototype._routeToRegExp(c))?(b.history.loadUrl(e),!1):!0},this),this.postInitialize&&this.postInitialize(d)},navigate:function(a,c){"/"!=a.substr(0,1)&&0!==a.indexOf(this.prefix.substr(0,this.prefix.length-1))&&(a=this.prefix+(a?this.separator:"")+a),b.Router.prototype.navigate.call(this,a,c)},route:function(a,c,d){"/"===a.substr(0)&&(a=a.substr(1,a.length));var e=this.prefix;return a&&a.length>0&&(this.prefix.length>0&&(e+=this.separator),e+=a),this.createTrailingSlashRoutes&&(this.routes[e+"/"]=c,b.Router.prototype.route.call(this,e+"/",c,d)),delete this.routes[a],this.routes[e]=c,b.Router.prototype.route.call(this,e,c,d)}}),b.SubRoute});
 /*!
  * Bootstrap v3.3.4 (http://getbootstrap.com)
  * Copyright 2011-2015 Twitter, Inc.
@@ -29324,66 +29325,84 @@ this["JST"]["layout/main"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1
 },"useData":true});
 
 this["JST"]["layout/menu"] = Handlebars.template({"1":function(depth0,helpers,partials,data) {
-  return " checked=\"checked\"";
+  return " checked=\"checked\" ";
   },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  var stack1, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, buffer = "<header class=\"hidden\">\n  <h2>Menu</h2>\n</header>\n<div class=\"panel panel-info\">\n  <div class=\"well\">\n    <h5>Sync apps over internet only</h5>\n    <div class=\"checkbox\">\n      <label>\n        <input type=\"checkbox\" id=\"isOnline\" ";
+  var stack1, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, buffer = "<header class=\"hidden\">\n    <h2>Menu</h2>\n</header>\n<div class=\"well\">\n    <h5>Sync apps over internet only</h5>\n    <div class=\"checkbox\">\n        <label>\n            <input type=\"checkbox\" id=\"isOnline\" ";
   stack1 = helpers['if'].call(depth0, (depth0 != null ? depth0.isOnline : depth0), {"name":"if","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});
   if (stack1 != null) { buffer += stack1; }
-  return buffer + "> Sync\n\n      </label>\n    </div>\n  </div>\n  <div class=\"panel-heading\"><h3>State</h3></div>\n\n  <div class=\"panel-body\">\n\n    <table class=\"table table-condensed\">\n      <tbody>\n        <tr class=\"active\">\n          <td class=\"when\">Today:</td>\n          <td class=\"time\">0:00</td>\n          <td class=\"pounds\">£0.0</td>\n        </tr>\n        <tr class=\"nonactual\">\n          <td class=\"when\">Yesterday:</td>\n          <td class=\"time\">8:00</td>\n          <td class=\"pounds\">£8.0</td>\n        </tr>\n        <tr class=\"active\">\n          <td class=\"when\">This week:</td>\n          <td class=\"time\">16:00</td>\n          <td class=\"pounds\">£16.0</td>\n        </tr>\n        <tr class=\"nonactual\">\n          <td class=\"when\">Previous week:</td>\n          <td class=\"time\">32:00</td>\n          <td class=\"pounds\">£32.0</td>\n        </tr>\n        <tr class=\"active\">\n          <td class=\"when\">This month:</td>\n          <td class=\"time\">48:00</td>\n          <td class=\"pounds\">£48.0</td>\n        </tr>\n        <tr class=\"nonactual\">\n          <td class=\"when\">Previous month:</td>\n          <td class=\"time\">0:00</td>\n          <td class=\"pounds\">£0.0</td>\n        </tr>\n\n\n      </tbody>\n    </table>\n  </div>\n\n\n</div>\n<div class=\"panel panel-primary\">\n  <div class=\"panel-heading\"><h3>Menu</h3></div>\n\n  <div class=\"panel-body\">\n    <div class=\"list-style-group\">\n      "
+  return buffer + "> Sync\n        </label>\n    </div>\n</div>\n<div class=\"panel-group\" id=\"accordion\" role=\"tablist\" aria-multiselectable=\"true\">\n    <div class=\"panel panel-default\">\n        <a class=\"btn btn-info btn-block\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#user-section\" aria-expanded=\"true\" aria-controls=\"user-section\" role=\"tab\" id=\"headingUser\">\n      User\n    </a>\n        <div id=\"user-section\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingUser\">\n            <div class=\"list-style-group\">\n                "
     + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
-    'body': ("Populate"),
-    'href': ("#populate"),
+    'body': ("Settings"),
+    'href': ("#user"),
     'class': ("list-group-item")
   },"data":data})))
-    + "\n      "
+    + "\n                "
     + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
-    'body': ("Slashed"),
-    'href': ("#slashed/path"),
+    'body': ("Rates"),
+    'href': ("#user/rates"),
     'class': ("list-group-item")
   },"data":data})))
-    + "\n    </div>\n  </div>\n\n  <div class=\"panel-body\">\n    <div class=\"list-style-group\">\n      "
+    + "\n                "
     + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
-    'body': ("In Progress"),
-    'href': ("#records/inprogress"),
+    'body': ("Logout"),
+    'href': ("#user/logout"),
     'class': ("list-group-item")
   },"data":data})))
-    + "\n      "
+    + "\n            </div>\n        </div>\n    </div>\n    <div class=\"panel panel-default\">\n        <a class=\"btn btn-primary btn-block\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#projects-section\" aria-expanded=\"true\" aria-controls=\"projects-section\" role=\"tab\" id=\"headingProjects\">\n      Projects\n    </a>\n        <div id=\"projects-section\" class=\"panel-collapse collapse in\" role=\"tabpanel\" aria-labelledby=\"headingProjects\">\n            <div class=\"list-style-group\">\n                "
     + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
-    'body': ("Not Finished"),
-    'href': ("#records/notfinished"),
+    'body': ("Projects list"),
+    'href': ("#projects"),
     'class': ("list-group-item")
   },"data":data})))
-    + "\n      "
+    + "\n                "
     + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
-    'body': ("Finished"),
-    'href': ("#records/finished"),
+    'body': ("Project 1"),
+    'href': ("#projects/1"),
     'class': ("list-group-item")
   },"data":data})))
-    + "\n    </div>\n  </div>\n\n  <div class=\"panel-body\">\n    <div class=\"list-style-group\">\n      "
+    + "\n                "
     + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
-    'body': ("Projects 1"),
-    'href': ("#project/1"),
+    'body': ("Project 2"),
+    'href': ("#projects/2"),
     'class': ("list-group-item")
   },"data":data})))
-    + "\n      "
+    + "\n            </div>\n        </div>\n    </div>\n    <div class=\"panel panel-default\">\n        <a class=\"btn btn-material-purple btn-block\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#reports-section\" aria-expanded=\"true\" aria-controls=\"reports-section\" role=\"tab\" id=\"headingReports\">\n      Reports\n    </a>\n        <div id=\"reports-section\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingReports\">\n            <div class=\"list-style-group\">\n                "
     + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
-    'body': ("Projects 2"),
-    'href': ("#project/2"),
+    'body': ("Reports list"),
+    'href': ("#reports"),
     'class': ("list-group-item")
   },"data":data})))
-    + "\n      "
+    + "\n                "
     + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
-    'body': ("Projects 3"),
-    'href': ("#project/3"),
+    'body': ("Report 1"),
+    'href': ("#reports/1"),
     'class': ("list-group-item")
   },"data":data})))
-    + "\n      "
+    + "\n                "
     + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
-    'body': ("Projects 4"),
-    'href': ("#project/4"),
+    'body': ("Report 2"),
+    'href': ("#reports/2"),
     'class': ("list-group-item")
   },"data":data})))
-    + "\n    </div>\n  </div>\n\n\n</div>\n";
+    + "\n            </div>\n        </div>\n    </div>\n    <div class=\"panel panel-default\">\n        <a class=\"btn btn-warning btn-block\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#admin-section\" aria-expanded=\"true\" aria-controls=\"admin-section\" role=\"tab\" id=\"headingAdmin\">\n      Admin\n    </a>\n        <div id=\"admin-section\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingAdmin\">\n            <div class=\"list-style-group\">\n                "
+    + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
+    'body': ("Users list"),
+    'href': ("#admin/users"),
+    'class': ("list-group-item")
+  },"data":data})))
+    + "\n                "
+    + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
+    'body': ("Projects list"),
+    'href': ("#admin/projects"),
+    'class': ("list-group-item")
+  },"data":data})))
+    + "\n                "
+    + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
+    'body': ("Actions list"),
+    'href': ("#admin/actions"),
+    'class': ("list-group-item")
+  },"data":data})))
+    + "\n            </div>\n        </div>\n    </div>\n    <div class=\"panel panel-default\">\n        <a class=\"btn btn-material-yellow btn-block\" data-parent=\"#accordion\" href=\"#stats-section\" aria-expanded=\"true\" aria-controls=\"stats-section\" role=\"tab\" id=\"headingStats\">\n      Stats\n    </a>\n        <div id=\"stats-section\" role=\"tabpanel\" aria-labelledby=\"headingStats\">\n            <table class=\"table table-condensed\">\n                <tbody>\n                    <tr class=\"active\">\n                        <td class=\"when\">Today:</td>\n                        <td class=\"time\">0:00</td>\n                        <td class=\"pounds\">£0.0</td>\n                    </tr>\n                    <tr class=\"nonactual\">\n                        <td class=\"when\">Yesterday:</td>\n                        <td class=\"time\">8:00</td>\n                        <td class=\"pounds\">£8.0</td>\n                    </tr>\n                    <tr class=\"active\">\n                        <td class=\"when\">This week:</td>\n                        <td class=\"time\">16:00</td>\n                        <td class=\"pounds\">£16.0</td>\n                    </tr>\n                    <tr class=\"nonactual\">\n                        <td class=\"when\">Previous week:</td>\n                        <td class=\"time\">32:00</td>\n                        <td class=\"pounds\">£32.0</td>\n                    </tr>\n                    <tr class=\"active\">\n                        <td class=\"when\">This month:</td>\n                        <td class=\"time\">48:00</td>\n                        <td class=\"pounds\">£48.0</td>\n                    </tr>\n                    <tr class=\"nonactual\">\n                        <td class=\"when\">Previous month:</td>\n                        <td class=\"time\">0:00</td>\n                        <td class=\"pounds\">£0.0</td>\n                    </tr>\n                </tbody>\n            </table>\n        </div>\n    </div>\n</div>";
 },"useData":true});
 
 this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
@@ -29928,11 +29947,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
     RecordsCollection.prototype.localStorage = new Backbone.LocalStorage(config.collection.records);
 
-    RecordsCollection.prototype.initialize = function() {
-      return this.router = new Tracktime.RecordsRouter({
-        controller: this
-      });
-    };
+    RecordsCollection.prototype.initialize = function() {};
 
     RecordsCollection.prototype.comparator = function(model) {
       return -(new Date(model.get('date'))).getTime();
@@ -30274,6 +30289,37 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.utils : void 0) || (this.Tracktime.utils = Tracktime.utils);
 
+  Tracktime.AdminRouter = (function(superClass) {
+    extend(AdminRouter, superClass);
+
+    function AdminRouter() {
+      return AdminRouter.__super__.constructor.apply(this, arguments);
+    }
+
+    AdminRouter.prototype.routes = {
+      'users': 'users',
+      'projects': 'projects',
+      'actions': 'actions'
+    };
+
+    AdminRouter.prototype.users = function() {
+      return $.alert("admin users");
+    };
+
+    AdminRouter.prototype.projects = function() {
+      return $.alert("admin projects");
+    };
+
+    AdminRouter.prototype.actions = function() {
+      return $.alert("admin actions");
+    };
+
+    return AdminRouter;
+
+  })(Backbone.SubRoute);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AdminRouter : void 0) || (this.Tracktime.AdminRouter = Tracktime.AdminRouter);
+
   Tracktime.AppRouter = (function(superClass) {
     extend(AppRouter, superClass);
 
@@ -30283,14 +30329,39 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
     AppRouter.prototype.routes = {
       '': 'index',
-      'populate': 'pagepopulate',
-      'slashed/path': 'slashed',
-      'with-params/:param1/:param2': 'withParams',
+      'projects*subroute': 'invokeProjectsRouter',
+      'reports*subroute': 'invokeReportsRouter',
+      'user*subroute': 'invokeUserRouter',
+      'admin*subroute': 'invokeAdminRouter',
       '*actions': 'default'
     };
 
     AppRouter.prototype.initialize = function(options) {
       return _.extend(this, options);
+    };
+
+    AppRouter.prototype.invokeProjectsRouter = function(subroute) {
+      if (!this.projectsRouter) {
+        return this.projectsRouter = new Tracktime.ProjectsRouter("projects");
+      }
+    };
+
+    AppRouter.prototype.invokeReportsRouter = function(subroute) {
+      if (!this.reportsRouter) {
+        return this.reportsRouter = new Tracktime.ReportsRouter("reports");
+      }
+    };
+
+    AppRouter.prototype.invokeUserRouter = function(subroute) {
+      if (!this.userRouter) {
+        return this.userRouter = new Tracktime.UserRouter("user");
+      }
+    };
+
+    AppRouter.prototype.invokeAdminRouter = function(subroute) {
+      if (!this.adminRouter) {
+        return this.adminRouter = new Tracktime.AdminRouter("admin");
+      }
     };
 
     AppRouter.prototype.index = function() {
@@ -30302,27 +30373,57 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
       return this.navigate("", true);
     };
 
-    AppRouter.prototype.pagepopulate = function() {
-      return Tracktime.AppChannel.command('populateRecords');
-    };
-
-    AppRouter.prototype.slashed = function() {
-      $.alert({
-        content: 'slashed (4s)',
-        timeout: 4000
-      });
-      return Tracktime.AppChannel.command('altView');
-    };
-
-    AppRouter.prototype.withParams = function(param1, param2) {
-      return $.alert('withParams');
-    };
-
     return AppRouter;
 
   })(Backbone.Router);
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AppRouter : void 0) || (this.Tracktime.AppRouter = Tracktime.AppRouter);
+
+  Tracktime.ProjectsRouter = (function(superClass) {
+    extend(ProjectsRouter, superClass);
+
+    function ProjectsRouter() {
+      return ProjectsRouter.__super__.constructor.apply(this, arguments);
+    }
+
+    ProjectsRouter.prototype.routes = {
+      '': 'list',
+      ':id': 'details',
+      ':id/edit': 'edit',
+      ':id/delete': 'delete',
+      ':id/add': 'add',
+      ':id/save': 'save'
+    };
+
+    ProjectsRouter.prototype.list = function() {
+      return $.alert("projects list");
+    };
+
+    ProjectsRouter.prototype.details = function(id) {
+      return $.alert("projects details " + id);
+    };
+
+    ProjectsRouter.prototype.edit = function(id) {
+      return $.alert("projects edit " + id);
+    };
+
+    ProjectsRouter.prototype["delete"] = function(id) {
+      return $.alert("projects delete " + id);
+    };
+
+    ProjectsRouter.prototype.add = function(id) {
+      return $.alert("projects add " + id);
+    };
+
+    ProjectsRouter.prototype.save = function(id) {
+      return $.alert("projects save " + id);
+    };
+
+    return ProjectsRouter;
+
+  })(Backbone.SubRoute);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.ProjectsRouter : void 0) || (this.Tracktime.ProjectsRouter = Tracktime.ProjectsRouter);
 
   Tracktime.RecordsRouter = (function(superClass) {
     extend(RecordsRouter, superClass);
@@ -30332,12 +30433,12 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     }
 
     RecordsRouter.prototype.routes = {
-      'records': 'list',
-      'records/:id': 'details',
-      'records/:id/edit': 'edit',
-      'records/:id/delete': 'delete',
-      'records/:id/add': 'add',
-      'records/:id/save': 'save'
+      '': 'list',
+      '/:id': 'details',
+      '/:id/edit': 'edit',
+      '/:id/delete': 'delete',
+      '/:id/add': 'add',
+      '/:id/save': 'save'
     };
 
     RecordsRouter.prototype.initialize = function(options) {
@@ -30373,6 +30474,83 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
   })(Backbone.Router);
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.RecordsRouter : void 0) || (this.Tracktime.RecordsRouter = Tracktime.RecordsRouter);
+
+  Tracktime.ReportsRouter = (function(superClass) {
+    extend(ReportsRouter, superClass);
+
+    function ReportsRouter() {
+      return ReportsRouter.__super__.constructor.apply(this, arguments);
+    }
+
+    ReportsRouter.prototype.routes = {
+      '': 'list',
+      ':id': 'details',
+      ':id/edit': 'edit',
+      ':id/delete': 'delete',
+      ':id/add': 'add',
+      ':id/save': 'save'
+    };
+
+    ReportsRouter.prototype.list = function() {
+      return $.alert("reports list");
+    };
+
+    ReportsRouter.prototype.details = function(id) {
+      return $.alert("reports details " + id);
+    };
+
+    ReportsRouter.prototype.edit = function(id) {
+      return $.alert("reports edit " + id);
+    };
+
+    ReportsRouter.prototype["delete"] = function(id) {
+      return $.alert("reports delete " + id);
+    };
+
+    ReportsRouter.prototype.add = function(id) {
+      return $.alert("reports add " + id);
+    };
+
+    ReportsRouter.prototype.save = function(id) {
+      return $.alert("reports save " + id);
+    };
+
+    return ReportsRouter;
+
+  })(Backbone.SubRoute);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.ReportsRouter : void 0) || (this.Tracktime.ReportsRouter = Tracktime.ReportsRouter);
+
+  Tracktime.UserRouter = (function(superClass) {
+    extend(UserRouter, superClass);
+
+    function UserRouter() {
+      return UserRouter.__super__.constructor.apply(this, arguments);
+    }
+
+    UserRouter.prototype.routes = {
+      '': 'details',
+      'rates': 'rates',
+      'logout': 'logout'
+    };
+
+    UserRouter.prototype.details = function() {
+      return $.alert("user details");
+    };
+
+    UserRouter.prototype.rates = function() {
+      return $.alert("user rates");
+    };
+
+    UserRouter.prototype.logout = function() {
+      return $.alert("user logout");
+    };
+
+    return UserRouter;
+
+  })(Backbone.SubRoute);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.UserRouter : void 0) || (this.Tracktime.UserRouter = Tracktime.UserRouter);
 
   Tracktime.ActionView = (function(superClass) {
     extend(ActionView, superClass);

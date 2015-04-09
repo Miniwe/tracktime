@@ -54,66 +54,84 @@ this["JST"]["layout/main"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1
 },"useData":true});
 
 this["JST"]["layout/menu"] = Handlebars.template({"1":function(depth0,helpers,partials,data) {
-  return " checked=\"checked\"";
+  return " checked=\"checked\" ";
   },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  var stack1, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, buffer = "<header class=\"hidden\">\n  <h2>Menu</h2>\n</header>\n<div class=\"panel panel-info\">\n  <div class=\"well\">\n    <h5>Sync apps over internet only</h5>\n    <div class=\"checkbox\">\n      <label>\n        <input type=\"checkbox\" id=\"isOnline\" ";
+  var stack1, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, buffer = "<header class=\"hidden\">\n    <h2>Menu</h2>\n</header>\n<div class=\"well\">\n    <h5>Sync apps over internet only</h5>\n    <div class=\"checkbox\">\n        <label>\n            <input type=\"checkbox\" id=\"isOnline\" ";
   stack1 = helpers['if'].call(depth0, (depth0 != null ? depth0.isOnline : depth0), {"name":"if","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});
   if (stack1 != null) { buffer += stack1; }
-  return buffer + "> Sync\n\n      </label>\n    </div>\n  </div>\n  <div class=\"panel-heading\"><h3>State</h3></div>\n\n  <div class=\"panel-body\">\n\n    <table class=\"table table-condensed\">\n      <tbody>\n        <tr class=\"active\">\n          <td class=\"when\">Today:</td>\n          <td class=\"time\">0:00</td>\n          <td class=\"pounds\">£0.0</td>\n        </tr>\n        <tr class=\"nonactual\">\n          <td class=\"when\">Yesterday:</td>\n          <td class=\"time\">8:00</td>\n          <td class=\"pounds\">£8.0</td>\n        </tr>\n        <tr class=\"active\">\n          <td class=\"when\">This week:</td>\n          <td class=\"time\">16:00</td>\n          <td class=\"pounds\">£16.0</td>\n        </tr>\n        <tr class=\"nonactual\">\n          <td class=\"when\">Previous week:</td>\n          <td class=\"time\">32:00</td>\n          <td class=\"pounds\">£32.0</td>\n        </tr>\n        <tr class=\"active\">\n          <td class=\"when\">This month:</td>\n          <td class=\"time\">48:00</td>\n          <td class=\"pounds\">£48.0</td>\n        </tr>\n        <tr class=\"nonactual\">\n          <td class=\"when\">Previous month:</td>\n          <td class=\"time\">0:00</td>\n          <td class=\"pounds\">£0.0</td>\n        </tr>\n\n\n      </tbody>\n    </table>\n  </div>\n\n\n</div>\n<div class=\"panel panel-primary\">\n  <div class=\"panel-heading\"><h3>Menu</h3></div>\n\n  <div class=\"panel-body\">\n    <div class=\"list-style-group\">\n      "
+  return buffer + "> Sync\n        </label>\n    </div>\n</div>\n<div class=\"panel-group\" id=\"accordion\" role=\"tablist\" aria-multiselectable=\"true\">\n    <div class=\"panel panel-default\">\n        <a class=\"btn btn-info btn-block\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#user-section\" aria-expanded=\"true\" aria-controls=\"user-section\" role=\"tab\" id=\"headingUser\">\n      User\n    </a>\n        <div id=\"user-section\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingUser\">\n            <div class=\"list-style-group\">\n                "
     + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
-    'body': ("Populate"),
-    'href': ("#populate"),
+    'body': ("Settings"),
+    'href': ("#user"),
     'class': ("list-group-item")
   },"data":data})))
-    + "\n      "
+    + "\n                "
     + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
-    'body': ("Slashed"),
-    'href': ("#slashed/path"),
+    'body': ("Rates"),
+    'href': ("#user/rates"),
     'class': ("list-group-item")
   },"data":data})))
-    + "\n    </div>\n  </div>\n\n  <div class=\"panel-body\">\n    <div class=\"list-style-group\">\n      "
+    + "\n                "
     + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
-    'body': ("In Progress"),
-    'href': ("#records/inprogress"),
+    'body': ("Logout"),
+    'href': ("#user/logout"),
     'class': ("list-group-item")
   },"data":data})))
-    + "\n      "
+    + "\n            </div>\n        </div>\n    </div>\n    <div class=\"panel panel-default\">\n        <a class=\"btn btn-primary btn-block\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#projects-section\" aria-expanded=\"true\" aria-controls=\"projects-section\" role=\"tab\" id=\"headingProjects\">\n      Projects\n    </a>\n        <div id=\"projects-section\" class=\"panel-collapse collapse in\" role=\"tabpanel\" aria-labelledby=\"headingProjects\">\n            <div class=\"list-style-group\">\n                "
     + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
-    'body': ("Not Finished"),
-    'href': ("#records/notfinished"),
+    'body': ("Projects list"),
+    'href': ("#projects"),
     'class': ("list-group-item")
   },"data":data})))
-    + "\n      "
+    + "\n                "
     + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
-    'body': ("Finished"),
-    'href': ("#records/finished"),
+    'body': ("Project 1"),
+    'href': ("#projects/1"),
     'class': ("list-group-item")
   },"data":data})))
-    + "\n    </div>\n  </div>\n\n  <div class=\"panel-body\">\n    <div class=\"list-style-group\">\n      "
+    + "\n                "
     + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
-    'body': ("Projects 1"),
-    'href': ("#project/1"),
+    'body': ("Project 2"),
+    'href': ("#projects/2"),
     'class': ("list-group-item")
   },"data":data})))
-    + "\n      "
+    + "\n            </div>\n        </div>\n    </div>\n    <div class=\"panel panel-default\">\n        <a class=\"btn btn-material-purple btn-block\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#reports-section\" aria-expanded=\"true\" aria-controls=\"reports-section\" role=\"tab\" id=\"headingReports\">\n      Reports\n    </a>\n        <div id=\"reports-section\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingReports\">\n            <div class=\"list-style-group\">\n                "
     + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
-    'body': ("Projects 2"),
-    'href': ("#project/2"),
+    'body': ("Reports list"),
+    'href': ("#reports"),
     'class': ("list-group-item")
   },"data":data})))
-    + "\n      "
+    + "\n                "
     + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
-    'body': ("Projects 3"),
-    'href': ("#project/3"),
+    'body': ("Report 1"),
+    'href': ("#reports/1"),
     'class': ("list-group-item")
   },"data":data})))
-    + "\n      "
+    + "\n                "
     + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
-    'body': ("Projects 4"),
-    'href': ("#project/4"),
+    'body': ("Report 2"),
+    'href': ("#reports/2"),
     'class': ("list-group-item")
   },"data":data})))
-    + "\n    </div>\n  </div>\n\n\n</div>\n";
+    + "\n            </div>\n        </div>\n    </div>\n    <div class=\"panel panel-default\">\n        <a class=\"btn btn-warning btn-block\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#admin-section\" aria-expanded=\"true\" aria-controls=\"admin-section\" role=\"tab\" id=\"headingAdmin\">\n      Admin\n    </a>\n        <div id=\"admin-section\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingAdmin\">\n            <div class=\"list-style-group\">\n                "
+    + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
+    'body': ("Users list"),
+    'href': ("#admin/users"),
+    'class': ("list-group-item")
+  },"data":data})))
+    + "\n                "
+    + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
+    'body': ("Projects list"),
+    'href': ("#admin/projects"),
+    'class': ("list-group-item")
+  },"data":data})))
+    + "\n                "
+    + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
+    'body': ("Actions list"),
+    'href': ("#admin/actions"),
+    'class': ("list-group-item")
+  },"data":data})))
+    + "\n            </div>\n        </div>\n    </div>\n    <div class=\"panel panel-default\">\n        <a class=\"btn btn-material-yellow btn-block\" data-parent=\"#accordion\" href=\"#stats-section\" aria-expanded=\"true\" aria-controls=\"stats-section\" role=\"tab\" id=\"headingStats\">\n      Stats\n    </a>\n        <div id=\"stats-section\" role=\"tabpanel\" aria-labelledby=\"headingStats\">\n            <table class=\"table table-condensed\">\n                <tbody>\n                    <tr class=\"active\">\n                        <td class=\"when\">Today:</td>\n                        <td class=\"time\">0:00</td>\n                        <td class=\"pounds\">£0.0</td>\n                    </tr>\n                    <tr class=\"nonactual\">\n                        <td class=\"when\">Yesterday:</td>\n                        <td class=\"time\">8:00</td>\n                        <td class=\"pounds\">£8.0</td>\n                    </tr>\n                    <tr class=\"active\">\n                        <td class=\"when\">This week:</td>\n                        <td class=\"time\">16:00</td>\n                        <td class=\"pounds\">£16.0</td>\n                    </tr>\n                    <tr class=\"nonactual\">\n                        <td class=\"when\">Previous week:</td>\n                        <td class=\"time\">32:00</td>\n                        <td class=\"pounds\">£32.0</td>\n                    </tr>\n                    <tr class=\"active\">\n                        <td class=\"when\">This month:</td>\n                        <td class=\"time\">48:00</td>\n                        <td class=\"pounds\">£48.0</td>\n                    </tr>\n                    <tr class=\"nonactual\">\n                        <td class=\"when\">Previous month:</td>\n                        <td class=\"time\">0:00</td>\n                        <td class=\"pounds\">£0.0</td>\n                    </tr>\n                </tbody>\n            </table>\n        </div>\n    </div>\n</div>";
 },"useData":true});
 
 this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {

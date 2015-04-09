@@ -522,11 +522,7 @@
 
     RecordsCollection.prototype.localStorage = new Backbone.LocalStorage(config.collection.records);
 
-    RecordsCollection.prototype.initialize = function() {
-      return this.router = new Tracktime.RecordsRouter({
-        controller: this
-      });
-    };
+    RecordsCollection.prototype.initialize = function() {};
 
     RecordsCollection.prototype.comparator = function(model) {
       return -(new Date(model.get('date'))).getTime();
@@ -868,6 +864,37 @@
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.utils : void 0) || (this.Tracktime.utils = Tracktime.utils);
 
+  Tracktime.AdminRouter = (function(superClass) {
+    extend(AdminRouter, superClass);
+
+    function AdminRouter() {
+      return AdminRouter.__super__.constructor.apply(this, arguments);
+    }
+
+    AdminRouter.prototype.routes = {
+      'users': 'users',
+      'projects': 'projects',
+      'actions': 'actions'
+    };
+
+    AdminRouter.prototype.users = function() {
+      return $.alert("admin users");
+    };
+
+    AdminRouter.prototype.projects = function() {
+      return $.alert("admin projects");
+    };
+
+    AdminRouter.prototype.actions = function() {
+      return $.alert("admin actions");
+    };
+
+    return AdminRouter;
+
+  })(Backbone.SubRoute);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AdminRouter : void 0) || (this.Tracktime.AdminRouter = Tracktime.AdminRouter);
+
   Tracktime.AppRouter = (function(superClass) {
     extend(AppRouter, superClass);
 
@@ -877,14 +904,39 @@
 
     AppRouter.prototype.routes = {
       '': 'index',
-      'populate': 'pagepopulate',
-      'slashed/path': 'slashed',
-      'with-params/:param1/:param2': 'withParams',
+      'projects*subroute': 'invokeProjectsRouter',
+      'reports*subroute': 'invokeReportsRouter',
+      'user*subroute': 'invokeUserRouter',
+      'admin*subroute': 'invokeAdminRouter',
       '*actions': 'default'
     };
 
     AppRouter.prototype.initialize = function(options) {
       return _.extend(this, options);
+    };
+
+    AppRouter.prototype.invokeProjectsRouter = function(subroute) {
+      if (!this.projectsRouter) {
+        return this.projectsRouter = new Tracktime.ProjectsRouter("projects");
+      }
+    };
+
+    AppRouter.prototype.invokeReportsRouter = function(subroute) {
+      if (!this.reportsRouter) {
+        return this.reportsRouter = new Tracktime.ReportsRouter("reports");
+      }
+    };
+
+    AppRouter.prototype.invokeUserRouter = function(subroute) {
+      if (!this.userRouter) {
+        return this.userRouter = new Tracktime.UserRouter("user");
+      }
+    };
+
+    AppRouter.prototype.invokeAdminRouter = function(subroute) {
+      if (!this.adminRouter) {
+        return this.adminRouter = new Tracktime.AdminRouter("admin");
+      }
     };
 
     AppRouter.prototype.index = function() {
@@ -896,27 +948,57 @@
       return this.navigate("", true);
     };
 
-    AppRouter.prototype.pagepopulate = function() {
-      return Tracktime.AppChannel.command('populateRecords');
-    };
-
-    AppRouter.prototype.slashed = function() {
-      $.alert({
-        content: 'slashed (4s)',
-        timeout: 4000
-      });
-      return Tracktime.AppChannel.command('altView');
-    };
-
-    AppRouter.prototype.withParams = function(param1, param2) {
-      return $.alert('withParams');
-    };
-
     return AppRouter;
 
   })(Backbone.Router);
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AppRouter : void 0) || (this.Tracktime.AppRouter = Tracktime.AppRouter);
+
+  Tracktime.ProjectsRouter = (function(superClass) {
+    extend(ProjectsRouter, superClass);
+
+    function ProjectsRouter() {
+      return ProjectsRouter.__super__.constructor.apply(this, arguments);
+    }
+
+    ProjectsRouter.prototype.routes = {
+      '': 'list',
+      ':id': 'details',
+      ':id/edit': 'edit',
+      ':id/delete': 'delete',
+      ':id/add': 'add',
+      ':id/save': 'save'
+    };
+
+    ProjectsRouter.prototype.list = function() {
+      return $.alert("projects list");
+    };
+
+    ProjectsRouter.prototype.details = function(id) {
+      return $.alert("projects details " + id);
+    };
+
+    ProjectsRouter.prototype.edit = function(id) {
+      return $.alert("projects edit " + id);
+    };
+
+    ProjectsRouter.prototype["delete"] = function(id) {
+      return $.alert("projects delete " + id);
+    };
+
+    ProjectsRouter.prototype.add = function(id) {
+      return $.alert("projects add " + id);
+    };
+
+    ProjectsRouter.prototype.save = function(id) {
+      return $.alert("projects save " + id);
+    };
+
+    return ProjectsRouter;
+
+  })(Backbone.SubRoute);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.ProjectsRouter : void 0) || (this.Tracktime.ProjectsRouter = Tracktime.ProjectsRouter);
 
   Tracktime.RecordsRouter = (function(superClass) {
     extend(RecordsRouter, superClass);
@@ -926,12 +1008,12 @@
     }
 
     RecordsRouter.prototype.routes = {
-      'records': 'list',
-      'records/:id': 'details',
-      'records/:id/edit': 'edit',
-      'records/:id/delete': 'delete',
-      'records/:id/add': 'add',
-      'records/:id/save': 'save'
+      '': 'list',
+      '/:id': 'details',
+      '/:id/edit': 'edit',
+      '/:id/delete': 'delete',
+      '/:id/add': 'add',
+      '/:id/save': 'save'
     };
 
     RecordsRouter.prototype.initialize = function(options) {
@@ -967,6 +1049,83 @@
   })(Backbone.Router);
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.RecordsRouter : void 0) || (this.Tracktime.RecordsRouter = Tracktime.RecordsRouter);
+
+  Tracktime.ReportsRouter = (function(superClass) {
+    extend(ReportsRouter, superClass);
+
+    function ReportsRouter() {
+      return ReportsRouter.__super__.constructor.apply(this, arguments);
+    }
+
+    ReportsRouter.prototype.routes = {
+      '': 'list',
+      ':id': 'details',
+      ':id/edit': 'edit',
+      ':id/delete': 'delete',
+      ':id/add': 'add',
+      ':id/save': 'save'
+    };
+
+    ReportsRouter.prototype.list = function() {
+      return $.alert("reports list");
+    };
+
+    ReportsRouter.prototype.details = function(id) {
+      return $.alert("reports details " + id);
+    };
+
+    ReportsRouter.prototype.edit = function(id) {
+      return $.alert("reports edit " + id);
+    };
+
+    ReportsRouter.prototype["delete"] = function(id) {
+      return $.alert("reports delete " + id);
+    };
+
+    ReportsRouter.prototype.add = function(id) {
+      return $.alert("reports add " + id);
+    };
+
+    ReportsRouter.prototype.save = function(id) {
+      return $.alert("reports save " + id);
+    };
+
+    return ReportsRouter;
+
+  })(Backbone.SubRoute);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.ReportsRouter : void 0) || (this.Tracktime.ReportsRouter = Tracktime.ReportsRouter);
+
+  Tracktime.UserRouter = (function(superClass) {
+    extend(UserRouter, superClass);
+
+    function UserRouter() {
+      return UserRouter.__super__.constructor.apply(this, arguments);
+    }
+
+    UserRouter.prototype.routes = {
+      '': 'details',
+      'rates': 'rates',
+      'logout': 'logout'
+    };
+
+    UserRouter.prototype.details = function() {
+      return $.alert("user details");
+    };
+
+    UserRouter.prototype.rates = function() {
+      return $.alert("user rates");
+    };
+
+    UserRouter.prototype.logout = function() {
+      return $.alert("user logout");
+    };
+
+    return UserRouter;
+
+  })(Backbone.SubRoute);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.UserRouter : void 0) || (this.Tracktime.UserRouter = Tracktime.UserRouter);
 
   Tracktime.ActionView = (function(superClass) {
     extend(ActionView, superClass);
