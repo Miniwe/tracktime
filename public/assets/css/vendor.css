@@ -1,0 +1,58 @@
+/* line 2, ../../app/assets/sass/vendor/_example.scss */
+.example .class-2, .example .class-3, .example .class-4 {
+  background-color: #aaaaaa;
+  border: 2px solid #777777;
+  margin: 1em;
+}
+/* line 8, ../../app/assets/sass/vendor/_example.scss */
+.example .class-2 {
+  margin-left: 1em;
+}
+/* line 8, ../../app/assets/sass/vendor/_example.scss */
+.example .class-3 {
+  margin-left: 2em;
+}
+/* line 8, ../../app/assets/sass/vendor/_example.scss */
+.example .class-4 {
+  margin-left: 3em;
+}
+
+/* line 1, ../../app/assets/sass/vendor/_slideout.scss */
+#menu, .slideout-menu {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 0;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  display: none;
+  width: 256px;
+}
+
+/* line 14, ../../app/assets/sass/vendor/_slideout.scss */
+.slideout-panel {
+  position: relative;
+  z-index: 1;
+  min-height: 100%;
+}
+
+/* line 20, ../../app/assets/sass/vendor/_slideout.scss */
+body,
+.slideout-open,
+.slideout-open body {
+  overflow: hidden;
+}
+
+/* line 26, ../../app/assets/sass/vendor/_slideout.scss */
+.slideout-open #menu, .slideout-open .slideout-menu {
+  display: block;
+}
+
+/* line 1, ../../app/assets/sass/global/_vendorfixes.scss */
+.btn.btn-fab.btn-fab-mini i {
+  font-size: 22px;
+  margin-left: -4px;
+  margin-top: 0px;
+}
