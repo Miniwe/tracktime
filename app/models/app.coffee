@@ -23,7 +23,6 @@ class Tracktime extends Backbone.Model
     try
       $.ajax
         url: "#{config.SERVER}/status"
-        async: false
         dataType: 'jsonp'
         jsonp: 'callback'
         success: (result) =>

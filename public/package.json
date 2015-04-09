@@ -1,0 +1,25 @@
+{
+  "name": "tracktime",
+  "version": "0.1.1",
+  "description": "Track time. Backbone on Chrome platform app.",
+  "main": "index.html",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Miniwe/tracktime.git"
+  },
+  "window": {
+    "title": "TrackTime Client",
+    "toolbar": false,
+    "frame": false,
+    "position": "mouse",
+    "width": 1000,
+    "height": 600,
+    "min_width": 320,
+    "min_height": 420
+  },
+  "author": "Vitaly Dryukov <miniwe@mail.ru>",
+  "license": "ISC",
+  "webkit": {
+    "plugin": true
+  }
+}

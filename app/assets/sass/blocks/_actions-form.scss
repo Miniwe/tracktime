@@ -1,5 +1,4 @@
-@import 'compass/css3/box-shadow';
-@import 'compass/css3/transition';
+@import 'compass/css3';
 
 #actions-form
 {
@@ -48,6 +47,17 @@
             left: 70px;
 
             color: #009688;
+        }
+
+        .controls-container {
+            overflow: hidden;
+            height: 54px;
+            @include opacity(1);
+            @include transition(all .2s .1s);
+            &.hidden {
+                @include opacity(0);
+                height: 0px;
+            }
         }
     }
 }

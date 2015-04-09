@@ -1,0 +1,17 @@
+{
+  "options":
+  {
+    "platforms": [
+      "osx",
+      "win"
+    ],
+    "buildDir": "builds",
+    "cacheDir": "cache",
+    "macIcns": "config/icons/macIcon.icns",
+    "winIco": "config/icons/winIcon.ico",
+    "macZip": true
+    },
+    "src": [
+      "public/**/*"
+    ]
+  }

@@ -17,5 +17,11 @@ Handlebars.registerHelper 'nl2br', (text) ->
   nl2br = (text + '').replace /([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + '<br>' + '$2'
   return new Handlebars.SafeString nl2br
 
-Handlebars.registerHelper 'timestampToDate', (date) ->
+Handlebars.registerHelper 'dateFormat', (date) ->
   date
+  # timestamp = Date.parse date
+  # unless _.isNaN(timestamp)
+  #   (new Date(timestamp)).toLocalString()
+  # else
+  #   new Date()
+

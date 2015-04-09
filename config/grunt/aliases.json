@@ -23,6 +23,10 @@
     "copy",
     "notify:client_complete"
   ],
+  "app": [
+    "client:prod",
+    "nodewebkit"
+  ],
   "server": [
     "express:dev",
     "watch"
