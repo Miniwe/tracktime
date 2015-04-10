@@ -3,48 +3,15 @@ class Tracktime extends Backbone.Model
 
   defaults:
     title: "TrackTime App - from"
-    isOnline: null
 
   initialize: () ->
-    @checkServer() if @checkOnline()
-    @setWindowListeners()
 
     @populateActions()
     @set 'records', new Tracktime.RecordsCollection()
 
-    @listenTo @, "change:isOnline", @updateApp
+    @listenTo Tracktime.AppChannel, "isOnline", @updateApp
 
-  checkOnline: () ->
-    (window.navigator.onLine == true) or false
-
-  checkServer: () ->
-    deferred = $.Deferred()
-    callback = (args...) -> console.log 'call', args...
-    try
-      $.ajax
-        url: "#{config.SERVER}/status"
-        dataType: 'jsonp'
-        jsonp: 'callback'
-        success: (result) =>
-          @set 'isOnline', true
-          deferred.resolve()
-        error: (result) =>
-          @set 'isOnline', false
-          deferred.resolve()
-    catch exception_var
-      @set 'isOnline', false
-    return deferred.promise()
-
-  setWindowListeners: () ->
-    window.addEventListener "offline", (e) =>
-      @set 'isOnline', false
-    , false
-
-    window.addEventListener "online", (e) =>
-      @checkServer()
-    , false
-
-  updateApp: () ->
+  updateApp: ->
     @get('records').fetch
       ajaxSync: Tracktime.AppChannel.request 'isOnline'
       success: () => @trigger 'render_records'
@@ -62,7 +29,6 @@ class Tracktime extends Backbone.Model
     @get('records').addRecord options,
       success: success,
       error: error
-
 
   populateActions: () ->
     @set 'actions', new Tracktime.ActionsCollection Tracktime.initdata.tmpActions

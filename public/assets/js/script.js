@@ -29327,10 +29327,22 @@ this["JST"]["layout/main"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1
 this["JST"]["layout/menu"] = Handlebars.template({"1":function(depth0,helpers,partials,data) {
   return " checked=\"checked\" ";
   },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  var stack1, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, buffer = "<header class=\"hidden\">\n    <h2>Menu</h2>\n</header>\n<div class=\"well\">\n    <h5>Sync apps over internet only</h5>\n    <div class=\"checkbox\">\n        <label>\n            <input type=\"checkbox\" id=\"isOnline\" ";
+  var stack1, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, buffer = "<div class=\"well\">\n    <h5>Sync apps over internet only</h5>\n    <div class=\"checkbox\">\n        <label>\n            <input type=\"checkbox\" id=\"isOnline\" ";
   stack1 = helpers['if'].call(depth0, (depth0 != null ? depth0.isOnline : depth0), {"name":"if","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});
   if (stack1 != null) { buffer += stack1; }
-  return buffer + "> Sync\n        </label>\n    </div>\n</div>\n<div class=\"panel-group\" id=\"accordion\" role=\"tablist\" aria-multiselectable=\"true\">\n    <div class=\"panel panel-default\">\n        <a class=\"btn btn-info btn-block\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#user-section\" aria-expanded=\"true\" aria-controls=\"user-section\" role=\"tab\" id=\"headingUser\">\n      User\n    </a>\n        <div id=\"user-section\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingUser\">\n            <div class=\"list-style-group\">\n                "
+  return buffer + "> Sync\n        </label>\n    </div>\n</div>\n<div class=\"list-style-group\">\n  "
+    + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
+    'body': ("Page 1"),
+    'href': ("#page1"),
+    'class': ("list-group-item")
+  },"data":data})))
+    + "\n  "
+    + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
+    'body': ("Page 2"),
+    'href': ("#page2"),
+    'class': ("list-group-item")
+  },"data":data})))
+    + "\n</div>\n\n<div class=\"panel-group\" id=\"accordion\" role=\"tablist\" aria-multiselectable=\"true\">\n    <div class=\"panel panel-default\">\n        <a class=\"btn btn-info btn-block\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#user-section\" aria-expanded=\"true\" aria-controls=\"user-section\" role=\"tab\" id=\"headingUser\">\n      User\n    </a>\n        <div id=\"user-section\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingUser\">\n            <div class=\"list-style-group\">\n                "
     + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
     'body': ("Settings"),
     'href': ("#user"),
@@ -29424,7 +29436,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     + "</time>\n    </p>\n\n  </div>\n\n  <div class=\"col-menu col-md-1 col-sm-1\">\n    <ul class=\"actions\">\n      <li><a class=\"delete btn btn-fab btn-danger btn-fab-mini pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Delete action\">\n        <i class=\"mdi-navigation-cancel\"></i>\n      </a></li>\n    </ul>\n  </div>\n</div>";
 },"useData":true});
 (function() {
-  var Lokitest, Tracktime, config, development, process, production, ref, ref1, test,
+  var Lokitest, Tracktime, config, development, process, production, ref, test,
     extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     hasProp = {}.hasOwnProperty,
     slice = [].slice,
@@ -29456,12 +29468,15 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     }
   };
 
-  if (((ref = window.process.env) != null ? ref.NODE_ENV : void 0) === 'production') {
-    config = production;
-  } else if (((ref1 = window.process.env) != null ? ref1.NODE_ENV : void 0) === 'test') {
-    config = test;
-  } else {
-    config = development;
+  switch ((ref = window.process.env) != null ? ref.NODE_ENV : void 0) {
+    case 'production':
+      config = production;
+      break;
+    case 'test':
+      config = test;
+      break;
+    default:
+      config = development;
   }
 
   (typeof module !== "undefined" && module !== null ? module.exports = config : void 0) || (this.config = config);
@@ -29476,68 +29491,13 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     Tracktime.prototype.urlRoot = config.SERVER;
 
     Tracktime.prototype.defaults = {
-      title: "TrackTime App - from",
-      isOnline: null
+      title: "TrackTime App - from"
     };
 
     Tracktime.prototype.initialize = function() {
-      if (this.checkOnline()) {
-        this.checkServer();
-      }
-      this.setWindowListeners();
       this.populateActions();
       this.set('records', new Tracktime.RecordsCollection());
-      return this.listenTo(this, "change:isOnline", this.updateApp);
-    };
-
-    Tracktime.prototype.checkOnline = function() {
-      return (window.navigator.onLine === true) || false;
-    };
-
-    Tracktime.prototype.checkServer = function() {
-      var callback, deferred, exception_var;
-      deferred = $.Deferred();
-      callback = function() {
-        var args;
-        args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-        return console.log.apply(console, ['call'].concat(slice.call(args)));
-      };
-      try {
-        $.ajax({
-          url: config.SERVER + "/status",
-          dataType: 'jsonp',
-          jsonp: 'callback',
-          success: (function(_this) {
-            return function(result) {
-              _this.set('isOnline', true);
-              return deferred.resolve();
-            };
-          })(this),
-          error: (function(_this) {
-            return function(result) {
-              _this.set('isOnline', false);
-              return deferred.resolve();
-            };
-          })(this)
-        });
-      } catch (_error) {
-        exception_var = _error;
-        this.set('isOnline', false);
-      }
-      return deferred.promise();
-    };
-
-    Tracktime.prototype.setWindowListeners = function() {
-      window.addEventListener("offline", (function(_this) {
-        return function(e) {
-          return _this.set('isOnline', false);
-        };
-      })(this), false);
-      return window.addEventListener("online", (function(_this) {
-        return function(e) {
-          return _this.checkServer();
-        };
-      })(this), false);
+      return this.listenTo(Tracktime.AppChannel, "isOnline", this.updateApp);
     };
 
     Tracktime.prototype.updateApp = function() {
@@ -29894,9 +29854,9 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     ActionsCollection.prototype.initialize = function() {};
 
     ActionsCollection.prototype.setActive = function(active) {
-      var ref2;
-      if ((ref2 = this.active) != null) {
-        ref2.set('isActive', false);
+      var ref1;
+      if ((ref1 = this.active) != null) {
+        ref1.set('isActive', false);
       }
       active.set('isActive', true);
       return this.active = active;
@@ -30067,17 +30027,81 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
   Tracktime.AppChannel = Backbone.Radio.channel('app');
 
   _.extend(Tracktime.AppChannel, {
+    isOnline: null,
     init: function() {
+      this.listenTo(this, 'isOnline', (function(_this) {
+        return function(status) {
+          return _this.isOnline = status;
+        };
+      })(this));
+      this.checkOnline();
+      this.setWindowListeners();
       this.model = new Tracktime();
       this.bindComply();
       this.bindRequest();
       return this;
     },
+    checkOnline: function() {
+      if (window.navigator.onLine === true) {
+        return this.checkServer();
+      } else {
+        return this.trigger('isOnline', false);
+      }
+    },
+    checkServer: function() {
+      var deferred, errorCallback, exception_var, serverOnlineCallback, successCallback;
+      deferred = $.Deferred();
+      serverOnlineCallback = (function(_this) {
+        return function(status) {
+          return _this.trigger('isOnline', true);
+        };
+      })(this);
+      successCallback = (function(_this) {
+        return function(result) {
+          _this.trigger('isOnline', true);
+          return deferred.resolve();
+        };
+      })(this);
+      errorCallback = (function(_this) {
+        return function(jqXHR, textStatus, errorThrown) {
+          _this.trigger('isOnline', false);
+          return deferred.resolve();
+        };
+      })(this);
+      try {
+        $.ajax({
+          url: config.SERVER + "/status",
+          async: false,
+          dataType: 'jsonp',
+          jsonpCallback: 'serverOnlineCallback',
+          success: successCallback,
+          error: errorCallback
+        });
+      } catch (_error) {
+        exception_var = _error;
+        this.trigger('isOnline', false);
+      }
+      return deferred.promise();
+    },
+    setWindowListeners: function() {
+      window.addEventListener("offline", (function(_this) {
+        return function(e) {
+          return _this.trigger('isOnline', false);
+        };
+      })(this), false);
+      return window.addEventListener("online", (function(_this) {
+        return function(e) {
+          return _this.checkServer();
+        };
+      })(this), false);
+    },
     bindComply: function() {
       return this.comply({
         'start': this.startApp,
         'newRecord': this.newRecord,
-        'serverOnline': this.serverOnline
+        'serverOnline': this.serverOnline,
+        'serverOffline': this.serverOffline,
+        'checkOnline': this.checkOnline
       });
     },
     bindRequest: function() {
@@ -30100,7 +30124,10 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
       return this.model.addRecord(options);
     },
     serverOnline: function() {
-      return this.model.set('isOnline', true);
+      return this.trigger('isOnline', true);
+    },
+    serverOffline: function() {
+      return this.trigger('isOnline', false);
     }
   });
 
@@ -30135,14 +30162,14 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
   _.extend(Backbone.Model.prototype, Backbone.Validation.mixin);
 
   Handlebars.registerHelper('link_to', function(options) {
-    var attrs, body, key, ref2, value;
+    var attrs, body, key, ref1, value;
     attrs = {
       href: ''
     };
-    ref2 = options.hash;
-    for (key in ref2) {
-      if (!hasProp.call(ref2, key)) continue;
-      value = ref2[key];
+    ref1 = options.hash;
+    for (key in ref1) {
+      if (!hasProp.call(ref1, key)) continue;
+      value = ref1[key];
       if (key === 'body') {
         body = Handlebars.Utils.escapeExpression(value);
       } else {
@@ -30329,6 +30356,8 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
     AppRouter.prototype.routes = {
       '': 'index',
+      'page1': 'page1',
+      'page2': 'page2',
       'projects*subroute': 'invokeProjectsRouter',
       'reports*subroute': 'invokeReportsRouter',
       'user*subroute': 'invokeUserRouter',
@@ -30366,6 +30395,14 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
     AppRouter.prototype.index = function() {
       return $.alert('index');
+    };
+
+    AppRouter.prototype.page1 = function() {
+      return $.alert('Page 1');
+    };
+
+    AppRouter.prototype.page2 = function() {
+      return $.alert('Page 2');
     };
 
     AppRouter.prototype["default"] = function(actions) {
@@ -30723,8 +30760,8 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
 
     ListBtn.prototype.setInputVal = function() {
-      var ref2;
-      return (ref2 = $('textarea', '#actions-form')) != null ? ref2.val(this.model.get('inputValue')).focus() : void 0;
+      var ref1;
+      return (ref1 = $('textarea', '#actions-form')) != null ? ref1.val(this.model.get('inputValue')).focus() : void 0;
     };
 
     return ListBtn;
@@ -30812,8 +30849,8 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
 
     Global.prototype.render = function() {
-      var ref2;
-      return this.$el.html(this.template((ref2 = this.model) != null ? ref2.toJSON() : void 0));
+      var ref1;
+      return this.$el.html(this.template((ref1 = this.model) != null ? ref1.toJSON() : void 0));
     };
 
     return Global;
@@ -30843,8 +30880,8 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
 
     Footer.prototype.render = function() {
-      var ref2;
-      return this.$el.html(this.template((ref2 = this.model) != null ? ref2.toJSON() : void 0));
+      var ref1;
+      return this.$el.html(this.template((ref1 = this.model) != null ? ref1.toJSON() : void 0));
     };
 
     Footer.prototype.clickMe = function(event) {
@@ -30922,8 +30959,8 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
 
     Header.prototype.render = function() {
-      var ref2;
-      this.$el.html(this.template((ref2 = this.model) != null ? ref2.toJSON() : void 0));
+      var ref1;
+      this.$el.html(this.template((ref1 = this.model) != null ? ref1.toJSON() : void 0));
       return this.childViews['actions'] = new Tracktime.ActionsView({
         collection: this.model.get('actions'),
         container: this
@@ -30988,8 +31025,8 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
 
     Main.prototype.render = function() {
-      var ref2;
-      return this.$el.html(this.template((ref2 = this.model) != null ? ref2.toJSON() : void 0));
+      var ref1;
+      return this.$el.html(this.template((ref1 = this.model) != null ? ref1.toJSON() : void 0));
     };
 
     Main.prototype.bindEvents = function() {
@@ -31031,18 +31068,22 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
 
     Menu.prototype.bindEvents = function() {
-      return this.listenTo(this.model, 'change:isOnline', function() {
-        return $('#isOnline').prop('checked', this.model.get('isOnline'));
+      return this.listenTo(Tracktime.AppChannel, "isOnline", function(status) {
+        return $('#isOnline').prop('checked', status);
       });
     };
 
     Menu.prototype.updateOnlineStatus = function(event) {
-      return this.model.set('isOnline', $(event.target).is(":checked"));
+      if ($(event.target).is(":checked")) {
+        return Tracktime.AppChannel.command('checkOnline');
+      } else {
+        return Tracktime.AppChannel.command("serverOffline");
+      }
     };
 
     Menu.prototype.render = function() {
-      var ref2;
-      return this.$el.html(this.template((ref2 = this.model) != null ? ref2.toJSON() : void 0));
+      var ref1;
+      return this.$el.html(this.template((ref1 = this.model) != null ? ref1.toJSON() : void 0));
     };
 
     return Menu;

@@ -1,5 +1,5 @@
 (function() {
-  var Lokitest, Tracktime, config, development, process, production, ref, ref1, test,
+  var Lokitest, Tracktime, config, development, process, production, ref, test,
     extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     hasProp = {}.hasOwnProperty,
     slice = [].slice,
@@ -31,12 +31,15 @@
     }
   };
 
-  if (((ref = window.process.env) != null ? ref.NODE_ENV : void 0) === 'production') {
-    config = production;
-  } else if (((ref1 = window.process.env) != null ? ref1.NODE_ENV : void 0) === 'test') {
-    config = test;
-  } else {
-    config = development;
+  switch ((ref = window.process.env) != null ? ref.NODE_ENV : void 0) {
+    case 'production':
+      config = production;
+      break;
+    case 'test':
+      config = test;
+      break;
+    default:
+      config = development;
   }
 
   (typeof module !== "undefined" && module !== null ? module.exports = config : void 0) || (this.config = config);
@@ -51,68 +54,13 @@
     Tracktime.prototype.urlRoot = config.SERVER;
 
     Tracktime.prototype.defaults = {
-      title: "TrackTime App - from",
-      isOnline: null
+      title: "TrackTime App - from"
     };
 
     Tracktime.prototype.initialize = function() {
-      if (this.checkOnline()) {
-        this.checkServer();
-      }
-      this.setWindowListeners();
       this.populateActions();
       this.set('records', new Tracktime.RecordsCollection());
-      return this.listenTo(this, "change:isOnline", this.updateApp);
-    };
-
-    Tracktime.prototype.checkOnline = function() {
-      return (window.navigator.onLine === true) || false;
-    };
-
-    Tracktime.prototype.checkServer = function() {
-      var callback, deferred, exception_var;
-      deferred = $.Deferred();
-      callback = function() {
-        var args;
-        args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-        return console.log.apply(console, ['call'].concat(slice.call(args)));
-      };
-      try {
-        $.ajax({
-          url: config.SERVER + "/status",
-          dataType: 'jsonp',
-          jsonp: 'callback',
-          success: (function(_this) {
-            return function(result) {
-              _this.set('isOnline', true);
-              return deferred.resolve();
-            };
-          })(this),
-          error: (function(_this) {
-            return function(result) {
-              _this.set('isOnline', false);
-              return deferred.resolve();
-            };
-          })(this)
-        });
-      } catch (_error) {
-        exception_var = _error;
-        this.set('isOnline', false);
-      }
-      return deferred.promise();
-    };
-
-    Tracktime.prototype.setWindowListeners = function() {
-      window.addEventListener("offline", (function(_this) {
-        return function(e) {
-          return _this.set('isOnline', false);
-        };
-      })(this), false);
-      return window.addEventListener("online", (function(_this) {
-        return function(e) {
-          return _this.checkServer();
-        };
-      })(this), false);
+      return this.listenTo(Tracktime.AppChannel, "isOnline", this.updateApp);
     };
 
     Tracktime.prototype.updateApp = function() {
@@ -469,9 +417,9 @@
     ActionsCollection.prototype.initialize = function() {};
 
     ActionsCollection.prototype.setActive = function(active) {
-      var ref2;
-      if ((ref2 = this.active) != null) {
-        ref2.set('isActive', false);
+      var ref1;
+      if ((ref1 = this.active) != null) {
+        ref1.set('isActive', false);
       }
       active.set('isActive', true);
       return this.active = active;
@@ -642,17 +590,81 @@
   Tracktime.AppChannel = Backbone.Radio.channel('app');
 
   _.extend(Tracktime.AppChannel, {
+    isOnline: null,
     init: function() {
+      this.listenTo(this, 'isOnline', (function(_this) {
+        return function(status) {
+          return _this.isOnline = status;
+        };
+      })(this));
+      this.checkOnline();
+      this.setWindowListeners();
       this.model = new Tracktime();
       this.bindComply();
       this.bindRequest();
       return this;
     },
+    checkOnline: function() {
+      if (window.navigator.onLine === true) {
+        return this.checkServer();
+      } else {
+        return this.trigger('isOnline', false);
+      }
+    },
+    checkServer: function() {
+      var deferred, errorCallback, exception_var, serverOnlineCallback, successCallback;
+      deferred = $.Deferred();
+      serverOnlineCallback = (function(_this) {
+        return function(status) {
+          return _this.trigger('isOnline', true);
+        };
+      })(this);
+      successCallback = (function(_this) {
+        return function(result) {
+          _this.trigger('isOnline', true);
+          return deferred.resolve();
+        };
+      })(this);
+      errorCallback = (function(_this) {
+        return function(jqXHR, textStatus, errorThrown) {
+          _this.trigger('isOnline', false);
+          return deferred.resolve();
+        };
+      })(this);
+      try {
+        $.ajax({
+          url: config.SERVER + "/status",
+          async: false,
+          dataType: 'jsonp',
+          jsonpCallback: 'serverOnlineCallback',
+          success: successCallback,
+          error: errorCallback
+        });
+      } catch (_error) {
+        exception_var = _error;
+        this.trigger('isOnline', false);
+      }
+      return deferred.promise();
+    },
+    setWindowListeners: function() {
+      window.addEventListener("offline", (function(_this) {
+        return function(e) {
+          return _this.trigger('isOnline', false);
+        };
+      })(this), false);
+      return window.addEventListener("online", (function(_this) {
+        return function(e) {
+          return _this.checkServer();
+        };
+      })(this), false);
+    },
     bindComply: function() {
       return this.comply({
         'start': this.startApp,
         'newRecord': this.newRecord,
-        'serverOnline': this.serverOnline
+        'serverOnline': this.serverOnline,
+        'serverOffline': this.serverOffline,
+        'checkOnline': this.checkOnline
       });
     },
     bindRequest: function() {
@@ -675,7 +687,10 @@
       return this.model.addRecord(options);
     },
     serverOnline: function() {
-      return this.model.set('isOnline', true);
+      return this.trigger('isOnline', true);
+    },
+    serverOffline: function() {
+      return this.trigger('isOnline', false);
     }
   });
 
@@ -710,14 +725,14 @@
   _.extend(Backbone.Model.prototype, Backbone.Validation.mixin);
 
   Handlebars.registerHelper('link_to', function(options) {
-    var attrs, body, key, ref2, value;
+    var attrs, body, key, ref1, value;
     attrs = {
       href: ''
     };
-    ref2 = options.hash;
-    for (key in ref2) {
-      if (!hasProp.call(ref2, key)) continue;
-      value = ref2[key];
+    ref1 = options.hash;
+    for (key in ref1) {
+      if (!hasProp.call(ref1, key)) continue;
+      value = ref1[key];
       if (key === 'body') {
         body = Handlebars.Utils.escapeExpression(value);
       } else {
@@ -904,6 +919,8 @@
 
     AppRouter.prototype.routes = {
       '': 'index',
+      'page1': 'page1',
+      'page2': 'page2',
       'projects*subroute': 'invokeProjectsRouter',
       'reports*subroute': 'invokeReportsRouter',
       'user*subroute': 'invokeUserRouter',
@@ -941,6 +958,14 @@
 
     AppRouter.prototype.index = function() {
       return $.alert('index');
+    };
+
+    AppRouter.prototype.page1 = function() {
+      return $.alert('Page 1');
+    };
+
+    AppRouter.prototype.page2 = function() {
+      return $.alert('Page 2');
     };
 
     AppRouter.prototype["default"] = function(actions) {
@@ -1298,8 +1323,8 @@
     };
 
     ListBtn.prototype.setInputVal = function() {
-      var ref2;
-      return (ref2 = $('textarea', '#actions-form')) != null ? ref2.val(this.model.get('inputValue')).focus() : void 0;
+      var ref1;
+      return (ref1 = $('textarea', '#actions-form')) != null ? ref1.val(this.model.get('inputValue')).focus() : void 0;
     };
 
     return ListBtn;
@@ -1387,8 +1412,8 @@
     };
 
     Global.prototype.render = function() {
-      var ref2;
-      return this.$el.html(this.template((ref2 = this.model) != null ? ref2.toJSON() : void 0));
+      var ref1;
+      return this.$el.html(this.template((ref1 = this.model) != null ? ref1.toJSON() : void 0));
     };
 
     return Global;
@@ -1418,8 +1443,8 @@
     };
 
     Footer.prototype.render = function() {
-      var ref2;
-      return this.$el.html(this.template((ref2 = this.model) != null ? ref2.toJSON() : void 0));
+      var ref1;
+      return this.$el.html(this.template((ref1 = this.model) != null ? ref1.toJSON() : void 0));
     };
 
     Footer.prototype.clickMe = function(event) {
@@ -1497,8 +1522,8 @@
     };
 
     Header.prototype.render = function() {
-      var ref2;
-      this.$el.html(this.template((ref2 = this.model) != null ? ref2.toJSON() : void 0));
+      var ref1;
+      this.$el.html(this.template((ref1 = this.model) != null ? ref1.toJSON() : void 0));
       return this.childViews['actions'] = new Tracktime.ActionsView({
         collection: this.model.get('actions'),
         container: this
@@ -1563,8 +1588,8 @@
     };
 
     Main.prototype.render = function() {
-      var ref2;
-      return this.$el.html(this.template((ref2 = this.model) != null ? ref2.toJSON() : void 0));
+      var ref1;
+      return this.$el.html(this.template((ref1 = this.model) != null ? ref1.toJSON() : void 0));
     };
 
     Main.prototype.bindEvents = function() {
@@ -1606,18 +1631,22 @@
     };
 
     Menu.prototype.bindEvents = function() {
-      return this.listenTo(this.model, 'change:isOnline', function() {
-        return $('#isOnline').prop('checked', this.model.get('isOnline'));
+      return this.listenTo(Tracktime.AppChannel, "isOnline", function(status) {
+        return $('#isOnline').prop('checked', status);
       });
     };
 
     Menu.prototype.updateOnlineStatus = function(event) {
-      return this.model.set('isOnline', $(event.target).is(":checked"));
+      if ($(event.target).is(":checked")) {
+        return Tracktime.AppChannel.command('checkOnline');
+      } else {
+        return Tracktime.AppChannel.command("serverOffline");
+      }
     };
 
     Menu.prototype.render = function() {
-      var ref2;
-      return this.$el.html(this.template((ref2 = this.model) != null ? ref2.toJSON() : void 0));
+      var ref1;
+      return this.$el.html(this.template((ref1 = this.model) != null ? ref1.toJSON() : void 0));
     };
 
     return Menu;

@@ -1,5 +1,6 @@
 process = process or window.process or {}
 
+
 production =
   SERVER: 'https://ttpms.herokuapp.com'
   collection:
@@ -16,12 +17,14 @@ development =
     records: 'records-backbone'
     actions: 'actions-backbone'
 
-if (window.process.env?.NODE_ENV == 'production')
-  config = production
-else if (window.process.env?.NODE_ENV == 'test')
-  config = test
-else
-  config = development
+
+switch window.process.env?.NODE_ENV
+  when 'production'
+    config = production
+  when 'test'
+    config = test
+  else
+    config = development
 
 (module?.exports = config) or @config = config
 
@@ -30,48 +33,15 @@ class Tracktime extends Backbone.Model
 
   defaults:
     title: "TrackTime App - from"
-    isOnline: null
 
   initialize: () ->
-    @checkServer() if @checkOnline()
-    @setWindowListeners()
 
     @populateActions()
     @set 'records', new Tracktime.RecordsCollection()
 
-    @listenTo @, "change:isOnline", @updateApp
+    @listenTo Tracktime.AppChannel, "isOnline", @updateApp
 
-  checkOnline: () ->
-    (window.navigator.onLine == true) or false
-
-  checkServer: () ->
-    deferred = $.Deferred()
-    callback = (args...) -> console.log 'call', args...
-    try
-      $.ajax
-        url: "#{config.SERVER}/status"
-        dataType: 'jsonp'
-        jsonp: 'callback'
-        success: (result) =>
-          @set 'isOnline', true
-          deferred.resolve()
-        error: (result) =>
-          @set 'isOnline', false
-          deferred.resolve()
-    catch exception_var
-      @set 'isOnline', false
-    return deferred.promise()
-
-  setWindowListeners: () ->
-    window.addEventListener "offline", (e) =>
-      @set 'isOnline', false
-    , false
-
-    window.addEventListener "online", (e) =>
-      @checkServer()
-    , false
-
-  updateApp: () ->
+  updateApp: ->
     @get('records').fetch
       ajaxSync: Tracktime.AppChannel.request 'isOnline'
       success: () => @trigger 'render_records'
@@ -89,7 +59,6 @@ class Tracktime extends Backbone.Model
     @get('records').addRecord options,
       success: success,
       error: error
-
 
   populateActions: () ->
     @set 'actions', new Tracktime.ActionsCollection Tracktime.initdata.tmpActions
@@ -451,17 +420,67 @@ class Tracktime.RecordsCollection extends Backbone.Collection
 Tracktime.AppChannel = Backbone.Radio.channel 'app'
 
 _.extend Tracktime.AppChannel,
+  isOnline: null
+
   init: () ->
+    @listenTo @, 'isOnline', (status) => @isOnline = status
+    @checkOnline()
+    @setWindowListeners()
+
     @model = new Tracktime()
     @bindComply()
     @bindRequest()
     return @
+
+
+  checkOnline: () ->
+    if window.navigator.onLine == true
+      @checkServer()
+    else
+      @trigger 'isOnline', false
+
+  checkServer: () ->
+    deferred = $.Deferred()
+
+    serverOnlineCallback = (status) => @trigger 'isOnline', true
+
+    successCallback = (result) =>
+      @trigger 'isOnline', true
+      deferred.resolve()
+
+    errorCallback = (jqXHR, textStatus, errorThrown) =>
+      @trigger 'isOnline', false
+      deferred.resolve()
+
+    try
+      $.ajax
+        url: "#{config.SERVER}/status"
+        async: false
+        dataType: 'jsonp'
+        jsonpCallback: 'serverOnlineCallback'
+        success: successCallback
+        error: errorCallback
+    catch exception_var
+      @trigger 'isOnline', false
+
+    return deferred.promise()
+
+  setWindowListeners: () ->
+    window.addEventListener "offline", (e) =>
+      @trigger 'isOnline', false
+    , false
+
+    window.addEventListener "online", (e) =>
+      @checkServer()
+    , false
 
   bindComply: () ->
     @comply
       'start':           @startApp
       'newRecord':       @newRecord
       'serverOnline':    @serverOnline
+      'serverOffline':   @serverOffline
+      'checkOnline':     @checkOnline
 
   bindRequest: () ->
     @reply 'isOnline', () => @model.get('isOnline')
@@ -476,7 +495,10 @@ _.extend Tracktime.AppChannel,
     @model.addRecord(options)
 
   serverOnline: () ->
-    @model.set 'isOnline', true
+    @trigger 'isOnline', true
+
+  serverOffline: () ->
+    @trigger 'isOnline', false
 
 
 (module?.exports = Tracktime.AppChannel) or @Tracktime.AppChannel = Tracktime.AppChannel
@@ -692,12 +714,14 @@ class Tracktime.AdminRouter extends Backbone.SubRoute
 
 class Tracktime.AppRouter extends Backbone.Router
   routes:
-    '':                            'index'        #index
-    'projects*subroute':           'invokeProjectsRouter' #Projects
-    'reports*subroute':            'invokeReportsRouter' #Reports
-    'user*subroute':               'invokeUserRouter' #User
-    'admin*subroute':              'invokeAdminRouter' #Admin
-    '*actions':                    'default'      #???
+    '':                  'index'                #index
+    'page1':             'page1'                #tmp page 1
+    'page2':             'page2'                #tmp page 2
+    'projects*subroute': 'invokeProjectsRouter' #Projects
+    'reports*subroute':  'invokeReportsRouter'  #Reports
+    'user*subroute':     'invokeUserRouter'     #User
+    'admin*subroute':    'invokeAdminRouter'    #Admin
+    '*actions':          'default'              #???
 
   initialize: (options) ->
     _.extend @, options
@@ -720,6 +744,12 @@ class Tracktime.AppRouter extends Backbone.Router
 
   index: () ->
     $.alert 'index'
+
+  page1: () ->
+    $.alert 'Page 1'
+
+  page2: () ->
+    $.alert 'Page 2'
 
   default: (actions) ->
     $.alert 'Unknown page'
@@ -1135,11 +1165,14 @@ class Tracktime.AppView.Menu extends Backbone.View
     @bindEvents()
 
   bindEvents: ->
-    @listenTo @model, 'change:isOnline', () ->
-      $('#isOnline').prop 'checked', @model.get 'isOnline'
+    @listenTo Tracktime.AppChannel, "isOnline", (status) ->
+      $('#isOnline').prop 'checked', status
 
   updateOnlineStatus: (event) ->
-    @model.set 'isOnline', $(event.target).is(":checked")
+    if $(event.target).is(":checked")
+      Tracktime.AppChannel.command 'checkOnline'
+    else
+      Tracktime.AppChannel.command "serverOffline"
 
   render: () ->
     @$el.html @template @model?.toJSON()

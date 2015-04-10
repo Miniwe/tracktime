@@ -9,11 +9,14 @@ class Tracktime.AppView.Menu extends Backbone.View
     @bindEvents()
 
   bindEvents: ->
-    @listenTo @model, 'change:isOnline', () ->
-      $('#isOnline').prop 'checked', @model.get 'isOnline'
+    @listenTo Tracktime.AppChannel, "isOnline", (status) ->
+      $('#isOnline').prop 'checked', status
 
   updateOnlineStatus: (event) ->
-    @model.set 'isOnline', $(event.target).is(":checked")
+    if $(event.target).is(":checked")
+      Tracktime.AppChannel.command 'checkOnline'
+    else
+      Tracktime.AppChannel.command "serverOffline"
 
   render: () ->
     @$el.html @template @model?.toJSON()

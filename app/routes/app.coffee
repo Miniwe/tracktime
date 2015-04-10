@@ -1,11 +1,13 @@
 class Tracktime.AppRouter extends Backbone.Router
   routes:
-    '':                            'index'        #index
-    'projects*subroute':           'invokeProjectsRouter' #Projects
-    'reports*subroute':            'invokeReportsRouter' #Reports
-    'user*subroute':               'invokeUserRouter' #User
-    'admin*subroute':              'invokeAdminRouter' #Admin
-    '*actions':                    'default'      #???
+    '':                  'index'                #index
+    'page1':             'page1'                #tmp page 1
+    'page2':             'page2'                #tmp page 2
+    'projects*subroute': 'invokeProjectsRouter' #Projects
+    'reports*subroute':  'invokeReportsRouter'  #Reports
+    'user*subroute':     'invokeUserRouter'     #User
+    'admin*subroute':    'invokeAdminRouter'    #Admin
+    '*actions':          'default'              #???
 
   initialize: (options) ->
     _.extend @, options
@@ -28,6 +30,12 @@ class Tracktime.AppRouter extends Backbone.Router
 
   index: () ->
     $.alert 'index'
+
+  page1: () ->
+    $.alert 'Page 1'
+
+  page2: () ->
+    $.alert 'Page 2'
 
   default: (actions) ->
     $.alert 'Unknown page'

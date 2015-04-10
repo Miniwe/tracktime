@@ -1,5 +1,6 @@
 process = process or window.process or {}
 
+
 production =
   SERVER: 'https://ttpms.herokuapp.com'
   collection:
@@ -16,11 +17,13 @@ development =
     records: 'records-backbone'
     actions: 'actions-backbone'
 
-if (window.process.env?.NODE_ENV == 'production')
-  config = production
-else if (window.process.env?.NODE_ENV == 'test')
-  config = test
-else
-  config = development
+
+switch window.process.env?.NODE_ENV
+  when 'production'
+    config = production
+  when 'test'
+    config = test
+  else
+    config = development
 
 (module?.exports = config) or @config = config

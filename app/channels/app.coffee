@@ -1,17 +1,67 @@
 Tracktime.AppChannel = Backbone.Radio.channel 'app'
 
 _.extend Tracktime.AppChannel,
+  isOnline: null
+
   init: () ->
+    @listenTo @, 'isOnline', (status) => @isOnline = status
+    @checkOnline()
+    @setWindowListeners()
+
     @model = new Tracktime()
     @bindComply()
     @bindRequest()
     return @
+
+
+  checkOnline: () ->
+    if window.navigator.onLine == true
+      @checkServer()
+    else
+      @trigger 'isOnline', false
+
+  checkServer: () ->
+    deferred = $.Deferred()
+
+    serverOnlineCallback = (status) => @trigger 'isOnline', true
+
+    successCallback = (result) =>
+      @trigger 'isOnline', true
+      deferred.resolve()
+
+    errorCallback = (jqXHR, textStatus, errorThrown) =>
+      @trigger 'isOnline', false
+      deferred.resolve()
+
+    try
+      $.ajax
+        url: "#{config.SERVER}/status"
+        async: false
+        dataType: 'jsonp'
+        jsonpCallback: 'serverOnlineCallback'
+        success: successCallback
+        error: errorCallback
+    catch exception_var
+      @trigger 'isOnline', false
+
+    return deferred.promise()
+
+  setWindowListeners: () ->
+    window.addEventListener "offline", (e) =>
+      @trigger 'isOnline', false
+    , false
+
+    window.addEventListener "online", (e) =>
+      @checkServer()
+    , false
 
   bindComply: () ->
     @comply
       'start':           @startApp
       'newRecord':       @newRecord
       'serverOnline':    @serverOnline
+      'serverOffline':   @serverOffline
+      'checkOnline':     @checkOnline
 
   bindRequest: () ->
     @reply 'isOnline', () => @model.get('isOnline')
@@ -26,7 +76,10 @@ _.extend Tracktime.AppChannel,
     @model.addRecord(options)
 
   serverOnline: () ->
-    @model.set 'isOnline', true
+    @trigger 'isOnline', true
+
+  serverOffline: () ->
+    @trigger 'isOnline', false
 
 
 (module?.exports = Tracktime.AppChannel) or @Tracktime.AppChannel = Tracktime.AppChannel
