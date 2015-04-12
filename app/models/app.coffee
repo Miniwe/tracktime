@@ -12,9 +12,7 @@ class Tracktime extends Backbone.Model
     @listenTo Tracktime.AppChannel, "isOnline", @updateApp
 
   updateApp: ->
-    console.log 'updateApp', Tracktime.AppChannel.request 'isOnline'
     @get('records').fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
-    # console.log 'update app global function'
 
   addRecord: (options) ->
     _.extend options, {date: (new Date()).toISOString()}
@@ -22,7 +20,7 @@ class Tracktime extends Backbone.Model
       $.alert
         content: 'save success'
         timeout: 2000
-        style: 'btn-primary'
+        style: 'btn-info'
       @get('actions').getActive().successAdd()
     error = () =>
       $.alert 'save error'

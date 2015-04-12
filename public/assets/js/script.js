@@ -29501,7 +29501,6 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
 
     Tracktime.prototype.updateApp = function() {
-      console.log('updateApp', Tracktime.AppChannel.request('isOnline'));
       return this.get('records').fetch({
         ajaxSync: Tracktime.AppChannel.request('isOnline')
       });
@@ -29517,7 +29516,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
           $.alert({
             content: 'save success',
             timeout: 2000,
-            style: 'btn-primary'
+            style: 'btn-info'
           });
           return _this.get('actions').getActive().successAdd();
         };
@@ -30528,11 +30527,11 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
     RecordsRouter.prototype.routes = {
       '': 'list',
-      '/:id': 'details',
-      '/:id/edit': 'edit',
-      '/:id/delete': 'delete',
-      '/:id/add': 'add',
-      '/:id/save': 'save'
+      ':id': 'details',
+      ':id/edit': 'edit',
+      ':id/delete': 'delete',
+      ':id/add': 'add',
+      ':id/save': 'save'
     };
 
     RecordsRouter.prototype.initialize = function(options) {
@@ -31221,7 +31220,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     RecordsView.prototype.initialize = function() {
       this.render();
       this.listenTo(this.collection, "reset", this.resetRecordsList);
-      return this.listenTo(this.collection, "add remove", this.updaeRecordsList);
+      return this.listenTo(this.collection, "add remove", this.updateRecordsList);
     };
 
     RecordsView.prototype.render = function() {
@@ -31232,7 +31231,6 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     RecordsView.prototype.resetRecordsList = function() {
       var args;
       args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-      console.log('updateRecordsList', this.collection);
       return _.each(this.collection.where({
         isDeleted: false
       }), (function(_this) {
@@ -31246,10 +31244,14 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
       })(this), this);
     };
 
-    RecordsView.prototype.updateRecordsList = function() {
-      var args;
-      args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-      return console.log.apply(console, ['call update'].concat(slice.call(args)));
+    RecordsView.prototype.updateRecordsList = function(record, collection, params) {
+      var recordView;
+      if (params.add) {
+        recordView = new Tracktime.RecordView({
+          model: record
+        });
+        return this.$el.prepend(recordView.el);
+      }
     };
 
     return RecordsView;

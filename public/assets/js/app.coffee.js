@@ -64,7 +64,6 @@
     };
 
     Tracktime.prototype.updateApp = function() {
-      console.log('updateApp', Tracktime.AppChannel.request('isOnline'));
       return this.get('records').fetch({
         ajaxSync: Tracktime.AppChannel.request('isOnline')
       });
@@ -80,7 +79,7 @@
           $.alert({
             content: 'save success',
             timeout: 2000,
-            style: 'btn-primary'
+            style: 'btn-info'
           });
           return _this.get('actions').getActive().successAdd();
         };
@@ -1091,11 +1090,11 @@
 
     RecordsRouter.prototype.routes = {
       '': 'list',
-      '/:id': 'details',
-      '/:id/edit': 'edit',
-      '/:id/delete': 'delete',
-      '/:id/add': 'add',
-      '/:id/save': 'save'
+      ':id': 'details',
+      ':id/edit': 'edit',
+      ':id/delete': 'delete',
+      ':id/add': 'add',
+      ':id/save': 'save'
     };
 
     RecordsRouter.prototype.initialize = function(options) {
@@ -1784,7 +1783,7 @@
     RecordsView.prototype.initialize = function() {
       this.render();
       this.listenTo(this.collection, "reset", this.resetRecordsList);
-      return this.listenTo(this.collection, "add remove", this.updaeRecordsList);
+      return this.listenTo(this.collection, "add remove", this.updateRecordsList);
     };
 
     RecordsView.prototype.render = function() {
@@ -1795,7 +1794,6 @@
     RecordsView.prototype.resetRecordsList = function() {
       var args;
       args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-      console.log('updateRecordsList', this.collection);
       return _.each(this.collection.where({
         isDeleted: false
       }), (function(_this) {
@@ -1809,10 +1807,14 @@
       })(this), this);
     };
 
-    RecordsView.prototype.updateRecordsList = function() {
-      var args;
-      args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-      return console.log.apply(console, ['call update'].concat(slice.call(args)));
+    RecordsView.prototype.updateRecordsList = function(record, collection, params) {
+      var recordView;
+      if (params.add) {
+        recordView = new Tracktime.RecordView({
+          model: record
+        });
+        return this.$el.prepend(recordView.el);
+      }
     };
 
     return RecordsView;

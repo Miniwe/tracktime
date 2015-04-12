@@ -1,11 +1,11 @@
 class Tracktime.RecordsRouter extends Backbone.Router
   routes:
     '':             'list'
-    '/:id':         'details'
-    '/:id/edit':    'edit'
-    '/:id/delete':  'delete'
-    '/:id/add':     'add'
-    '/:id/save':    'save'
+    ':id':         'details'
+    ':id/edit':    'edit'
+    ':id/delete':  'delete'
+    ':id/add':     'add'
+    ':id/save':    'save'
 
   initialize: (options) ->
     _.extend @, options
