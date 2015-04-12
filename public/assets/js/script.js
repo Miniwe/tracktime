@@ -29283,7 +29283,7 @@ this["JST"]["blocks/action"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta
 },"useData":true});
 
 this["JST"]["global/app"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  return "<header id=\"header\">\n</header>\n<div class=\"scrollWrapper\">\n  <div id=\"main\" class=\"container\" style=\"padding: 0\">\n\n  </div>\n  <footer id=\"footer\">\n  </footer>\n</div>\n";
+  return "<header id=\"header\">\n</header>\n<div class=\"scrollWrapper\">\n  <div class=\"container\" style=\"padding: 0\">\n    <div id=\"main\"></div>\n  </div>\n  <footer id=\"footer\">\n  </footer>\n</div>\n";
   },"useData":true});
 
 this["JST"]["layout/footer"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
@@ -29323,10 +29323,6 @@ this["JST"]["layout/header/listbtn"] = Handlebars.template({"compiler":[6,">= 2.
 this["JST"]["layout/main"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "";
 },"useData":true});
-
-this["JST"]["layout/main2"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  return "<h1>Main 2 Layout</h1>";
-  },"useData":true});
 
 this["JST"]["layout/menu"] = Handlebars.template({"1":function(depth0,helpers,partials,data) {
   return " checked=\"checked\" ";
@@ -29504,7 +29500,12 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
       return this.listenTo(Tracktime.AppChannel, "isOnline", this.updateApp);
     };
 
-    Tracktime.prototype.updateApp = function() {};
+    Tracktime.prototype.updateApp = function() {
+      console.log('updateApp', Tracktime.AppChannel.request('isOnline'));
+      return this.get('records').fetch({
+        ajaxSync: Tracktime.AppChannel.request('isOnline')
+      });
+    };
 
     Tracktime.prototype.addRecord = function(options) {
       var error, success;
@@ -29902,7 +29903,11 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
     RecordsCollection.prototype.localStorage = new Backbone.LocalStorage(config.collection.records);
 
-    RecordsCollection.prototype.initialize = function() {};
+    RecordsCollection.prototype.initialize = function() {
+      return this.fetch({
+        ajaxSync: Tracktime.AppChannel.request('isOnline')
+      });
+    };
 
     RecordsCollection.prototype.comparator = function(model) {
       return -(new Date(model.get('date'))).getTime();
@@ -30102,7 +30107,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     bindRequest: function() {
       return this.reply('isOnline', (function(_this) {
         return function() {
-          return _this.model.get('isOnline');
+          return _this.isOnline;
         };
       })(this));
     },
@@ -30155,17 +30160,13 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
   _.extend(Backbone.Model.prototype, Backbone.Validation.mixin);
 
-  Backbone.ViewDecorator = {
-    views: {},
+  Backbone.ViewMixin = {
     close: function() {
       if (this.onClose) {
         this.onClose();
       }
-      console.log('close', this, this.el);
+      this.unbind();
       this.remove();
-    },
-    protoEl: function() {
-      return this.prototype;
     },
     onClose: function() {
       var key, ref1, results, view;
@@ -30174,25 +30175,24 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
       for (key in ref1) {
         if (!hasProp.call(ref1, key)) continue;
         view = ref1[key];
-        results.push(view.close());
+        results.push(view.close(key));
       }
       return results;
     },
-    setView: function(key, view) {
-      console.log('set', view, view.el);
+    setSubView: function(key, view) {
       if (this.views[key]) {
         this.views[key].close();
       }
       return this.views[key] = view;
     },
-    getView: function(key) {
+    getSubView: function(key) {
       if (this.views[key]) {
         return this.views[key];
       }
     }
   };
 
-  extend(Backbone.View.prototype, Backbone.ViewDecorator);
+  extend(Backbone.View.prototype, Backbone.ViewMixin);
 
   Handlebars.registerHelper('link_to', function(options) {
     var attrs, body, key, ref1, value;
@@ -30389,8 +30389,6 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
     AppRouter.prototype.routes = {
       '': 'index',
-      'page1': 'page1',
-      'page2': 'page2',
       'projects*subroute': 'invokeProjectsRouter',
       'reports*subroute': 'invokeReportsRouter',
       'user*subroute': 'invokeUserRouter',
@@ -30400,56 +30398,66 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
     AppRouter.prototype.initialize = function(options) {
       _.extend(this, options);
-      return this.view = new Tracktime.AppView({
-        model: this.model
-      });
+      return this.initAuthInterface();
     };
 
     AppRouter.prototype.invokeProjectsRouter = function(subroute) {
       if (!this.projectsRouter) {
-        return this.projectsRouter = new Tracktime.ProjectsRouter("projects");
+        return this.projectsRouter = new Tracktime.ProjectsRouter('projects', {
+          parent: this
+        });
       }
     };
 
     AppRouter.prototype.invokeReportsRouter = function(subroute) {
       if (!this.reportsRouter) {
-        return this.reportsRouter = new Tracktime.ReportsRouter("reports");
+        return this.reportsRouter = new Tracktime.ReportsRouter('reports', {
+          parent: this
+        });
       }
     };
 
     AppRouter.prototype.invokeUserRouter = function(subroute) {
       if (!this.userRouter) {
-        return this.userRouter = new Tracktime.UserRouter("user");
+        return this.userRouter = new Tracktime.UserRouter('user', {
+          parent: this
+        });
       }
     };
 
     AppRouter.prototype.invokeAdminRouter = function(subroute) {
       if (!this.adminRouter) {
-        return this.adminRouter = new Tracktime.AdminRouter("admin");
+        return this.adminRouter = new Tracktime.AdminRouter('admin', {
+          parent: this
+        });
       }
     };
 
-    AppRouter.prototype.index = function() {
-      return $.alert('index');
-    };
-
-    AppRouter.prototype.page1 = function() {
-      $.alert('Page 1');
-      return this.view.setView('main', new Tracktime.AppView.Main({
-        model: this.model,
-        container: this.view
+    AppRouter.prototype.initAuthInterface = function() {
+      this.view = new Tracktime.AppView({
+        model: this.model
+      });
+      this.view.setSubView('header', new Tracktime.AppView.Header({
+        model: this.model
       }));
+      this.view.setSubView('footer', new Tracktime.AppView.Footer());
+      this.view.setSubView('menu', new Tracktime.AppView.Menu({
+        model: this.model
+      }));
+      return this.view.initUI();
     };
 
-    AppRouter.prototype.page2 = function() {
-      $.alert('Page 2');
-      this.view.setView('main', new Tracktime.AppView.Main2());
-      return this.view.setView('maintmp', new Tracktime.AppView.MainTmp());
+    AppRouter.prototype.index = function() {
+      $.alert('index');
+      return this.navigate('projects', {
+        trigger: true,
+        replace: false
+      });
     };
 
     AppRouter.prototype["default"] = function(actions) {
       $.alert('Unknown page');
-      return this.navigate("", true);
+      return this.navigate('', true);
     };
 
     return AppRouter;
@@ -30472,6 +30480,13 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
       ':id/delete': 'delete',
       ':id/add': 'add',
       ':id/save': 'save'
+    };
+
+    ProjectsRouter.prototype.initialize = function(options) {
+      _.extend(this, options);
+      return this.parent.view.setSubView('main', new Tracktime.RecordsView({
+        collection: this.parent.model.get('records')
+      }));
     };
 
     ProjectsRouter.prototype.list = function() {
@@ -30825,49 +30840,18 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
     AppView.prototype.layoutTemplate = JST['global/app'];
 
-    AppView.prototype.views = {
-      header: null,
-      main: null,
-      footer: null,
-      menu: null
-    };
+    AppView.prototype.views = {};
 
     AppView.prototype.initialize = function() {
-      this.render();
-      return this.initUI();
+      return this.render();
     };
 
     AppView.prototype.render = function() {
-      this.$el.html(this.layoutTemplate(this.model.toJSON()));
-      return this.renderViews();
-    };
-
-    AppView.prototype.renderViews = function() {
-      this.views['header'] = new Tracktime.AppView.Header({
-        model: this.model,
-        container: this
-      });
-      this.views['footer'] = new Tracktime.AppView.Footer({
-        container: this
-      });
-      return this.views['menu'] = new Tracktime.AppView.Menu({
-        model: this.model,
-        container: this
-      });
+      return this.$el.html(this.layoutTemplate(this.model.toJSON()));
     };
 
     AppView.prototype.initUI = function() {
-      var slideout;
-      $.material.init();
-      slideout = new Slideout({
-        'panel': $('#panel')[0],
-        'menu': $('#menu')[0],
-        'padding': 256,
-        'tolerance': 70
-      });
-      return $("#menuToggler").on('click', function() {
-        return slideout.toggle();
-      });
+      return $.material.init();
     };
 
     return AppView;
@@ -30979,8 +30963,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
       var ref1;
       $(this.container).html(this.$el.html(this.template((ref1 = this.model) != null ? ref1.toJSON() : void 0)));
       return this.views['actions'] = new Tracktime.ActionsView({
-        collection: this.model.get('actions'),
-        container: this
+        collection: this.model.get('actions')
       });
     };
 
@@ -31036,63 +31019,32 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
     Main.prototype.template = JST['layout/main'];
 
+    Main.prototype.views = {};
+
     Main.prototype.initialize = function() {
-      console.log('main', this);
       this.render();
       return this.bindEvents();
     };
 
     Main.prototype.render = function() {
       var ref1;
-      return $(this.container).html(this.$el.html(this.template((ref1 = this.model) != null ? ref1.toJSON() : void 0)));
+      $(this.container).html(this.$el.html(this.template((ref1 = this.model) != null ? ref1.toJSON() : void 0)));
+      return this.renderRecords();
     };
 
     Main.prototype.bindEvents = function() {
-      return this.listenTo(Tracktime.AppChannel, "isOnline", this.renderRecords);
+      return this.listenTo(this.model.get('records'), "reset", this.renderRecords);
     };
 
     Main.prototype.renderRecords = function() {
-      return this.model.get('records').fetch({
-        ajaxSync: Tracktime.AppChannel.request('isOnline'),
-        success: (function(_this) {
-          return function() {
-            var recordsView;
-            recordsView = new Tracktime.RecordsView({
-              collection: _this.model.get('records')
-            });
-            return _this.$el.html(recordsView.el);
-          };
-        })(this)
+      var recordsView;
+      recordsView = new Tracktime.RecordsView({
+        collection: this.model.get('records')
       });
+      return this.$el.html(recordsView.el);
     };
 
     return Main;
-
-  })(Backbone.View);
-
-  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AppView.Main : void 0) || (this.Tracktime.AppView.Main = Tracktime.AppView.Main);
-
-  Tracktime.AppView.Main2 = (function(superClass) {
-    extend(Main2, superClass);
-
-    function Main2() {
-      return Main2.__super__.constructor.apply(this, arguments);
-    }
-
-    Main2.prototype.container = '#main';
-
-    Main2.prototype.template = JST['layout/main2'];
-
-    Main2.prototype.initialize = function() {
-      console.log('main2', this);
-      return this.render();
-    };
-
-    Main2.prototype.render = function() {
-      return $(this.container).html(this.$el.html(this.template()));
-    };
-
-    return Main2;
 
   })(Backbone.View);
 
@@ -31119,8 +31071,18 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
 
     Menu.prototype.bindEvents = function() {
-      return this.listenTo(Tracktime.AppChannel, "isOnline", function(status) {
+      var slideout;
+      this.listenTo(Tracktime.AppChannel, "isOnline", function(status) {
         return $('#isOnline').prop('checked', status);
+      });
+      slideout = new Slideout({
+        'panel': $('#panel')[0],
+        'menu': $('#menu')[0],
+        'padding': 256,
+        'tolerance': 70
+      });
+      return $("#menuToggler").on('click', function() {
+        return slideout.toggle();
       });
     };
 
@@ -31128,7 +31090,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
       if ($(event.target).is(":checked")) {
         return Tracktime.AppChannel.command('checkOnline');
       } else {
-        return Tracktime.AppChannel.command("serverOffline");
+        return Tracktime.AppChannel.command('serverOffline');
       }
     };
 
@@ -31142,32 +31104,6 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
   })(Backbone.View);
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AppView.Menu : void 0) || (this.Tracktime.AppView.Menu = Tracktime.AppView.Menu);
-
-  Tracktime.AppView.MainTmp = (function(superClass) {
-    extend(MainTmp, superClass);
-
-    function MainTmp() {
-      return MainTmp.__super__.constructor.apply(this, arguments);
-    }
-
-    MainTmp.prototype.template = JST['layout/main2'];
-
-    MainTmp.prototype.tagName = 'li';
-
-    MainTmp.prototype.initialize = function() {
-      console.log('mainTMP', this);
-      return this.render();
-    };
-
-    MainTmp.prototype.render = function() {
-      return this.$el.html(this.template());
-    };
-
-    return MainTmp;
-
-  })(Backbone.View);
-
-  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AppView.Main : void 0) || (this.Tracktime.AppView.Main = Tracktime.AppView.Main);
 
   Tracktime.RecordView = (function(superClass) {
     extend(RecordView, superClass);
@@ -31276,16 +31212,27 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
       return RecordsView.__super__.constructor.apply(this, arguments);
     }
 
+    RecordsView.prototype.container = '#main';
+
     RecordsView.prototype.tagName = 'ul';
 
     RecordsView.prototype.className = 'records-group';
 
     RecordsView.prototype.initialize = function() {
       this.render();
-      return this.listenTo(this.collection, "add remove", this.updateRecordsList);
+      this.listenTo(this.collection, "reset", this.resetRecordsList);
+      return this.listenTo(this.collection, "add remove", this.updaeRecordsList);
     };
 
     RecordsView.prototype.render = function() {
+      $(this.container).html(this.$el.html(''));
+      return this.resetRecordsList();
+    };
+
+    RecordsView.prototype.resetRecordsList = function() {
+      var args;
+      args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+      console.log('updateRecordsList', this.collection);
       return _.each(this.collection.where({
         isDeleted: false
       }), (function(_this) {
@@ -31302,8 +31249,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     RecordsView.prototype.updateRecordsList = function() {
       var args;
       args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-      this.$el.html('');
-      return this.render();
+      return console.log.apply(console, ['call update'].concat(slice.call(args)));
     };
 
     return RecordsView;

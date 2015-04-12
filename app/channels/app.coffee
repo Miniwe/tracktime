@@ -64,7 +64,7 @@ _.extend Tracktime.AppChannel,
       'checkOnline':     @checkOnline
 
   bindRequest: () ->
-    @reply 'isOnline', () => @model.get('isOnline')
+    @reply 'isOnline', () => @isOnline
 
   startApp: () ->
     @router = new Tracktime.AppRouter model: @model

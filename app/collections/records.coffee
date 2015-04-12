@@ -6,6 +6,7 @@ class Tracktime.RecordsCollection extends Backbone.Collection
 
   initialize: () ->
     # @router = new Tracktime.RecordsRouter {controller: @}
+    @fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
 
   comparator: (model) -> - (new Date(model.get('date'))).getTime()
 

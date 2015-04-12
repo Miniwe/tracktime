@@ -38,7 +38,6 @@ class Tracktime.AppView.Header extends Backbone.View
     $(@container).html @$el.html @template @model?.toJSON()
     @views['actions'] = new Tracktime.ActionsView
       collection: @model.get('actions')
-      container: @
 
   fixEnter: (event) =>
     if event.keyCode == 13

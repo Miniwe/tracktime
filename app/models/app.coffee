@@ -12,6 +12,8 @@ class Tracktime extends Backbone.Model
     @listenTo Tracktime.AppChannel, "isOnline", @updateApp
 
   updateApp: ->
+    console.log 'updateApp', Tracktime.AppChannel.request 'isOnline'
+    @get('records').fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
     # console.log 'update app global function'
 
   addRecord: (options) ->

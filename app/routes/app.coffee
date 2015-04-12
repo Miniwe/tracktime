@@ -1,8 +1,6 @@
 class Tracktime.AppRouter extends Backbone.Router
   routes:
     '':                  'index'                #index
-    'page1':             'page1'                #tmp page 1
-    'page2':             'page2'                #tmp page 2
     'projects*subroute': 'invokeProjectsRouter' #Projects
     'reports*subroute':  'invokeReportsRouter'  #Reports
     'user*subroute':     'invokeUserRouter'     #User
@@ -11,39 +9,38 @@ class Tracktime.AppRouter extends Backbone.Router
 
   initialize: (options) ->
     _.extend @, options
-    @view = new Tracktime.AppView model: @model
+    @initAuthInterface()
 
   invokeProjectsRouter: (subroute) ->
     unless @projectsRouter
-      @projectsRouter = new Tracktime.ProjectsRouter "projects"
+      @projectsRouter = new Tracktime.ProjectsRouter 'projects', parent: @
 
   invokeReportsRouter: (subroute) ->
     unless @reportsRouter
-      @reportsRouter = new Tracktime.ReportsRouter "reports"
+      @reportsRouter = new Tracktime.ReportsRouter 'reports', parent: @
 
   invokeUserRouter: (subroute) ->
     unless @userRouter
-      @userRouter = new Tracktime.UserRouter "user"
+      @userRouter = new Tracktime.UserRouter 'user', parent: @
 
   invokeAdminRouter: (subroute) ->
     unless @adminRouter
-      @adminRouter = new Tracktime.AdminRouter "admin"
+      @adminRouter = new Tracktime.AdminRouter 'admin', parent: @
+
+  initAuthInterface: () ->
+    @view = new Tracktime.AppView model: @model
+    @view.setSubView 'header', new Tracktime.AppView.Header model: @model
+    @view.setSubView 'footer', new Tracktime.AppView.Footer()
+    @view.setSubView 'menu', new Tracktime.AppView.Menu model: @model
+    @view.initUI()
 
   index: () ->
     $.alert 'index'
-
-  page1: () ->
-    $.alert 'Page 1'
-    @view.setView 'main', new Tracktime.AppView.Main model: @model, container: @view
-
-  page2: () ->
-    $.alert 'Page 2'
-    @view.setView 'main', new Tracktime.AppView.Main2()
-    @view.setView 'maintmp', new Tracktime.AppView.MainTmp()
+    @navigate 'projects', trigger: true, replace: false
 
   default: (actions) ->
     $.alert 'Unknown page'
-    @navigate "", true
+    @navigate '', true
 
 (module?.exports = Tracktime.AppRouter) or @Tracktime.AppRouter = Tracktime.AppRouter
 

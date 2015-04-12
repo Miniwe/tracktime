@@ -1,24 +1,22 @@
 class Tracktime.AppView.Main extends Backbone.View
   container: '#main'
   template: JST['layout/main']
+  views: {}
 
   initialize: () ->
-    console.log 'main', @
     @render()
     @bindEvents()
 
   render: () ->
     $(@container).html @$el.html @template @model?.toJSON()
+    @renderRecords()
 
   bindEvents: ->
-    @listenTo Tracktime.AppChannel, "isOnline", @renderRecords
+    @listenTo @model.get('records'), "reset", @renderRecords
 
   renderRecords: ->
-    @model.get('records').fetch
-      ajaxSync: Tracktime.AppChannel.request 'isOnline'
-      success: =>
-        recordsView = new Tracktime.RecordsView {collection: @model.get('records')}
-        @$el.html recordsView.el
+    recordsView = new Tracktime.RecordsView {collection: @model.get('records')}
+    @$el.html recordsView.el
 
 
 

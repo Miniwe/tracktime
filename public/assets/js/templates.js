@@ -53,10 +53,6 @@ this["JST"]["layout/main"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1
   return "";
 },"useData":true});
 
-this["JST"]["layout/main2"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  return "<h1>Main 2 Layout</h1>";
-  },"useData":true});
-
 this["JST"]["layout/menu"] = Handlebars.template({"1":function(depth0,helpers,partials,data) {
   return " checked=\"checked\" ";
   },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {

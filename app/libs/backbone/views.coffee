@@ -1,30 +1,19 @@
-Backbone.ViewDecorator =
-  views: {}
-
-  close: ->
-    if @onClose
-      @onClose()
-    console.log 'close', @, @el
-    # if @prototype.el?
-    #   console.log 'will clear'
-    # else
-    #   console.log 'will remove'
+Backbone.ViewMixin =
+  close: () ->
+    @onClose() if @onClose
+    @unbind()
     @remove()
     return
 
-  protoEl: ->
-    @prototype
-
   onClose: ->
     for own key, view of @views
-      view.close()
+      view.close(key)
 
-  setView: (key, view) ->
-    console.log 'set', view, view.el
+  setSubView: (key, view) ->
     @views[key].close() if @views[key]
     @views[key] = view
 
-  getView: (key) ->
+  getSubView: (key) ->
     @views[key] if @views[key]
 
-Backbone.View.prototype extends Backbone.ViewDecorator
+Backbone.View.prototype extends Backbone.ViewMixin
