@@ -4,7 +4,6 @@ class Tracktime.AppView extends Backbone.View
   layoutTemplate: JST['global/app']
   childViews: {}
 
-
   initialize: ->
     @render()
     @initUI()

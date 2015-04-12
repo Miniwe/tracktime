@@ -1396,32 +1396,6 @@
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AppView : void 0) || (this.Tracktime.AppView = Tracktime.AppView);
 
-  Tracktime.AppView.Global = (function(superClass) {
-    extend(Global, superClass);
-
-    function Global() {
-      return Global.__super__.constructor.apply(this, arguments);
-    }
-
-    Global.prototype.el = 'body';
-
-    Global.prototype.template = JST['layout/global'];
-
-    Global.prototype.initialize = function() {
-      return this.render();
-    };
-
-    Global.prototype.render = function() {
-      var ref1;
-      return this.$el.html(this.template((ref1 = this.model) != null ? ref1.toJSON() : void 0));
-    };
-
-    return Global;
-
-  })(Backbone.View);
-
-  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AppView.Global : void 0) || (this.Tracktime.AppView.Global = Tracktime.AppView.Global);
-
   Tracktime.AppView.Footer = (function(superClass) {
     extend(Footer, superClass);
 
