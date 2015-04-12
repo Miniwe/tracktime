@@ -1,7 +1,7 @@
 class Tracktime.AppView.Header extends Backbone.View
-  el: '#header'
+  container: '#header'
   template: JST['layout/header']
-  childViews: {}
+  views: {}
   tmpDetails: {}
 
   initialize: (options) ->
@@ -35,8 +35,8 @@ class Tracktime.AppView.Header extends Backbone.View
 
 
   render: () ->
-    @$el.html @template @model?.toJSON()
-    @childViews['actions'] = new Tracktime.ActionsView
+    $(@container).html @$el.html @template @model?.toJSON()
+    @views['actions'] = new Tracktime.ActionsView
       collection: @model.get('actions')
       container: @
 

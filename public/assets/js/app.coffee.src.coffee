@@ -42,9 +42,7 @@ class Tracktime extends Backbone.Model
     @listenTo Tracktime.AppChannel, "isOnline", @updateApp
 
   updateApp: ->
-    @get('records').fetch
-      ajaxSync: Tracktime.AppChannel.request 'isOnline'
-      success: () => @trigger 'render_records'
+    # console.log 'update app global function'
 
   addRecord: (options) ->
     _.extend options, {date: (new Date()).toISOString()}
@@ -486,8 +484,7 @@ _.extend Tracktime.AppChannel,
     @reply 'isOnline', () => @model.get('isOnline')
 
   startApp: () ->
-    @view = new Tracktime.AppView {model: @model}
-    @router = new Tracktime.AppRouter()
+    @router = new Tracktime.AppRouter model: @model
     Backbone.history.start
       pushState: false
 
@@ -530,6 +527,37 @@ Backbone.Validation.configure
 
 
 _.extend Backbone.Model.prototype, Backbone.Validation.mixin
+Backbone.ViewDecorator =
+  views: {}
+
+  close: ->
+    if @onClose
+      @onClose()
+    console.log 'close', @, @el
+    # if @prototype.el?
+    #   console.log 'will clear'
+    # else
+    #   console.log 'will remove'
+    @remove()
+    return
+
+  protoEl: ->
+    @prototype
+
+  onClose: ->
+    for own key, view of @views
+      view.close()
+
+  setView: (key, view) ->
+    console.log 'set', view, view.el
+    @views[key].close() if @views[key]
+    @views[key] = view
+
+  getView: (key) ->
+    @views[key] if @views[key]
+
+Backbone.View.prototype extends Backbone.ViewDecorator
+
 Handlebars.registerHelper 'link_to', (options) ->
   attrs = href: ''
   for own key, value of options.hash
@@ -725,6 +753,7 @@ class Tracktime.AppRouter extends Backbone.Router
 
   initialize: (options) ->
     _.extend @, options
+    @view = new Tracktime.AppView model: @model
 
   invokeProjectsRouter: (subroute) ->
     unless @projectsRouter
@@ -747,9 +776,12 @@ class Tracktime.AppRouter extends Backbone.Router
 
   page1: () ->
     $.alert 'Page 1'
+    @view.setView 'main', new Tracktime.AppView.Main model: @model, container: @view
 
   page2: () ->
     $.alert 'Page 2'
+    @view.setView 'main', new Tracktime.AppView.Main2()
+    @view.setView 'maintmp', new Tracktime.AppView.MainTmp()
 
   default: (actions) ->
     $.alert 'Unknown page'
@@ -988,7 +1020,11 @@ class Tracktime.AppView extends Backbone.View
   el: '#panel'
   className: ''
   layoutTemplate: JST['global/app']
-  childViews: {}
+  views:
+    header: null
+    main: null
+    footer: null
+    menu: null
 
   initialize: ->
     @render()
@@ -997,14 +1033,14 @@ class Tracktime.AppView extends Backbone.View
   render: ->
     # $(document).title @model.get 'title'
     @$el.html @layoutTemplate @model.toJSON()
-    @renderChilds()
+    @renderViews()
 
-  renderChilds: ->
-    @childViews['header'] = new Tracktime.AppView.Header model: @model, container: @
-    @childViews['main'] = new Tracktime.AppView.Main model: @model, container: @
-    @childViews['footer'] = new Tracktime.AppView.Footer
+  renderViews: ->
+    @views['header'] = new Tracktime.AppView.Header model: @model, container: @
+    # @views['main'] = new Tracktime.AppView.Main model: @model, container: @
+    @views['footer'] = new Tracktime.AppView.Footer
       container: @
-    @childViews['menu'] = new Tracktime.AppView.Menu
+    @views['menu'] = new Tracktime.AppView.Menu
       model: @model,
       container: @
 
@@ -1022,7 +1058,7 @@ class Tracktime.AppView extends Backbone.View
 
 
 class Tracktime.AppView.Footer extends Backbone.View
-  el: '#footer'
+  container: '#footer'
   template: JST['layout/footer']
   events:
     'click #click-me': 'clickMe'
@@ -1032,7 +1068,7 @@ class Tracktime.AppView.Footer extends Backbone.View
     @render()
 
   render: () ->
-    @$el.html @template @model?.toJSON()
+    $(@container).html @$el.html @template @model?.toJSON()
 
   clickMe: (event) ->
     event.preventDefault()
@@ -1048,9 +1084,9 @@ class Tracktime.AppView.Footer extends Backbone.View
 
 
 class Tracktime.AppView.Header extends Backbone.View
-  el: '#header'
+  container: '#header'
   template: JST['layout/header']
-  childViews: {}
+  views: {}
   tmpDetails: {}
 
   initialize: (options) ->
@@ -1084,8 +1120,8 @@ class Tracktime.AppView.Header extends Backbone.View
 
 
   render: () ->
-    @$el.html @template @model?.toJSON()
-    @childViews['actions'] = new Tracktime.ActionsView
+    $(@container).html @$el.html @template @model?.toJSON()
+    @views['actions'] = new Tracktime.ActionsView
       collection: @model.get('actions')
       container: @
 
@@ -1118,29 +1154,50 @@ class Tracktime.AppView.Header extends Backbone.View
 (module?.exports = Tracktime.AppView.Header) or @Tracktime.AppView.Header = Tracktime.AppView.Header
 
 class Tracktime.AppView.Main extends Backbone.View
-  el: '#main'
+  container: '#main'
   template: JST['layout/main']
 
   initialize: () ->
+    console.log 'main', @
     @render()
     @bindEvents()
 
   render: () ->
-    @$el.html @template @model?.toJSON()
+    $(@container).html @$el.html @template @model?.toJSON()
 
   bindEvents: ->
-    @listenTo @model, 'render_records', @renderRecords
+    @listenTo Tracktime.AppChannel, "isOnline", @renderRecords
 
   renderRecords: ->
-    recordsView = new Tracktime.RecordsView {collection: @model.get('records')}
-    @$el.html recordsView.el
+    @model.get('records').fetch
+      ajaxSync: Tracktime.AppChannel.request 'isOnline'
+      success: =>
+        recordsView = new Tracktime.RecordsView {collection: @model.get('records')}
+        @$el.html recordsView.el
+
+
+
+
+(module?.exports = Tracktime.AppView.Main) or @Tracktime.AppView.Main = Tracktime.AppView.Main
+
+
+class Tracktime.AppView.Main2 extends Backbone.View
+  container: '#main'
+  template: JST['layout/main2']
+
+  initialize: () ->
+    console.log 'main2', @
+    @render()
+
+  render: () ->
+    $(@container).html @$el.html @template()
 
 
 (module?.exports = Tracktime.AppView.Main) or @Tracktime.AppView.Main = Tracktime.AppView.Main
 
 
 class Tracktime.AppView.Menu extends Backbone.View
-  el: '#menu'
+  container: '#menu'
   template: JST['layout/menu']
   events:
     'change #isOnline': 'updateOnlineStatus'
@@ -1160,10 +1217,25 @@ class Tracktime.AppView.Menu extends Backbone.View
       Tracktime.AppChannel.command "serverOffline"
 
   render: () ->
-    @$el.html @template @model?.toJSON()
+    $(@container).html @$el.html @template @model?.toJSON()
 
 
 (module?.exports = Tracktime.AppView.Menu) or @Tracktime.AppView.Menu = Tracktime.AppView.Menu
+
+
+class Tracktime.AppView.MainTmp extends Backbone.View
+  template: JST['layout/main2']
+  tagName: 'li'
+
+  initialize: () ->
+    console.log 'mainTMP', @
+    @render()
+
+  render: () ->
+    @$el.html @template()
+
+
+(module?.exports = Tracktime.AppView.Main) or @Tracktime.AppView.Main = Tracktime.AppView.Main
 
 
 class Tracktime.RecordView extends Backbone.View

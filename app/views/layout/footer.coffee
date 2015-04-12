@@ -1,5 +1,5 @@
 class Tracktime.AppView.Footer extends Backbone.View
-  el: '#footer'
+  container: '#footer'
   template: JST['layout/footer']
   events:
     'click #click-me': 'clickMe'
@@ -9,7 +9,7 @@ class Tracktime.AppView.Footer extends Backbone.View
     @render()
 
   render: () ->
-    @$el.html @template @model?.toJSON()
+    $(@container).html @$el.html @template @model?.toJSON()
 
   clickMe: (event) ->
     event.preventDefault()

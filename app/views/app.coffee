@@ -2,7 +2,11 @@ class Tracktime.AppView extends Backbone.View
   el: '#panel'
   className: ''
   layoutTemplate: JST['global/app']
-  childViews: {}
+  views:
+    header: null
+    main: null
+    footer: null
+    menu: null
 
   initialize: ->
     @render()
@@ -11,14 +15,14 @@ class Tracktime.AppView extends Backbone.View
   render: ->
     # $(document).title @model.get 'title'
     @$el.html @layoutTemplate @model.toJSON()
-    @renderChilds()
+    @renderViews()
 
-  renderChilds: ->
-    @childViews['header'] = new Tracktime.AppView.Header model: @model, container: @
-    @childViews['main'] = new Tracktime.AppView.Main model: @model, container: @
-    @childViews['footer'] = new Tracktime.AppView.Footer
+  renderViews: ->
+    @views['header'] = new Tracktime.AppView.Header model: @model, container: @
+    # @views['main'] = new Tracktime.AppView.Main model: @model, container: @
+    @views['footer'] = new Tracktime.AppView.Footer
       container: @
-    @childViews['menu'] = new Tracktime.AppView.Menu
+    @views['menu'] = new Tracktime.AppView.Menu
       model: @model,
       container: @
 

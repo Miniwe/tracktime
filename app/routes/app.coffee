@@ -11,6 +11,7 @@ class Tracktime.AppRouter extends Backbone.Router
 
   initialize: (options) ->
     _.extend @, options
+    @view = new Tracktime.AppView model: @model
 
   invokeProjectsRouter: (subroute) ->
     unless @projectsRouter
@@ -33,9 +34,12 @@ class Tracktime.AppRouter extends Backbone.Router
 
   page1: () ->
     $.alert 'Page 1'
+    @view.setView 'main', new Tracktime.AppView.Main model: @model, container: @view
 
   page2: () ->
     $.alert 'Page 2'
+    @view.setView 'main', new Tracktime.AppView.Main2()
+    @view.setView 'maintmp', new Tracktime.AppView.MainTmp()
 
   default: (actions) ->
     $.alert 'Unknown page'

@@ -67,8 +67,7 @@ _.extend Tracktime.AppChannel,
     @reply 'isOnline', () => @model.get('isOnline')
 
   startApp: () ->
-    @view = new Tracktime.AppView {model: @model}
-    @router = new Tracktime.AppRouter()
+    @router = new Tracktime.AppRouter model: @model
     Backbone.history.start
       pushState: false
 

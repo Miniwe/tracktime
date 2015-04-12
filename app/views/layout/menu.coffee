@@ -1,5 +1,5 @@
 class Tracktime.AppView.Menu extends Backbone.View
-  el: '#menu'
+  container: '#menu'
   template: JST['layout/menu']
   events:
     'change #isOnline': 'updateOnlineStatus'
@@ -19,7 +19,7 @@ class Tracktime.AppView.Menu extends Backbone.View
       Tracktime.AppChannel.command "serverOffline"
 
   render: () ->
-    @$el.html @template @model?.toJSON()
+    $(@container).html @$el.html @template @model?.toJSON()
 
 
 (module?.exports = Tracktime.AppView.Menu) or @Tracktime.AppView.Menu = Tracktime.AppView.Menu
