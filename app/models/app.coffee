@@ -5,8 +5,7 @@ class Tracktime extends Backbone.Model
     title: "TrackTime App - from"
 
   initialize: () ->
-
-    @populateActions()
+    @set 'actions', new Tracktime.ActionsCollection()
     @set 'records', new Tracktime.RecordsCollection()
 
     @listenTo Tracktime.AppChannel, "isOnline", @updateApp
@@ -27,8 +26,5 @@ class Tracktime extends Backbone.Model
     @get('records').addRecord options,
       success: success,
       error: error
-
-  populateActions: () ->
-    @set 'actions', new Tracktime.ActionsCollection Tracktime.initdata.tmpActions
 
 (module?.exports = Tracktime) or @Tracktime = Tracktime

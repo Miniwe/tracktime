@@ -61,7 +61,7 @@
     };
 
     Tracktime.prototype.initialize = function() {
-      this.populateActions();
+      this.set('actions', new Tracktime.ActionsCollection());
       this.set('records', new Tracktime.RecordsCollection());
       return this.listenTo(Tracktime.AppChannel, "isOnline", this.updateApp);
     };
@@ -96,10 +96,6 @@
         success: success,
         error: error
       });
-    };
-
-    Tracktime.prototype.populateActions = function() {
-      return this.set('actions', new Tracktime.ActionsCollection(Tracktime.initdata.tmpActions));
     };
 
     return Tracktime;
@@ -210,9 +206,19 @@
 
   Tracktime.initdata = {};
 
+  Tracktime.initdata.defaultActions = [
+    {
+      title: 'Add Record',
+      type: 'AddRecord'
+    }, {
+      title: 'Search',
+      type: 'Search'
+    }
+  ];
+
   Tracktime.initdata.tmpActions = [
     {
-      title: 'Add record +4',
+      title: 'Add record',
       formAction: '#',
       btnClass: 'btn-primary',
       navbarClass: 'navbar-material-amber',
@@ -268,26 +274,6 @@
       },
       isActive: false,
       isVisible: true
-    }
-  ];
-
-  Tracktime.initdata.tmpRecords = [
-    {
-      description: 'Lorem',
-      subject: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nam, culpa, deleniti, temporibus, itaque similique suscipit saepe rerum voluptates voluptatum asperiores modi possimus vitae inventore dolore illo incidunt dolorem animi iure provident labore minima delectus unde nihil soluta recusandae ut dicta explicabo perspiciatis dolores eum. Numquam molestias reiciendis quibusdam sunt suscipit fugit temporibus asperiores quia. Cum, vel, molestias, sapiente ex nisi blanditiis dolorem quod beatae obcaecati culpa eos eius at vitae sed modi explicabo tempore. Harum, error nam veritatis maiores est at incidunt quae magni amet non qui eum. Aperiam, harum, tenetur facere officia delectus omnis odio totam consequatur obcaecati tempora. ',
-      date: (new Date()).toISOString()
-    }, {
-      description: 'Tempore',
-      subject: 'Accusamus, cumque, aperiam velit quos quisquam ex officiis obcaecati totam ipsa saepe fugiat in. Corrupti, soluta, aliquid cumque adipisci nihil omnis explicabo itaque commodi neque dolorum fugit quibusdam deserunt voluptates corporis amet hic quod blanditiis nesciunt dignissimos vero iure. Omnis, provident ducimus delectus sed in incidunt expedita quae accusantium cum culpa recusandae rerum ipsum vitae aliquid ratione ea architecto optio accusamus similique saepe nobis vel deleniti tempora iure consequatur. Debitis laborum accusantium omnis iure velit necessitatibus quod veniam sequi! Excepturi, praesentium, porro ducimus fugit provident repellendus quibusdam dolorum nisi autem tenetur. Non, neque reiciendis eius sequi accusamus. Quam, nostrum, nesciunt. ',
-      date: (new Date()).toISOString()
-    }, {
-      description: 'Consequuntur',
-      subject: 'Obcaecati, incidunt, optio deleniti earum odio nobis dolore sapiente delectus. Accusamus sequi voluptatibus magni fuga fugit nisi aut nam rem repellat possimus! Delectus, harum nisi eos nostrum necessitatibus ducimus eius odio dolores ratione quas quos laboriosam magnam reprehenderit itaque nihil! Dolor, hic, asperiores alias aut voluptas odit illum voluptatem quod! Pariatur, nesciunt distinctio aliquam quam voluptatibus temporibus voluptate placeat quaerat nemo quidem. Asperiores, nihil quasi molestias suscipit sunt. Itaque, sapiente voluptatibus qui non fugit impedit voluptatem beatae repellat at nulla dignissimos esse doloribus. Officiis, dolorem, id, officia sapiente eius ullam vel dolorum numquam et aspernatur illo deleniti enim quam autem! ',
-      date: (new Date()).toISOString()
-    }, {
-      description: 'Rem',
-      subject: 'Quisquam ab soluta dicta amet possimus iure deserunt expedita facere maxime nemo. Laudantium, quod, dignissimos, quos perspiciatis illo numquam est hic qui totam eligendi aut in provident dolor. Libero, dolores, cumque ut molestiae iusto nostrum tempore voluptatum laborum iure quae? Culpa, et, deserunt, explicabo a assumenda voluptate commodi voluptatum possimus omnis totam libero ipsum delectus? Harum, facilis, suscipit perspiciatis dolorum sapiente quae voluptas assumenda cumque atque accusamus blanditiis ullam doloribus enim placeat saepe dolorem sed quos architecto error vero odit deserunt autem? Sunt, cumque, similique voluptatem quis voluptatum non explicabo quibusdam porro in nihil quae sint rem molestias vero beatae!',
-      date: (new Date()).toISOString()
     }
   ];
 
@@ -526,21 +512,10 @@
 
     Action.prototype.defaults = {
       _id: null,
-      title: 'Default action title',
-      formAction: '#',
-      btnClass: 'btn-default',
-      navbarClass: 'navbar-material-amber',
-      icon: {
-        className: 'mdi-editor-mode-edit',
-        letter: ''
-      },
+      title: 'Default action',
       isActive: false,
-      isVisible: false,
-      inputValue: '',
-      details: null
+      isVisible: false
     };
-
-    Action.prototype.validation = function() {};
 
     Action.prototype.attributes = function() {
       return {
@@ -551,35 +526,15 @@
     function Action() {
       var args;
       args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-      Action.__super__.constructor.apply(this, args);
+      Action.__super__.constructor.apply(this, ['action constructor'].concat(slice.call(args)));
     }
-
-    Action.prototype.initialize = function() {
-      return this.set('details', new Tracktime.Action.Details());
-    };
 
     Action.prototype.setActive = function() {
       return this.collection.setActive(this);
     };
 
     Action.prototype.processAction = function(options) {
-      this.set('inputValue', options.subject);
-      this.get('details').set(options);
-      return this.newRecord();
-    };
-
-    Action.prototype.newRecord = function() {
-      return Tracktime.AppChannel.command('newRecord', _.extend({
-        project: 0
-      }, this.get('details').attributes));
-    };
-
-    Action.prototype.search = function() {
-      return $.alert('search under construction');
-    };
-
-    Action.prototype.successAdd = function() {
-      return this.set('inputValue', '');
+      return $.alert('Void Action');
     };
 
     return Action;
@@ -600,6 +555,102 @@
   })(Backbone.Model);
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.Action.Details : void 0) || (this.Tracktime.Action.Details = Tracktime.Action.Details);
+
+  Tracktime.Action.AddRecord = (function(superClass) {
+    extend(AddRecord, superClass);
+
+    function AddRecord() {
+      return AddRecord.__super__.constructor.apply(this, arguments);
+    }
+
+    AddRecord.prototype.defaults = _.extend({}, Tracktime.Action.prototype.defaults, {
+      title: 'Default action title',
+      inputValue: '',
+      formAction: '#',
+      btnClass: 'btn-primary',
+      navbarClass: 'navbar-material-amber',
+      icon: {
+        className: 'mdi-editor-mode-edit',
+        letter: ''
+      },
+      isActive: true,
+      isVisible: true
+    });
+
+    AddRecord.prototype.initialize = function(options) {
+      if (options == null) {
+        options = {};
+      }
+      this.set(options);
+      return this.set('details', new Tracktime.Action.Details());
+    };
+
+    AddRecord.prototype.processAction = function(options) {
+      this.set('inputValue', options.subject);
+      this.get('details').set(options);
+      return this.newRecord();
+    };
+
+    AddRecord.prototype.newRecord = function() {
+      return Tracktime.AppChannel.command('newRecord', _.extend({
+        project: 0
+      }, this.get('details').attributes));
+    };
+
+    AddRecord.prototype.successAdd = function() {
+      return this.set('inputValue', '');
+    };
+
+    return AddRecord;
+
+  })(Tracktime.Action);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.Action.AddRecord : void 0) || (this.Tracktime.Action.AddRecord = Tracktime.Action.AddRecord);
+
+  Tracktime.Action.Search = (function(superClass) {
+    extend(Search, superClass);
+
+    function Search() {
+      return Search.__super__.constructor.apply(this, arguments);
+    }
+
+    Search.prototype.defaults = _.extend({}, Tracktime.Action.prototype.defaults, {
+      title: 'Search',
+      inputValue: '',
+      formAction: '#',
+      btnClass: 'btn-white',
+      navbarClass: 'navbar-material-light-blue',
+      icon: {
+        className: 'mdi-action-search',
+        letter: ''
+      },
+      isActive: false,
+      isVisible: true
+    });
+
+    Search.prototype.initialize = function(options) {
+      if (options == null) {
+        options = {};
+      }
+      this.set(options);
+      return this.set('details', new Tracktime.Action.Details());
+    };
+
+    Search.prototype.processAction = function(options) {
+      this.set('inputValue', options.subject);
+      this.get('details').set(options);
+      return this.search();
+    };
+
+    Search.prototype.search = function() {
+      return $.alert('search start');
+    };
+
+    return Search;
+
+  })(Tracktime.Action);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.Action.Search : void 0) || (this.Tracktime.Action.Search = Tracktime.Action.Search);
 
   Tracktime.Project = (function(superClass) {
     extend(Project, superClass);
@@ -710,13 +761,25 @@
 
     ActionsCollection.prototype.model = Tracktime.Action;
 
+    ActionsCollection.prototype.defaultActions = Tracktime.initdata.defaultActions;
+
     ActionsCollection.prototype.url = '/actions';
 
     ActionsCollection.prototype.localStorage = new Backbone.LocalStorage('records-backbone');
 
     ActionsCollection.prototype.active = null;
 
-    ActionsCollection.prototype.initialize = function() {};
+    ActionsCollection.prototype.initialize = function() {
+      return _.each(this.defaultActions, (function(_this) {
+        return function(action) {
+          var actionModel;
+          if (Tracktime.Action[action.type]) {
+            actionModel = new Tracktime.Action[action.type](action);
+            return _this.push(actionModel);
+          }
+        };
+      })(this));
+    };
 
     ActionsCollection.prototype.setActive = function(active) {
       var ref1;
@@ -735,20 +798,6 @@
       return _.filter(this.models, function(model) {
         return model.get('isVisible');
       });
-    };
-
-    ActionsCollection.prototype.fetch = function() {
-      var models;
-      models = this.localStorage.findAll();
-      if (!models.length) {
-        _.each(Tracktime.initdata.tmpActions, function(action) {
-          var newAction;
-          newAction = new Tracktime.Action(action);
-          return newAction.save();
-        });
-        models = this.localStorage.findAll();
-      }
-      return this.add(models);
     };
 
     return ActionsCollection;
@@ -1729,7 +1778,15 @@
       return $(".slider").noUiSlider_pips({
         mode: 'values',
         values: [0, 60 * 1, 60 * 2, 60 * 3, 60 * 4, 60 * 5, 60 * 6, 60 * 7, 60 * 8, 60 * 9, 60 * 10, 60 * 11, 60 * 12],
-        density: 2
+        density: 2,
+        format: {
+          to: function(value) {
+            return value / 60;
+          },
+          from: function(value) {
+            return value;
+          }
+        }
       });
     };
 

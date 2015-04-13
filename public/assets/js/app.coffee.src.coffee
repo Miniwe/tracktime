@@ -38,8 +38,7 @@ class Tracktime extends Backbone.Model
     title: "TrackTime App - from"
 
   initialize: () ->
-
-    @populateActions()
+    @set 'actions', new Tracktime.ActionsCollection()
     @set 'records', new Tracktime.RecordsCollection()
 
     @listenTo Tracktime.AppChannel, "isOnline", @updateApp
@@ -60,9 +59,6 @@ class Tracktime extends Backbone.Model
     @get('records').addRecord options,
       success: success,
       error: error
-
-  populateActions: () ->
-    @set 'actions', new Tracktime.ActionsCollection Tracktime.initdata.tmpActions
 
 (module?.exports = Tracktime) or @Tracktime = Tracktime
 
@@ -144,9 +140,20 @@ Handlebars.registerHelper 'minuteFormat', (val) ->
 
 Tracktime.initdata = {}
 
+Tracktime.initdata.defaultActions = [
+  {
+    title: 'Add Record'
+    type: 'AddRecord'
+  }
+  {
+    title: 'Search'
+    type: 'Search'
+  }
+]
+
 Tracktime.initdata.tmpActions = [
   {
-    title: 'Add record +4'
+    title: 'Add record'
     formAction: '#'
     btnClass: 'btn-primary'
     navbarClass: 'navbar-material-amber'
@@ -201,31 +208,6 @@ Tracktime.initdata.tmpActions = [
       letter: ''
     isActive: false
     isVisible: true
-  }
-]
-
-Tracktime.initdata.tmpRecords = [
-  {
-    description: 'Lorem'
-    subject: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nam, culpa, deleniti, temporibus, itaque similique suscipit saepe rerum voluptates voluptatum asperiores modi possimus vitae inventore dolore illo incidunt dolorem animi iure provident labore minima delectus unde nihil soluta recusandae ut dicta explicabo perspiciatis dolores eum. Numquam molestias reiciendis quibusdam sunt suscipit fugit temporibus asperiores quia. Cum, vel, molestias, sapiente ex nisi blanditiis dolorem quod beatae obcaecati culpa eos eius at vitae sed modi explicabo tempore. Harum, error nam veritatis maiores est at incidunt quae magni amet non qui eum. Aperiam, harum, tenetur facere officia delectus omnis odio totam consequatur obcaecati tempora. '
-    date: (new Date()).toISOString()
-
-  }
-  {
-    description: 'Tempore'
-    subject: 'Accusamus, cumque, aperiam velit quos quisquam ex officiis obcaecati totam ipsa saepe fugiat in. Corrupti, soluta, aliquid cumque adipisci nihil omnis explicabo itaque commodi neque dolorum fugit quibusdam deserunt voluptates corporis amet hic quod blanditiis nesciunt dignissimos vero iure. Omnis, provident ducimus delectus sed in incidunt expedita quae accusantium cum culpa recusandae rerum ipsum vitae aliquid ratione ea architecto optio accusamus similique saepe nobis vel deleniti tempora iure consequatur. Debitis laborum accusantium omnis iure velit necessitatibus quod veniam sequi! Excepturi, praesentium, porro ducimus fugit provident repellendus quibusdam dolorum nisi autem tenetur. Non, neque reiciendis eius sequi accusamus. Quam, nostrum, nesciunt. '
-    date: (new Date()).toISOString()
-  }
-  {
-    description: 'Consequuntur'
-    subject: 'Obcaecati, incidunt, optio deleniti earum odio nobis dolore sapiente delectus. Accusamus sequi voluptatibus magni fuga fugit nisi aut nam rem repellat possimus! Delectus, harum nisi eos nostrum necessitatibus ducimus eius odio dolores ratione quas quos laboriosam magnam reprehenderit itaque nihil! Dolor, hic, asperiores alias aut voluptas odit illum voluptatem quod! Pariatur, nesciunt distinctio aliquam quam voluptatibus temporibus voluptate placeat quaerat nemo quidem. Asperiores, nihil quasi molestias suscipit sunt. Itaque, sapiente voluptatibus qui non fugit impedit voluptatem beatae repellat at nulla dignissimos esse doloribus. Officiis, dolorem, id, officia sapiente eius ullam vel dolorum numquam et aspernatur illo deleniti enim quam autem! '
-    date: (new Date()).toISOString()
-
-  }
-  {
-    description: 'Rem'
-    subject: 'Quisquam ab soluta dicta amet possimus iure deserunt expedita facere maxime nemo. Laudantium, quod, dignissimos, quos perspiciatis illo numquam est hic qui totam eligendi aut in provident dolor. Libero, dolores, cumque ut molestiae iusto nostrum tempore voluptatum laborum iure quae? Culpa, et, deserunt, explicabo a assumenda voluptate commodi voluptatum possimus omnis totam libero ipsum delectus? Harum, facilis, suscipit perspiciatis dolorum sapiente quae voluptas assumenda cumque atque accusamus blanditiis ullam doloribus enim placeat saepe dolorem sed quos architecto error vero odit deserunt autem? Sunt, cumque, similique voluptatem quis voluptatum non explicabo quibusdam porro in nihil quae sint rem molestias vero beatae!'
-    date: (new Date()).toISOString()
   }
 ]
 
@@ -402,72 +384,88 @@ class Tracktime.Action extends Backbone.Model
 
   defaults:
     _id: null
-    title: 'Default action title'
-    formAction: '#'
-    btnClass: 'btn-default'
-    navbarClass: 'navbar-material-amber'
-    icon:
-      className: 'mdi-editor-mode-edit'
-      letter: ''
+    title: 'Default action'
     isActive: false
     isVisible: false
-    inputValue: ''
-    details: null # Tracktime.Action.Details or null
-
-  validation: () ->
-    # @todo make details validation
 
   attributes: () ->
     id: @model.cid
 
   constructor: (args...) ->
-    super args...
-
-  initialize: () ->
-    @set 'details', new Tracktime.Action.Details()
+    super 'action constructor', args...
 
   setActive: () ->
     @collection.setActive @
 
   processAction: (options) ->
-    @set 'inputValue', options.subject
-    @get('details').set(options) # @todo remove possible
-    @newRecord() #@todo эта функция будет определятся в зависимости от типа action
-    # @search() #@todo эта функция будет определятся в зависимости от типа action
-
-  newRecord: () ->
-    Tracktime.AppChannel.command 'newRecord', _.extend {project: 0}, @get('details').attributes
-
-  search: () ->
-    $.alert 'search under construction'
-
-  successAdd: () ->
-    @set 'inputValue', ''
-    # @details.reset() # @todo on change details change view controls
+    $.alert 'Void Action'
 
 (module?.exports = Tracktime.Action) or @Tracktime.Action = Tracktime.Action
-
-
-
-# actions
-#   options
-#     details = view and model
-#   onChangeDetails: function to apply details
-#   save and restore selectedAction
-# actinView:
-#  when детали openicon is крестик
-#   сохраняются данные деталей автоматически
-#   крестик очищает и закрывает
-#   при потере фокуса с деталей сохранненые автоматичеки выводятся рядом с subject
-
-
-
-
 
 class Tracktime.Action.Details extends Backbone.Model
 
 
 (module?.exports = Tracktime.Action.Details) or @Tracktime.Action.Details = Tracktime.Action.Details
+
+class Tracktime.Action.AddRecord extends Tracktime.Action
+
+  defaults: _.extend {}, Tracktime.Action.prototype.defaults,
+    title: 'Default action title'
+    inputValue: ''
+    formAction: '#'
+    btnClass: 'btn-primary'
+    navbarClass: 'navbar-material-amber'
+    icon:
+      className: 'mdi-editor-mode-edit'
+      letter: ''
+    isActive: true
+    isVisible: true
+
+  initialize: (options = {}) ->
+    @set options
+    @set 'details', new Tracktime.Action.Details()
+
+  processAction: (options) ->
+    @set 'inputValue', options.subject
+    @get('details').set(options) # @todo remove possible
+    @newRecord()
+
+  newRecord: () ->
+    Tracktime.AppChannel.command 'newRecord', _.extend {project: 0}, @get('details').attributes
+
+  successAdd: () ->
+    @set 'inputValue', ''
+    # @details.reset() # @todo on change details change view controls
+
+(module?.exports = Tracktime.Action.AddRecord) or @Tracktime.Action.AddRecord = Tracktime.Action.AddRecord
+
+class Tracktime.Action.Search extends Tracktime.Action
+
+  defaults: _.extend {}, Tracktime.Action.prototype.defaults,
+    title: 'Search'
+    inputValue: ''
+    formAction: '#'
+    btnClass: 'btn-white'
+    navbarClass: 'navbar-material-light-blue'
+    icon:
+      className: 'mdi-action-search'
+      letter: ''
+    isActive: false
+    isVisible: true
+
+  initialize: (options = {}) ->
+    @set options
+    @set 'details', new Tracktime.Action.Details()
+
+  processAction: (options) ->
+    @set 'inputValue', options.subject
+    @get('details').set(options) # @todo remove possible
+    @search()
+
+  search: () ->
+    $.alert 'search start'
+
+(module?.exports = Tracktime.Action.Search) or @Tracktime.Action.Search = Tracktime.Action.Search
 
 class Tracktime.Project extends Tracktime.Model
   idAttribute: "_id"
@@ -539,14 +537,16 @@ class Tracktime.Record extends Tracktime.Model
 
 class Tracktime.ActionsCollection extends Backbone.Collection
   model: Tracktime.Action
+  defaultActions: Tracktime.initdata.defaultActions
   url: '/actions'
   localStorage: new Backbone.LocalStorage ('records-backbone')
   active: null
 
   initialize: () ->
-    # @router = new Tracktime.ActionsRouter {controller: @}
-    # @setActive @models.findWhere isActive: true
-
+    _.each @defaultActions, (action) =>
+      if (Tracktime.Action[action.type])
+        actionModel = new Tracktime.Action[action.type](action)
+        @push actionModel
 
   setActive: (active) ->
     @active?.set 'isActive', false
@@ -558,18 +558,6 @@ class Tracktime.ActionsCollection extends Backbone.Collection
 
   getVisible: () ->
     _.filter @models, (model) -> model.get('isVisible')
-
-  fetch: () ->
-    models = @localStorage.findAll()
-
-    unless models.length
-      _.each Tracktime.initdata.tmpActions, (action) ->
-        newAction = new Tracktime.Action action
-        newAction.save()
-      models = @localStorage.findAll()
-
-    @add models
-
 
 (module?.exports = Tracktime.ActionsCollection) or @Tracktime.ActionsCollection = Tracktime.ActionsCollection
 
@@ -1166,6 +1154,7 @@ class Tracktime.AppView.Header extends Backbone.View
     $('#send-form').on 'click', @sendForm
 
     @tmpDetails.recordDate = $(".select-date > .btn .caption ruby rt").html()
+
     $(".select-date .dropdown-menu").on 'click', '.btn', (event) =>
       event.preventDefault()
       $(".select-date > .btn .caption ruby").html $(event.currentTarget).find('ruby').html()
@@ -1189,6 +1178,9 @@ class Tracktime.AppView.Header extends Backbone.View
         mode: 'values'
         values: [0,60*1,60*2,60*3,60*4,60*5,60*6,60*7,60*8,60*9,60*10,60*11,60*12]
         density: 2
+        format:
+          to: (value) -> value / 60
+          from: (value) -> value
 
 
   render: () ->
