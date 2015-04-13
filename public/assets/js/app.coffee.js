@@ -1457,6 +1457,31 @@
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AdminView : void 0) || (this.Tracktime.AdminView = Tracktime.AdminView);
 
+  Tracktime.AdminView.Header = (function(superClass) {
+    extend(Header, superClass);
+
+    function Header() {
+      return Header.__super__.constructor.apply(this, arguments);
+    }
+
+    Header.prototype.container = '#header';
+
+    Header.prototype.template = JST['admin/layout/header'];
+
+    Header.prototype.initialize = function(options) {
+      return this.render();
+    };
+
+    Header.prototype.render = function() {
+      return $(this.container).html(this.$el.html(this.template()));
+    };
+
+    return Header;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AdminView.Header : void 0) || (this.Tracktime.AdminView.Header = Tracktime.AdminView.Header);
+
   Tracktime.AdminView.Actions = (function(superClass) {
     extend(Actions, superClass);
 

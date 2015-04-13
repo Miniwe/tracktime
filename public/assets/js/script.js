@@ -29286,6 +29286,10 @@ this["JST"]["admin/index"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1
   return "<h1>admin index</h1>";
   },"useData":true});
 
+this["JST"]["admin/layout/header"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  return "<div class=\"navbar navbar-material-amber shadow-z-1\" style=\"-webkit-app-region: drag\">\n  <a id=\"menuToggler\" class=\"btn btn-fab btn-link pull-left\" href=\"javascript:void(0)\">\n    <i class=\"mdi-action-view-headline\"></i>\n  </a>\n  <div class=\"container\">\n    <h1>Admin panel</h1>\n  </div>\n</div>\n\n";
+  },"useData":true});
+
 this["JST"]["admin/projects"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
   return "<h1>"
@@ -30935,6 +30939,31 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
   })(Backbone.View);
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AdminView : void 0) || (this.Tracktime.AdminView = Tracktime.AdminView);
+
+  Tracktime.AdminView.Header = (function(superClass) {
+    extend(Header, superClass);
+
+    function Header() {
+      return Header.__super__.constructor.apply(this, arguments);
+    }
+
+    Header.prototype.container = '#header';
+
+    Header.prototype.template = JST['admin/layout/header'];
+
+    Header.prototype.initialize = function(options) {
+      return this.render();
+    };
+
+    Header.prototype.render = function() {
+      return $(this.container).html(this.$el.html(this.template()));
+    };
+
+    return Header;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AdminView.Header : void 0) || (this.Tracktime.AdminView.Header = Tracktime.AdminView.Header);
 
   Tracktime.AdminView.Actions = (function(superClass) {
     extend(Actions, superClass);

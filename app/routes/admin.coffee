@@ -9,6 +9,8 @@ class Tracktime.AdminRouter extends Backbone.SubRoute
   initialize: (options) ->
     _.extend @, options
     # @parent.view.setSubView 'main', new Tracktime.AdminView()
+    # @parent.view.setSubView 'header', new Tracktime.AdminView.Header()
+    # @parent.view.initUI()
 
   dashboard: () ->
     @parent.view.setSubView 'main', new Tracktime.AdminView.Dashboard()

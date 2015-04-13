@@ -729,6 +729,8 @@ class Tracktime.AdminRouter extends Backbone.SubRoute
   initialize: (options) ->
     _.extend @, options
     # @parent.view.setSubView 'main', new Tracktime.AdminView()
+    # @parent.view.setSubView 'header', new Tracktime.AdminView.Header()
+    # @parent.view.initUI()
 
   dashboard: () ->
     @parent.view.setSubView 'main', new Tracktime.AdminView.Dashboard()
@@ -1050,6 +1052,19 @@ class Tracktime.AdminView extends Backbone.View
 
 (module?.exports = Tracktime.AdminView) or @Tracktime.AdminView = Tracktime.AdminView
 
+
+class Tracktime.AdminView.Header extends Backbone.View
+  container: '#header'
+  template: JST['admin/layout/header']
+
+  initialize: (options) ->
+    @render()
+
+
+  render: () ->
+    $(@container).html @$el.html @template()
+
+(module?.exports = Tracktime.AdminView.Header) or @Tracktime.AdminView.Header = Tracktime.AdminView.Header
 
 class Tracktime.AdminView.Actions extends Backbone.View
   container: '#main'
