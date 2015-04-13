@@ -35,7 +35,6 @@ class Tracktime.AppRouter extends Backbone.Router
     @view.initUI()
 
   index: () ->
-    $.alert 'index'
     @navigate 'projects', trigger: true, replace: false
 
   default: (actions) ->

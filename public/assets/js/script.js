@@ -29271,6 +29271,32 @@ function toArray(list, index) {
 
 this["JST"] = this["JST"] || {};
 
+this["JST"]["admin/actions"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+  return "<h1>admin "
+    + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
+    + "</h1>";
+},"useData":true});
+
+this["JST"]["admin/dashboard"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  return "<h1>admin dashboard</h1>";
+  },"useData":true});
+
+this["JST"]["admin/index"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  return "<h1>admin index</h1>";
+  },"useData":true});
+
+this["JST"]["admin/projects"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+  return "<h1>"
+    + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
+    + "</h1>";
+},"useData":true});
+
+this["JST"]["admin/users"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  return "<h1>admin users</h1>";
+  },"useData":true});
+
 this["JST"]["blocks/action"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
   return "<div class=\"popover panel panel-warning "
@@ -29330,19 +29356,7 @@ this["JST"]["layout/menu"] = Handlebars.template({"1":function(depth0,helpers,pa
   var stack1, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, buffer = "<div class=\"well\">\n    <h5>Sync apps over internet only</h5>\n    <div class=\"checkbox\">\n        <label>\n            <input type=\"checkbox\" id=\"isOnline\" ";
   stack1 = helpers['if'].call(depth0, (depth0 != null ? depth0.isOnline : depth0), {"name":"if","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});
   if (stack1 != null) { buffer += stack1; }
-  return buffer + "> Sync\n        </label>\n    </div>\n</div>\n<div class=\"list-style-group\">\n  "
-    + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
-    'body': ("Page 1"),
-    'href': ("#page1"),
-    'class': ("list-group-item")
-  },"data":data})))
-    + "\n  "
-    + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
-    'body': ("Page 2"),
-    'href': ("#page2"),
-    'class': ("list-group-item")
-  },"data":data})))
-    + "\n</div>\n\n<div class=\"panel-group\" id=\"accordion\" role=\"tablist\" aria-multiselectable=\"true\">\n    <div class=\"panel panel-default\">\n        <a class=\"btn btn-info btn-block\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#user-section\" aria-expanded=\"true\" aria-controls=\"user-section\" role=\"tab\" id=\"headingUser\">\n      User\n    </a>\n        <div id=\"user-section\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingUser\">\n            <div class=\"list-style-group\">\n                "
+  return buffer + "> Sync\n        </label>\n    </div>\n</div>\n\n<div class=\"panel-group\" id=\"accordion\" role=\"tablist\" aria-multiselectable=\"true\">\n    <div class=\"panel panel-default\">\n        <a class=\"btn btn-info btn-block\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#user-section\" aria-expanded=\"true\" aria-controls=\"user-section\" role=\"tab\" id=\"headingUser\">\n      User\n    </a>\n        <div id=\"user-section\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingUser\">\n            <div class=\"list-style-group\">\n                "
     + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
     'body': ("Settings"),
     'href': ("#user"),
@@ -29398,6 +29412,12 @@ this["JST"]["layout/menu"] = Handlebars.template({"1":function(depth0,helpers,pa
   },"data":data})))
     + "\n            </div>\n        </div>\n    </div>\n    <div class=\"panel panel-default\">\n        <a class=\"btn btn-warning btn-block\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#admin-section\" aria-expanded=\"true\" aria-controls=\"admin-section\" role=\"tab\" id=\"headingAdmin\">\n      Admin\n    </a>\n        <div id=\"admin-section\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingAdmin\">\n            <div class=\"list-style-group\">\n                "
     + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
+    'body': ("Dashboard"),
+    'href': ("#admin/dashboard"),
+    'class': ("list-group-item")
+  },"data":data})))
+    + "\n                "
+    + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
     'body': ("Users list"),
     'href': ("#admin/users"),
     'class': ("list-group-item")
@@ -29414,7 +29434,7 @@ this["JST"]["layout/menu"] = Handlebars.template({"1":function(depth0,helpers,pa
     'href': ("#admin/actions"),
     'class': ("list-group-item")
   },"data":data})))
-    + "\n            </div>\n        </div>\n    </div>\n    <div class=\"panel panel-default\">\n        <a class=\"btn btn-material-yellow btn-block\" data-parent=\"#accordion\" href=\"#stats-section\" aria-expanded=\"true\" aria-controls=\"stats-section\" role=\"tab\" id=\"headingStats\">\n      Stats\n    </a>\n        <div id=\"stats-section\" role=\"tabpanel\" aria-labelledby=\"headingStats\">\n            <table class=\"table table-condensed\">\n                <tbody>\n                    <tr class=\"active\">\n                        <td class=\"when\">Today:</td>\n                        <td class=\"time\">0:00</td>\n                        <td class=\"pounds\">£0.0</td>\n                    </tr>\n                    <tr class=\"nonactual\">\n                        <td class=\"when\">Yesterday:</td>\n                        <td class=\"time\">8:00</td>\n                        <td class=\"pounds\">£8.0</td>\n                    </tr>\n                    <tr class=\"active\">\n                        <td class=\"when\">This week:</td>\n                        <td class=\"time\">16:00</td>\n                        <td class=\"pounds\">£16.0</td>\n                    </tr>\n                    <tr class=\"nonactual\">\n                        <td class=\"when\">Previous week:</td>\n                        <td class=\"time\">32:00</td>\n                        <td class=\"pounds\">£32.0</td>\n                    </tr>\n                    <tr class=\"active\">\n                        <td class=\"when\">This month:</td>\n                        <td class=\"time\">48:00</td>\n                        <td class=\"pounds\">£48.0</td>\n                    </tr>\n                    <tr class=\"nonactual\">\n                        <td class=\"when\">Previous month:</td>\n                        <td class=\"time\">0:00</td>\n                        <td class=\"pounds\">£0.0</td>\n                    </tr>\n                </tbody>\n            </table>\n        </div>\n    </div>\n</div>";
+    + "\n            </div>\n        </div>\n    </div>\n    <div class=\"panel panel-default\">\n        <a class=\"btn btn-material-yellow btn-block\" data-parent=\"#accordion\" href=\"#user/rates\" aria-expanded=\"true\" aria-controls=\"stats-section\" role=\"tab\" id=\"headingStats\">\n      Stats\n    </a>\n        <div id=\"stats-section\" role=\"tabpanel\" aria-labelledby=\"headingStats\">\n            <table class=\"table table-condensed\">\n                <tbody>\n                    <tr class=\"active\">\n                        <td class=\"when\">Today:</td>\n                        <td class=\"time\">0:00</td>\n                        <td class=\"pounds\">£0.0</td>\n                    </tr>\n                    <tr class=\"nonactual\">\n                        <td class=\"when\">Yesterday:</td>\n                        <td class=\"time\">8:00</td>\n                        <td class=\"pounds\">£8.0</td>\n                    </tr>\n                    <tr class=\"active\">\n                        <td class=\"when\">This week:</td>\n                        <td class=\"time\">16:00</td>\n                        <td class=\"pounds\">£16.0</td>\n                    </tr>\n                    <tr class=\"nonactual\">\n                        <td class=\"when\">Previous week:</td>\n                        <td class=\"time\">32:00</td>\n                        <td class=\"pounds\">£32.0</td>\n                    </tr>\n                    <tr class=\"active\">\n                        <td class=\"when\">This month:</td>\n                        <td class=\"time\">48:00</td>\n                        <td class=\"pounds\">£48.0</td>\n                    </tr>\n                    <tr class=\"nonactual\">\n                        <td class=\"when\">Previous month:</td>\n                        <td class=\"time\">0:00</td>\n                        <td class=\"pounds\">£0.0</td>\n                    </tr>\n                </tbody>\n            </table>\n        </div>\n    </div>\n</div>";
 },"useData":true});
 
 this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
@@ -29435,6 +29455,28 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     + escapeExpression(((helpers.dateFormat || (depth0 && depth0.dateFormat) || helperMissing).call(depth0, (depth0 != null ? depth0.lastAccess : depth0), {"name":"dateFormat","hash":{},"data":data})))
     + "</time>\n    </p>\n\n  </div>\n\n  <div class=\"col-menu col-md-1 col-sm-1\">\n    <ul class=\"actions\">\n      <li><a class=\"delete btn btn-fab btn-danger btn-fab-mini pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Delete action\">\n        <i class=\"mdi-navigation-cancel\"></i>\n      </a></li>\n    </ul>\n  </div>\n</div>";
 },"useData":true});
+
+this["JST"]["reports/report"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+  return "<div class=\"well\">"
+    + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
+    + "</div>\n";
+},"useData":true});
+
+this["JST"]["reports/reports"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+  return "<div class=\"well\">"
+    + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
+    + "</div>\n";
+},"useData":true});
+
+this["JST"]["user/details"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  return "user details";
+  },"useData":true});
+
+this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  return "<div class=\"thumbnail\">user rates</div>";
+  },"useData":true});
 (function() {
   var Lokitest, Tracktime, config, development, process, production, ref, test,
     extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
@@ -30371,21 +30413,31 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     }
 
     AdminRouter.prototype.routes = {
+      '': 'dashboard',
       'users': 'users',
       'projects': 'projects',
+      'dashboard': 'dashboard',
       'actions': 'actions'
     };
 
+    AdminRouter.prototype.initialize = function(options) {
+      return _.extend(this, options);
+    };
+
+    AdminRouter.prototype.dashboard = function() {
+      return this.parent.view.setSubView('main', new Tracktime.AdminView.Dashboard());
+    };
+
     AdminRouter.prototype.users = function() {
-      return $.alert("admin users");
+      return this.parent.view.setSubView('main', new Tracktime.AdminView.Users());
     };
 
     AdminRouter.prototype.projects = function() {
-      return $.alert("admin projects");
+      return this.parent.view.setSubView('main', new Tracktime.AdminView.Projects());
     };
 
     AdminRouter.prototype.actions = function() {
-      return $.alert("admin actions");
+      return this.parent.view.setSubView('main', new Tracktime.AdminView.Actions());
     };
 
     return AdminRouter;
@@ -30462,7 +30514,6 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
 
     AppRouter.prototype.index = function() {
-      $.alert('index');
       return this.navigate('projects', {
         trigger: true,
         replace: false
@@ -30497,18 +30548,20 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
 
     ProjectsRouter.prototype.initialize = function(options) {
-      _.extend(this, options);
+      return _.extend(this, options);
+    };
+
+    ProjectsRouter.prototype.list = function() {
+      $.alert("whole records list in projects section");
       return this.parent.view.setSubView('main', new Tracktime.RecordsView({
         collection: this.parent.model.get('records')
       }));
     };
 
-    ProjectsRouter.prototype.list = function() {
-      return $.alert("projects list");
-    };
-
     ProjectsRouter.prototype.details = function(id) {
-      return $.alert("projects details " + id);
+      return this.parent.view.setSubView('main', new Tracktime.RecordsView({
+        collection: this.parent.model.get('records')
+      }));
     };
 
     ProjectsRouter.prototype.edit = function(id) {
@@ -30599,12 +30652,17 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
       ':id/save': 'save'
     };
 
+    ReportsRouter.prototype.initialize = function(options) {
+      _.extend(this, options);
+      return this.parent.view.setSubView('main', new Tracktime.ReportsView());
+    };
+
     ReportsRouter.prototype.list = function() {
-      return $.alert("reports list");
+      return this.parent.view.setSubView('main', new Tracktime.ReportsView());
     };
 
     ReportsRouter.prototype.details = function(id) {
-      return $.alert("reports details " + id);
+      return this.parent.view.setSubView('main', new Tracktime.ReportView());
     };
 
     ReportsRouter.prototype.edit = function(id) {
@@ -30642,16 +30700,20 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
       'logout': 'logout'
     };
 
+    UserRouter.prototype.initialize = function(options) {
+      return _.extend(this, options);
+    };
+
     UserRouter.prototype.details = function() {
-      return $.alert("user details");
+      return this.parent.view.setSubView('main', new Tracktime.UserView.Details());
     };
 
     UserRouter.prototype.rates = function() {
-      return $.alert("user rates");
+      return this.parent.view.setSubView('main', new Tracktime.UserView.Rates());
     };
 
     UserRouter.prototype.logout = function() {
-      return $.alert("user logout");
+      return $.alert("user logout process");
     };
 
     return UserRouter;
@@ -30841,6 +30903,143 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.ActionView.ListBtn : void 0) || (this.Tracktime.ActionView.ListBtn = Tracktime.ActionView.ListBtn);
 
+  Tracktime.AdminView = (function(superClass) {
+    extend(AdminView, superClass);
+
+    function AdminView() {
+      return AdminView.__super__.constructor.apply(this, arguments);
+    }
+
+    AdminView.prototype.el = '#panel';
+
+    AdminView.prototype.className = '';
+
+    AdminView.prototype.template = JST['admin/index'];
+
+    AdminView.prototype.views = {};
+
+    AdminView.prototype.initialize = function() {
+      return this.render();
+    };
+
+    AdminView.prototype.render = function() {
+      return this.$el.html(this.template());
+    };
+
+    AdminView.prototype.initUI = function() {
+      return $.material.init();
+    };
+
+    return AdminView;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AdminView : void 0) || (this.Tracktime.AdminView = Tracktime.AdminView);
+
+  Tracktime.AdminView.Actions = (function(superClass) {
+    extend(Actions, superClass);
+
+    function Actions() {
+      return Actions.__super__.constructor.apply(this, arguments);
+    }
+
+    Actions.prototype.container = '#main';
+
+    Actions.prototype.template = JST['admin/actions'];
+
+    Actions.prototype.initialize = function() {
+      return this.render();
+    };
+
+    Actions.prototype.render = function() {
+      return $(this.container).html(this.$el.html(this.template({
+        title: 'Actions'
+      })));
+    };
+
+    return Actions;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AdminView.Actions : void 0) || (this.Tracktime.AdminView.Actions = Tracktime.AdminView.Actions);
+
+  Tracktime.AdminView.Dashboard = (function(superClass) {
+    extend(Dashboard, superClass);
+
+    function Dashboard() {
+      return Dashboard.__super__.constructor.apply(this, arguments);
+    }
+
+    Dashboard.prototype.container = '#main';
+
+    Dashboard.prototype.template = JST['admin/dashboard'];
+
+    Dashboard.prototype.initialize = function() {
+      return this.render();
+    };
+
+    Dashboard.prototype.render = function() {
+      return $(this.container).html(this.$el.html(this.template()));
+    };
+
+    return Dashboard;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AdminView.Dashboard : void 0) || (this.Tracktime.AdminView.Dashboard = Tracktime.AdminView.Dashboard);
+
+  Tracktime.AdminView.Projects = (function(superClass) {
+    extend(Projects, superClass);
+
+    function Projects() {
+      return Projects.__super__.constructor.apply(this, arguments);
+    }
+
+    Projects.prototype.container = '#main';
+
+    Projects.prototype.template = JST['admin/projects'];
+
+    Projects.prototype.initialize = function() {
+      return this.render();
+    };
+
+    Projects.prototype.render = function() {
+      return $(this.container).html(this.$el.html(this.template({
+        title: 'Projects'
+      })));
+    };
+
+    return Projects;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AdminView.Projects : void 0) || (this.Tracktime.AdminView.Projects = Tracktime.AdminView.Projects);
+
+  Tracktime.AdminView.Users = (function(superClass) {
+    extend(Users, superClass);
+
+    function Users() {
+      return Users.__super__.constructor.apply(this, arguments);
+    }
+
+    Users.prototype.container = '#main';
+
+    Users.prototype.template = JST['admin/users'];
+
+    Users.prototype.initialize = function() {
+      return this.render();
+    };
+
+    Users.prototype.render = function() {
+      return $(this.container).html(this.$el.html(this.template()));
+    };
+
+    return Users;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AdminView.Users : void 0) || (this.Tracktime.AdminView.Users = Tracktime.AdminView.Users);
+
   Tracktime.AppView = (function(superClass) {
     extend(AppView, superClass);
 
@@ -30852,7 +31051,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
     AppView.prototype.className = '';
 
-    AppView.prototype.layoutTemplate = JST['global/app'];
+    AppView.prototype.template = JST['global/app'];
 
     AppView.prototype.views = {};
 
@@ -30861,7 +31060,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
 
     AppView.prototype.render = function() {
-      return this.$el.html(this.layoutTemplate(this.model.toJSON()));
+      return this.$el.html(this.template(this.model.toJSON()));
     };
 
     AppView.prototype.initUI = function() {
@@ -31119,6 +31318,60 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AppView.Menu : void 0) || (this.Tracktime.AppView.Menu = Tracktime.AppView.Menu);
 
+  Tracktime.ProjectView = (function(superClass) {
+    extend(ProjectView, superClass);
+
+    function ProjectView() {
+      return ProjectView.__super__.constructor.apply(this, arguments);
+    }
+
+    ProjectView.prototype.container = '#main';
+
+    ProjectView.prototype.template = JST['projects/project'];
+
+    ProjectView.prototype.initialize = function() {
+      return this.render();
+    };
+
+    ProjectView.prototype.render = function() {
+      return $(this.container).html(this.$el.html(this.template({
+        title: 'Project Details HERE'
+      })));
+    };
+
+    return ProjectView;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.ProjectView : void 0) || (this.Tracktime.ProjectView = Tracktime.ProjectView);
+
+  Tracktime.ProjectsView = (function(superClass) {
+    extend(ProjectsView, superClass);
+
+    function ProjectsView() {
+      return ProjectsView.__super__.constructor.apply(this, arguments);
+    }
+
+    ProjectsView.prototype.container = '#main';
+
+    ProjectsView.prototype.template = JST['projecs/projecs'];
+
+    ProjectsView.prototype.initialize = function() {
+      return this.render();
+    };
+
+    ProjectsView.prototype.render = function() {
+      return $(this.container).html(this.$el.html(this.template({
+        title: 'Projects HERE'
+      })));
+    };
+
+    return ProjectsView;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.ProjectsView : void 0) || (this.Tracktime.ProjectsView = Tracktime.ProjectsView);
+
   Tracktime.RecordView = (function(superClass) {
     extend(RecordView, superClass);
 
@@ -31283,6 +31536,141 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
   })(Backbone.View);
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.RecordsView : void 0) || (this.Tracktime.RecordsView = Tracktime.RecordsView);
+
+  Tracktime.ReportView = (function(superClass) {
+    extend(ReportView, superClass);
+
+    function ReportView() {
+      return ReportView.__super__.constructor.apply(this, arguments);
+    }
+
+    ReportView.prototype.container = '#main';
+
+    ReportView.prototype.template = JST['reports/report'];
+
+    ReportView.prototype.initialize = function() {
+      return this.render();
+    };
+
+    ReportView.prototype.render = function() {
+      return $(this.container).html(this.$el.html(this.template({
+        title: 'Report Details HERE'
+      })));
+    };
+
+    return ReportView;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.ReportView : void 0) || (this.Tracktime.ReportView = Tracktime.ReportView);
+
+  Tracktime.ReportsView = (function(superClass) {
+    extend(ReportsView, superClass);
+
+    function ReportsView() {
+      return ReportsView.__super__.constructor.apply(this, arguments);
+    }
+
+    ReportsView.prototype.container = '#main';
+
+    ReportsView.prototype.template = JST['reports/reports'];
+
+    ReportsView.prototype.initialize = function() {
+      return this.render();
+    };
+
+    ReportsView.prototype.render = function() {
+      return $(this.container).html(this.$el.html(this.template({
+        title: 'Reports HERE'
+      })));
+    };
+
+    return ReportsView;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.ReportsView : void 0) || (this.Tracktime.ReportsView = Tracktime.ReportsView);
+
+  Tracktime.UserView = (function(superClass) {
+    extend(UserView, superClass);
+
+    function UserView() {
+      return UserView.__super__.constructor.apply(this, arguments);
+    }
+
+    UserView.prototype.container = '#main';
+
+    UserView.prototype.template = JST['user/user'];
+
+    UserView.prototype.initialize = function() {
+      return this.render();
+    };
+
+    UserView.prototype.render = function() {
+      return $(this.container).html(this.$el.html(this.template({
+        title: 'User index'
+      })));
+    };
+
+    return UserView;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.UserView : void 0) || (this.Tracktime.UserView = Tracktime.UserView);
+
+  Tracktime.UserView.Details = (function(superClass) {
+    extend(Details, superClass);
+
+    function Details() {
+      return Details.__super__.constructor.apply(this, arguments);
+    }
+
+    Details.prototype.container = '#main';
+
+    Details.prototype.template = JST['user/details'];
+
+    Details.prototype.initialize = function() {
+      return this.render();
+    };
+
+    Details.prototype.render = function() {
+      return $(this.container).html(this.$el.html(this.template({
+        title: 'User details HERE'
+      })));
+    };
+
+    return Details;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.UserView.Details : void 0) || (this.Tracktime.UserView.Details = Tracktime.UserView.Details);
+
+  Tracktime.UserView.Rates = (function(superClass) {
+    extend(Rates, superClass);
+
+    function Rates() {
+      return Rates.__super__.constructor.apply(this, arguments);
+    }
+
+    Rates.prototype.container = '#main';
+
+    Rates.prototype.template = JST['user/rates'];
+
+    Rates.prototype.initialize = function() {
+      return this.render();
+    };
+
+    Rates.prototype.render = function() {
+      return $(this.container).html(this.$el.html(this.template({
+        title: 'User Rates'
+      })));
+    };
+
+    return Rates;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.UserView.Rates : void 0) || (this.Tracktime.UserView.Rates = Tracktime.UserView.Rates);
 
 }).call(this);
 

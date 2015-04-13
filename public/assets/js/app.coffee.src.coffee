@@ -720,18 +720,27 @@ Tracktime.utils.nl2br = (text) ->
 
 class Tracktime.AdminRouter extends Backbone.SubRoute
   routes:
-    'users':    'users'
-    'projects': 'projects'
-    'actions':  'actions'
+    '':          'dashboard'
+    'users':     'users'
+    'projects':  'projects'
+    'dashboard': 'dashboard'
+    'actions':   'actions'
+
+  initialize: (options) ->
+    _.extend @, options
+    # @parent.view.setSubView 'main', new Tracktime.AdminView()
+
+  dashboard: () ->
+    @parent.view.setSubView 'main', new Tracktime.AdminView.Dashboard()
 
   users: () ->
-    $.alert "admin users"
+    @parent.view.setSubView 'main', new Tracktime.AdminView.Users()
 
   projects: () ->
-    $.alert "admin projects"
+    @parent.view.setSubView 'main', new Tracktime.AdminView.Projects()
 
   actions: () ->
-    $.alert "admin actions"
+    @parent.view.setSubView 'main', new Tracktime.AdminView.Actions()
 
 
 
@@ -775,7 +784,6 @@ class Tracktime.AppRouter extends Backbone.Router
     @view.initUI()
 
   index: () ->
-    $.alert 'index'
     @navigate 'projects', trigger: true, replace: false
 
   default: (actions) ->
@@ -796,13 +804,13 @@ class Tracktime.ProjectsRouter extends Backbone.SubRoute
 
   initialize: (options) ->
     _.extend @, options
-    @parent.view.setSubView 'main', new Tracktime.RecordsView collection: @parent.model.get 'records'
 
   list: () ->
-    $.alert "projects list"
+    $.alert "whole records list in projects section"
+    @parent.view.setSubView 'main', new Tracktime.RecordsView collection: @parent.model.get 'records'
 
   details: (id) ->
-    $.alert "projects details #{id}"
+    @parent.view.setSubView 'main', new Tracktime.RecordsView collection: @parent.model.get 'records'
 
   edit: (id) ->
     $.alert "projects edit #{id}"
@@ -859,11 +867,15 @@ class Tracktime.ReportsRouter extends Backbone.SubRoute
     ':id/add':      'add'
     ':id/save':     'save'
 
+  initialize: (options) ->
+    _.extend @, options
+    @parent.view.setSubView 'main', new Tracktime.ReportsView()
+
   list: () ->
-    $.alert "reports list"
+    @parent.view.setSubView 'main', new Tracktime.ReportsView()
 
   details: (id) ->
-    $.alert "reports details #{id}"
+    @parent.view.setSubView 'main', new Tracktime.ReportView()
 
   edit: (id) ->
     $.alert "reports edit #{id}"
@@ -885,15 +897,19 @@ class Tracktime.UserRouter extends Backbone.SubRoute
     'rates':  'rates'
     'logout': 'logout'
 
+
+  initialize: (options) ->
+    _.extend @, options
+    # @parent.view.setSubView 'main', new Tracktime.UserView()
+
   details: () ->
-    $.alert "user details"
+    @parent.view.setSubView 'main', new Tracktime.UserView.Details()
 
   rates: () ->
-    $.alert "user rates"
+    @parent.view.setSubView 'main', new Tracktime.UserView.Rates()
 
   logout: () ->
-    $.alert "user logout"
-
+    $.alert "user logout process"
 
 
 
@@ -1015,10 +1031,10 @@ class Tracktime.ActionView.ListBtn extends Backbone.View
 (module?.exports = Tracktime.ActionView.ListBtn) or @Tracktime.ActionView.ListBtn = Tracktime.ActionView.ListBtn
 
 
-class Tracktime.AppView extends Backbone.View
+class Tracktime.AdminView extends Backbone.View
   el: '#panel'
   className: ''
-  layoutTemplate: JST['global/app']
+  template: JST['admin/index']
   views: {}
 
   initialize: ->
@@ -1026,7 +1042,79 @@ class Tracktime.AppView extends Backbone.View
 
   render: ->
     # $(document).title @model.get 'title'
-    @$el.html @layoutTemplate @model.toJSON()
+    @$el.html @template()
+
+  initUI: ->
+    $.material.init()
+
+
+(module?.exports = Tracktime.AdminView) or @Tracktime.AdminView = Tracktime.AdminView
+
+
+class Tracktime.AdminView.Actions extends Backbone.View
+  container: '#main'
+  template: JST['admin/actions']
+
+  initialize: () ->
+    @render()
+
+  render: () ->
+    $(@container).html @$el.html @template {title: 'Actions'}
+
+(module?.exports = Tracktime.AdminView.Actions) or @Tracktime.AdminView.Actions = Tracktime.AdminView.Actions
+
+
+class Tracktime.AdminView.Dashboard extends Backbone.View
+  container: '#main'
+  template: JST['admin/dashboard']
+
+  initialize: () ->
+    @render()
+
+  render: () ->
+    $(@container).html @$el.html @template()
+
+(module?.exports = Tracktime.AdminView.Dashboard) or @Tracktime.AdminView.Dashboard = Tracktime.AdminView.Dashboard
+
+
+class Tracktime.AdminView.Projects extends Backbone.View
+  container: '#main'
+  template: JST['admin/projects']
+
+  initialize: () ->
+    @render()
+
+  render: () ->
+    $(@container).html @$el.html @template {title: 'Projects'}
+
+(module?.exports = Tracktime.AdminView.Projects) or @Tracktime.AdminView.Projects = Tracktime.AdminView.Projects
+
+
+class Tracktime.AdminView.Users extends Backbone.View
+  container: '#main'
+  template: JST['admin/users']
+
+  initialize: () ->
+    @render()
+
+  render: () ->
+    $(@container).html @$el.html @template()
+
+(module?.exports = Tracktime.AdminView.Users) or @Tracktime.AdminView.Users = Tracktime.AdminView.Users
+
+
+class Tracktime.AppView extends Backbone.View
+  el: '#panel'
+  className: ''
+  template: JST['global/app']
+  views: {}
+
+  initialize: ->
+    @render()
+
+  render: ->
+    # $(document).title @model.get 'title'
+    @$el.html @template @model.toJSON()
 
   initUI: ->
     $.material.init()
@@ -1189,6 +1277,32 @@ class Tracktime.AppView.Menu extends Backbone.View
 (module?.exports = Tracktime.AppView.Menu) or @Tracktime.AppView.Menu = Tracktime.AppView.Menu
 
 
+class Tracktime.ProjectView extends Backbone.View
+  container: '#main'
+  template: JST['projects/project']
+
+  initialize: () ->
+    @render()
+
+  render: () ->
+    $(@container).html @$el.html @template {title: 'Project Details HERE'}
+
+(module?.exports = Tracktime.ProjectView) or @Tracktime.ProjectView = Tracktime.ProjectView
+
+
+class Tracktime.ProjectsView extends Backbone.View
+  container: '#main'
+  template: JST['projecs/projecs']
+
+  initialize: () ->
+    @render()
+
+  render: () ->
+    $(@container).html @$el.html @template {title: 'Projects HERE'}
+
+(module?.exports = Tracktime.ProjectsView) or @Tracktime.ProjectsView = Tracktime.ProjectsView
+
+
 class Tracktime.RecordView extends Backbone.View
   tagName: 'li'
   className: 'records-group-item shadow-z-1'
@@ -1290,4 +1404,69 @@ class Tracktime.RecordsView extends Backbone.View
     recordView.close() if recordView
 
 (module?.exports = Tracktime.RecordsView) or @Tracktime.RecordsView = Tracktime.RecordsView
+
+
+class Tracktime.ReportView extends Backbone.View
+  container: '#main'
+  template: JST['reports/report']
+
+  initialize: () ->
+    @render()
+
+  render: () ->
+    $(@container).html @$el.html @template {title: 'Report Details HERE'}
+
+(module?.exports = Tracktime.ReportView) or @Tracktime.ReportView = Tracktime.ReportView
+
+
+class Tracktime.ReportsView extends Backbone.View
+  container: '#main'
+  template: JST['reports/reports']
+
+  initialize: () ->
+    @render()
+
+  render: () ->
+    $(@container).html @$el.html @template {title: 'Reports HERE'}
+
+(module?.exports = Tracktime.ReportsView) or @Tracktime.ReportsView = Tracktime.ReportsView
+
+
+class Tracktime.UserView extends Backbone.View
+  container: '#main'
+  template: JST['user/user']
+
+  initialize: () ->
+    @render()
+
+  render: () ->
+    $(@container).html @$el.html @template {title: 'User index'}
+
+(module?.exports = Tracktime.UserView) or @Tracktime.UserView = Tracktime.UserView
+
+
+class Tracktime.UserView.Details extends Backbone.View
+  container: '#main'
+  template: JST['user/details']
+
+  initialize: () ->
+    @render()
+
+  render: () ->
+    $(@container).html @$el.html @template {title: 'User details HERE'}
+
+(module?.exports = Tracktime.UserView.Details) or @Tracktime.UserView.Details = Tracktime.UserView.Details
+
+
+class Tracktime.UserView.Rates extends Backbone.View
+  container: '#main'
+  template: JST['user/rates']
+
+  initialize: () ->
+    @render()
+
+  render: () ->
+    $(@container).html @$el.html @template {title: 'User Rates'}
+
+(module?.exports = Tracktime.UserView.Rates) or @Tracktime.UserView.Rates = Tracktime.UserView.Rates
 

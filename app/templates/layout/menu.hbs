@@ -6,10 +6,6 @@
         </label>
     </div>
 </div>
-<div class="list-style-group">
-  {{link_to class="list-group-item" href='#page1' body='Page 1'}}
-  {{link_to class="list-group-item" href='#page2' body='Page 2'}}
-</div>
 
 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
     <div class="panel panel-default">
@@ -54,6 +50,7 @@
     </a>
         <div id="admin-section" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingAdmin">
             <div class="list-style-group">
+                {{link_to class="list-group-item" href='#admin/dashboard' body='Dashboard'}}
                 {{link_to class="list-group-item" href='#admin/users' body='Users list'}}
                 {{link_to class="list-group-item" href='#admin/projects' body='Projects list'}}
                 {{link_to class="list-group-item" href='#admin/actions' body='Actions list'}}
@@ -61,7 +58,7 @@
         </div>
     </div>
     <div class="panel panel-default">
-        <a class="btn btn-material-yellow btn-block" data-parent="#accordion" href="#stats-section" aria-expanded="true" aria-controls="stats-section" role="tab" id="headingStats">
+        <a class="btn btn-material-yellow btn-block" data-parent="#accordion" href="#user/rates" aria-expanded="true" aria-controls="stats-section" role="tab" id="headingStats">
       Stats
     </a>
         <div id="stats-section" role="tabpanel" aria-labelledby="headingStats">

@@ -7,11 +7,15 @@ class Tracktime.ReportsRouter extends Backbone.SubRoute
     ':id/add':      'add'
     ':id/save':     'save'
 
+  initialize: (options) ->
+    _.extend @, options
+    @parent.view.setSubView 'main', new Tracktime.ReportsView()
+
   list: () ->
-    $.alert "reports list"
+    @parent.view.setSubView 'main', new Tracktime.ReportsView()
 
   details: (id) ->
-    $.alert "reports details #{id}"
+    @parent.view.setSubView 'main', new Tracktime.ReportView()
 
   edit: (id) ->
     $.alert "reports edit #{id}"

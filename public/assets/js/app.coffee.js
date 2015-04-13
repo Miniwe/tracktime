@@ -934,21 +934,31 @@
     }
 
     AdminRouter.prototype.routes = {
+      '': 'dashboard',
       'users': 'users',
       'projects': 'projects',
+      'dashboard': 'dashboard',
       'actions': 'actions'
     };
 
+    AdminRouter.prototype.initialize = function(options) {
+      return _.extend(this, options);
+    };
+
+    AdminRouter.prototype.dashboard = function() {
+      return this.parent.view.setSubView('main', new Tracktime.AdminView.Dashboard());
+    };
+
     AdminRouter.prototype.users = function() {
-      return $.alert("admin users");
+      return this.parent.view.setSubView('main', new Tracktime.AdminView.Users());
     };
 
     AdminRouter.prototype.projects = function() {
-      return $.alert("admin projects");
+      return this.parent.view.setSubView('main', new Tracktime.AdminView.Projects());
     };
 
     AdminRouter.prototype.actions = function() {
-      return $.alert("admin actions");
+      return this.parent.view.setSubView('main', new Tracktime.AdminView.Actions());
     };
 
     return AdminRouter;
@@ -1025,7 +1035,6 @@
     };
 
     AppRouter.prototype.index = function() {
-      $.alert('index');
       return this.navigate('projects', {
         trigger: true,
         replace: false
@@ -1060,18 +1069,20 @@
     };
 
     ProjectsRouter.prototype.initialize = function(options) {
-      _.extend(this, options);
+      return _.extend(this, options);
+    };
+
+    ProjectsRouter.prototype.list = function() {
+      $.alert("whole records list in projects section");
       return this.parent.view.setSubView('main', new Tracktime.RecordsView({
         collection: this.parent.model.get('records')
       }));
     };
 
-    ProjectsRouter.prototype.list = function() {
-      return $.alert("projects list");
-    };
-
     ProjectsRouter.prototype.details = function(id) {
-      return $.alert("projects details " + id);
+      return this.parent.view.setSubView('main', new Tracktime.RecordsView({
+        collection: this.parent.model.get('records')
+      }));
     };
 
     ProjectsRouter.prototype.edit = function(id) {
@@ -1162,12 +1173,17 @@
       ':id/save': 'save'
     };
 
+    ReportsRouter.prototype.initialize = function(options) {
+      _.extend(this, options);
+      return this.parent.view.setSubView('main', new Tracktime.ReportsView());
+    };
+
     ReportsRouter.prototype.list = function() {
-      return $.alert("reports list");
+      return this.parent.view.setSubView('main', new Tracktime.ReportsView());
     };
 
     ReportsRouter.prototype.details = function(id) {
-      return $.alert("reports details " + id);
+      return this.parent.view.setSubView('main', new Tracktime.ReportView());
     };
 
     ReportsRouter.prototype.edit = function(id) {
@@ -1205,16 +1221,20 @@
       'logout': 'logout'
     };
 
+    UserRouter.prototype.initialize = function(options) {
+      return _.extend(this, options);
+    };
+
     UserRouter.prototype.details = function() {
-      return $.alert("user details");
+      return this.parent.view.setSubView('main', new Tracktime.UserView.Details());
     };
 
     UserRouter.prototype.rates = function() {
-      return $.alert("user rates");
+      return this.parent.view.setSubView('main', new Tracktime.UserView.Rates());
     };
 
     UserRouter.prototype.logout = function() {
-      return $.alert("user logout");
+      return $.alert("user logout process");
     };
 
     return UserRouter;
@@ -1404,6 +1424,143 @@
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.ActionView.ListBtn : void 0) || (this.Tracktime.ActionView.ListBtn = Tracktime.ActionView.ListBtn);
 
+  Tracktime.AdminView = (function(superClass) {
+    extend(AdminView, superClass);
+
+    function AdminView() {
+      return AdminView.__super__.constructor.apply(this, arguments);
+    }
+
+    AdminView.prototype.el = '#panel';
+
+    AdminView.prototype.className = '';
+
+    AdminView.prototype.template = JST['admin/index'];
+
+    AdminView.prototype.views = {};
+
+    AdminView.prototype.initialize = function() {
+      return this.render();
+    };
+
+    AdminView.prototype.render = function() {
+      return this.$el.html(this.template());
+    };
+
+    AdminView.prototype.initUI = function() {
+      return $.material.init();
+    };
+
+    return AdminView;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AdminView : void 0) || (this.Tracktime.AdminView = Tracktime.AdminView);
+
+  Tracktime.AdminView.Actions = (function(superClass) {
+    extend(Actions, superClass);
+
+    function Actions() {
+      return Actions.__super__.constructor.apply(this, arguments);
+    }
+
+    Actions.prototype.container = '#main';
+
+    Actions.prototype.template = JST['admin/actions'];
+
+    Actions.prototype.initialize = function() {
+      return this.render();
+    };
+
+    Actions.prototype.render = function() {
+      return $(this.container).html(this.$el.html(this.template({
+        title: 'Actions'
+      })));
+    };
+
+    return Actions;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AdminView.Actions : void 0) || (this.Tracktime.AdminView.Actions = Tracktime.AdminView.Actions);
+
+  Tracktime.AdminView.Dashboard = (function(superClass) {
+    extend(Dashboard, superClass);
+
+    function Dashboard() {
+      return Dashboard.__super__.constructor.apply(this, arguments);
+    }
+
+    Dashboard.prototype.container = '#main';
+
+    Dashboard.prototype.template = JST['admin/dashboard'];
+
+    Dashboard.prototype.initialize = function() {
+      return this.render();
+    };
+
+    Dashboard.prototype.render = function() {
+      return $(this.container).html(this.$el.html(this.template()));
+    };
+
+    return Dashboard;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AdminView.Dashboard : void 0) || (this.Tracktime.AdminView.Dashboard = Tracktime.AdminView.Dashboard);
+
+  Tracktime.AdminView.Projects = (function(superClass) {
+    extend(Projects, superClass);
+
+    function Projects() {
+      return Projects.__super__.constructor.apply(this, arguments);
+    }
+
+    Projects.prototype.container = '#main';
+
+    Projects.prototype.template = JST['admin/projects'];
+
+    Projects.prototype.initialize = function() {
+      return this.render();
+    };
+
+    Projects.prototype.render = function() {
+      return $(this.container).html(this.$el.html(this.template({
+        title: 'Projects'
+      })));
+    };
+
+    return Projects;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AdminView.Projects : void 0) || (this.Tracktime.AdminView.Projects = Tracktime.AdminView.Projects);
+
+  Tracktime.AdminView.Users = (function(superClass) {
+    extend(Users, superClass);
+
+    function Users() {
+      return Users.__super__.constructor.apply(this, arguments);
+    }
+
+    Users.prototype.container = '#main';
+
+    Users.prototype.template = JST['admin/users'];
+
+    Users.prototype.initialize = function() {
+      return this.render();
+    };
+
+    Users.prototype.render = function() {
+      return $(this.container).html(this.$el.html(this.template()));
+    };
+
+    return Users;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AdminView.Users : void 0) || (this.Tracktime.AdminView.Users = Tracktime.AdminView.Users);
+
   Tracktime.AppView = (function(superClass) {
     extend(AppView, superClass);
 
@@ -1415,7 +1572,7 @@
 
     AppView.prototype.className = '';
 
-    AppView.prototype.layoutTemplate = JST['global/app'];
+    AppView.prototype.template = JST['global/app'];
 
     AppView.prototype.views = {};
 
@@ -1424,7 +1581,7 @@
     };
 
     AppView.prototype.render = function() {
-      return this.$el.html(this.layoutTemplate(this.model.toJSON()));
+      return this.$el.html(this.template(this.model.toJSON()));
     };
 
     AppView.prototype.initUI = function() {
@@ -1682,6 +1839,60 @@
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AppView.Menu : void 0) || (this.Tracktime.AppView.Menu = Tracktime.AppView.Menu);
 
+  Tracktime.ProjectView = (function(superClass) {
+    extend(ProjectView, superClass);
+
+    function ProjectView() {
+      return ProjectView.__super__.constructor.apply(this, arguments);
+    }
+
+    ProjectView.prototype.container = '#main';
+
+    ProjectView.prototype.template = JST['projects/project'];
+
+    ProjectView.prototype.initialize = function() {
+      return this.render();
+    };
+
+    ProjectView.prototype.render = function() {
+      return $(this.container).html(this.$el.html(this.template({
+        title: 'Project Details HERE'
+      })));
+    };
+
+    return ProjectView;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.ProjectView : void 0) || (this.Tracktime.ProjectView = Tracktime.ProjectView);
+
+  Tracktime.ProjectsView = (function(superClass) {
+    extend(ProjectsView, superClass);
+
+    function ProjectsView() {
+      return ProjectsView.__super__.constructor.apply(this, arguments);
+    }
+
+    ProjectsView.prototype.container = '#main';
+
+    ProjectsView.prototype.template = JST['projecs/projecs'];
+
+    ProjectsView.prototype.initialize = function() {
+      return this.render();
+    };
+
+    ProjectsView.prototype.render = function() {
+      return $(this.container).html(this.$el.html(this.template({
+        title: 'Projects HERE'
+      })));
+    };
+
+    return ProjectsView;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.ProjectsView : void 0) || (this.Tracktime.ProjectsView = Tracktime.ProjectsView);
+
   Tracktime.RecordView = (function(superClass) {
     extend(RecordView, superClass);
 
@@ -1846,6 +2057,141 @@
   })(Backbone.View);
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.RecordsView : void 0) || (this.Tracktime.RecordsView = Tracktime.RecordsView);
+
+  Tracktime.ReportView = (function(superClass) {
+    extend(ReportView, superClass);
+
+    function ReportView() {
+      return ReportView.__super__.constructor.apply(this, arguments);
+    }
+
+    ReportView.prototype.container = '#main';
+
+    ReportView.prototype.template = JST['reports/report'];
+
+    ReportView.prototype.initialize = function() {
+      return this.render();
+    };
+
+    ReportView.prototype.render = function() {
+      return $(this.container).html(this.$el.html(this.template({
+        title: 'Report Details HERE'
+      })));
+    };
+
+    return ReportView;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.ReportView : void 0) || (this.Tracktime.ReportView = Tracktime.ReportView);
+
+  Tracktime.ReportsView = (function(superClass) {
+    extend(ReportsView, superClass);
+
+    function ReportsView() {
+      return ReportsView.__super__.constructor.apply(this, arguments);
+    }
+
+    ReportsView.prototype.container = '#main';
+
+    ReportsView.prototype.template = JST['reports/reports'];
+
+    ReportsView.prototype.initialize = function() {
+      return this.render();
+    };
+
+    ReportsView.prototype.render = function() {
+      return $(this.container).html(this.$el.html(this.template({
+        title: 'Reports HERE'
+      })));
+    };
+
+    return ReportsView;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.ReportsView : void 0) || (this.Tracktime.ReportsView = Tracktime.ReportsView);
+
+  Tracktime.UserView = (function(superClass) {
+    extend(UserView, superClass);
+
+    function UserView() {
+      return UserView.__super__.constructor.apply(this, arguments);
+    }
+
+    UserView.prototype.container = '#main';
+
+    UserView.prototype.template = JST['user/user'];
+
+    UserView.prototype.initialize = function() {
+      return this.render();
+    };
+
+    UserView.prototype.render = function() {
+      return $(this.container).html(this.$el.html(this.template({
+        title: 'User index'
+      })));
+    };
+
+    return UserView;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.UserView : void 0) || (this.Tracktime.UserView = Tracktime.UserView);
+
+  Tracktime.UserView.Details = (function(superClass) {
+    extend(Details, superClass);
+
+    function Details() {
+      return Details.__super__.constructor.apply(this, arguments);
+    }
+
+    Details.prototype.container = '#main';
+
+    Details.prototype.template = JST['user/details'];
+
+    Details.prototype.initialize = function() {
+      return this.render();
+    };
+
+    Details.prototype.render = function() {
+      return $(this.container).html(this.$el.html(this.template({
+        title: 'User details HERE'
+      })));
+    };
+
+    return Details;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.UserView.Details : void 0) || (this.Tracktime.UserView.Details = Tracktime.UserView.Details);
+
+  Tracktime.UserView.Rates = (function(superClass) {
+    extend(Rates, superClass);
+
+    function Rates() {
+      return Rates.__super__.constructor.apply(this, arguments);
+    }
+
+    Rates.prototype.container = '#main';
+
+    Rates.prototype.template = JST['user/rates'];
+
+    Rates.prototype.initialize = function() {
+      return this.render();
+    };
+
+    Rates.prototype.render = function() {
+      return $(this.container).html(this.$el.html(this.template({
+        title: 'User Rates'
+      })));
+    };
+
+    return Rates;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.UserView.Rates : void 0) || (this.Tracktime.UserView.Rates = Tracktime.UserView.Rates);
 
 }).call(this);
 

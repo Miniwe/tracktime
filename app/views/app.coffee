@@ -1,7 +1,7 @@
 class Tracktime.AppView extends Backbone.View
   el: '#panel'
   className: ''
-  layoutTemplate: JST['global/app']
+  template: JST['global/app']
   views: {}
 
   initialize: ->
@@ -9,7 +9,7 @@ class Tracktime.AppView extends Backbone.View
 
   render: ->
     # $(document).title @model.get 'title'
-    @$el.html @layoutTemplate @model.toJSON()
+    @$el.html @template @model.toJSON()
 
   initUI: ->
     $.material.init()

@@ -1,17 +1,26 @@
 class Tracktime.AdminRouter extends Backbone.SubRoute
   routes:
-    'users':    'users'
-    'projects': 'projects'
-    'actions':  'actions'
+    '':          'dashboard'
+    'users':     'users'
+    'projects':  'projects'
+    'dashboard': 'dashboard'
+    'actions':   'actions'
+
+  initialize: (options) ->
+    _.extend @, options
+    # @parent.view.setSubView 'main', new Tracktime.AdminView()
+
+  dashboard: () ->
+    @parent.view.setSubView 'main', new Tracktime.AdminView.Dashboard()
 
   users: () ->
-    $.alert "admin users"
+    @parent.view.setSubView 'main', new Tracktime.AdminView.Users()
 
   projects: () ->
-    $.alert "admin projects"
+    @parent.view.setSubView 'main', new Tracktime.AdminView.Projects()
 
   actions: () ->
-    $.alert "admin actions"
+    @parent.view.setSubView 'main', new Tracktime.AdminView.Actions()
 
 
 

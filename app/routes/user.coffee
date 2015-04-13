@@ -4,15 +4,19 @@ class Tracktime.UserRouter extends Backbone.SubRoute
     'rates':  'rates'
     'logout': 'logout'
 
+
+  initialize: (options) ->
+    _.extend @, options
+    # @parent.view.setSubView 'main', new Tracktime.UserView()
+
   details: () ->
-    $.alert "user details"
+    @parent.view.setSubView 'main', new Tracktime.UserView.Details()
 
   rates: () ->
-    $.alert "user rates"
+    @parent.view.setSubView 'main', new Tracktime.UserView.Rates()
 
   logout: () ->
-    $.alert "user logout"
-
+    $.alert "user logout process"
 
 
 

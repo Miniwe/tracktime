@@ -9,13 +9,13 @@ class Tracktime.ProjectsRouter extends Backbone.SubRoute
 
   initialize: (options) ->
     _.extend @, options
-    @parent.view.setSubView 'main', new Tracktime.RecordsView collection: @parent.model.get 'records'
 
   list: () ->
-    $.alert "projects list"
+    $.alert "whole records list in projects section"
+    @parent.view.setSubView 'main', new Tracktime.RecordsView collection: @parent.model.get 'records'
 
   details: (id) ->
-    $.alert "projects details #{id}"
+    @parent.view.setSubView 'main', new Tracktime.RecordsView collection: @parent.model.get 'records'
 
   edit: (id) ->
     $.alert "projects edit #{id}"
