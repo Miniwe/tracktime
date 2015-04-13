@@ -20,7 +20,7 @@ class Tracktime extends Backbone.Model
       $.alert
         content: 'save success'
         timeout: 2000
-        style: 'btn-info'
+        style: 'btn-success'
       @get('actions').getActive().successAdd()
     error = () =>
       $.alert 'save error'

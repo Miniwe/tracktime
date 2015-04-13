@@ -29516,7 +29516,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
           $.alert({
             content: 'save success',
             timeout: 2000,
-            style: 'btn-info'
+            style: 'btn-success'
           });
           return _this.get('actions').getActive().successAdd();
         };
@@ -29803,12 +29803,14 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
           }
           return Backbone.sync(method, model, options);
         case 'delete':
-          model.save({
-            'isDeleted': true
-          }, {
-            ajaxSync: false
-          });
-          if (options.ajaxSync) {
+          console.log('call delete', options);
+          if (options.ajaxSync === true) {
+            console.log('indel 1 + sync', model);
+            model.save({
+              'isDeleted': true
+            }, {
+              ajaxSync: false
+            });
             _success = options.success;
             _model = model;
             options.success = function(model, response) {
@@ -29816,6 +29818,9 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
               options.success = _success;
               return Backbone.sync(method, _model, options);
             };
+            return Backbone.sync(method, model, options);
+          } else {
+            console.log('indel 1 + now', model, options);
             return Backbone.sync(method, model, options);
           }
           break;
@@ -29981,15 +29986,25 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
           var collectionModel, destroedModel, modelLastAccess, newModel, replacedModel;
           collectionModel = _this.get(model._id);
           if (model.isDeleted) {
-            modelLastAccess = (new Date(model.lastAccess)).getTime();
-            if ((collectionModel != null) && modelLastAccess > (new Date(collectionModel.get('lastAccess'))).getTime()) {
-              destroedModel = collectionModel;
+            if (model._id.length > 24) {
+              destroedModel = new Tracktime.Record({
+                _id: model._id,
+                subject: 'model to delete'
+              });
+              return destroedModel.destroy({
+                ajaxSync: false
+              });
             } else {
-              destroedModel = new Tracktime.Record(model);
+              modelLastAccess = (new Date(model.lastAccess)).getTime();
+              if ((collectionModel != null) && modelLastAccess > (new Date(collectionModel.get('lastAccess'))).getTime()) {
+                destroedModel = collectionModel;
+              } else {
+                destroedModel = new Tracktime.Record(model);
+              }
+              return destroedModel.destroy({
+                ajaxSync: true
+              });
             }
-            return destroedModel.destroy({
-              ajaxSync: true
-            });
           } else {
             if (!collectionModel) {
               replacedModel = new Tracktime.Record({
@@ -31218,9 +31233,11 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     RecordsView.prototype.className = 'records-group';
 
     RecordsView.prototype.initialize = function() {
+      this.views = {};
       this.render();
       this.listenTo(this.collection, "reset", this.resetRecordsList);
-      return this.listenTo(this.collection, "add remove", this.updateRecordsList);
+      this.listenTo(this.collection, "add", this.addRecord);
+      return this.listenTo(this.collection, "remove", this.removeRecord);
     };
 
     RecordsView.prototype.render = function() {
@@ -31229,8 +31246,6 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     };
 
     RecordsView.prototype.resetRecordsList = function() {
-      var args;
-      args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
       return _.each(this.collection.where({
         isDeleted: false
       }), (function(_this) {
@@ -31239,18 +31254,27 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
           recordView = new Tracktime.RecordView({
             model: record
           });
-          return _this.$el.append(recordView.el);
+          _this.$el.append(recordView.el);
+          return _this.setSubView("record-" + record.cid, recordView);
         };
       })(this), this);
     };
 
-    RecordsView.prototype.updateRecordsList = function(record, collection, params) {
+    RecordsView.prototype.addRecord = function(record, collection, params) {
       var recordView;
-      if (params.add) {
-        recordView = new Tracktime.RecordView({
-          model: record
-        });
-        return this.$el.prepend(recordView.el);
+      recordView = new Tracktime.RecordView({
+        model: record
+      });
+      $(recordView.el).prependTo(this.$el);
+      return this.setSubView("record-" + record.cid, recordView);
+    };
+
+    RecordsView.prototype.removeRecord = function() {
+      var args, record, recordView;
+      record = arguments[0], args = 2 <= arguments.length ? slice.call(arguments, 1) : [];
+      recordView = this.getSubView("record-" + record.cid);
+      if (recordView) {
+        return recordView.close();
       }
     };
 

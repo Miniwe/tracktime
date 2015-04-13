@@ -60,14 +60,18 @@ class Tracktime.RecordsCollection extends Backbone.Collection
       collectionModel = @get(model._id)
       # если удалена
       if model.isDeleted
-        modelLastAccess = (new Date(model.lastAccess)).getTime()
-        if collectionModel? and modelLastAccess > (new Date(collectionModel.get('lastAccess'))).getTime()
-          destroedModel = collectionModel
+        if model._id.length > 24
+          destroedModel = new Tracktime.Record {_id: model._id, subject: 'model to delete'}
+          destroedModel.destroy ajaxSync: false
         else
-          destroedModel = new Tracktime.Record(model)
-        # то удаляем локально и удаленно
-        # и из коллекции если есть
-        destroedModel.destroy ajaxSync: true
+          modelLastAccess = (new Date(model.lastAccess)).getTime()
+          if collectionModel? and modelLastAccess > (new Date(collectionModel.get('lastAccess'))).getTime()
+            destroedModel = collectionModel
+          else
+            destroedModel = new Tracktime.Record(model)
+          # то удаляем локально и удаленно
+          # и из коллекции если есть
+          destroedModel.destroy ajaxSync: true
       else
         # если нет в коллекции
         unless collectionModel

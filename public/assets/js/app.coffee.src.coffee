@@ -50,7 +50,7 @@ class Tracktime extends Backbone.Model
       $.alert
         content: 'save success'
         timeout: 2000
-        style: 'btn-info'
+        style: 'btn-success'
       @get('actions').getActive().successAdd()
     error = () =>
       $.alert 'save error'
@@ -272,15 +272,19 @@ class Tracktime.Record extends Backbone.Model
             Backbone.sync method, _model, options
         Backbone.sync method, model, options
       when 'delete'
-        model.save {'isDeleted': true}, {ajaxSync: false}
-        if options.ajaxSync
+        console.log 'call delete', options
+        if options.ajaxSync == true
+          console.log 'indel 1 + sync', model
+          model.save {'isDeleted': true}, {ajaxSync: false}
           _success = options.success
           _model = model
           options.success = (model, response) ->
             options.ajaxSync = !options.ajaxSync
             options.success = _success
             Backbone.sync method, _model, options
-
+          Backbone.sync method, model, options
+        else
+          console.log 'indel 1 + now', model, options
           Backbone.sync method, model, options
       else
         $.alert "unknown method #{method}"
@@ -386,14 +390,18 @@ class Tracktime.RecordsCollection extends Backbone.Collection
       collectionModel = @get(model._id)
       # если удалена
       if model.isDeleted
-        modelLastAccess = (new Date(model.lastAccess)).getTime()
-        if collectionModel? and modelLastAccess > (new Date(collectionModel.get('lastAccess'))).getTime()
-          destroedModel = collectionModel
+        if model._id.length > 24
+          destroedModel = new Tracktime.Record {_id: model._id, subject: 'model to delete'}
+          destroedModel.destroy ajaxSync: false
         else
-          destroedModel = new Tracktime.Record(model)
-        # то удаляем локально и удаленно
-        # и из коллекции если есть
-        destroedModel.destroy ajaxSync: true
+          modelLastAccess = (new Date(model.lastAccess)).getTime()
+          if collectionModel? and modelLastAccess > (new Date(collectionModel.get('lastAccess'))).getTime()
+            destroedModel = collectionModel
+          else
+            destroedModel = new Tracktime.Record(model)
+          # то удаляем локально и удаленно
+          # и из коллекции если есть
+          destroedModel.destroy ajaxSync: true
       else
         # если нет в коллекции
         unless collectionModel
@@ -1255,24 +1263,31 @@ class Tracktime.RecordsView extends Backbone.View
   className: 'records-group'
 
   initialize: () ->
+    @views = {}
     @render()
     @listenTo @collection, "reset", @resetRecordsList
-    @listenTo @collection, "add remove", @updateRecordsList
+    @listenTo @collection, "add", @addRecord
+    @listenTo @collection, "remove", @removeRecord
 
   render: () ->
     $(@container).html @$el.html('')
     @resetRecordsList()
 
-  resetRecordsList: (args...) ->
+  resetRecordsList: () ->
     _.each @collection.where(isDeleted: false), (record) =>
-      recordView = new Tracktime.RecordView { model: record }
+      recordView =  new Tracktime.RecordView { model: record }
       @$el.append recordView.el
+      @setSubView "record-#{record.cid}", recordView
     , @
 
-  updateRecordsList: (record, collection, params) ->
-    if params.add
-      recordView = new Tracktime.RecordView { model: record }
-      @$el.prepend recordView.el
+  addRecord: (record, collection, params) ->
+    recordView = new Tracktime.RecordView { model: record }
+    $(recordView.el).prependTo @$el
+    @setSubView "record-#{record.cid}", recordView
+
+  removeRecord: (record, args...) ->
+    recordView = @getSubView "record-#{record.cid}"
+    recordView.close() if recordView
 
 (module?.exports = Tracktime.RecordsView) or @Tracktime.RecordsView = Tracktime.RecordsView
 
