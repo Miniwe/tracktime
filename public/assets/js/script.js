@@ -29482,7 +29482,7 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
   return "<div class=\"thumbnail\">user rates</div>";
   },"useData":true});
 (function() {
-  var Lokitest, Tracktime, config, development, process, production, ref, test,
+  var Tracktime, config, development, process, production, ref, test,
     extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     hasProp = {}.hasOwnProperty,
     slice = [].slice,
@@ -30083,75 +30083,6 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
   })(Backbone.Model);
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.Action.Details : void 0) || (this.Tracktime.Action.Details = Tracktime.Action.Details);
-
-  Lokitest = (function() {
-    function Lokitest() {
-      var LokiJS;
-      this.test('Start loki</li>');
-      LokiJS = require('lokijs');
-      this.db = new LokiJS('users_1.json');
-      $('.add-users').on('click', (function(_this) {
-        return function(event) {
-          console.log('add-users');
-          event.preventDefault();
-          return _this.add();
-        };
-      })(this));
-      $('.get-users').on('click', (function(_this) {
-        return function(event) {
-          console.log('get-users');
-          event.preventDefault();
-          return _this.get();
-        };
-      })(this));
-      return;
-    }
-
-    Lokitest.prototype.test = function(msg) {
-      if (msg) {
-        $('h1').html(msg);
-      }
-    };
-
-    Lokitest.prototype.add = function() {
-      var users;
-      users = this.db.addCollection('users', {
-        indices: ['name']
-      });
-      users.insert({
-        name: 'User 10',
-        user: 20
-      });
-      users.insert({
-        name: 'User 11',
-        user: 21
-      });
-      users.insert({
-        name: 'User 12',
-        user: 22
-      });
-      this.db.saveDatabase();
-    };
-
-    Lokitest.prototype.get = function() {
-      this.db.loadDatabase({}, (function(_this) {
-        return function() {
-          var users;
-          users = _this.db.getCollection('users');
-          if (users) {
-            console.log('users', users.data);
-          } else {
-            console.log('no users Data');
-            console.log('will create');
-            _this.add();
-          }
-        };
-      })(this));
-    };
-
-    return Lokitest;
-
-  })();
 
   Tracktime.Project = (function(superClass) {
     extend(Project, superClass);
