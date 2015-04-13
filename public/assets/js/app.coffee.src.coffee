@@ -4,18 +4,21 @@ process = process or window.process or {}
 production =
   SERVER: 'https://ttpms.herokuapp.com'
   collection:
-    records: 'records-backbone'
-    actions: 'actions-backbone'
+    records: 'records'
+    projects: 'projects'
+    actions: 'actions'
 test =
   SERVER: 'http://localhost:5000'
   collection:
-    records: 'records-backbone'
-    actions: 'actions-backbone'
+    records: 'records'
+    projects: 'projects'
+    actions: 'actions'
 development =
   SERVER: 'http://localhost:5000'
   collection:
-    records: 'records-backbone'
-    actions: 'actions-backbone'
+    records: 'records'
+    projects: 'projects'
+    actions: 'actions'
 
 
 switch window.process.env?.NODE_ENV
@@ -62,458 +65,6 @@ class Tracktime extends Backbone.Model
     @set 'actions', new Tracktime.ActionsCollection Tracktime.initdata.tmpActions
 
 (module?.exports = Tracktime) or @Tracktime = Tracktime
-
-class Tracktime.Action extends Backbone.Model
-
-  idAttribute: "_id"
-  url: '/actions' #receive on activate actions for user (!)
-
-  defaults:
-    _id: null
-    title: 'Default action title'
-    formAction: '#'
-    btnClass: 'btn-default'
-    navbarClass: 'navbar-material-amber'
-    icon:
-      className: 'mdi-editor-mode-edit'
-      letter: ''
-    isActive: false
-    isVisible: false
-    inputValue: ''
-    details: null # Tracktime.Action.Details or null
-
-  validation: () ->
-    # @todo make details validation
-
-  attributes: () ->
-    id: @model.cid
-
-  constructor: (args...) ->
-    super args...
-
-  initialize: () ->
-    @set 'details', new Tracktime.Action.Details()
-
-  setActive: () ->
-    @collection.setActive @
-
-  processAction: (options) ->
-    @set 'inputValue', options.subject
-    @get('details').set(options) # @todo remove possible
-    @newRecord() #@todo эта функция будет определятся в зависимости от типа action
-    # @search() #@todo эта функция будет определятся в зависимости от типа action
-
-  newRecord: () ->
-    Tracktime.AppChannel.command 'newRecord', _.extend {project: 0}, @get('details').attributes
-
-  search: () ->
-    $.alert 'search under construction'
-
-  successAdd: () ->
-    @set 'inputValue', ''
-    # @details.reset() # @todo on change details change view controls
-
-(module?.exports = Tracktime.Action) or @Tracktime.Action = Tracktime.Action
-
-
-
-# actions
-#   options
-#     details = view and model
-#   onChangeDetails: function to apply details
-#   save and restore selectedAction
-# actinView:
-#  when детали openicon is крестик
-#   сохраняются данные деталей автоматически
-#   крестик очищает и закрывает
-#   при потере фокуса с деталей сохранненые автоматичеки выводятся рядом с subject
-
-
-
-
-
-class Tracktime.Action.Details extends Backbone.Model
-
-
-(module?.exports = Tracktime.Action.Details) or @Tracktime.Action.Details = Tracktime.Action.Details
-
-class Lokitest
-  constructor: () ->
-    @test 'Start loki</li>'
-    LokiJS = require('lokijs')
-    @db = new LokiJS('users_1.json')
-
-    $('.add-users').on 'click', (event) =>
-      console.log 'add-users'
-      event.preventDefault()
-      @add()
-
-    $('.get-users').on 'click', (event) =>
-      console.log 'get-users'
-      event.preventDefault()
-      @get()
-
-    return
-
-  test : (msg) ->
-    $('h1').html(msg) if msg
-    return
-
-  add : () ->
-    users = @db.addCollection('users', indices: [ 'name' ])
-    users.insert
-      name: 'User 10'
-      user: 20
-    users.insert
-      name: 'User 11'
-      user: 21
-    users.insert
-      name: 'User 12'
-      user: 22
-    # console.log(users.data);
-    @db.saveDatabase()
-    return
-
-  get : () ->
-    @db.loadDatabase {}, =>
-      users = @db.getCollection('users')
-      # var records = users.data.length;
-      if users
-        console.log 'users', users.data
-      else
-        console.log 'no users Data'
-        console.log 'will create'
-        @add()
-      return
-    return
-
-class Tracktime.Model extends Backbone.Model
-
-  url: '/models'
-
-  validation:
-    field:
-      required: true
-    someAttribute: (value) ->
-      return 'Error message' if value isnt 'somevalue'
-
-  constructor: () ->
-    return
-
-  initialize: () ->
-    return
-
-
-(module?.exports = Tracktime.Model) or @Tracktime.Model = Tracktime.Model
-
-class Tracktime.Record extends Backbone.Model
-  idAttribute: "_id"
-  urlRoot: config.SERVER + '/records'
-  localStorage: new Backbone.LocalStorage (config.collection.records)
-
-  defaults:
-    _id: null
-    subject: ''
-    description: ''
-    date: () -> (new Date()).toISOString()
-    lastAccess: (new Date()).toISOString()
-    recordDate: ''
-    recordTime: 0
-    project: 0
-    isDeleted: false
-    # order: Tracktime.RecordsCollection.nextOrder()
-
-  validation:
-    subject:
-      required: true
-      minLength: 4
-      msg: 'Please enter a valid subject'
-
-
-  initialize: (options, params, any) ->
-    @listenTo @, 'change:subject', @updateLastAccess
-
-  isValid: () ->
-    # @todo add good validation
-    true
-
-  # parse: (response) ->
-  #   response.lastAccess = (new Date(response.lastAccess)).getTime()
-  #   response
-
-  updateLastAccess: () ->
-    @set 'lastAccess', (new Date()).toISOString()
-
-  sync: (method, model, options) ->
-    options = options or {}
-    switch method
-      when 'create'
-        if options.ajaxSync
-          _success = options.success
-          _model = model.clone()
-          options.success = (model, response) ->
-            options.ajaxSync = !options.ajaxSync
-            options.success = _success
-            _model.id = model._id
-            _model.set '_id', model._id
-            Backbone.sync method, _model, options
-        Backbone.sync method, model, options
-      when 'read'
-        Backbone.sync method, model, options
-      when 'patch'
-        Backbone.sync method, model, options
-      when 'update'
-        if options.ajaxSync
-          _success = options.success
-          _model = model
-          options.success = (model, response) ->
-            options.ajaxSync = !options.ajaxSync
-            options.success = _success
-            Backbone.sync method, _model, options
-        Backbone.sync method, model, options
-      when 'delete'
-        console.log 'call delete', options
-        if options.ajaxSync == true
-          console.log 'indel 1 + sync', model
-          model.save {'isDeleted': true}, {ajaxSync: false}
-          _success = options.success
-          _model = model
-          options.success = (model, response) ->
-            options.ajaxSync = !options.ajaxSync
-            options.success = _success
-            Backbone.sync method, _model, options
-          Backbone.sync method, model, options
-        else
-          console.log 'indel 1 + now', model, options
-          Backbone.sync method, model, options
-      else
-        $.alert "unknown method #{method}"
-        Backbone.sync method, model, options
-
-(module?.exports = Tracktime.Record) or @Tracktime.Record = Tracktime.Record
-
-class Tracktime.ActionsCollection extends Backbone.Collection
-  model: Tracktime.Action
-  url: '/actions'
-  localStorage: new Backbone.LocalStorage ('records-backbone')
-  active: null
-
-  initialize: () ->
-    # @router = new Tracktime.ActionsRouter {controller: @}
-    # @setActive @models.findWhere isActive: true
-
-
-  setActive: (active) ->
-    @active?.set 'isActive', false
-    active.set 'isActive', true
-    @active = active
-
-  getActive: () ->
-    @active
-
-  getVisible: () ->
-    _.filter @models, (model) -> model.get('isVisible')
-
-  fetch: () ->
-    models = @localStorage.findAll()
-
-    unless models.length
-      _.each Tracktime.initdata.tmpActions, (action) ->
-        newAction = new Tracktime.Action action
-        newAction.save()
-      models = @localStorage.findAll()
-
-    @add models
-
-
-(module?.exports = Tracktime.ActionsCollection) or @Tracktime.ActionsCollection = Tracktime.ActionsCollection
-
-class Tracktime.RecordsCollection extends Backbone.Collection
-  model: Tracktime.Record
-  url: config?.SERVER + '/records'
-  urlRoot: config?.SERVER + '/records'
-  localStorage: new Backbone.LocalStorage (config.collection.records)
-
-  initialize: () ->
-    # @router = new Tracktime.RecordsRouter {controller: @}
-    @fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
-
-  comparator: (model) -> - (new Date(model.get('date'))).getTime()
-
-  addRecord: (params, options) ->
-    newRecord = new Tracktime.Record params
-    if newRecord.isValid()
-      @add newRecord
-      unless options.ajaxSync?
-        options.ajaxSync = Tracktime.AppChannel.request 'isOnline'
-      newRecord.save {}, options
-    else
-      $.alert 'Erros validation from add record to collection'
-
-  fetch: (options) ->
-    @resetLocalStorage()
-    if options? and options.ajaxSync == true
-      _success = options.success
-      options.success = (collection, response, optionsSuccess) =>
-        @syncRecords(response)
-        _success.apply(@, collection, response, options) if _.isFunction(_success)
-    super options
-
-  syncRecords: (models) ->
-
-    # по всем remote model которые вроде как в коллекции уже
-    _.each models, (model) =>
-      record = @get(model._id)
-      localModel = @localStorage.find record
-      # если нет локальной то сохраняем (локально)
-      unless localModel
-        record.save ajaxSync: false
-      # иначе
-      else
-        # если локальная старее то обновляем с новых данных (локально)
-        modelLastAccess = (new Date(model.lastAccess)).getTime()
-        localLastAccess = (new Date(localModel.lastAccess)).getTime()
-        if localModel.isDeleted
-          # do nothing
-          record.set {'isDeleted': true},  {trigger: false}
-        else if localLastAccess < modelLastAccess
-          record.save model, ajaxSync: false
-        # иначе есть если локальная новее то
-        else if localLastAccess > modelLastAccess
-          # обновляем модель пришедшую в коллекции
-          # сохраняем ее удаленно
-          record.save localModel, ajaxSync: true
-
-    # по всем local моделям
-    localModels = @localStorage.findAll()
-    _.each _.clone(localModels), (model) =>
-      collectionModel = @get(model._id)
-      # если удалена
-      if model.isDeleted
-        if model._id.length > 24
-          destroedModel = new Tracktime.Record {_id: model._id, subject: 'model to delete'}
-          destroedModel.destroy ajaxSync: false
-        else
-          modelLastAccess = (new Date(model.lastAccess)).getTime()
-          if collectionModel? and modelLastAccess > (new Date(collectionModel.get('lastAccess'))).getTime()
-            destroedModel = collectionModel
-          else
-            destroedModel = new Tracktime.Record(model)
-          # то удаляем локально и удаленно
-          # и из коллекции если есть
-          destroedModel.destroy ajaxSync: true
-      else
-        # если нет в коллекции
-        unless collectionModel
-          replacedModel = new Tracktime.Record {_id: model._id}
-          replacedModel.fetch {ajaxSync: false}
-          newModel = replacedModel.toJSON()
-          delete newModel._id
-          # то сохраняем ее удаленно
-          # добавляем в коллекцию
-          @addRecord newModel,
-            success: (model, response) =>
-              # заменяем на новосохраненную
-              replacedModel.destroy {ajaxSync: false}
-
-
-  resetLocalStorage: () ->
-    @localStorage = new Backbone.LocalStorage (config.collection.records)
-
-
-
-(module?.exports = Tracktime.RecordsCollection) or @Tracktime.RecordsCollection = Tracktime.RecordsCollection
-
-Tracktime.AppChannel = Backbone.Radio.channel 'app'
-
-_.extend Tracktime.AppChannel,
-  isOnline: null
-
-  init: () ->
-    @listenTo @, 'isOnline', (status) => @isOnline = status
-    @checkOnline()
-    @setWindowListeners()
-
-    @model = new Tracktime()
-    @bindComply()
-    @bindRequest()
-    return @
-
-
-  checkOnline: () ->
-    if window.navigator.onLine == true
-      @checkServer()
-    else
-      @trigger 'isOnline', false
-
-  checkServer: () ->
-    deferred = $.Deferred()
-
-    serverOnlineCallback = (status) => @trigger 'isOnline', true
-
-    successCallback = (result) =>
-      @trigger 'isOnline', true
-      deferred.resolve()
-
-    errorCallback = (jqXHR, textStatus, errorThrown) =>
-      @trigger 'isOnline', false
-      deferred.resolve()
-
-    try
-      $.ajax
-        url: "#{config.SERVER}/status"
-        async: false
-        dataType: 'jsonp'
-        jsonpCallback: 'serverOnlineCallback'
-        success: successCallback
-        error: errorCallback
-    catch exception_var
-      @trigger 'isOnline', false
-
-    return deferred.promise()
-
-  setWindowListeners: () ->
-    window.addEventListener "offline", (e) =>
-      @trigger 'isOnline', false
-    , false
-
-    window.addEventListener "online", (e) =>
-      @checkServer()
-    , false
-
-  bindComply: () ->
-    @comply
-      'start':           @startApp
-      'newRecord':       @newRecord
-      'serverOnline':    @serverOnline
-      'serverOffline':   @serverOffline
-      'checkOnline':     @checkOnline
-
-  bindRequest: () ->
-    @reply 'isOnline', () => @isOnline
-
-  startApp: () ->
-    @router = new Tracktime.AppRouter model: @model
-    Backbone.history.start
-      pushState: false
-
-  newRecord: (options) ->
-    @model.addRecord(options)
-
-  serverOnline: () ->
-    @trigger 'isOnline', true
-
-  serverOffline: () ->
-    @trigger 'isOnline', false
-
-
-(module?.exports = Tracktime.AppChannel) or @Tracktime.AppChannel = Tracktime.AppChannel
-
-$ ->
-
-  Tracktime.AppChannel.init().command 'start'
-
-  return
 
 do ->
   proxiedSync = Backbone.sync
@@ -696,6 +247,132 @@ Tracktime.initdata.tmpRecords = [
       $.snackbar snackbarOptions
   )
 ) jQuery
+class Tracktime.Collection extends Backbone.Collection
+  addRecord: (params, options) ->
+    newRecord = new @model params
+    if newRecord.isValid()
+      @add newRecord
+      unless options.ajaxSync?
+        options.ajaxSync = Tracktime.AppChannel.request 'isOnline'
+      newRecord.save {}, options
+    else
+      $.alert 'Erros validation from add record to collection'
+
+  fetch: (options) ->
+    @resetLocalStorage()
+    if options? and options.ajaxSync == true
+      _success = options.success
+      options.success = (collection, response, optionsSuccess) =>
+        @syncCollection(response)
+        _success.apply(@, collection, response, options) if _.isFunction(_success)
+    super options
+
+  syncCollection: (models) ->
+    # по всем remote model которые вроде как в коллекции уже
+    _.each models, (model) =>
+      record = @get(model._id)
+      localModel = @localStorage.find record
+      # если нет локальной то сохраняем (локально)
+      unless localModel
+        record.save ajaxSync: false
+      # иначе
+      else
+        # если локальная старее то обновляем с новых данных (локально)
+        modelLastAccess = (new Date(model.lastAccess)).getTime()
+        localLastAccess = (new Date(localModel.lastAccess)).getTime()
+        if localModel.isDeleted
+          # do nothing
+          record.set {'isDeleted': true},  {trigger: false}
+        else if localLastAccess < modelLastAccess
+          record.save model, ajaxSync: false
+        # иначе есть если локальная новее то
+        else if localLastAccess > modelLastAccess
+          # обновляем модель пришедшую в коллекции
+          # сохраняем ее удаленно
+          record.save localModel, ajaxSync: true
+
+    # по всем local моделям
+    localModels = @localStorage.findAll()
+    _.each _.clone(localModels), (model) =>
+      collectionModel = @get(model._id)
+      # если удалена
+      if model.isDeleted
+        if model._id.length > 24
+          destroedModel = new @model {_id: model._id, subject: 'model to delete'}
+          destroedModel.destroy ajaxSync: false
+        else
+          modelLastAccess = (new Date(model.lastAccess)).getTime()
+          if collectionModel? and modelLastAccess > (new Date(collectionModel.get('lastAccess'))).getTime()
+            destroedModel = collectionModel
+          else
+            destroedModel = new @model (model)
+          # то удаляем локально и удаленно
+          # и из коллекции если есть
+          destroedModel.destroy ajaxSync: true
+      else
+        # если нет в коллекции
+        unless collectionModel
+          replacedModel = new @model {_id: model._id}
+          replacedModel.fetch {ajaxSync: false}
+          newModel = replacedModel.toJSON()
+          delete newModel._id
+          # то сохраняем ее удаленно
+          # добавляем в коллекцию
+          @addRecord newModel,
+            success: (model, response) =>
+              # заменяем на новосохраненную
+              replacedModel.destroy {ajaxSync: false}
+
+
+  resetLocalStorage: () ->
+    @localStorage = new Backbone.LocalStorage @collectionName
+
+
+(module?.exports = Tracktime.Collection) or @Tracktime.Collection = Tracktime.Collection
+
+class Tracktime.Model extends Backbone.Model
+  sync: (method, model, options) ->
+    options = options or {}
+    switch method
+      when 'create'
+        if options.ajaxSync
+          _success = options.success
+          _model = model.clone()
+          options.success = (model, response) ->
+            options.ajaxSync = !options.ajaxSync
+            options.success = _success
+            _model.id = model._id
+            _model.set '_id', model._id
+            Backbone.sync method, _model, options
+        Backbone.sync method, model, options
+      when 'read'
+        Backbone.sync method, model, options
+      when 'patch'
+        Backbone.sync method, model, options
+      when 'update'
+        if options.ajaxSync
+          _success = options.success
+          _model = model
+          options.success = (model, response) ->
+            options.ajaxSync = !options.ajaxSync
+            options.success = _success
+            Backbone.sync method, _model, options
+        Backbone.sync method, model, options
+      when 'delete'
+        if options.ajaxSync == true
+          model.save {'isDeleted': true}, {ajaxSync: false}
+          _success = options.success
+          _model = model
+          options.success = (model, response) ->
+            options.ajaxSync = !options.ajaxSync
+            options.success = _success
+            Backbone.sync method, _model, options
+          Backbone.sync method, model, options
+        else
+          Backbone.sync method, model, options
+      else
+        $.alert "unknown method #{method}"
+        Backbone.sync method, model, options
 # class Tracktime.UI
 #   instance = null
 
@@ -717,6 +394,361 @@ Tracktime.utils.nl2br = (text) ->
   (text + '').replace /([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + '<br>' + '$2'
 
 (module?.exports = Tracktime.utils) or @Tracktime.utils = Tracktime.utils
+
+class Tracktime.Action extends Backbone.Model
+
+  idAttribute: "_id"
+  url: '/actions' #receive on activate actions for user (!)
+
+  defaults:
+    _id: null
+    title: 'Default action title'
+    formAction: '#'
+    btnClass: 'btn-default'
+    navbarClass: 'navbar-material-amber'
+    icon:
+      className: 'mdi-editor-mode-edit'
+      letter: ''
+    isActive: false
+    isVisible: false
+    inputValue: ''
+    details: null # Tracktime.Action.Details or null
+
+  validation: () ->
+    # @todo make details validation
+
+  attributes: () ->
+    id: @model.cid
+
+  constructor: (args...) ->
+    super args...
+
+  initialize: () ->
+    @set 'details', new Tracktime.Action.Details()
+
+  setActive: () ->
+    @collection.setActive @
+
+  processAction: (options) ->
+    @set 'inputValue', options.subject
+    @get('details').set(options) # @todo remove possible
+    @newRecord() #@todo эта функция будет определятся в зависимости от типа action
+    # @search() #@todo эта функция будет определятся в зависимости от типа action
+
+  newRecord: () ->
+    Tracktime.AppChannel.command 'newRecord', _.extend {project: 0}, @get('details').attributes
+
+  search: () ->
+    $.alert 'search under construction'
+
+  successAdd: () ->
+    @set 'inputValue', ''
+    # @details.reset() # @todo on change details change view controls
+
+(module?.exports = Tracktime.Action) or @Tracktime.Action = Tracktime.Action
+
+
+
+# actions
+#   options
+#     details = view and model
+#   onChangeDetails: function to apply details
+#   save and restore selectedAction
+# actinView:
+#  when детали openicon is крестик
+#   сохраняются данные деталей автоматически
+#   крестик очищает и закрывает
+#   при потере фокуса с деталей сохранненые автоматичеки выводятся рядом с subject
+
+
+
+
+
+class Tracktime.Action.Details extends Backbone.Model
+
+
+(module?.exports = Tracktime.Action.Details) or @Tracktime.Action.Details = Tracktime.Action.Details
+
+class Lokitest
+  constructor: () ->
+    @test 'Start loki</li>'
+    LokiJS = require('lokijs')
+    @db = new LokiJS('users_1.json')
+
+    $('.add-users').on 'click', (event) =>
+      console.log 'add-users'
+      event.preventDefault()
+      @add()
+
+    $('.get-users').on 'click', (event) =>
+      console.log 'get-users'
+      event.preventDefault()
+      @get()
+
+    return
+
+  test : (msg) ->
+    $('h1').html(msg) if msg
+    return
+
+  add : () ->
+    users = @db.addCollection('users', indices: [ 'name' ])
+    users.insert
+      name: 'User 10'
+      user: 20
+    users.insert
+      name: 'User 11'
+      user: 21
+    users.insert
+      name: 'User 12'
+      user: 22
+    # console.log(users.data);
+    @db.saveDatabase()
+    return
+
+  get : () ->
+    @db.loadDatabase {}, =>
+      users = @db.getCollection('users')
+      # var records = users.data.length;
+      if users
+        console.log 'users', users.data
+      else
+        console.log 'no users Data'
+        console.log 'will create'
+        @add()
+      return
+    return
+
+class Tracktime.Project extends Tracktime.Model
+  idAttribute: "_id"
+  urlRoot: config.SERVER + '/projects'
+  localStorage: new Backbone.LocalStorage (config.collection.projects)
+
+  defaults:
+    _id: null
+    name: ''
+    description: ''
+    lastAccess: (new Date()).toISOString()
+    isDeleted: false
+    # order: Tracktime.ProjectsCollection.nextOrder()
+
+  validation:
+    name:
+      required: true
+      minLength: 4
+      msg: 'Please enter a valid name'
+
+
+  initialize: (options, params, any) ->
+    @listenTo @, 'change:name', @updateLastAccess
+
+  isValid: () ->
+    # @todo add good validation
+    true
+  updateLastAccess: () ->
+    @set 'lastAccess', (new Date()).toISOString()
+
+
+(module?.exports = Tracktime.Project) or @Tracktime.Project = Tracktime.Project
+
+class Tracktime.Record extends Tracktime.Model
+  idAttribute: "_id"
+  urlRoot: config.SERVER + '/records'
+  localStorage: new Backbone.LocalStorage (config.collection.records)
+
+  defaults:
+    _id: null
+    subject: ''
+    description: ''
+    date: () -> (new Date()).toISOString()
+    lastAccess: (new Date()).toISOString()
+    recordDate: ''
+    recordTime: 0
+    project: 0
+    isDeleted: false
+    # order: Tracktime.RecordsCollection.nextOrder()
+
+  validation:
+    subject:
+      required: true
+      minLength: 4
+      msg: 'Please enter a valid subject'
+
+
+  initialize: (options, params, any) ->
+    @listenTo @, 'change:subject', @updateLastAccess
+
+  isValid: () ->
+    # @todo add good validation
+    true
+  updateLastAccess: () ->
+    @set 'lastAccess', (new Date()).toISOString()
+
+
+(module?.exports = Tracktime.Record) or @Tracktime.Record = Tracktime.Record
+
+class Tracktime.ActionsCollection extends Backbone.Collection
+  model: Tracktime.Action
+  url: '/actions'
+  localStorage: new Backbone.LocalStorage ('records-backbone')
+  active: null
+
+  initialize: () ->
+    # @router = new Tracktime.ActionsRouter {controller: @}
+    # @setActive @models.findWhere isActive: true
+
+
+  setActive: (active) ->
+    @active?.set 'isActive', false
+    active.set 'isActive', true
+    @active = active
+
+  getActive: () ->
+    @active
+
+  getVisible: () ->
+    _.filter @models, (model) -> model.get('isVisible')
+
+  fetch: () ->
+    models = @localStorage.findAll()
+
+    unless models.length
+      _.each Tracktime.initdata.tmpActions, (action) ->
+        newAction = new Tracktime.Action action
+        newAction.save()
+      models = @localStorage.findAll()
+
+    @add models
+
+
+(module?.exports = Tracktime.ActionsCollection) or @Tracktime.ActionsCollection = Tracktime.ActionsCollection
+
+class Tracktime.ProjectsCollection extends Tracktime.Collection
+  model: Tracktime.Project
+  url: config?.SERVER + '/projects'
+  urlRoot: config?.SERVER + '/projects'
+  collectionName: config.collection.projects
+  localStorage: new Backbone.LocalStorage @collectionName
+
+  initialize: () ->
+    @fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
+
+  comparator: (model) ->
+    - (new Date(model.get('date'))).getTime()
+
+
+
+
+(module?.exports = Tracktime.ProjectsCollection) or @Tracktime.ProjectsCollection = Tracktime.ProjectsCollection
+
+class Tracktime.RecordsCollection extends Tracktime.Collection
+  model: Tracktime.Record
+  url: config?.SERVER + '/records'
+  urlRoot: config?.SERVER + '/records'
+  collectionName: config.collection.records
+  localStorage: new Backbone.LocalStorage @collectionName
+
+  initialize: () ->
+    @fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
+
+  comparator: (model) ->
+    - (new Date(model.get('date'))).getTime()
+
+
+
+
+(module?.exports = Tracktime.RecordsCollection) or @Tracktime.RecordsCollection = Tracktime.RecordsCollection
+
+Tracktime.AppChannel = Backbone.Radio.channel 'app'
+
+_.extend Tracktime.AppChannel,
+  isOnline: null
+
+  init: () ->
+    @listenTo @, 'isOnline', (status) => @isOnline = status
+    @checkOnline()
+    @setWindowListeners()
+
+    @model = new Tracktime()
+    @bindComply()
+    @bindRequest()
+    return @
+
+
+  checkOnline: () ->
+    if window.navigator.onLine == true
+      @checkServer()
+    else
+      @trigger 'isOnline', false
+
+  checkServer: () ->
+    deferred = $.Deferred()
+
+    serverOnlineCallback = (status) => @trigger 'isOnline', true
+
+    successCallback = (result) =>
+      @trigger 'isOnline', true
+      deferred.resolve()
+
+    errorCallback = (jqXHR, textStatus, errorThrown) =>
+      @trigger 'isOnline', false
+      deferred.resolve()
+
+    try
+      $.ajax
+        url: "#{config.SERVER}/status"
+        async: false
+        dataType: 'jsonp'
+        jsonpCallback: 'serverOnlineCallback'
+        success: successCallback
+        error: errorCallback
+    catch exception_var
+      @trigger 'isOnline', false
+
+    return deferred.promise()
+
+  setWindowListeners: () ->
+    window.addEventListener "offline", (e) =>
+      @trigger 'isOnline', false
+    , false
+
+    window.addEventListener "online", (e) =>
+      @checkServer()
+    , false
+
+  bindComply: () ->
+    @comply
+      'start':           @startApp
+      'newRecord':       @newRecord
+      'serverOnline':    @serverOnline
+      'serverOffline':   @serverOffline
+      'checkOnline':     @checkOnline
+
+  bindRequest: () ->
+    @reply 'isOnline', () => @isOnline
+
+  startApp: () ->
+    @router = new Tracktime.AppRouter model: @model
+    Backbone.history.start
+      pushState: false
+
+  newRecord: (options) ->
+    @model.addRecord(options)
+
+  serverOnline: () ->
+    @trigger 'isOnline', true
+
+  serverOffline: () ->
+    @trigger 'isOnline', false
+
+
+(module?.exports = Tracktime.AppChannel) or @Tracktime.AppChannel = Tracktime.AppChannel
+
+$ ->
+
+  Tracktime.AppChannel.init().command 'start'
+
+  return
 
 class Tracktime.AdminRouter extends Backbone.SubRoute
   routes:
@@ -1189,7 +1221,10 @@ class Tracktime.AppView.Header extends Backbone.View
       $(".select-date > .btn .caption ruby").html $(event.currentTarget).find('ruby').html()
       @tmpDetails.recordDate = $(".select-date > .btn .caption ruby rt").html()
     $(".slider")
-      .noUiSlider start: [1], range: {'min': [ 0 ], 'max': [ 720 ] }
+      .noUiSlider
+        start: [0]
+        step: 5
+        range: {'min': [ 0 ], 'max': [ 720 ] }
       .on
         slide: (event, val) =>
           @tmpDetails.recordTime = val
@@ -1198,6 +1233,12 @@ class Tracktime.AppView.Header extends Backbone.View
           minute = (currentHour - hour) * 60
           $('.slider .noUi-handle').attr 'data-before', hour
           $('.slider .noUi-handle').attr 'data-after', Math.round(minute)
+
+    $(".slider")
+      .noUiSlider_pips
+        mode: 'values'
+        values: [0,60*1,60*2,60*3,60*4,60*5,60*6,60*7,60*8,60*9,60*10,60*11,60*12]
+        density: 2
 
 
   render: () ->

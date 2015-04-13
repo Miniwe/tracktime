@@ -8,6 +8,7 @@
       ".tmp/app.coffee.js": [
         "app/libs/config.coffee",
         "app/models/app.coffee",
+        "app/libs/**/*.coffee",
         "app/models/**/*.coffee",
         "app/collections/**/*.coffee",
         "app/channels/**/*.coffee",

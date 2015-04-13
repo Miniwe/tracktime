@@ -23,7 +23,10 @@ class Tracktime.AppView.Header extends Backbone.View
       $(".select-date > .btn .caption ruby").html $(event.currentTarget).find('ruby').html()
       @tmpDetails.recordDate = $(".select-date > .btn .caption ruby rt").html()
     $(".slider")
-      .noUiSlider start: [1], range: {'min': [ 0 ], 'max': [ 720 ] }
+      .noUiSlider
+        start: [0]
+        step: 5
+        range: {'min': [ 0 ], 'max': [ 720 ] }
       .on
         slide: (event, val) =>
           @tmpDetails.recordTime = val
@@ -32,6 +35,12 @@ class Tracktime.AppView.Header extends Backbone.View
           minute = (currentHour - hour) * 60
           $('.slider .noUi-handle').attr 'data-before', hour
           $('.slider .noUi-handle').attr 'data-after', Math.round(minute)
+
+    $(".slider")
+      .noUiSlider_pips
+        mode: 'values'
+        values: [0,60*1,60*2,60*3,60*4,60*5,60*6,60*7,60*8,60*9,60*10,60*11,60*12]
+        density: 2
 
 
   render: () ->

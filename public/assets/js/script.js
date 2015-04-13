@@ -29380,7 +29380,7 @@ this["JST"]["layout/menu"] = Handlebars.template({"1":function(depth0,helpers,pa
   },"data":data})))
     + "\n            </div>\n        </div>\n    </div>\n    <div class=\"panel panel-default\">\n        <a class=\"btn btn-primary btn-block\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#projects-section\" aria-expanded=\"true\" aria-controls=\"projects-section\" role=\"tab\" id=\"headingProjects\">\n      Projects\n    </a>\n        <div id=\"projects-section\" class=\"panel-collapse collapse in\" role=\"tabpanel\" aria-labelledby=\"headingProjects\">\n            <div class=\"list-style-group\">\n                "
     + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
-    'body': ("Projects list"),
+    'body': ("All Records"),
     'href': ("#projects"),
     'class': ("list-group-item")
   },"data":data})))
@@ -29493,24 +29493,27 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
   production = {
     SERVER: 'https://ttpms.herokuapp.com',
     collection: {
-      records: 'records-backbone',
-      actions: 'actions-backbone'
+      records: 'records',
+      projects: 'projects',
+      actions: 'actions'
     }
   };
 
   test = {
     SERVER: 'http://localhost:5000',
     collection: {
-      records: 'records-backbone',
-      actions: 'actions-backbone'
+      records: 'records',
+      projects: 'projects',
+      actions: 'actions'
     }
   };
 
   development = {
     SERVER: 'http://localhost:5000',
     collection: {
-      records: 'records-backbone',
-      actions: 'actions-backbone'
+      records: 'records',
+      projects: 'projects',
+      actions: 'actions'
     }
   };
 
@@ -29587,614 +29590,6 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
   })(Backbone.Model);
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime : void 0) || (this.Tracktime = Tracktime);
-
-  Tracktime.Action = (function(superClass) {
-    extend(Action, superClass);
-
-    Action.prototype.idAttribute = "_id";
-
-    Action.prototype.url = '/actions';
-
-    Action.prototype.defaults = {
-      _id: null,
-      title: 'Default action title',
-      formAction: '#',
-      btnClass: 'btn-default',
-      navbarClass: 'navbar-material-amber',
-      icon: {
-        className: 'mdi-editor-mode-edit',
-        letter: ''
-      },
-      isActive: false,
-      isVisible: false,
-      inputValue: '',
-      details: null
-    };
-
-    Action.prototype.validation = function() {};
-
-    Action.prototype.attributes = function() {
-      return {
-        id: this.model.cid
-      };
-    };
-
-    function Action() {
-      var args;
-      args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-      Action.__super__.constructor.apply(this, args);
-    }
-
-    Action.prototype.initialize = function() {
-      return this.set('details', new Tracktime.Action.Details());
-    };
-
-    Action.prototype.setActive = function() {
-      return this.collection.setActive(this);
-    };
-
-    Action.prototype.processAction = function(options) {
-      this.set('inputValue', options.subject);
-      this.get('details').set(options);
-      return this.newRecord();
-    };
-
-    Action.prototype.newRecord = function() {
-      return Tracktime.AppChannel.command('newRecord', _.extend({
-        project: 0
-      }, this.get('details').attributes));
-    };
-
-    Action.prototype.search = function() {
-      return $.alert('search under construction');
-    };
-
-    Action.prototype.successAdd = function() {
-      return this.set('inputValue', '');
-    };
-
-    return Action;
-
-  })(Backbone.Model);
-
-  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.Action : void 0) || (this.Tracktime.Action = Tracktime.Action);
-
-  Tracktime.Action.Details = (function(superClass) {
-    extend(Details, superClass);
-
-    function Details() {
-      return Details.__super__.constructor.apply(this, arguments);
-    }
-
-    return Details;
-
-  })(Backbone.Model);
-
-  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.Action.Details : void 0) || (this.Tracktime.Action.Details = Tracktime.Action.Details);
-
-  Lokitest = (function() {
-    function Lokitest() {
-      var LokiJS;
-      this.test('Start loki</li>');
-      LokiJS = require('lokijs');
-      this.db = new LokiJS('users_1.json');
-      $('.add-users').on('click', (function(_this) {
-        return function(event) {
-          console.log('add-users');
-          event.preventDefault();
-          return _this.add();
-        };
-      })(this));
-      $('.get-users').on('click', (function(_this) {
-        return function(event) {
-          console.log('get-users');
-          event.preventDefault();
-          return _this.get();
-        };
-      })(this));
-      return;
-    }
-
-    Lokitest.prototype.test = function(msg) {
-      if (msg) {
-        $('h1').html(msg);
-      }
-    };
-
-    Lokitest.prototype.add = function() {
-      var users;
-      users = this.db.addCollection('users', {
-        indices: ['name']
-      });
-      users.insert({
-        name: 'User 10',
-        user: 20
-      });
-      users.insert({
-        name: 'User 11',
-        user: 21
-      });
-      users.insert({
-        name: 'User 12',
-        user: 22
-      });
-      this.db.saveDatabase();
-    };
-
-    Lokitest.prototype.get = function() {
-      this.db.loadDatabase({}, (function(_this) {
-        return function() {
-          var users;
-          users = _this.db.getCollection('users');
-          if (users) {
-            console.log('users', users.data);
-          } else {
-            console.log('no users Data');
-            console.log('will create');
-            _this.add();
-          }
-        };
-      })(this));
-    };
-
-    return Lokitest;
-
-  })();
-
-  Tracktime.Model = (function(superClass) {
-    extend(Model, superClass);
-
-    Model.prototype.url = '/models';
-
-    Model.prototype.validation = {
-      field: {
-        required: true
-      },
-      someAttribute: function(value) {
-        if (value !== 'somevalue') {
-          return 'Error message';
-        }
-      }
-    };
-
-    function Model() {
-      return;
-    }
-
-    Model.prototype.initialize = function() {};
-
-    return Model;
-
-  })(Backbone.Model);
-
-  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.Model : void 0) || (this.Tracktime.Model = Tracktime.Model);
-
-  Tracktime.Record = (function(superClass) {
-    extend(Record, superClass);
-
-    function Record() {
-      return Record.__super__.constructor.apply(this, arguments);
-    }
-
-    Record.prototype.idAttribute = "_id";
-
-    Record.prototype.urlRoot = config.SERVER + '/records';
-
-    Record.prototype.localStorage = new Backbone.LocalStorage(config.collection.records);
-
-    Record.prototype.defaults = {
-      _id: null,
-      subject: '',
-      description: '',
-      date: function() {
-        return (new Date()).toISOString();
-      },
-      lastAccess: (new Date()).toISOString(),
-      recordDate: '',
-      recordTime: 0,
-      project: 0,
-      isDeleted: false
-    };
-
-    Record.prototype.validation = {
-      subject: {
-        required: true,
-        minLength: 4,
-        msg: 'Please enter a valid subject'
-      }
-    };
-
-    Record.prototype.initialize = function(options, params, any) {
-      return this.listenTo(this, 'change:subject', this.updateLastAccess);
-    };
-
-    Record.prototype.isValid = function() {
-      return true;
-    };
-
-    Record.prototype.updateLastAccess = function() {
-      return this.set('lastAccess', (new Date()).toISOString());
-    };
-
-    Record.prototype.sync = function(method, model, options) {
-      var _model, _success;
-      options = options || {};
-      switch (method) {
-        case 'create':
-          if (options.ajaxSync) {
-            _success = options.success;
-            _model = model.clone();
-            options.success = function(model, response) {
-              options.ajaxSync = !options.ajaxSync;
-              options.success = _success;
-              _model.id = model._id;
-              _model.set('_id', model._id);
-              return Backbone.sync(method, _model, options);
-            };
-          }
-          return Backbone.sync(method, model, options);
-        case 'read':
-          return Backbone.sync(method, model, options);
-        case 'patch':
-          return Backbone.sync(method, model, options);
-        case 'update':
-          if (options.ajaxSync) {
-            _success = options.success;
-            _model = model;
-            options.success = function(model, response) {
-              options.ajaxSync = !options.ajaxSync;
-              options.success = _success;
-              return Backbone.sync(method, _model, options);
-            };
-          }
-          return Backbone.sync(method, model, options);
-        case 'delete':
-          console.log('call delete', options);
-          if (options.ajaxSync === true) {
-            console.log('indel 1 + sync', model);
-            model.save({
-              'isDeleted': true
-            }, {
-              ajaxSync: false
-            });
-            _success = options.success;
-            _model = model;
-            options.success = function(model, response) {
-              options.ajaxSync = !options.ajaxSync;
-              options.success = _success;
-              return Backbone.sync(method, _model, options);
-            };
-            return Backbone.sync(method, model, options);
-          } else {
-            console.log('indel 1 + now', model, options);
-            return Backbone.sync(method, model, options);
-          }
-          break;
-        default:
-          $.alert("unknown method " + method);
-          return Backbone.sync(method, model, options);
-      }
-    };
-
-    return Record;
-
-  })(Backbone.Model);
-
-  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.Record : void 0) || (this.Tracktime.Record = Tracktime.Record);
-
-  Tracktime.ActionsCollection = (function(superClass) {
-    extend(ActionsCollection, superClass);
-
-    function ActionsCollection() {
-      return ActionsCollection.__super__.constructor.apply(this, arguments);
-    }
-
-    ActionsCollection.prototype.model = Tracktime.Action;
-
-    ActionsCollection.prototype.url = '/actions';
-
-    ActionsCollection.prototype.localStorage = new Backbone.LocalStorage('records-backbone');
-
-    ActionsCollection.prototype.active = null;
-
-    ActionsCollection.prototype.initialize = function() {};
-
-    ActionsCollection.prototype.setActive = function(active) {
-      var ref1;
-      if ((ref1 = this.active) != null) {
-        ref1.set('isActive', false);
-      }
-      active.set('isActive', true);
-      return this.active = active;
-    };
-
-    ActionsCollection.prototype.getActive = function() {
-      return this.active;
-    };
-
-    ActionsCollection.prototype.getVisible = function() {
-      return _.filter(this.models, function(model) {
-        return model.get('isVisible');
-      });
-    };
-
-    ActionsCollection.prototype.fetch = function() {
-      var models;
-      models = this.localStorage.findAll();
-      if (!models.length) {
-        _.each(Tracktime.initdata.tmpActions, function(action) {
-          var newAction;
-          newAction = new Tracktime.Action(action);
-          return newAction.save();
-        });
-        models = this.localStorage.findAll();
-      }
-      return this.add(models);
-    };
-
-    return ActionsCollection;
-
-  })(Backbone.Collection);
-
-  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.ActionsCollection : void 0) || (this.Tracktime.ActionsCollection = Tracktime.ActionsCollection);
-
-  Tracktime.RecordsCollection = (function(superClass) {
-    extend(RecordsCollection, superClass);
-
-    function RecordsCollection() {
-      return RecordsCollection.__super__.constructor.apply(this, arguments);
-    }
-
-    RecordsCollection.prototype.model = Tracktime.Record;
-
-    RecordsCollection.prototype.url = (config != null ? config.SERVER : void 0) + '/records';
-
-    RecordsCollection.prototype.urlRoot = (config != null ? config.SERVER : void 0) + '/records';
-
-    RecordsCollection.prototype.localStorage = new Backbone.LocalStorage(config.collection.records);
-
-    RecordsCollection.prototype.initialize = function() {
-      return this.fetch({
-        ajaxSync: Tracktime.AppChannel.request('isOnline')
-      });
-    };
-
-    RecordsCollection.prototype.comparator = function(model) {
-      return -(new Date(model.get('date'))).getTime();
-    };
-
-    RecordsCollection.prototype.addRecord = function(params, options) {
-      var newRecord;
-      newRecord = new Tracktime.Record(params);
-      if (newRecord.isValid()) {
-        this.add(newRecord);
-        if (options.ajaxSync == null) {
-          options.ajaxSync = Tracktime.AppChannel.request('isOnline');
-        }
-        return newRecord.save({}, options);
-      } else {
-        return $.alert('Erros validation from add record to collection');
-      }
-    };
-
-    RecordsCollection.prototype.fetch = function(options) {
-      var _success;
-      this.resetLocalStorage();
-      if ((options != null) && options.ajaxSync === true) {
-        _success = options.success;
-        options.success = (function(_this) {
-          return function(collection, response, optionsSuccess) {
-            _this.syncRecords(response);
-            if (_.isFunction(_success)) {
-              return _success.apply(_this, collection, response, options);
-            }
-          };
-        })(this);
-      }
-      return RecordsCollection.__super__.fetch.call(this, options);
-    };
-
-    RecordsCollection.prototype.syncRecords = function(models) {
-      var localModels;
-      _.each(models, (function(_this) {
-        return function(model) {
-          var localLastAccess, localModel, modelLastAccess, record;
-          record = _this.get(model._id);
-          localModel = _this.localStorage.find(record);
-          if (!localModel) {
-            return record.save({
-              ajaxSync: false
-            });
-          } else {
-            modelLastAccess = (new Date(model.lastAccess)).getTime();
-            localLastAccess = (new Date(localModel.lastAccess)).getTime();
-            if (localModel.isDeleted) {
-              return record.set({
-                'isDeleted': true
-              }, {
-                trigger: false
-              });
-            } else if (localLastAccess < modelLastAccess) {
-              return record.save(model, {
-                ajaxSync: false
-              });
-            } else if (localLastAccess > modelLastAccess) {
-              return record.save(localModel, {
-                ajaxSync: true
-              });
-            }
-          }
-        };
-      })(this));
-      localModels = this.localStorage.findAll();
-      return _.each(_.clone(localModels), (function(_this) {
-        return function(model) {
-          var collectionModel, destroedModel, modelLastAccess, newModel, replacedModel;
-          collectionModel = _this.get(model._id);
-          if (model.isDeleted) {
-            if (model._id.length > 24) {
-              destroedModel = new Tracktime.Record({
-                _id: model._id,
-                subject: 'model to delete'
-              });
-              return destroedModel.destroy({
-                ajaxSync: false
-              });
-            } else {
-              modelLastAccess = (new Date(model.lastAccess)).getTime();
-              if ((collectionModel != null) && modelLastAccess > (new Date(collectionModel.get('lastAccess'))).getTime()) {
-                destroedModel = collectionModel;
-              } else {
-                destroedModel = new Tracktime.Record(model);
-              }
-              return destroedModel.destroy({
-                ajaxSync: true
-              });
-            }
-          } else {
-            if (!collectionModel) {
-              replacedModel = new Tracktime.Record({
-                _id: model._id
-              });
-              replacedModel.fetch({
-                ajaxSync: false
-              });
-              newModel = replacedModel.toJSON();
-              delete newModel._id;
-              return _this.addRecord(newModel, {
-                success: function(model, response) {
-                  return replacedModel.destroy({
-                    ajaxSync: false
-                  });
-                }
-              });
-            }
-          }
-        };
-      })(this));
-    };
-
-    RecordsCollection.prototype.resetLocalStorage = function() {
-      return this.localStorage = new Backbone.LocalStorage(config.collection.records);
-    };
-
-    return RecordsCollection;
-
-  })(Backbone.Collection);
-
-  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.RecordsCollection : void 0) || (this.Tracktime.RecordsCollection = Tracktime.RecordsCollection);
-
-  Tracktime.AppChannel = Backbone.Radio.channel('app');
-
-  _.extend(Tracktime.AppChannel, {
-    isOnline: null,
-    init: function() {
-      this.listenTo(this, 'isOnline', (function(_this) {
-        return function(status) {
-          return _this.isOnline = status;
-        };
-      })(this));
-      this.checkOnline();
-      this.setWindowListeners();
-      this.model = new Tracktime();
-      this.bindComply();
-      this.bindRequest();
-      return this;
-    },
-    checkOnline: function() {
-      if (window.navigator.onLine === true) {
-        return this.checkServer();
-      } else {
-        return this.trigger('isOnline', false);
-      }
-    },
-    checkServer: function() {
-      var deferred, errorCallback, exception_var, serverOnlineCallback, successCallback;
-      deferred = $.Deferred();
-      serverOnlineCallback = (function(_this) {
-        return function(status) {
-          return _this.trigger('isOnline', true);
-        };
-      })(this);
-      successCallback = (function(_this) {
-        return function(result) {
-          _this.trigger('isOnline', true);
-          return deferred.resolve();
-        };
-      })(this);
-      errorCallback = (function(_this) {
-        return function(jqXHR, textStatus, errorThrown) {
-          _this.trigger('isOnline', false);
-          return deferred.resolve();
-        };
-      })(this);
-      try {
-        $.ajax({
-          url: config.SERVER + "/status",
-          async: false,
-          dataType: 'jsonp',
-          jsonpCallback: 'serverOnlineCallback',
-          success: successCallback,
-          error: errorCallback
-        });
-      } catch (_error) {
-        exception_var = _error;
-        this.trigger('isOnline', false);
-      }
-      return deferred.promise();
-    },
-    setWindowListeners: function() {
-      window.addEventListener("offline", (function(_this) {
-        return function(e) {
-          return _this.trigger('isOnline', false);
-        };
-      })(this), false);
-      return window.addEventListener("online", (function(_this) {
-        return function(e) {
-          return _this.checkServer();
-        };
-      })(this), false);
-    },
-    bindComply: function() {
-      return this.comply({
-        'start': this.startApp,
-        'newRecord': this.newRecord,
-        'serverOnline': this.serverOnline,
-        'serverOffline': this.serverOffline,
-        'checkOnline': this.checkOnline
-      });
-    },
-    bindRequest: function() {
-      return this.reply('isOnline', (function(_this) {
-        return function() {
-          return _this.isOnline;
-        };
-      })(this));
-    },
-    startApp: function() {
-      this.router = new Tracktime.AppRouter({
-        model: this.model
-      });
-      return Backbone.history.start({
-        pushState: false
-      });
-    },
-    newRecord: function(options) {
-      return this.model.addRecord(options);
-    },
-    serverOnline: function() {
-      return this.trigger('isOnline', true);
-    },
-    serverOffline: function() {
-      return this.trigger('isOnline', false);
-    }
-  });
-
-  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AppChannel : void 0) || (this.Tracktime.AppChannel = Tracktime.AppChannel);
-
-  $(function() {
-    Tracktime.AppChannel.init().command('start');
-  });
 
   (function() {
     var proxiedSync;
@@ -30401,6 +29796,202 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     });
   })(jQuery);
 
+  Tracktime.Collection = (function(superClass) {
+    extend(Collection, superClass);
+
+    function Collection() {
+      return Collection.__super__.constructor.apply(this, arguments);
+    }
+
+    Collection.prototype.addRecord = function(params, options) {
+      var newRecord;
+      newRecord = new this.model(params);
+      if (newRecord.isValid()) {
+        this.add(newRecord);
+        if (options.ajaxSync == null) {
+          options.ajaxSync = Tracktime.AppChannel.request('isOnline');
+        }
+        return newRecord.save({}, options);
+      } else {
+        return $.alert('Erros validation from add record to collection');
+      }
+    };
+
+    Collection.prototype.fetch = function(options) {
+      var _success;
+      this.resetLocalStorage();
+      if ((options != null) && options.ajaxSync === true) {
+        _success = options.success;
+        options.success = (function(_this) {
+          return function(collection, response, optionsSuccess) {
+            _this.syncCollection(response);
+            if (_.isFunction(_success)) {
+              return _success.apply(_this, collection, response, options);
+            }
+          };
+        })(this);
+      }
+      return Collection.__super__.fetch.call(this, options);
+    };
+
+    Collection.prototype.syncCollection = function(models) {
+      var localModels;
+      _.each(models, (function(_this) {
+        return function(model) {
+          var localLastAccess, localModel, modelLastAccess, record;
+          record = _this.get(model._id);
+          localModel = _this.localStorage.find(record);
+          if (!localModel) {
+            return record.save({
+              ajaxSync: false
+            });
+          } else {
+            modelLastAccess = (new Date(model.lastAccess)).getTime();
+            localLastAccess = (new Date(localModel.lastAccess)).getTime();
+            if (localModel.isDeleted) {
+              return record.set({
+                'isDeleted': true
+              }, {
+                trigger: false
+              });
+            } else if (localLastAccess < modelLastAccess) {
+              return record.save(model, {
+                ajaxSync: false
+              });
+            } else if (localLastAccess > modelLastAccess) {
+              return record.save(localModel, {
+                ajaxSync: true
+              });
+            }
+          }
+        };
+      })(this));
+      localModels = this.localStorage.findAll();
+      return _.each(_.clone(localModels), (function(_this) {
+        return function(model) {
+          var collectionModel, destroedModel, modelLastAccess, newModel, replacedModel;
+          collectionModel = _this.get(model._id);
+          if (model.isDeleted) {
+            if (model._id.length > 24) {
+              destroedModel = new _this.model({
+                _id: model._id,
+                subject: 'model to delete'
+              });
+              return destroedModel.destroy({
+                ajaxSync: false
+              });
+            } else {
+              modelLastAccess = (new Date(model.lastAccess)).getTime();
+              if ((collectionModel != null) && modelLastAccess > (new Date(collectionModel.get('lastAccess'))).getTime()) {
+                destroedModel = collectionModel;
+              } else {
+                destroedModel = new _this.model(model);
+              }
+              return destroedModel.destroy({
+                ajaxSync: true
+              });
+            }
+          } else {
+            if (!collectionModel) {
+              replacedModel = new _this.model({
+                _id: model._id
+              });
+              replacedModel.fetch({
+                ajaxSync: false
+              });
+              newModel = replacedModel.toJSON();
+              delete newModel._id;
+              return _this.addRecord(newModel, {
+                success: function(model, response) {
+                  return replacedModel.destroy({
+                    ajaxSync: false
+                  });
+                }
+              });
+            }
+          }
+        };
+      })(this));
+    };
+
+    Collection.prototype.resetLocalStorage = function() {
+      return this.localStorage = new Backbone.LocalStorage(this.collectionName);
+    };
+
+    return Collection;
+
+  })(Backbone.Collection);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.Collection : void 0) || (this.Tracktime.Collection = Tracktime.Collection);
+
+  Tracktime.Model = (function(superClass) {
+    extend(Model, superClass);
+
+    function Model() {
+      return Model.__super__.constructor.apply(this, arguments);
+    }
+
+    Model.prototype.sync = function(method, model, options) {
+      var _model, _success;
+      options = options || {};
+      switch (method) {
+        case 'create':
+          if (options.ajaxSync) {
+            _success = options.success;
+            _model = model.clone();
+            options.success = function(model, response) {
+              options.ajaxSync = !options.ajaxSync;
+              options.success = _success;
+              _model.id = model._id;
+              _model.set('_id', model._id);
+              return Backbone.sync(method, _model, options);
+            };
+          }
+          return Backbone.sync(method, model, options);
+        case 'read':
+          return Backbone.sync(method, model, options);
+        case 'patch':
+          return Backbone.sync(method, model, options);
+        case 'update':
+          if (options.ajaxSync) {
+            _success = options.success;
+            _model = model;
+            options.success = function(model, response) {
+              options.ajaxSync = !options.ajaxSync;
+              options.success = _success;
+              return Backbone.sync(method, _model, options);
+            };
+          }
+          return Backbone.sync(method, model, options);
+        case 'delete':
+          if (options.ajaxSync === true) {
+            model.save({
+              'isDeleted': true
+            }, {
+              ajaxSync: false
+            });
+            _success = options.success;
+            _model = model;
+            options.success = function(model, response) {
+              options.ajaxSync = !options.ajaxSync;
+              options.success = _success;
+              return Backbone.sync(method, _model, options);
+            };
+            return Backbone.sync(method, model, options);
+          } else {
+            return Backbone.sync(method, model, options);
+          }
+          break;
+        default:
+          $.alert("unknown method " + method);
+          return Backbone.sync(method, model, options);
+      }
+    };
+
+    return Model;
+
+  })(Backbone.Model);
+
   Tracktime.utils = {};
 
   Tracktime.utils.nl2br = function(text) {
@@ -30408,6 +29999,493 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
   };
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.utils : void 0) || (this.Tracktime.utils = Tracktime.utils);
+
+  Tracktime.Action = (function(superClass) {
+    extend(Action, superClass);
+
+    Action.prototype.idAttribute = "_id";
+
+    Action.prototype.url = '/actions';
+
+    Action.prototype.defaults = {
+      _id: null,
+      title: 'Default action title',
+      formAction: '#',
+      btnClass: 'btn-default',
+      navbarClass: 'navbar-material-amber',
+      icon: {
+        className: 'mdi-editor-mode-edit',
+        letter: ''
+      },
+      isActive: false,
+      isVisible: false,
+      inputValue: '',
+      details: null
+    };
+
+    Action.prototype.validation = function() {};
+
+    Action.prototype.attributes = function() {
+      return {
+        id: this.model.cid
+      };
+    };
+
+    function Action() {
+      var args;
+      args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+      Action.__super__.constructor.apply(this, args);
+    }
+
+    Action.prototype.initialize = function() {
+      return this.set('details', new Tracktime.Action.Details());
+    };
+
+    Action.prototype.setActive = function() {
+      return this.collection.setActive(this);
+    };
+
+    Action.prototype.processAction = function(options) {
+      this.set('inputValue', options.subject);
+      this.get('details').set(options);
+      return this.newRecord();
+    };
+
+    Action.prototype.newRecord = function() {
+      return Tracktime.AppChannel.command('newRecord', _.extend({
+        project: 0
+      }, this.get('details').attributes));
+    };
+
+    Action.prototype.search = function() {
+      return $.alert('search under construction');
+    };
+
+    Action.prototype.successAdd = function() {
+      return this.set('inputValue', '');
+    };
+
+    return Action;
+
+  })(Backbone.Model);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.Action : void 0) || (this.Tracktime.Action = Tracktime.Action);
+
+  Tracktime.Action.Details = (function(superClass) {
+    extend(Details, superClass);
+
+    function Details() {
+      return Details.__super__.constructor.apply(this, arguments);
+    }
+
+    return Details;
+
+  })(Backbone.Model);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.Action.Details : void 0) || (this.Tracktime.Action.Details = Tracktime.Action.Details);
+
+  Lokitest = (function() {
+    function Lokitest() {
+      var LokiJS;
+      this.test('Start loki</li>');
+      LokiJS = require('lokijs');
+      this.db = new LokiJS('users_1.json');
+      $('.add-users').on('click', (function(_this) {
+        return function(event) {
+          console.log('add-users');
+          event.preventDefault();
+          return _this.add();
+        };
+      })(this));
+      $('.get-users').on('click', (function(_this) {
+        return function(event) {
+          console.log('get-users');
+          event.preventDefault();
+          return _this.get();
+        };
+      })(this));
+      return;
+    }
+
+    Lokitest.prototype.test = function(msg) {
+      if (msg) {
+        $('h1').html(msg);
+      }
+    };
+
+    Lokitest.prototype.add = function() {
+      var users;
+      users = this.db.addCollection('users', {
+        indices: ['name']
+      });
+      users.insert({
+        name: 'User 10',
+        user: 20
+      });
+      users.insert({
+        name: 'User 11',
+        user: 21
+      });
+      users.insert({
+        name: 'User 12',
+        user: 22
+      });
+      this.db.saveDatabase();
+    };
+
+    Lokitest.prototype.get = function() {
+      this.db.loadDatabase({}, (function(_this) {
+        return function() {
+          var users;
+          users = _this.db.getCollection('users');
+          if (users) {
+            console.log('users', users.data);
+          } else {
+            console.log('no users Data');
+            console.log('will create');
+            _this.add();
+          }
+        };
+      })(this));
+    };
+
+    return Lokitest;
+
+  })();
+
+  Tracktime.Project = (function(superClass) {
+    extend(Project, superClass);
+
+    function Project() {
+      return Project.__super__.constructor.apply(this, arguments);
+    }
+
+    Project.prototype.idAttribute = "_id";
+
+    Project.prototype.urlRoot = config.SERVER + '/projects';
+
+    Project.prototype.localStorage = new Backbone.LocalStorage(config.collection.projects);
+
+    Project.prototype.defaults = {
+      _id: null,
+      name: '',
+      description: '',
+      lastAccess: (new Date()).toISOString(),
+      isDeleted: false
+    };
+
+    Project.prototype.validation = {
+      name: {
+        required: true,
+        minLength: 4,
+        msg: 'Please enter a valid name'
+      }
+    };
+
+    Project.prototype.initialize = function(options, params, any) {
+      return this.listenTo(this, 'change:name', this.updateLastAccess);
+    };
+
+    Project.prototype.isValid = function() {
+      return true;
+    };
+
+    Project.prototype.updateLastAccess = function() {
+      return this.set('lastAccess', (new Date()).toISOString());
+    };
+
+    return Project;
+
+  })(Tracktime.Model);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.Project : void 0) || (this.Tracktime.Project = Tracktime.Project);
+
+  Tracktime.Record = (function(superClass) {
+    extend(Record, superClass);
+
+    function Record() {
+      return Record.__super__.constructor.apply(this, arguments);
+    }
+
+    Record.prototype.idAttribute = "_id";
+
+    Record.prototype.urlRoot = config.SERVER + '/records';
+
+    Record.prototype.localStorage = new Backbone.LocalStorage(config.collection.records);
+
+    Record.prototype.defaults = {
+      _id: null,
+      subject: '',
+      description: '',
+      date: function() {
+        return (new Date()).toISOString();
+      },
+      lastAccess: (new Date()).toISOString(),
+      recordDate: '',
+      recordTime: 0,
+      project: 0,
+      isDeleted: false
+    };
+
+    Record.prototype.validation = {
+      subject: {
+        required: true,
+        minLength: 4,
+        msg: 'Please enter a valid subject'
+      }
+    };
+
+    Record.prototype.initialize = function(options, params, any) {
+      return this.listenTo(this, 'change:subject', this.updateLastAccess);
+    };
+
+    Record.prototype.isValid = function() {
+      return true;
+    };
+
+    Record.prototype.updateLastAccess = function() {
+      return this.set('lastAccess', (new Date()).toISOString());
+    };
+
+    return Record;
+
+  })(Tracktime.Model);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.Record : void 0) || (this.Tracktime.Record = Tracktime.Record);
+
+  Tracktime.ActionsCollection = (function(superClass) {
+    extend(ActionsCollection, superClass);
+
+    function ActionsCollection() {
+      return ActionsCollection.__super__.constructor.apply(this, arguments);
+    }
+
+    ActionsCollection.prototype.model = Tracktime.Action;
+
+    ActionsCollection.prototype.url = '/actions';
+
+    ActionsCollection.prototype.localStorage = new Backbone.LocalStorage('records-backbone');
+
+    ActionsCollection.prototype.active = null;
+
+    ActionsCollection.prototype.initialize = function() {};
+
+    ActionsCollection.prototype.setActive = function(active) {
+      var ref1;
+      if ((ref1 = this.active) != null) {
+        ref1.set('isActive', false);
+      }
+      active.set('isActive', true);
+      return this.active = active;
+    };
+
+    ActionsCollection.prototype.getActive = function() {
+      return this.active;
+    };
+
+    ActionsCollection.prototype.getVisible = function() {
+      return _.filter(this.models, function(model) {
+        return model.get('isVisible');
+      });
+    };
+
+    ActionsCollection.prototype.fetch = function() {
+      var models;
+      models = this.localStorage.findAll();
+      if (!models.length) {
+        _.each(Tracktime.initdata.tmpActions, function(action) {
+          var newAction;
+          newAction = new Tracktime.Action(action);
+          return newAction.save();
+        });
+        models = this.localStorage.findAll();
+      }
+      return this.add(models);
+    };
+
+    return ActionsCollection;
+
+  })(Backbone.Collection);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.ActionsCollection : void 0) || (this.Tracktime.ActionsCollection = Tracktime.ActionsCollection);
+
+  Tracktime.ProjectsCollection = (function(superClass) {
+    extend(ProjectsCollection, superClass);
+
+    function ProjectsCollection() {
+      return ProjectsCollection.__super__.constructor.apply(this, arguments);
+    }
+
+    ProjectsCollection.prototype.model = Tracktime.Project;
+
+    ProjectsCollection.prototype.url = (config != null ? config.SERVER : void 0) + '/projects';
+
+    ProjectsCollection.prototype.urlRoot = (config != null ? config.SERVER : void 0) + '/projects';
+
+    ProjectsCollection.prototype.collectionName = config.collection.projects;
+
+    ProjectsCollection.prototype.localStorage = new Backbone.LocalStorage(ProjectsCollection.collectionName);
+
+    ProjectsCollection.prototype.initialize = function() {
+      return this.fetch({
+        ajaxSync: Tracktime.AppChannel.request('isOnline')
+      });
+    };
+
+    ProjectsCollection.prototype.comparator = function(model) {
+      return -(new Date(model.get('date'))).getTime();
+    };
+
+    return ProjectsCollection;
+
+  })(Tracktime.Collection);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.ProjectsCollection : void 0) || (this.Tracktime.ProjectsCollection = Tracktime.ProjectsCollection);
+
+  Tracktime.RecordsCollection = (function(superClass) {
+    extend(RecordsCollection, superClass);
+
+    function RecordsCollection() {
+      return RecordsCollection.__super__.constructor.apply(this, arguments);
+    }
+
+    RecordsCollection.prototype.model = Tracktime.Record;
+
+    RecordsCollection.prototype.url = (config != null ? config.SERVER : void 0) + '/records';
+
+    RecordsCollection.prototype.urlRoot = (config != null ? config.SERVER : void 0) + '/records';
+
+    RecordsCollection.prototype.collectionName = config.collection.records;
+
+    RecordsCollection.prototype.localStorage = new Backbone.LocalStorage(RecordsCollection.collectionName);
+
+    RecordsCollection.prototype.initialize = function() {
+      return this.fetch({
+        ajaxSync: Tracktime.AppChannel.request('isOnline')
+      });
+    };
+
+    RecordsCollection.prototype.comparator = function(model) {
+      return -(new Date(model.get('date'))).getTime();
+    };
+
+    return RecordsCollection;
+
+  })(Tracktime.Collection);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.RecordsCollection : void 0) || (this.Tracktime.RecordsCollection = Tracktime.RecordsCollection);
+
+  Tracktime.AppChannel = Backbone.Radio.channel('app');
+
+  _.extend(Tracktime.AppChannel, {
+    isOnline: null,
+    init: function() {
+      this.listenTo(this, 'isOnline', (function(_this) {
+        return function(status) {
+          return _this.isOnline = status;
+        };
+      })(this));
+      this.checkOnline();
+      this.setWindowListeners();
+      this.model = new Tracktime();
+      this.bindComply();
+      this.bindRequest();
+      return this;
+    },
+    checkOnline: function() {
+      if (window.navigator.onLine === true) {
+        return this.checkServer();
+      } else {
+        return this.trigger('isOnline', false);
+      }
+    },
+    checkServer: function() {
+      var deferred, errorCallback, exception_var, serverOnlineCallback, successCallback;
+      deferred = $.Deferred();
+      serverOnlineCallback = (function(_this) {
+        return function(status) {
+          return _this.trigger('isOnline', true);
+        };
+      })(this);
+      successCallback = (function(_this) {
+        return function(result) {
+          _this.trigger('isOnline', true);
+          return deferred.resolve();
+        };
+      })(this);
+      errorCallback = (function(_this) {
+        return function(jqXHR, textStatus, errorThrown) {
+          _this.trigger('isOnline', false);
+          return deferred.resolve();
+        };
+      })(this);
+      try {
+        $.ajax({
+          url: config.SERVER + "/status",
+          async: false,
+          dataType: 'jsonp',
+          jsonpCallback: 'serverOnlineCallback',
+          success: successCallback,
+          error: errorCallback
+        });
+      } catch (_error) {
+        exception_var = _error;
+        this.trigger('isOnline', false);
+      }
+      return deferred.promise();
+    },
+    setWindowListeners: function() {
+      window.addEventListener("offline", (function(_this) {
+        return function(e) {
+          return _this.trigger('isOnline', false);
+        };
+      })(this), false);
+      return window.addEventListener("online", (function(_this) {
+        return function(e) {
+          return _this.checkServer();
+        };
+      })(this), false);
+    },
+    bindComply: function() {
+      return this.comply({
+        'start': this.startApp,
+        'newRecord': this.newRecord,
+        'serverOnline': this.serverOnline,
+        'serverOffline': this.serverOffline,
+        'checkOnline': this.checkOnline
+      });
+    },
+    bindRequest: function() {
+      return this.reply('isOnline', (function(_this) {
+        return function() {
+          return _this.isOnline;
+        };
+      })(this));
+    },
+    startApp: function() {
+      this.router = new Tracktime.AppRouter({
+        model: this.model
+      });
+      return Backbone.history.start({
+        pushState: false
+      });
+    },
+    newRecord: function(options) {
+      return this.model.addRecord(options);
+    },
+    serverOnline: function() {
+      return this.trigger('isOnline', true);
+    },
+    serverOffline: function() {
+      return this.trigger('isOnline', false);
+    }
+  });
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AppChannel : void 0) || (this.Tracktime.AppChannel = Tracktime.AppChannel);
+
+  $(function() {
+    Tracktime.AppChannel.init().command('start');
+  });
 
   Tracktime.AdminRouter = (function(superClass) {
     extend(AdminRouter, superClass);
@@ -31180,8 +31258,9 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
           return _this.tmpDetails.recordDate = $(".select-date > .btn .caption ruby rt").html();
         };
       })(this));
-      return $(".slider").noUiSlider({
-        start: [1],
+      $(".slider").noUiSlider({
+        start: [0],
+        step: 5,
         range: {
           'min': [0],
           'max': [720]
@@ -31198,6 +31277,11 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
             return $('.slider .noUi-handle').attr('data-after', Math.round(minute));
           };
         })(this)
+      });
+      return $(".slider").noUiSlider_pips({
+        mode: 'values',
+        values: [0, 60 * 1, 60 * 2, 60 * 3, 60 * 4, 60 * 5, 60 * 6, 60 * 7, 60 * 8, 60 * 9, 60 * 10, 60 * 11, 60 * 12],
+        density: 2
       });
     };
 
