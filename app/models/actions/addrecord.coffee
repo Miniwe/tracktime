@@ -9,7 +9,7 @@ class Tracktime.Action.AddRecord extends Tracktime.Action
     icon:
       className: 'mdi-editor-mode-edit'
       letter: ''
-    isActive: true
+    isActive: null
     isVisible: true
 
   initialize: (options = {}) ->

@@ -6,14 +6,11 @@ class Tracktime.Action extends Backbone.Model
   defaults:
     _id: null
     title: 'Default action'
-    isActive: false
+    isActive: null
     isVisible: false
 
   attributes: () ->
     id: @model.cid
-
-  constructor: (args...) ->
-    super 'action constructor', args...
 
   setActive: () ->
     @collection.setActive @

@@ -9,7 +9,7 @@ class Tracktime.Action.Search extends Tracktime.Action
     icon:
       className: 'mdi-action-search'
       letter: ''
-    isActive: false
+    isActive: null
     isVisible: true
 
   initialize: (options = {}) ->

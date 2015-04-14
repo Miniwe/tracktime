@@ -15,11 +15,13 @@ class Tracktime.ActionsCollection extends Backbone.Collection
     @active?.set 'isActive', false
     active.set 'isActive', true
     @active = active
+    @trigger 'change:active', @active
 
   getActive: () ->
     @active
 
-  getVisible: () ->
+  getActions: () ->
+    # visible actions
     _.filter @models, (model) -> model.get('isVisible')
 
 (module?.exports = Tracktime.ActionsCollection) or @Tracktime.ActionsCollection = Tracktime.ActionsCollection

@@ -385,14 +385,11 @@ class Tracktime.Action extends Backbone.Model
   defaults:
     _id: null
     title: 'Default action'
-    isActive: false
+    isActive: null
     isVisible: false
 
   attributes: () ->
     id: @model.cid
-
-  constructor: (args...) ->
-    super 'action constructor', args...
 
   setActive: () ->
     @collection.setActive @
@@ -418,7 +415,7 @@ class Tracktime.Action.AddRecord extends Tracktime.Action
     icon:
       className: 'mdi-editor-mode-edit'
       letter: ''
-    isActive: true
+    isActive: null
     isVisible: true
 
   initialize: (options = {}) ->
@@ -450,7 +447,7 @@ class Tracktime.Action.Search extends Tracktime.Action
     icon:
       className: 'mdi-action-search'
       letter: ''
-    isActive: false
+    isActive: null
     isVisible: true
 
   initialize: (options = {}) ->
@@ -552,11 +549,13 @@ class Tracktime.ActionsCollection extends Backbone.Collection
     @active?.set 'isActive', false
     active.set 'isActive', true
     @active = active
+    @trigger 'change:active', @active
 
   getActive: () ->
     @active
 
-  getVisible: () ->
+  getActions: () ->
+    # visible actions
     _.filter @models, (model) -> model.get('isVisible')
 
 (module?.exports = Tracktime.ActionsCollection) or @Tracktime.ActionsCollection = Tracktime.ActionsCollection
@@ -904,24 +903,30 @@ class Tracktime.ActionView extends Backbone.View
 
 class Tracktime.ActionsView extends Backbone.View
   el: '#actions-form'
-  className: 'actions-group'
-  template: JST['layout/header/actions']
+  template: JST['actions/actions']
+  views: {}
 
   initialize: (options) ->
     _.extend @, options
+    @listenTo @collection, 'change:active', @renderAction
     @render()
 
   render: () ->
     @$el.html @template()
-    dropdown = $('.select-action-type-dropdown', @$el)
+    dropdown = $('.select-action', @$el)
 
-    #add to select-action-type-dropdown in ul all - but selected mast be hidden
     ul = dropdown.find '.dropdown-menu'
-    _.each @collection.getVisible(), (action) ->
-      listBtn = new Tracktime.ActionView.ListBtn model: action, container: dropdown
+    _.each @collection.getActions(), (action) =>
+      listBtn = new Tracktime.ActionView.ListBtn model: action
       ul.append listBtn.$el
-      $(listBtn.$el).click() if action.get 'isActive'
+      @setSubView "listBtn-#{listBtn.cid}", listBtn
+    @collection.at(0).setActive()
 
+  renderAction: (action) ->
+    @$el.parents('.navbar').attr 'class', "navbar #{action.get('navbarClass')} shadow-z-1"
+
+    if Tracktime.ActionView[action.get('type')]
+      @setSubView "actionDetails", new Tracktime.ActionView[action.get('type')] model: action
 
 (module?.exports = Tracktime.ActionsView) or @Tracktime.ActionsView = Tracktime.ActionsView
 
@@ -943,7 +948,7 @@ class Tracktime.ActionView.ActiveBtn extends Backbone.View
 
 class Tracktime.ActionView.DetailsBtn extends Backbone.View
   el: '#detailsNew'
-  template: JST['blocks/action']
+  template: JST['actions/detailsbtn']
 
   initialize: () ->
     @$el.popover
@@ -957,50 +962,145 @@ class Tracktime.ActionView.DetailsBtn extends Backbone.View
 
 class Tracktime.ActionView.ListBtn extends Backbone.View
   tagName: 'li'
-  template: JST['layout/header/listbtn']
+  template: JST['actions/listbtn']
   events:
     'click': 'actionActive'
 
   initialize: (options) ->
     _.extend @, options
     @render()
-
-    @listenTo @model, 'change:isActive', @updateHeader
-    @listenTo @model, 'change:inputValue', @setInputVal
+    @listenTo @model, 'change:isActive', @updateActionControl
 
   render: () ->
-    @$el.toggleClass('active', @model.get('isActive'))
     @$el.html @template @model.toJSON()
+    @$el.toggleClass('active', @model.get('isActive'))
+    @updateActionControl() if @model.get 'isActive'
 
-  actionActive: () ->
-    @updateHeader()
+  actionActive: (event) ->
+    event.preventDefault()
     @model.setActive()
 
-  updateHeader: () ->
+  updateActionControl: () ->
     @$el.siblings().removeClass 'active'
     @$el.addClass 'active'
-
-    #add to select-action-type-dropdown selected - can modify on action modell call
-    @container.find("#action_type").replaceWith (new Tracktime.ActionView.ActiveBtn model: @model).$el
-
-    #add selected detais if exist - will change from action modell call
-    @container.parent().find("#detailsNew").popover('destroy')
-    unless @model.get('details') is null
-      @container.parent().find("#detailsNew").show().replaceWith (new Tracktime.ActionView.DetailsBtn model: @model).el
-    else
-      @container.parent().find("#detailsNew").hide()
-
-    $('.floating-label', '#actions-form').html @model.get('title')
-
-    @container.parents('.navbar').attr 'class', "navbar #{@model.get('navbarClass')} shadow-z-1"
-
-    @setInputVal()
-
-  setInputVal: () ->
-    $('textarea', '#actions-form')?.val(@model.get('inputValue')).focus()
+    $("#action_type").replaceWith (new Tracktime.ActionView.ActiveBtn model: @model).$el
 
 
 (module?.exports = Tracktime.ActionView.ListBtn) or @Tracktime.ActionView.ListBtn = Tracktime.ActionView.ListBtn
+
+
+class Tracktime.ActionView.AddRecord extends Backbone.View
+  container: '.form-control-wrapper'
+  template: JST['actions/details/addrecord']
+  tmpDetails: {}
+  views: {}
+
+  initialize: (options) ->
+    _.extend @, options
+    @render()
+    @initUI()
+
+  render: () ->
+    $(@container).html @$el.html @template @model.toJSON()
+
+  initUI: () ->
+    $('[data-toggle="tooltip"]', @$el).tooltip()
+    $('textarea', @el)
+      .on('keydown', @fixEnter)
+      .on('change, keyup', @checkContent)
+      .textareaAutoSize()
+    $('#send-form').on 'click', @sendForm
+
+    @tmpDetails.recordDate = $(".select-date > .btn .caption ruby rt").html()
+
+    $(".select-date .dropdown-menu").on 'click', '.btn', (event) =>
+      event.preventDefault()
+      $(".select-date > .btn .caption ruby").html $(event.currentTarget).find('ruby').html()
+      @tmpDetails.recordDate = $(".select-date > .btn .caption ruby rt").html()
+    $(".slider")
+      .noUiSlider
+        start: [0]
+        step: 5
+        range: {'min': [ 0 ], 'max': [ 720 ] }
+      .on
+        slide: (event, val) =>
+          @tmpDetails.recordTime = val
+          currentHour = val / 720 * 12
+          hour = Math.floor(currentHour)
+          minute = (currentHour - hour) * 60
+          $('.slider .noUi-handle').attr 'data-before', hour
+          $('.slider .noUi-handle').attr 'data-after', Math.round(minute)
+
+    $(".slider")
+      .noUiSlider_pips
+        mode: 'values'
+        values: [0,60*1,60*2,60*3,60*4,60*5,60*6,60*7,60*8,60*9,60*10,60*11,60*12]
+        density: 2
+        format:
+          to: (value) -> value / 60
+          from: (value) -> value
+
+
+
+  fixEnter: (event) =>
+    if event.keyCode == 13
+      if event.shiftKey
+        event.preventDefault()
+        @tmpDetails.subject = $('textarea', @el).val()
+        @actionSubmit()
+
+  checkContent: () =>
+    window.setTimeout () =>
+      diff = $('#actions-form').outerHeight() - $('.navbar').outerHeight(true)
+      $('#actions-form').toggleClass "shadow-z-2", (diff > 10)
+      $(".controls-container").toggleClass 'hidden', _.isEmpty $('textarea').val()
+    , 500
+
+  sendForm: (event) =>
+    event.preventDefault()
+    @tmpDetails.subject = $('textarea', @el).val()
+    @actionSubmit()
+    @checkContent()
+
+  actionSubmit: (val) ->
+    unless _.isEmpty @tmpDetails.subject
+      $('textarea', @el).val('')
+      @model.processAction @tmpDetails
+
+  # ============ ============ ============ ============ ============ ============
+  #   #add selected detais if exist - will change from action modell call
+  #   @container.parent().find("#detailsNew").popover('destroy')
+  #   unless @model.get('details') is null
+  #     @container.parent().find("#detailsNew").show().replaceWith (new Tracktime.ActionView.DetailsBtn model: @model).el
+  #   else
+  #     @container.parent().find("#detailsNew").hide()
+
+  #   $('.floating-label', '#actions-form').html @model.get('title')
+
+  #   @container.parents('.navbar').attr 'class', "navbar #{@model.get('navbarClass')} shadow-z-1"
+
+  #   @setInputVal()
+
+  # setInputVal: () ->
+  #   $('textarea', '#actions-form')?.val(@model.get('inputValue')).focus()
+
+(module?.exports = Tracktime.ActionView.AddRecord) or @Tracktime.ActionView.AddRecord = Tracktime.ActionView.AddRecord
+
+
+class Tracktime.ActionView.Search extends Backbone.View
+  container: '.form-control-wrapper'
+  template: JST['actions/details/search']
+  tmpDetails: {}
+  views: {}
+
+  initialize: (options) ->
+    _.extend @, options
+    @render()
+
+  render: () ->
+    $(@container).html @$el.html @template @model.toJSON()
+
+(module?.exports = Tracktime.ActionView.Search) or @Tracktime.ActionView.Search = Tracktime.ActionView.Search
 
 
 class Tracktime.AdminView extends Backbone.View
@@ -1138,81 +1238,15 @@ class Tracktime.AppView.Header extends Backbone.View
   container: '#header'
   template: JST['layout/header']
   views: {}
-  tmpDetails: {}
 
   initialize: (options) ->
     @options = options
     @render()
-    @initUI()
-
-  initUI: () ->
-    $('[data-toggle="tooltip"]', @$el).tooltip()
-    $('textarea', @el)
-      .on('keydown', @fixEnter)
-      .on('change, keyup', @checkContent)
-      .textareaAutoSize()
-    $('#send-form').on 'click', @sendForm
-
-    @tmpDetails.recordDate = $(".select-date > .btn .caption ruby rt").html()
-
-    $(".select-date .dropdown-menu").on 'click', '.btn', (event) =>
-      event.preventDefault()
-      $(".select-date > .btn .caption ruby").html $(event.currentTarget).find('ruby').html()
-      @tmpDetails.recordDate = $(".select-date > .btn .caption ruby rt").html()
-    $(".slider")
-      .noUiSlider
-        start: [0]
-        step: 5
-        range: {'min': [ 0 ], 'max': [ 720 ] }
-      .on
-        slide: (event, val) =>
-          @tmpDetails.recordTime = val
-          currentHour = val / 720 * 12
-          hour = Math.floor(currentHour)
-          minute = (currentHour - hour) * 60
-          $('.slider .noUi-handle').attr 'data-before', hour
-          $('.slider .noUi-handle').attr 'data-after', Math.round(minute)
-
-    $(".slider")
-      .noUiSlider_pips
-        mode: 'values'
-        values: [0,60*1,60*2,60*3,60*4,60*5,60*6,60*7,60*8,60*9,60*10,60*11,60*12]
-        density: 2
-        format:
-          to: (value) -> value / 60
-          from: (value) -> value
-
 
   render: () ->
     $(@container).html @$el.html @template @model?.toJSON()
     @views['actions'] = new Tracktime.ActionsView
       collection: @model.get('actions')
-
-  fixEnter: (event) =>
-    if event.keyCode == 13
-      if event.shiftKey
-        event.preventDefault()
-        @tmpDetails.subject = $('textarea', @el).val()
-        @actionSubmit()
-
-  sendForm: (event) =>
-    event.preventDefault()
-    @tmpDetails.subject = $('textarea', @el).val()
-    @actionSubmit()
-    @checkContent()
-
-  actionSubmit: (val) ->
-    unless _.isEmpty @tmpDetails.subject
-      $('textarea', @el).val('')
-      @model.get('actions').getActive().processAction @tmpDetails
-
-  checkContent: () =>
-    window.setTimeout () =>
-      diff = $('#actions-form').outerHeight() - $('.navbar').outerHeight(true)
-      $('#actions-form').toggleClass "shadow-z-2", (diff > 10)
-      $(".controls-container").toggleClass 'hidden', _.isEmpty $('textarea').val()
-    , 500
-
 
 (module?.exports = Tracktime.AppView.Header) or @Tracktime.AppView.Header = Tracktime.AppView.Header
 

@@ -1,5 +1,43 @@
 this["JST"] = this["JST"] || {};
 
+this["JST"]["actions/actions"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  return "<div class=\"select-action dropdown pull-left\">\n    <button id=\"action_type\" type=\"button\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\" class=\"btn btn-fab btn-warning dropdown-toggle\" title=\"SHIFT + ENTER to submit\">\n        <i class=\"\"></i>\n    </button>\n    <ul class=\"dropdown-menu\" role=\"menu\" aria-labelledby=\"dLabel\">\n    </ul>\n</div>\n<div class=\"form-control-wrapper\">\n\n</div>";
+  },"useData":true});
+
+this["JST"]["actions/details/addrecord"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  return "<a id=\"detailsNew\" class=\"btn btn-fab btn-link\" href=\"javascript:void(0)\" data-toggle=\"popover\" title=\"Popover title\" data-content=\"And here's some amazing content. It's very engaging. Right?\" data-placement=\"left\" style=\"  position: absolute; top: -0.7em; right: 0;\">\n    <i class=\"mdi-navigation-more-vert\"></i>\n</a>\n<textarea class=\"form-control\" name=\"action\"></textarea>\n<div class=\"floating-label\">Selected Action Hint</div>\n<span class=\"material-input\"></span>\n<div class=\"controls-container hidden\">\n    <div class=\"row\">\n        <div class=\"col-md-2\">\n            <div class=\"btn-group select-date\">\n                <a href=\"javascript:void(0)\" class=\"btn btn-block btn-default dropdown-toggle\" data-toggle=\"dropdown\" id=\"open-cal\" data-target=\"#\" style=\"padding-left: 15px;\"><i class=\"mdi-action-event pull-left\"></i><div class=\"caption\" style=\"display: inline-block;\"><ruby>Сегодня<rt>03.01.2015</rt> </ruby></div> <span class=\"caret\"></span></a>\n                <ul class=\"dropdown-menu\">\n                    <li>\n                        <a href=\"javascript:void(0)\" class=\"btn btn-default\">\n                            <ruby>Позавчера\n                                <rt>01.01.2015</rt>\n                            </ruby>\n                        </a>\n                    </li>\n                    <li>\n                        <a href=\"javascript:void(0)\" class=\"btn btn-default\">\n                            <ruby>Вчера\n                                <rt>02.01.2015</rt>\n                            </ruby>\n                        </a>\n                    </li>\n                    <li>\n                        <a href=\"javascript:void(0)\" class=\"btn btn-default\">\n                            <ruby>Сегодня\n                                <rt>03.01.2015</rt>\n                            </ruby>\n                        </a>\n                    </li>\n                    <li><a href=\"javascript:void(0)\" class=\"btn btn-default disabled\">Выбрать дату</a></li>\n                </ul>\n            </div>\n        </div>\n        <div class=\"col-md-8\">\n            <div class=\"slider shor btn-primary slider-material-orange\"></div>\n        </div>\n        <div class=\"col-md-2\">\n            <button href=\"#send-form\" id=\"send-form\" class=\"btn btn-primary btn-block\"><i class=\"mdi-action-done pull-left\"></i>Send</button>\n        </div>\n    </div>\n    <div class=\"row hidden\">\n        <div class=\"well\">\n            Project:\n            <input type=\"text\" value=\"0\" name=\"project_id\" />\n        </div>\n    </div>\n</div>";
+  },"useData":true});
+
+this["JST"]["actions/details/search"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  return "search form";
+  },"useData":true});
+
+this["JST"]["actions/detailsbtn"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+  return "<div class=\"popover panel panel-warning "
+    + escapeExpression(((helper = (helper = helpers.btnClass || (depth0 != null ? depth0.btnClass : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"btnClass","hash":{},"data":data}) : helper)))
+    + " shadow-z-3\" style=\"z-index: 1010\"><div class=\"arrow\"></div><div class=\"panel-heading\"><h3 class=\"panel-title\">Details for "
+    + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
+    + "</h3></div><div class=\"panel-body\">And here's some amazing content. It's very engaging. Right? <hr> "
+    + escapeExpression(((helper = (helper = helpers.details || (depth0 != null ? depth0.details : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"details","hash":{},"data":data}) : helper)))
+    + "</div></div>";
+},"useData":true});
+
+this["JST"]["actions/listbtn"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var stack1, helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, lambda=this.lambda;
+  return "<a class=\"btn btn-fab "
+    + escapeExpression(((helper = (helper = helpers.btnClass || (depth0 != null ? depth0.btnClass : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"btnClass","hash":{},"data":data}) : helper)))
+    + "\" role=\"menuitem\" tabindex=\"-1\" href=\""
+    + escapeExpression(((helper = (helper = helpers.formAction || (depth0 != null ? depth0.formAction : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"formAction","hash":{},"data":data}) : helper)))
+    + "\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"\" data-original-title=\""
+    + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
+    + "\">\n  <i class=\""
+    + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.icon : depth0)) != null ? stack1.className : stack1), depth0))
+    + "\">"
+    + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.icon : depth0)) != null ? stack1.letter : stack1), depth0))
+    + "</i>\n</a>";
+},"useData":true});
+
 this["JST"]["admin/actions"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
   return "<h1>admin "
@@ -30,17 +68,6 @@ this["JST"]["admin/users"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1
   return "<h1>admin users</h1>";
   },"useData":true});
 
-this["JST"]["blocks/action"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-  return "<div class=\"popover panel panel-warning "
-    + escapeExpression(((helper = (helper = helpers.btnClass || (depth0 != null ? depth0.btnClass : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"btnClass","hash":{},"data":data}) : helper)))
-    + " shadow-z-3\" style=\"z-index: 1010\"><div class=\"arrow\"></div><div class=\"panel-heading\"><h3 class=\"panel-title\">Details for "
-    + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
-    + "</h3></div><div class=\"panel-body\">And here's some amazing content. It's very engaging. Right? <hr> "
-    + escapeExpression(((helper = (helper = helpers.details || (depth0 != null ? depth0.details : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"details","hash":{},"data":data}) : helper)))
-    + "</div></div>";
-},"useData":true});
-
 this["JST"]["global/app"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "<header id=\"header\">\n</header>\n<div class=\"scrollWrapper\">\n  <div class=\"container\" style=\"padding: 0\">\n    <div id=\"main\"></div>\n  </div>\n  <footer id=\"footer\">\n  </footer>\n</div>\n";
   },"useData":true});
@@ -57,27 +84,8 @@ this["JST"]["layout/footer"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta
 },"useData":true});
 
 this["JST"]["layout/header"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  return "<div class=\"navbar navbar-material-amber shadow-z-1\" style=\"-webkit-app-region: drag\">\n  <a id=\"menuToggler\" class=\"btn btn-fab btn-link pull-left\" href=\"javascript:void(0)\">\n    <i class=\"mdi-action-view-headline\"></i>\n  </a>\n  <div class=\"container\">\n    <div id=\"actions-form\">\n\n    </div>\n  </div>\n</div>\n\n";
+  return "<div class=\"navbar navbar-material-amber shadow-z-1\" style=\"-webkit-app-region: drag\">\n  <a id=\"menuToggler\" class=\"btn btn-fab btn-link pull-left\" href=\"javascript:void(0)\">\n    <i class=\"mdi-action-view-headline\"></i>\n  </a>\n  <div id=\"actions-form\">\n\n  </div>\n</div>\n\n";
   },"useData":true});
-
-this["JST"]["layout/header/actions"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  return "<div class=\"select-action-type-dropdown dropdown pull-left\">\n    <button id=\"action_type\" type=\"button\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\" class=\"btn btn-fab btn-warning dropdown-toggle\" title=\"SHIFT + ENTER to submit\">\n        <i class=\"\"></i>\n    </button>\n    <ul class=\"dropdown-menu\" role=\"menu\" aria-labelledby=\"dLabel\">\n    </ul>\n</div>\n<a id=\"detailsNew\" class=\"btn btn-fab btn-link pull-right\" href=\"javascript:void(0)\" data-toggle=\"popover\" title=\"Popover title\" data-content=\"And here's some amazing content. It's very engaging. Right?\" data-placement=\"left\">\n    <i class=\"mdi-navigation-more-vert\"></i>\n</a>\n<div class=\"form-control-wrapper\">\n    <textarea class=\"form-control\" name=\"action\"></textarea>\n    <div class=\"floating-label\">Selected Action Hint</div>\n    <span class=\"material-input\"></span>\n    <div class=\"controls-container hidden\">\n        <div class=\"row\">\n            <div class=\"col-md-2\">\n                <div class=\"btn-group select-date\">\n                    <a href=\"javascript:void(0)\" class=\"btn btn-block btn-default dropdown-toggle\" data-toggle=\"dropdown\" id=\"open-cal\" data-target=\"#\" style=\"padding-left: 15px;\"><i class=\"mdi-action-event pull-left\"></i><div class=\"caption\" style=\"display: inline-block;\"><ruby>Сегодня<rt>03.01.2015</rt> </ruby></div> <span class=\"caret\"></span></a>\n                    <ul class=\"dropdown-menu\">\n                        <li>\n                            <a href=\"javascript:void(0)\" class=\"btn btn-default\">\n                                <ruby>Позавчера\n                                    <rt>01.01.2015</rt>\n                                </ruby>\n                            </a>\n                        </li>\n                        <li>\n                            <a href=\"javascript:void(0)\" class=\"btn btn-default\">\n                                <ruby>Вчера\n                                    <rt>02.01.2015</rt>\n                                </ruby>\n                            </a>\n                        </li>\n                        <li>\n                            <a href=\"javascript:void(0)\" class=\"btn btn-default\">\n                                <ruby>Сегодня\n                                    <rt>03.01.2015</rt>\n                                </ruby>\n                            </a>\n                        </li>\n                        <li><a href=\"javascript:void(0)\" class=\"btn btn-default disabled\">Выбрать дату</a></li>\n                    </ul>\n                </div>\n            </div>\n            <div class=\"col-md-8\">\n                <div class=\"slider shor btn-primary slider-material-orange\"></div>\n            </div>\n            <div class=\"col-md-2\">\n                <button href=\"#send-form\" id=\"send-form\" class=\"btn btn-primary btn-block\"><i class=\"mdi-action-done pull-left\"></i>Send</button>\n            </div>\n        </div>\n        <div class=\"row hidden\">\n          <div class=\"well\">\n            Project: <input type=\"text\" value=\"0\" name=\"project_id\" />\n\n          </div>\n        </div>\n    </div>\n</div>";
-  },"useData":true});
-
-this["JST"]["layout/header/listbtn"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  var stack1, helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, lambda=this.lambda;
-  return "<a class=\"btn btn-fab "
-    + escapeExpression(((helper = (helper = helpers.btnClass || (depth0 != null ? depth0.btnClass : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"btnClass","hash":{},"data":data}) : helper)))
-    + "\" role=\"menuitem\" tabindex=\"-1\" href=\""
-    + escapeExpression(((helper = (helper = helpers.formAction || (depth0 != null ? depth0.formAction : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"formAction","hash":{},"data":data}) : helper)))
-    + "\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"\" data-original-title=\""
-    + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
-    + "\">\n  <i class=\""
-    + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.icon : depth0)) != null ? stack1.className : stack1), depth0))
-    + "\">"
-    + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.icon : depth0)) != null ? stack1.letter : stack1), depth0))
-    + "</i>\n</a>";
-},"useData":true});
 
 this["JST"]["layout/main"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "";

@@ -1,6 +1,6 @@
 class Tracktime.ActionView.DetailsBtn extends Backbone.View
   el: '#detailsNew'
-  template: JST['blocks/action']
+  template: JST['actions/detailsbtn']
 
   initialize: () ->
     @$el.popover

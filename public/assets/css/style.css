@@ -14981,7 +14981,7 @@ hr.on-light {
   min-height: 100%;
 }
 
-/* line 20, ../../app/assets/sass/vendor/_slideout.scss */
+/* line 22, ../../app/assets/sass/vendor/_slideout.scss */
 body,
 .slideout-open,
 .slideout-open body {
@@ -15153,13 +15153,13 @@ h1, h2, h3, h4, h5, h6 {
   height: 0px;
 }
 
-/* line 8, ../../app/assets/sass/blocks/_select-action-type-dropdown.scss */
-.select-action-type-dropdown .btn i.letter {
+/* line 8, ../../app/assets/sass/blocks/_select-action.scss */
+.select-action .btn i.letter {
   font-weight: 700;
   font-style: normal;
 }
-/* line 15, ../../app/assets/sass/blocks/_select-action-type-dropdown.scss */
-.select-action-type-dropdown .dropdown-menu {
+/* line 15, ../../app/assets/sass/blocks/_select-action.scss */
+.select-action .dropdown-menu {
   border: none;
   background: none;
   top: 0;
@@ -15169,18 +15169,18 @@ h1, h2, h3, h4, h5, h6 {
   -webkit-box-shadow: none;
   box-shadow: none;
 }
-/* line 24, ../../app/assets/sass/blocks/_select-action-type-dropdown.scss */
-.select-action-type-dropdown .dropdown-menu li {
+/* line 24, ../../app/assets/sass/blocks/_select-action.scss */
+.select-action .dropdown-menu li {
   overflow: visible;
   margin-bottom: .6em;
   float: left;
 }
-/* line 30, ../../app/assets/sass/blocks/_select-action-type-dropdown.scss */
-.select-action-type-dropdown .dropdown-menu li.active {
+/* line 30, ../../app/assets/sass/blocks/_select-action.scss */
+.select-action .dropdown-menu li.active {
   display: none;
 }
-/* line 34, ../../app/assets/sass/blocks/_select-action-type-dropdown.scss */
-.select-action-type-dropdown .dropdown-menu li .btn {
+/* line 34, ../../app/assets/sass/blocks/_select-action.scss */
+.select-action .dropdown-menu li .btn {
   font-size: 20px;
   width: 46px;
   height: 46px;
@@ -15200,14 +15200,14 @@ h1, h2, h3, h4, h5, h6 {
   -webkit-transition-duration: 0.2s;
   transition-duration: 0.2s;
 }
-/* line 47, ../../app/assets/sass/blocks/_select-action-type-dropdown.scss */
-.select-action-type-dropdown .dropdown-menu li .btn i {
+/* line 47, ../../app/assets/sass/blocks/_select-action.scss */
+.select-action .dropdown-menu li .btn i {
   font-size: 22px;
   margin-top: 2px;
   margin-left: -1px;
 }
-/* line 62, ../../app/assets/sass/blocks/_select-action-type-dropdown.scss */
-.select-action-type-dropdown.open .dropdown-menu li:nth-child(1) .btn {
+/* line 62, ../../app/assets/sass/blocks/_select-action.scss */
+.select-action.open .dropdown-menu li:nth-child(1) .btn {
   -moz-transition-duration: 0.15s;
   -o-transition-duration: 0.15s;
   -webkit-transition-duration: 0.15s;
@@ -15221,8 +15221,8 @@ h1, h2, h3, h4, h5, h6 {
   -webkit-transform: scale(1);
   transform: scale(1);
 }
-/* line 62, ../../app/assets/sass/blocks/_select-action-type-dropdown.scss */
-.select-action-type-dropdown.open .dropdown-menu li:nth-child(2) .btn {
+/* line 62, ../../app/assets/sass/blocks/_select-action.scss */
+.select-action.open .dropdown-menu li:nth-child(2) .btn {
   -moz-transition-duration: 0.3s;
   -o-transition-duration: 0.3s;
   -webkit-transition-duration: 0.3s;
@@ -15236,8 +15236,8 @@ h1, h2, h3, h4, h5, h6 {
   -webkit-transform: scale(1);
   transform: scale(1);
 }
-/* line 62, ../../app/assets/sass/blocks/_select-action-type-dropdown.scss */
-.select-action-type-dropdown.open .dropdown-menu li:nth-child(3) .btn {
+/* line 62, ../../app/assets/sass/blocks/_select-action.scss */
+.select-action.open .dropdown-menu li:nth-child(3) .btn {
   -moz-transition-duration: 0.45s;
   -o-transition-duration: 0.45s;
   -webkit-transition-duration: 0.45s;
@@ -15251,8 +15251,8 @@ h1, h2, h3, h4, h5, h6 {
   -webkit-transform: scale(1);
   transform: scale(1);
 }
-/* line 62, ../../app/assets/sass/blocks/_select-action-type-dropdown.scss */
-.select-action-type-dropdown.open .dropdown-menu li:nth-child(4) .btn {
+/* line 62, ../../app/assets/sass/blocks/_select-action.scss */
+.select-action.open .dropdown-menu li:nth-child(4) .btn {
   -moz-transition-duration: 0.6s;
   -o-transition-duration: 0.6s;
   -webkit-transition-duration: 0.6s;
@@ -15266,8 +15266,8 @@ h1, h2, h3, h4, h5, h6 {
   -webkit-transform: scale(1);
   transform: scale(1);
 }
-/* line 62, ../../app/assets/sass/blocks/_select-action-type-dropdown.scss */
-.select-action-type-dropdown.open .dropdown-menu li:nth-child(5) .btn {
+/* line 62, ../../app/assets/sass/blocks/_select-action.scss */
+.select-action.open .dropdown-menu li:nth-child(5) .btn {
   -moz-transition-duration: 0.75s;
   -o-transition-duration: 0.75s;
   -webkit-transition-duration: 0.75s;
@@ -15281,8 +15281,8 @@ h1, h2, h3, h4, h5, h6 {
   -webkit-transform: scale(1);
   transform: scale(1);
 }
-/* line 62, ../../app/assets/sass/blocks/_select-action-type-dropdown.scss */
-.select-action-type-dropdown.open .dropdown-menu li:nth-child(6) .btn {
+/* line 62, ../../app/assets/sass/blocks/_select-action.scss */
+.select-action.open .dropdown-menu li:nth-child(6) .btn {
   -moz-transition-duration: 0.9s;
   -o-transition-duration: 0.9s;
   -webkit-transition-duration: 0.9s;
@@ -15296,8 +15296,8 @@ h1, h2, h3, h4, h5, h6 {
   -webkit-transform: scale(1);
   transform: scale(1);
 }
-/* line 62, ../../app/assets/sass/blocks/_select-action-type-dropdown.scss */
-.select-action-type-dropdown.open .dropdown-menu li:nth-child(7) .btn {
+/* line 62, ../../app/assets/sass/blocks/_select-action.scss */
+.select-action.open .dropdown-menu li:nth-child(7) .btn {
   -moz-transition-duration: 1.05s;
   -o-transition-duration: 1.05s;
   -webkit-transition-duration: 1.05s;
@@ -15311,8 +15311,8 @@ h1, h2, h3, h4, h5, h6 {
   -webkit-transform: scale(1);
   transform: scale(1);
 }
-/* line 62, ../../app/assets/sass/blocks/_select-action-type-dropdown.scss */
-.select-action-type-dropdown.open .dropdown-menu li:nth-child(8) .btn {
+/* line 62, ../../app/assets/sass/blocks/_select-action.scss */
+.select-action.open .dropdown-menu li:nth-child(8) .btn {
   -moz-transition-duration: 1.2s;
   -o-transition-duration: 1.2s;
   -webkit-transition-duration: 1.2s;
@@ -15326,8 +15326,8 @@ h1, h2, h3, h4, h5, h6 {
   -webkit-transform: scale(1);
   transform: scale(1);
 }
-/* line 62, ../../app/assets/sass/blocks/_select-action-type-dropdown.scss */
-.select-action-type-dropdown.open .dropdown-menu li:nth-child(9) .btn {
+/* line 62, ../../app/assets/sass/blocks/_select-action.scss */
+.select-action.open .dropdown-menu li:nth-child(9) .btn {
   -moz-transition-duration: 1.35s;
   -o-transition-duration: 1.35s;
   -webkit-transition-duration: 1.35s;
@@ -15341,8 +15341,8 @@ h1, h2, h3, h4, h5, h6 {
   -webkit-transform: scale(1);
   transform: scale(1);
 }
-/* line 62, ../../app/assets/sass/blocks/_select-action-type-dropdown.scss */
-.select-action-type-dropdown.open .dropdown-menu li:nth-child(10) .btn {
+/* line 62, ../../app/assets/sass/blocks/_select-action.scss */
+.select-action.open .dropdown-menu li:nth-child(10) .btn {
   -moz-transition-duration: 1.5s;
   -o-transition-duration: 1.5s;
   -webkit-transition-duration: 1.5s;
@@ -15356,8 +15356,8 @@ h1, h2, h3, h4, h5, h6 {
   -webkit-transform: scale(1);
   transform: scale(1);
 }
-/* line 72, ../../app/assets/sass/blocks/_select-action-type-dropdown.scss */
-.select-action-type-dropdown.open .dropdown-menu li .btn:hover {
+/* line 72, ../../app/assets/sass/blocks/_select-action.scss */
+.select-action.open .dropdown-menu li .btn:hover {
   -moz-transition: all 0.2s;
   -o-transition: all 0.2s;
   -webkit-transition: all 0.2s;
@@ -15450,7 +15450,7 @@ h1, h2, h3, h4, h5, h6 {
   display: block;
   width: 100%;
   min-height: 1em;
-  margin: 0 auto .2em;
+  margin: .4em auto .8em;
   padding: 1em;
   -moz-transition: all 0.4s;
   -o-transition: all 0.4s;

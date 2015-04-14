@@ -2,8 +2,8 @@
   var Tracktime, config, development, process, production, ref, test,
     extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     hasProp = {}.hasOwnProperty,
-    slice = [].slice,
-    bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+    bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    slice = [].slice;
 
   process = process || window.process || {};
 
@@ -506,6 +506,10 @@
   Tracktime.Action = (function(superClass) {
     extend(Action, superClass);
 
+    function Action() {
+      return Action.__super__.constructor.apply(this, arguments);
+    }
+
     Action.prototype.idAttribute = "_id";
 
     Action.prototype.url = '/actions';
@@ -513,7 +517,7 @@
     Action.prototype.defaults = {
       _id: null,
       title: 'Default action',
-      isActive: false,
+      isActive: null,
       isVisible: false
     };
 
@@ -522,12 +526,6 @@
         id: this.model.cid
       };
     };
-
-    function Action() {
-      var args;
-      args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-      Action.__super__.constructor.apply(this, ['action constructor'].concat(slice.call(args)));
-    }
 
     Action.prototype.setActive = function() {
       return this.collection.setActive(this);
@@ -573,7 +571,7 @@
         className: 'mdi-editor-mode-edit',
         letter: ''
       },
-      isActive: true,
+      isActive: null,
       isVisible: true
     });
 
@@ -624,7 +622,7 @@
         className: 'mdi-action-search',
         letter: ''
       },
-      isActive: false,
+      isActive: null,
       isVisible: true
     });
 
@@ -787,14 +785,15 @@
         ref1.set('isActive', false);
       }
       active.set('isActive', true);
-      return this.active = active;
+      this.active = active;
+      return this.trigger('change:active', this.active);
     };
 
     ActionsCollection.prototype.getActive = function() {
       return this.active;
     };
 
-    ActionsCollection.prototype.getVisible = function() {
+    ActionsCollection.prototype.getActions = function() {
       return _.filter(this.models, function(model) {
         return model.get('isVisible');
       });
@@ -1337,31 +1336,41 @@
 
     ActionsView.prototype.el = '#actions-form';
 
-    ActionsView.prototype.className = 'actions-group';
+    ActionsView.prototype.template = JST['actions/actions'];
 
-    ActionsView.prototype.template = JST['layout/header/actions'];
+    ActionsView.prototype.views = {};
 
     ActionsView.prototype.initialize = function(options) {
       _.extend(this, options);
+      this.listenTo(this.collection, 'change:active', this.renderAction);
       return this.render();
     };
 
     ActionsView.prototype.render = function() {
       var dropdown, ul;
       this.$el.html(this.template());
-      dropdown = $('.select-action-type-dropdown', this.$el);
+      dropdown = $('.select-action', this.$el);
       ul = dropdown.find('.dropdown-menu');
-      return _.each(this.collection.getVisible(), function(action) {
-        var listBtn;
-        listBtn = new Tracktime.ActionView.ListBtn({
-          model: action,
-          container: dropdown
-        });
-        ul.append(listBtn.$el);
-        if (action.get('isActive')) {
-          return $(listBtn.$el).click();
-        }
-      });
+      _.each(this.collection.getActions(), (function(_this) {
+        return function(action) {
+          var listBtn;
+          listBtn = new Tracktime.ActionView.ListBtn({
+            model: action
+          });
+          ul.append(listBtn.$el);
+          return _this.setSubView("listBtn-" + listBtn.cid, listBtn);
+        };
+      })(this));
+      return this.collection.at(0).setActive();
+    };
+
+    ActionsView.prototype.renderAction = function(action) {
+      this.$el.parents('.navbar').attr('class', "navbar " + (action.get('navbarClass')) + " shadow-z-1");
+      if (Tracktime.ActionView[action.get('type')]) {
+        return this.setSubView("actionDetails", new Tracktime.ActionView[action.get('type')]({
+          model: action
+        }));
+      }
     };
 
     return ActionsView;
@@ -1402,7 +1411,7 @@
 
     DetailsBtn.prototype.el = '#detailsNew';
 
-    DetailsBtn.prototype.template = JST['blocks/action'];
+    DetailsBtn.prototype.template = JST['actions/detailsbtn'];
 
     DetailsBtn.prototype.initialize = function() {
       return this.$el.popover({
@@ -1429,7 +1438,7 @@
 
     ListBtn.prototype.tagName = 'li';
 
-    ListBtn.prototype.template = JST['layout/header/listbtn'];
+    ListBtn.prototype.template = JST['actions/listbtn'];
 
     ListBtn.prototype.events = {
       'click': 'actionActive'
@@ -1438,42 +1447,28 @@
     ListBtn.prototype.initialize = function(options) {
       _.extend(this, options);
       this.render();
-      this.listenTo(this.model, 'change:isActive', this.updateHeader);
-      return this.listenTo(this.model, 'change:inputValue', this.setInputVal);
+      return this.listenTo(this.model, 'change:isActive', this.updateActionControl);
     };
 
     ListBtn.prototype.render = function() {
+      this.$el.html(this.template(this.model.toJSON()));
       this.$el.toggleClass('active', this.model.get('isActive'));
-      return this.$el.html(this.template(this.model.toJSON()));
+      if (this.model.get('isActive')) {
+        return this.updateActionControl();
+      }
     };
 
-    ListBtn.prototype.actionActive = function() {
-      this.updateHeader();
+    ListBtn.prototype.actionActive = function(event) {
+      event.preventDefault();
       return this.model.setActive();
     };
 
-    ListBtn.prototype.updateHeader = function() {
+    ListBtn.prototype.updateActionControl = function() {
       this.$el.siblings().removeClass('active');
       this.$el.addClass('active');
-      this.container.find("#action_type").replaceWith((new Tracktime.ActionView.ActiveBtn({
+      return $("#action_type").replaceWith((new Tracktime.ActionView.ActiveBtn({
         model: this.model
       })).$el);
-      this.container.parent().find("#detailsNew").popover('destroy');
-      if (this.model.get('details') !== null) {
-        this.container.parent().find("#detailsNew").show().replaceWith((new Tracktime.ActionView.DetailsBtn({
-          model: this.model
-        })).el);
-      } else {
-        this.container.parent().find("#detailsNew").hide();
-      }
-      $('.floating-label', '#actions-form').html(this.model.get('title'));
-      this.container.parents('.navbar').attr('class', "navbar " + (this.model.get('navbarClass')) + " shadow-z-1");
-      return this.setInputVal();
-    };
-
-    ListBtn.prototype.setInputVal = function() {
-      var ref1;
-      return (ref1 = $('textarea', '#actions-form')) != null ? ref1.val(this.model.get('inputValue')).focus() : void 0;
     };
 
     return ListBtn;
@@ -1481,6 +1476,152 @@
   })(Backbone.View);
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.ActionView.ListBtn : void 0) || (this.Tracktime.ActionView.ListBtn = Tracktime.ActionView.ListBtn);
+
+  Tracktime.ActionView.AddRecord = (function(superClass) {
+    extend(AddRecord, superClass);
+
+    function AddRecord() {
+      this.sendForm = bind(this.sendForm, this);
+      this.checkContent = bind(this.checkContent, this);
+      this.fixEnter = bind(this.fixEnter, this);
+      return AddRecord.__super__.constructor.apply(this, arguments);
+    }
+
+    AddRecord.prototype.container = '.form-control-wrapper';
+
+    AddRecord.prototype.template = JST['actions/details/addrecord'];
+
+    AddRecord.prototype.tmpDetails = {};
+
+    AddRecord.prototype.views = {};
+
+    AddRecord.prototype.initialize = function(options) {
+      _.extend(this, options);
+      this.render();
+      return this.initUI();
+    };
+
+    AddRecord.prototype.render = function() {
+      return $(this.container).html(this.$el.html(this.template(this.model.toJSON())));
+    };
+
+    AddRecord.prototype.initUI = function() {
+      $('[data-toggle="tooltip"]', this.$el).tooltip();
+      $('textarea', this.el).on('keydown', this.fixEnter).on('change, keyup', this.checkContent).textareaAutoSize();
+      $('#send-form').on('click', this.sendForm);
+      this.tmpDetails.recordDate = $(".select-date > .btn .caption ruby rt").html();
+      $(".select-date .dropdown-menu").on('click', '.btn', (function(_this) {
+        return function(event) {
+          event.preventDefault();
+          $(".select-date > .btn .caption ruby").html($(event.currentTarget).find('ruby').html());
+          return _this.tmpDetails.recordDate = $(".select-date > .btn .caption ruby rt").html();
+        };
+      })(this));
+      $(".slider").noUiSlider({
+        start: [0],
+        step: 5,
+        range: {
+          'min': [0],
+          'max': [720]
+        }
+      }).on({
+        slide: (function(_this) {
+          return function(event, val) {
+            var currentHour, hour, minute;
+            _this.tmpDetails.recordTime = val;
+            currentHour = val / 720 * 12;
+            hour = Math.floor(currentHour);
+            minute = (currentHour - hour) * 60;
+            $('.slider .noUi-handle').attr('data-before', hour);
+            return $('.slider .noUi-handle').attr('data-after', Math.round(minute));
+          };
+        })(this)
+      });
+      return $(".slider").noUiSlider_pips({
+        mode: 'values',
+        values: [0, 60 * 1, 60 * 2, 60 * 3, 60 * 4, 60 * 5, 60 * 6, 60 * 7, 60 * 8, 60 * 9, 60 * 10, 60 * 11, 60 * 12],
+        density: 2,
+        format: {
+          to: function(value) {
+            return value / 60;
+          },
+          from: function(value) {
+            return value;
+          }
+        }
+      });
+    };
+
+    AddRecord.prototype.fixEnter = function(event) {
+      if (event.keyCode === 13) {
+        if (event.shiftKey) {
+          event.preventDefault();
+          this.tmpDetails.subject = $('textarea', this.el).val();
+          return this.actionSubmit();
+        }
+      }
+    };
+
+    AddRecord.prototype.checkContent = function() {
+      return window.setTimeout((function(_this) {
+        return function() {
+          var diff;
+          diff = $('#actions-form').outerHeight() - $('.navbar').outerHeight(true);
+          $('#actions-form').toggleClass("shadow-z-2", diff > 10);
+          return $(".controls-container").toggleClass('hidden', _.isEmpty($('textarea').val()));
+        };
+      })(this), 500);
+    };
+
+    AddRecord.prototype.sendForm = function(event) {
+      event.preventDefault();
+      this.tmpDetails.subject = $('textarea', this.el).val();
+      this.actionSubmit();
+      return this.checkContent();
+    };
+
+    AddRecord.prototype.actionSubmit = function(val) {
+      if (!_.isEmpty(this.tmpDetails.subject)) {
+        $('textarea', this.el).val('');
+        return this.model.processAction(this.tmpDetails);
+      }
+    };
+
+    return AddRecord;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.ActionView.AddRecord : void 0) || (this.Tracktime.ActionView.AddRecord = Tracktime.ActionView.AddRecord);
+
+  Tracktime.ActionView.Search = (function(superClass) {
+    extend(Search, superClass);
+
+    function Search() {
+      return Search.__super__.constructor.apply(this, arguments);
+    }
+
+    Search.prototype.container = '.form-control-wrapper';
+
+    Search.prototype.template = JST['actions/details/search'];
+
+    Search.prototype.tmpDetails = {};
+
+    Search.prototype.views = {};
+
+    Search.prototype.initialize = function(options) {
+      _.extend(this, options);
+      return this.render();
+    };
+
+    Search.prototype.render = function() {
+      return $(this.container).html(this.$el.html(this.template(this.model.toJSON())));
+    };
+
+    return Search;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.ActionView.Search : void 0) || (this.Tracktime.ActionView.Search = Tracktime.ActionView.Search);
 
   Tracktime.AdminView = (function(superClass) {
     extend(AdminView, superClass);
@@ -1723,9 +1864,6 @@
     extend(Header, superClass);
 
     function Header() {
-      this.checkContent = bind(this.checkContent, this);
-      this.sendForm = bind(this.sendForm, this);
-      this.fixEnter = bind(this.fixEnter, this);
       return Header.__super__.constructor.apply(this, arguments);
     }
 
@@ -1735,59 +1873,9 @@
 
     Header.prototype.views = {};
 
-    Header.prototype.tmpDetails = {};
-
     Header.prototype.initialize = function(options) {
       this.options = options;
-      this.render();
-      return this.initUI();
-    };
-
-    Header.prototype.initUI = function() {
-      $('[data-toggle="tooltip"]', this.$el).tooltip();
-      $('textarea', this.el).on('keydown', this.fixEnter).on('change, keyup', this.checkContent).textareaAutoSize();
-      $('#send-form').on('click', this.sendForm);
-      this.tmpDetails.recordDate = $(".select-date > .btn .caption ruby rt").html();
-      $(".select-date .dropdown-menu").on('click', '.btn', (function(_this) {
-        return function(event) {
-          event.preventDefault();
-          $(".select-date > .btn .caption ruby").html($(event.currentTarget).find('ruby').html());
-          return _this.tmpDetails.recordDate = $(".select-date > .btn .caption ruby rt").html();
-        };
-      })(this));
-      $(".slider").noUiSlider({
-        start: [0],
-        step: 5,
-        range: {
-          'min': [0],
-          'max': [720]
-        }
-      }).on({
-        slide: (function(_this) {
-          return function(event, val) {
-            var currentHour, hour, minute;
-            _this.tmpDetails.recordTime = val;
-            currentHour = val / 720 * 12;
-            hour = Math.floor(currentHour);
-            minute = (currentHour - hour) * 60;
-            $('.slider .noUi-handle').attr('data-before', hour);
-            return $('.slider .noUi-handle').attr('data-after', Math.round(minute));
-          };
-        })(this)
-      });
-      return $(".slider").noUiSlider_pips({
-        mode: 'values',
-        values: [0, 60 * 1, 60 * 2, 60 * 3, 60 * 4, 60 * 5, 60 * 6, 60 * 7, 60 * 8, 60 * 9, 60 * 10, 60 * 11, 60 * 12],
-        density: 2,
-        format: {
-          to: function(value) {
-            return value / 60;
-          },
-          from: function(value) {
-            return value;
-          }
-        }
-      });
+      return this.render();
     };
 
     Header.prototype.render = function() {
@@ -1796,41 +1884,6 @@
       return this.views['actions'] = new Tracktime.ActionsView({
         collection: this.model.get('actions')
       });
-    };
-
-    Header.prototype.fixEnter = function(event) {
-      if (event.keyCode === 13) {
-        if (event.shiftKey) {
-          event.preventDefault();
-          this.tmpDetails.subject = $('textarea', this.el).val();
-          return this.actionSubmit();
-        }
-      }
-    };
-
-    Header.prototype.sendForm = function(event) {
-      event.preventDefault();
-      this.tmpDetails.subject = $('textarea', this.el).val();
-      this.actionSubmit();
-      return this.checkContent();
-    };
-
-    Header.prototype.actionSubmit = function(val) {
-      if (!_.isEmpty(this.tmpDetails.subject)) {
-        $('textarea', this.el).val('');
-        return this.model.get('actions').getActive().processAction(this.tmpDetails);
-      }
-    };
-
-    Header.prototype.checkContent = function() {
-      return window.setTimeout((function(_this) {
-        return function() {
-          var diff;
-          diff = $('#actions-form').outerHeight() - $('.navbar').outerHeight(true);
-          $('#actions-form').toggleClass("shadow-z-2", diff > 10);
-          return $(".controls-container").toggleClass('hidden', _.isEmpty($('textarea').val()));
-        };
-      })(this), 500);
     };
 
     return Header;
