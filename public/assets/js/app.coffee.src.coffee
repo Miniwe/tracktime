@@ -86,8 +86,11 @@ _.extend Backbone.Model.prototype, Backbone.Validation.mixin
 Backbone.ViewMixin =
   close: () ->
     @onClose() if @onClose
-    @unbind()
-    @remove()
+
+    @undelegateEvents()
+    @$el.removeData().unbind()
+    @remove();
+    Backbone.View.prototype.remove.call @
     return
 
   onClose: ->
@@ -143,7 +146,7 @@ Tracktime.initdata = {}
 Tracktime.initdata.defaultActions = [
   {
     title: 'Add Record'
-    type: 'AddRecord'
+    type: 'Record'
   }
   {
     title: 'Search'
@@ -404,10 +407,42 @@ class Tracktime.Action.Details extends Backbone.Model
 
 (module?.exports = Tracktime.Action.Details) or @Tracktime.Action.Details = Tracktime.Action.Details
 
-class Tracktime.Action.AddRecord extends Tracktime.Action
+class Tracktime.Action.Project extends Tracktime.Action
 
   defaults: _.extend {}, Tracktime.Action.prototype.defaults,
-    title: 'Default action title'
+    title: 'Add project'
+    inputValue: ''
+    formAction: '#'
+    btnClass: 'btn-danger'
+    navbarClass: 'navbar-material-indigo'
+    icon:
+      className: 'mdi-editor-mode-edit'
+      letter: ''
+    isActive: null
+    isVisible: true
+
+  initialize: (options = {}) ->
+    @set options
+    @set 'details', new Tracktime.Action.Details()
+
+  processAction: (options) ->
+    @set 'inputValue', options.subject
+    @get('details').set(options) # @todo remove possible
+    @newProject()
+
+  newProject: () ->
+    Tracktime.AppChannel.command 'newProject', _.extend {project: 0}, @get('details').attributes
+
+  successAdd: () ->
+    @set 'inputValue', ''
+    # @details.reset() # @todo on change details change view controls
+
+(module?.exports = Tracktime.Action.Project) or @Tracktime.Action.Project = Tracktime.Action.Project
+
+class Tracktime.Action.Record extends Tracktime.Action
+
+  defaults: _.extend {}, Tracktime.Action.prototype.defaults,
+    title: 'Add record'
     inputValue: ''
     formAction: '#'
     btnClass: 'btn-primary'
@@ -434,7 +469,7 @@ class Tracktime.Action.AddRecord extends Tracktime.Action
     @set 'inputValue', ''
     # @details.reset() # @todo on change details change view controls
 
-(module?.exports = Tracktime.Action.AddRecord) or @Tracktime.Action.AddRecord = Tracktime.Action.AddRecord
+(module?.exports = Tracktime.Action.Record) or @Tracktime.Action.Record = Tracktime.Action.Record
 
 class Tracktime.Action.Search extends Tracktime.Action
 
@@ -540,10 +575,14 @@ class Tracktime.ActionsCollection extends Backbone.Collection
   active: null
 
   initialize: () ->
-    _.each @defaultActions, (action) =>
-      if (Tracktime.Action[action.type])
-        actionModel = new Tracktime.Action[action.type](action)
-        @push actionModel
+    _.each @defaultActions, @addAction
+
+  addAction: (action, params = {}) =>
+    if (Tracktime.Action[action.type])
+      actionModel = new Tracktime.Action[action.type](action)
+      actionModel.set params
+      @push actionModel
+      return actionModel
 
   setActive: (active) ->
     @active?.set 'isActive', false
@@ -697,9 +736,8 @@ class Tracktime.AdminRouter extends Backbone.SubRoute
 
   initialize: (options) ->
     _.extend @, options
-    # @parent.view.setSubView 'main', new Tracktime.AdminView()
-    # @parent.view.setSubView 'header', new Tracktime.AdminView.Header()
-    # @parent.view.initUI()
+    @on 'route', (route, params) =>
+      @parent.trigger 'subroute', "admin:#{route}", params
 
   dashboard: () ->
     @parent.view.setSubView 'main', new Tracktime.AdminView.Dashboard()
@@ -709,11 +747,14 @@ class Tracktime.AdminRouter extends Backbone.SubRoute
 
   projects: () ->
     @parent.view.setSubView 'main', new Tracktime.AdminView.Projects()
+    newAction = @parent.model.get('actions').addAction
+      title: 'Add projects'
+      type: 'Project'
+    , scope: 'admin:projects'
+    newAction.setActive()
 
   actions: () ->
     @parent.view.setSubView 'main', new Tracktime.AdminView.Actions()
-
-
 
 
 (module?.exports = Tracktime.AdminRouter) or @Tracktime.AdminRouter = Tracktime.AdminRouter
@@ -729,6 +770,8 @@ class Tracktime.AppRouter extends Backbone.Router
 
   initialize: (options) ->
     _.extend @, options
+    @on 'route subroute', (route, params) =>
+      @removeActionsExcept(route) unless route.substr(0,6) == 'invoke'
     @initAuthInterface()
 
   invokeProjectsRouter: (subroute) ->
@@ -761,6 +804,15 @@ class Tracktime.AppRouter extends Backbone.Router
     $.alert 'Unknown page'
     @navigate '', true
 
+  removeActionsExcept: (route) ->
+    activeInScope = false
+    _.each @model.get('actions').models, (action) ->
+      if action.get('scope') and action.get('scope') isnt route
+        activeInScope = true if action.get('isActive')
+        action.destroy()
+
+    @model.get('actions').at(0).setActive() if activeInScope
+
 (module?.exports = Tracktime.AppRouter) or @Tracktime.AppRouter = Tracktime.AppRouter
 
 
@@ -775,6 +827,8 @@ class Tracktime.ProjectsRouter extends Backbone.SubRoute
 
   initialize: (options) ->
     _.extend @, options
+    @on 'route', (route, params) =>
+      @parent.trigger 'subroute', "projects:#{route}", params
 
   list: () ->
     $.alert "whole records list in projects section"
@@ -808,6 +862,8 @@ class Tracktime.RecordsRouter extends Backbone.Router
 
   initialize: (options) ->
     _.extend @, options
+    @on 'route', (route, params) =>
+      @parent.trigger 'subroute', "records:#{route}", params
 
   list: () ->
     $.alert "records list"
@@ -840,6 +896,8 @@ class Tracktime.ReportsRouter extends Backbone.SubRoute
 
   initialize: (options) ->
     _.extend @, options
+    @on 'route', (route, params) =>
+      @parent.trigger 'subroute', "reports:#{route}", params
     @parent.view.setSubView 'main', new Tracktime.ReportsView()
 
   list: () ->
@@ -871,6 +929,8 @@ class Tracktime.UserRouter extends Backbone.SubRoute
 
   initialize: (options) ->
     _.extend @, options
+    @on 'route', (route, params) =>
+      @parent.trigger 'subroute', "user:#{route}", params
     # @parent.view.setSubView 'main', new Tracktime.UserView()
 
   details: () ->
@@ -903,24 +963,27 @@ class Tracktime.ActionView extends Backbone.View
 
 class Tracktime.ActionsView extends Backbone.View
   el: '#actions-form'
+  menu: '#actions-form'
   template: JST['actions/actions']
   views: {}
 
   initialize: (options) ->
     _.extend @, options
+
     @listenTo @collection, 'change:active', @renderAction
+    @listenTo @collection, 'add', @addAction
     @render()
 
   render: () ->
     @$el.html @template()
-    dropdown = $('.select-action', @$el)
-
-    ul = dropdown.find '.dropdown-menu'
-    _.each @collection.getActions(), (action) =>
-      listBtn = new Tracktime.ActionView.ListBtn model: action
-      ul.append listBtn.$el
-      @setSubView "listBtn-#{listBtn.cid}", listBtn
+    @menu = $('.dropdown-menu', '.select-action', @$el)
+    _.each @collection.getActions(), @addAction
     @collection.at(0).setActive()
+
+  addAction: (action) =>
+    listBtn = new Tracktime.ActionView.ListBtn model: action
+    @menu.append listBtn.$el
+    @setSubView "listBtn-#{listBtn.cid}", listBtn
 
   renderAction: (action) ->
     @$el.parents('.navbar').attr 'class', "navbar #{action.get('navbarClass')} shadow-z-1"
@@ -970,11 +1033,15 @@ class Tracktime.ActionView.ListBtn extends Backbone.View
     _.extend @, options
     @render()
     @listenTo @model, 'change:isActive', @updateActionControl
+    @listenTo @model, 'destroy', @close
 
   render: () ->
     @$el.html @template @model.toJSON()
-    @$el.toggleClass('active', @model.get('isActive'))
-    @updateActionControl() if @model.get 'isActive'
+    if @model.get('isActive') == true
+      @$el.addClass 'active'
+      @updateActionControl()
+    else
+      @$el.removeClass 'active'
 
   actionActive: (event) ->
     event.preventDefault()
@@ -989,9 +1056,25 @@ class Tracktime.ActionView.ListBtn extends Backbone.View
 (module?.exports = Tracktime.ActionView.ListBtn) or @Tracktime.ActionView.ListBtn = Tracktime.ActionView.ListBtn
 
 
-class Tracktime.ActionView.AddRecord extends Backbone.View
+class Tracktime.ActionView.Project extends Backbone.View
   container: '.form-control-wrapper'
-  template: JST['actions/details/addrecord']
+  template: JST['actions/details/project']
+  tmpDetails: {}
+  views: {}
+
+  initialize: (options) ->
+    _.extend @, options
+    @render()
+
+  render: () ->
+    $(@container).html @$el.html @template @model.toJSON()
+
+(module?.exports = Tracktime.ActionView.Search) or @Tracktime.ActionView.Search = Tracktime.ActionView.Search
+
+
+class Tracktime.ActionView.Record extends Backbone.View
+  container: '.form-control-wrapper'
+  template: JST['actions/details/record']
   tmpDetails: {}
   views: {}
 
@@ -1084,7 +1167,7 @@ class Tracktime.ActionView.AddRecord extends Backbone.View
   # setInputVal: () ->
   #   $('textarea', '#actions-form')?.val(@model.get('inputValue')).focus()
 
-(module?.exports = Tracktime.ActionView.AddRecord) or @Tracktime.ActionView.AddRecord = Tracktime.ActionView.AddRecord
+(module?.exports = Tracktime.ActionView.Record) or @Tracktime.ActionView.Record = Tracktime.ActionView.Record
 
 
 class Tracktime.ActionView.Search extends Backbone.View

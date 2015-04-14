@@ -9,6 +9,8 @@ class Tracktime.AppRouter extends Backbone.Router
 
   initialize: (options) ->
     _.extend @, options
+    @on 'route subroute', (route, params) =>
+      @removeActionsExcept(route) unless route.substr(0,6) == 'invoke'
     @initAuthInterface()
 
   invokeProjectsRouter: (subroute) ->
@@ -40,6 +42,15 @@ class Tracktime.AppRouter extends Backbone.Router
   default: (actions) ->
     $.alert 'Unknown page'
     @navigate '', true
+
+  removeActionsExcept: (route) ->
+    activeInScope = false
+    _.each @model.get('actions').models, (action) ->
+      if action.get('scope') and action.get('scope') isnt route
+        activeInScope = true if action.get('isActive')
+        action.destroy()
+
+    @model.get('actions').at(0).setActive() if activeInScope
 
 (module?.exports = Tracktime.AppRouter) or @Tracktime.AppRouter = Tracktime.AppRouter
 

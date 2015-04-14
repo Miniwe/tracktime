@@ -1,6 +1,6 @@
-class Tracktime.ActionView.AddRecord extends Backbone.View
+class Tracktime.ActionView.Record extends Backbone.View
   container: '.form-control-wrapper'
-  template: JST['actions/details/addrecord']
+  template: JST['actions/details/record']
   tmpDetails: {}
   views: {}
 
@@ -93,5 +93,5 @@ class Tracktime.ActionView.AddRecord extends Backbone.View
   # setInputVal: () ->
   #   $('textarea', '#actions-form')?.val(@model.get('inputValue')).focus()
 
-(module?.exports = Tracktime.ActionView.AddRecord) or @Tracktime.ActionView.AddRecord = Tracktime.ActionView.AddRecord
+(module?.exports = Tracktime.ActionView.Record) or @Tracktime.ActionView.Record = Tracktime.ActionView.Record
 

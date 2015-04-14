@@ -1,8 +1,11 @@
 Backbone.ViewMixin =
   close: () ->
     @onClose() if @onClose
-    @unbind()
-    @remove()
+
+    @undelegateEvents()
+    @$el.removeData().unbind()
+    @remove();
+    Backbone.View.prototype.remove.call @
     return
 
   onClose: ->

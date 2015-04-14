@@ -8,11 +8,15 @@ class Tracktime.ActionView.ListBtn extends Backbone.View
     _.extend @, options
     @render()
     @listenTo @model, 'change:isActive', @updateActionControl
+    @listenTo @model, 'destroy', @close
 
   render: () ->
     @$el.html @template @model.toJSON()
-    @$el.toggleClass('active', @model.get('isActive'))
-    @updateActionControl() if @model.get 'isActive'
+    if @model.get('isActive') == true
+      @$el.addClass 'active'
+      @updateActionControl()
+    else
+      @$el.removeClass 'active'
 
   actionActive: (event) ->
     event.preventDefault()

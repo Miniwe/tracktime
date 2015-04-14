@@ -9,6 +9,8 @@ class Tracktime.ReportsRouter extends Backbone.SubRoute
 
   initialize: (options) ->
     _.extend @, options
+    @on 'route', (route, params) =>
+      @parent.trigger 'subroute', "reports:#{route}", params
     @parent.view.setSubView 'main', new Tracktime.ReportsView()
 
   list: () ->

@@ -133,8 +133,10 @@
       if (this.onClose) {
         this.onClose();
       }
-      this.unbind();
+      this.undelegateEvents();
+      this.$el.removeData().unbind();
       this.remove();
+      Backbone.View.prototype.remove.call(this);
     },
     onClose: function() {
       var key, ref1, results, view;
@@ -209,7 +211,7 @@
   Tracktime.initdata.defaultActions = [
     {
       title: 'Add Record',
-      type: 'AddRecord'
+      type: 'Record'
     }, {
       title: 'Search',
       type: 'Search'
@@ -554,15 +556,66 @@
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.Action.Details : void 0) || (this.Tracktime.Action.Details = Tracktime.Action.Details);
 
-  Tracktime.Action.AddRecord = (function(superClass) {
-    extend(AddRecord, superClass);
+  Tracktime.Action.Project = (function(superClass) {
+    extend(Project, superClass);
 
-    function AddRecord() {
-      return AddRecord.__super__.constructor.apply(this, arguments);
+    function Project() {
+      return Project.__super__.constructor.apply(this, arguments);
     }
 
-    AddRecord.prototype.defaults = _.extend({}, Tracktime.Action.prototype.defaults, {
-      title: 'Default action title',
+    Project.prototype.defaults = _.extend({}, Tracktime.Action.prototype.defaults, {
+      title: 'Add project',
+      inputValue: '',
+      formAction: '#',
+      btnClass: 'btn-danger',
+      navbarClass: 'navbar-material-indigo',
+      icon: {
+        className: 'mdi-editor-mode-edit',
+        letter: ''
+      },
+      isActive: null,
+      isVisible: true
+    });
+
+    Project.prototype.initialize = function(options) {
+      if (options == null) {
+        options = {};
+      }
+      this.set(options);
+      return this.set('details', new Tracktime.Action.Details());
+    };
+
+    Project.prototype.processAction = function(options) {
+      this.set('inputValue', options.subject);
+      this.get('details').set(options);
+      return this.newProject();
+    };
+
+    Project.prototype.newProject = function() {
+      return Tracktime.AppChannel.command('newProject', _.extend({
+        project: 0
+      }, this.get('details').attributes));
+    };
+
+    Project.prototype.successAdd = function() {
+      return this.set('inputValue', '');
+    };
+
+    return Project;
+
+  })(Tracktime.Action);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.Action.Project : void 0) || (this.Tracktime.Action.Project = Tracktime.Action.Project);
+
+  Tracktime.Action.Record = (function(superClass) {
+    extend(Record, superClass);
+
+    function Record() {
+      return Record.__super__.constructor.apply(this, arguments);
+    }
+
+    Record.prototype.defaults = _.extend({}, Tracktime.Action.prototype.defaults, {
+      title: 'Add record',
       inputValue: '',
       formAction: '#',
       btnClass: 'btn-primary',
@@ -575,7 +628,7 @@
       isVisible: true
     });
 
-    AddRecord.prototype.initialize = function(options) {
+    Record.prototype.initialize = function(options) {
       if (options == null) {
         options = {};
       }
@@ -583,27 +636,27 @@
       return this.set('details', new Tracktime.Action.Details());
     };
 
-    AddRecord.prototype.processAction = function(options) {
+    Record.prototype.processAction = function(options) {
       this.set('inputValue', options.subject);
       this.get('details').set(options);
       return this.newRecord();
     };
 
-    AddRecord.prototype.newRecord = function() {
+    Record.prototype.newRecord = function() {
       return Tracktime.AppChannel.command('newRecord', _.extend({
         project: 0
       }, this.get('details').attributes));
     };
 
-    AddRecord.prototype.successAdd = function() {
+    Record.prototype.successAdd = function() {
       return this.set('inputValue', '');
     };
 
-    return AddRecord;
+    return Record;
 
   })(Tracktime.Action);
 
-  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.Action.AddRecord : void 0) || (this.Tracktime.Action.AddRecord = Tracktime.Action.AddRecord);
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.Action.Record : void 0) || (this.Tracktime.Action.Record = Tracktime.Action.Record);
 
   Tracktime.Action.Search = (function(superClass) {
     extend(Search, superClass);
@@ -754,6 +807,7 @@
     extend(ActionsCollection, superClass);
 
     function ActionsCollection() {
+      this.addAction = bind(this.addAction, this);
       return ActionsCollection.__super__.constructor.apply(this, arguments);
     }
 
@@ -768,15 +822,20 @@
     ActionsCollection.prototype.active = null;
 
     ActionsCollection.prototype.initialize = function() {
-      return _.each(this.defaultActions, (function(_this) {
-        return function(action) {
-          var actionModel;
-          if (Tracktime.Action[action.type]) {
-            actionModel = new Tracktime.Action[action.type](action);
-            return _this.push(actionModel);
-          }
-        };
-      })(this));
+      return _.each(this.defaultActions, this.addAction);
+    };
+
+    ActionsCollection.prototype.addAction = function(action, params) {
+      var actionModel;
+      if (params == null) {
+        params = {};
+      }
+      if (Tracktime.Action[action.type]) {
+        actionModel = new Tracktime.Action[action.type](action);
+        actionModel.set(params);
+        this.push(actionModel);
+        return actionModel;
+      }
     };
 
     ActionsCollection.prototype.setActive = function(active) {
@@ -999,7 +1058,12 @@
     };
 
     AdminRouter.prototype.initialize = function(options) {
-      return _.extend(this, options);
+      _.extend(this, options);
+      return this.on('route', (function(_this) {
+        return function(route, params) {
+          return _this.parent.trigger('subroute', "admin:" + route, params);
+        };
+      })(this));
     };
 
     AdminRouter.prototype.dashboard = function() {
@@ -1011,7 +1075,15 @@
     };
 
     AdminRouter.prototype.projects = function() {
-      return this.parent.view.setSubView('main', new Tracktime.AdminView.Projects());
+      var newAction;
+      this.parent.view.setSubView('main', new Tracktime.AdminView.Projects());
+      newAction = this.parent.model.get('actions').addAction({
+        title: 'Add projects',
+        type: 'Project'
+      }, {
+        scope: 'admin:projects'
+      });
+      return newAction.setActive();
     };
 
     AdminRouter.prototype.actions = function() {
@@ -1042,6 +1114,13 @@
 
     AppRouter.prototype.initialize = function(options) {
       _.extend(this, options);
+      this.on('route subroute', (function(_this) {
+        return function(route, params) {
+          if (route.substr(0, 6) !== 'invoke') {
+            return _this.removeActionsExcept(route);
+          }
+        };
+      })(this));
       return this.initAuthInterface();
     };
 
@@ -1103,6 +1182,22 @@
       return this.navigate('', true);
     };
 
+    AppRouter.prototype.removeActionsExcept = function(route) {
+      var activeInScope;
+      activeInScope = false;
+      _.each(this.model.get('actions').models, function(action) {
+        if (action.get('scope') && action.get('scope') !== route) {
+          if (action.get('isActive')) {
+            activeInScope = true;
+          }
+          return action.destroy();
+        }
+      });
+      if (activeInScope) {
+        return this.model.get('actions').at(0).setActive();
+      }
+    };
+
     return AppRouter;
 
   })(Backbone.Router);
@@ -1126,7 +1221,12 @@
     };
 
     ProjectsRouter.prototype.initialize = function(options) {
-      return _.extend(this, options);
+      _.extend(this, options);
+      return this.on('route', (function(_this) {
+        return function(route, params) {
+          return _this.parent.trigger('subroute', "projects:" + route, params);
+        };
+      })(this));
     };
 
     ProjectsRouter.prototype.list = function() {
@@ -1181,7 +1281,12 @@
     };
 
     RecordsRouter.prototype.initialize = function(options) {
-      return _.extend(this, options);
+      _.extend(this, options);
+      return this.on('route', (function(_this) {
+        return function(route, params) {
+          return _this.parent.trigger('subroute', "records:" + route, params);
+        };
+      })(this));
     };
 
     RecordsRouter.prototype.list = function() {
@@ -1232,6 +1337,11 @@
 
     ReportsRouter.prototype.initialize = function(options) {
       _.extend(this, options);
+      this.on('route', (function(_this) {
+        return function(route, params) {
+          return _this.parent.trigger('subroute', "reports:" + route, params);
+        };
+      })(this));
       return this.parent.view.setSubView('main', new Tracktime.ReportsView());
     };
 
@@ -1279,7 +1389,12 @@
     };
 
     UserRouter.prototype.initialize = function(options) {
-      return _.extend(this, options);
+      _.extend(this, options);
+      return this.on('route', (function(_this) {
+        return function(route, params) {
+          return _this.parent.trigger('subroute', "user:" + route, params);
+        };
+      })(this));
     };
 
     UserRouter.prototype.details = function() {
@@ -1331,10 +1446,13 @@
     extend(ActionsView, superClass);
 
     function ActionsView() {
+      this.addAction = bind(this.addAction, this);
       return ActionsView.__super__.constructor.apply(this, arguments);
     }
 
     ActionsView.prototype.el = '#actions-form';
+
+    ActionsView.prototype.menu = '#actions-form';
 
     ActionsView.prototype.template = JST['actions/actions'];
 
@@ -1343,25 +1461,24 @@
     ActionsView.prototype.initialize = function(options) {
       _.extend(this, options);
       this.listenTo(this.collection, 'change:active', this.renderAction);
+      this.listenTo(this.collection, 'add', this.addAction);
       return this.render();
     };
 
     ActionsView.prototype.render = function() {
-      var dropdown, ul;
       this.$el.html(this.template());
-      dropdown = $('.select-action', this.$el);
-      ul = dropdown.find('.dropdown-menu');
-      _.each(this.collection.getActions(), (function(_this) {
-        return function(action) {
-          var listBtn;
-          listBtn = new Tracktime.ActionView.ListBtn({
-            model: action
-          });
-          ul.append(listBtn.$el);
-          return _this.setSubView("listBtn-" + listBtn.cid, listBtn);
-        };
-      })(this));
+      this.menu = $('.dropdown-menu', '.select-action', this.$el);
+      _.each(this.collection.getActions(), this.addAction);
       return this.collection.at(0).setActive();
+    };
+
+    ActionsView.prototype.addAction = function(action) {
+      var listBtn;
+      listBtn = new Tracktime.ActionView.ListBtn({
+        model: action
+      });
+      this.menu.append(listBtn.$el);
+      return this.setSubView("listBtn-" + listBtn.cid, listBtn);
     };
 
     ActionsView.prototype.renderAction = function(action) {
@@ -1447,14 +1564,17 @@
     ListBtn.prototype.initialize = function(options) {
       _.extend(this, options);
       this.render();
-      return this.listenTo(this.model, 'change:isActive', this.updateActionControl);
+      this.listenTo(this.model, 'change:isActive', this.updateActionControl);
+      return this.listenTo(this.model, 'destroy', this.close);
     };
 
     ListBtn.prototype.render = function() {
       this.$el.html(this.template(this.model.toJSON()));
-      this.$el.toggleClass('active', this.model.get('isActive'));
-      if (this.model.get('isActive')) {
+      if (this.model.get('isActive') === true) {
+        this.$el.addClass('active');
         return this.updateActionControl();
+      } else {
+        return this.$el.removeClass('active');
       }
     };
 
@@ -1477,35 +1597,65 @@
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.ActionView.ListBtn : void 0) || (this.Tracktime.ActionView.ListBtn = Tracktime.ActionView.ListBtn);
 
-  Tracktime.ActionView.AddRecord = (function(superClass) {
-    extend(AddRecord, superClass);
+  Tracktime.ActionView.Project = (function(superClass) {
+    extend(Project, superClass);
 
-    function AddRecord() {
+    function Project() {
+      return Project.__super__.constructor.apply(this, arguments);
+    }
+
+    Project.prototype.container = '.form-control-wrapper';
+
+    Project.prototype.template = JST['actions/details/project'];
+
+    Project.prototype.tmpDetails = {};
+
+    Project.prototype.views = {};
+
+    Project.prototype.initialize = function(options) {
+      _.extend(this, options);
+      return this.render();
+    };
+
+    Project.prototype.render = function() {
+      return $(this.container).html(this.$el.html(this.template(this.model.toJSON())));
+    };
+
+    return Project;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.ActionView.Search : void 0) || (this.Tracktime.ActionView.Search = Tracktime.ActionView.Search);
+
+  Tracktime.ActionView.Record = (function(superClass) {
+    extend(Record, superClass);
+
+    function Record() {
       this.sendForm = bind(this.sendForm, this);
       this.checkContent = bind(this.checkContent, this);
       this.fixEnter = bind(this.fixEnter, this);
-      return AddRecord.__super__.constructor.apply(this, arguments);
+      return Record.__super__.constructor.apply(this, arguments);
     }
 
-    AddRecord.prototype.container = '.form-control-wrapper';
+    Record.prototype.container = '.form-control-wrapper';
 
-    AddRecord.prototype.template = JST['actions/details/addrecord'];
+    Record.prototype.template = JST['actions/details/record'];
 
-    AddRecord.prototype.tmpDetails = {};
+    Record.prototype.tmpDetails = {};
 
-    AddRecord.prototype.views = {};
+    Record.prototype.views = {};
 
-    AddRecord.prototype.initialize = function(options) {
+    Record.prototype.initialize = function(options) {
       _.extend(this, options);
       this.render();
       return this.initUI();
     };
 
-    AddRecord.prototype.render = function() {
+    Record.prototype.render = function() {
       return $(this.container).html(this.$el.html(this.template(this.model.toJSON())));
     };
 
-    AddRecord.prototype.initUI = function() {
+    Record.prototype.initUI = function() {
       $('[data-toggle="tooltip"]', this.$el).tooltip();
       $('textarea', this.el).on('keydown', this.fixEnter).on('change, keyup', this.checkContent).textareaAutoSize();
       $('#send-form').on('click', this.sendForm);
@@ -1552,7 +1702,7 @@
       });
     };
 
-    AddRecord.prototype.fixEnter = function(event) {
+    Record.prototype.fixEnter = function(event) {
       if (event.keyCode === 13) {
         if (event.shiftKey) {
           event.preventDefault();
@@ -1562,7 +1712,7 @@
       }
     };
 
-    AddRecord.prototype.checkContent = function() {
+    Record.prototype.checkContent = function() {
       return window.setTimeout((function(_this) {
         return function() {
           var diff;
@@ -1573,25 +1723,25 @@
       })(this), 500);
     };
 
-    AddRecord.prototype.sendForm = function(event) {
+    Record.prototype.sendForm = function(event) {
       event.preventDefault();
       this.tmpDetails.subject = $('textarea', this.el).val();
       this.actionSubmit();
       return this.checkContent();
     };
 
-    AddRecord.prototype.actionSubmit = function(val) {
+    Record.prototype.actionSubmit = function(val) {
       if (!_.isEmpty(this.tmpDetails.subject)) {
         $('textarea', this.el).val('');
         return this.model.processAction(this.tmpDetails);
       }
     };
 
-    return AddRecord;
+    return Record;
 
   })(Backbone.View);
 
-  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.ActionView.AddRecord : void 0) || (this.Tracktime.ActionView.AddRecord = Tracktime.ActionView.AddRecord);
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.ActionView.Record : void 0) || (this.Tracktime.ActionView.Record = Tracktime.ActionView.Record);
 
   Tracktime.ActionView.Search = (function(superClass) {
     extend(Search, superClass);

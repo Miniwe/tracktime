@@ -1,11 +1,11 @@
-class Tracktime.Action.AddRecord extends Tracktime.Action
+class Tracktime.Action.Project extends Tracktime.Action
 
   defaults: _.extend {}, Tracktime.Action.prototype.defaults,
-    title: 'Default action title'
+    title: 'Add project'
     inputValue: ''
     formAction: '#'
-    btnClass: 'btn-primary'
-    navbarClass: 'navbar-material-amber'
+    btnClass: 'btn-danger'
+    navbarClass: 'navbar-material-indigo'
     icon:
       className: 'mdi-editor-mode-edit'
       letter: ''
@@ -19,13 +19,13 @@ class Tracktime.Action.AddRecord extends Tracktime.Action
   processAction: (options) ->
     @set 'inputValue', options.subject
     @get('details').set(options) # @todo remove possible
-    @newRecord()
+    @newProject()
 
-  newRecord: () ->
-    Tracktime.AppChannel.command 'newRecord', _.extend {project: 0}, @get('details').attributes
+  newProject: () ->
+    Tracktime.AppChannel.command 'newProject', _.extend {project: 0}, @get('details').attributes
 
   successAdd: () ->
     @set 'inputValue', ''
     # @details.reset() # @todo on change details change view controls
 
-(module?.exports = Tracktime.Action.AddRecord) or @Tracktime.Action.AddRecord = Tracktime.Action.AddRecord
+(module?.exports = Tracktime.Action.Project) or @Tracktime.Action.Project = Tracktime.Action.Project

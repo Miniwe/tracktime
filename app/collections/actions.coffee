@@ -6,10 +6,14 @@ class Tracktime.ActionsCollection extends Backbone.Collection
   active: null
 
   initialize: () ->
-    _.each @defaultActions, (action) =>
-      if (Tracktime.Action[action.type])
-        actionModel = new Tracktime.Action[action.type](action)
-        @push actionModel
+    _.each @defaultActions, @addAction
+
+  addAction: (action, params = {}) =>
+    if (Tracktime.Action[action.type])
+      actionModel = new Tracktime.Action[action.type](action)
+      actionModel.set params
+      @push actionModel
+      return actionModel
 
   setActive: (active) ->
     @active?.set 'isActive', false

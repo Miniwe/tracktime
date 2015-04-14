@@ -8,9 +8,8 @@ class Tracktime.AdminRouter extends Backbone.SubRoute
 
   initialize: (options) ->
     _.extend @, options
-    # @parent.view.setSubView 'main', new Tracktime.AdminView()
-    # @parent.view.setSubView 'header', new Tracktime.AdminView.Header()
-    # @parent.view.initUI()
+    @on 'route', (route, params) =>
+      @parent.trigger 'subroute', "admin:#{route}", params
 
   dashboard: () ->
     @parent.view.setSubView 'main', new Tracktime.AdminView.Dashboard()
@@ -20,11 +19,14 @@ class Tracktime.AdminRouter extends Backbone.SubRoute
 
   projects: () ->
     @parent.view.setSubView 'main', new Tracktime.AdminView.Projects()
+    newAction = @parent.model.get('actions').addAction
+      title: 'Add projects'
+      type: 'Project'
+    , scope: 'admin:projects'
+    newAction.setActive()
 
   actions: () ->
     @parent.view.setSubView 'main', new Tracktime.AdminView.Actions()
-
-
 
 
 (module?.exports = Tracktime.AdminRouter) or @Tracktime.AdminRouter = Tracktime.AdminRouter

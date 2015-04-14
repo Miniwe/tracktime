@@ -9,6 +9,8 @@ class Tracktime.RecordsRouter extends Backbone.Router
 
   initialize: (options) ->
     _.extend @, options
+    @on 'route', (route, params) =>
+      @parent.trigger 'subroute', "records:#{route}", params
 
   list: () ->
     $.alert "records list"

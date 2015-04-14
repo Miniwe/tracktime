@@ -3,7 +3,7 @@ Tracktime.initdata = {}
 Tracktime.initdata.defaultActions = [
   {
     title: 'Add Record'
-    type: 'AddRecord'
+    type: 'Record'
   }
   {
     title: 'Search'
