@@ -122,8 +122,8 @@ Handlebars.registerHelper 'safe_val', (value, safeValue) ->
 
 
 Handlebars.registerHelper 'nl2br', (text) ->
-  value = Handlebars.Utils.escapeExpression value
-  return value.nl2br
+  text = Handlebars.Utils.escapeExpression text
+  return text.nl2br()
 
 Handlebars.registerHelper 'dateFormat', (date) ->
   date
@@ -965,16 +965,19 @@ class Tracktime.ActionsView extends Backbone.View
     _.each @collection.getActions(), @addAction
     @collection.at(0).setActive()
 
+
   addAction: (action) =>
     listBtn = new Tracktime.ActionView.ListBtn model: action
     @menu.append listBtn.$el
     @setSubView "listBtn-#{listBtn.cid}", listBtn
+    $('[data-toggle="tooltip"]', listBtn.$el).tooltip()
 
   renderAction: (action) ->
     @$el.parents('.navbar').attr 'class', "navbar #{action.get('navbarClass')} shadow-z-1"
 
     if Tracktime.ActionView[action.get('type')]
       @setSubView "actionDetails", new Tracktime.ActionView[action.get('type')] model: action
+
 
 (module?.exports = Tracktime.ActionsView) or @Tracktime.ActionsView = Tracktime.ActionsView
 
@@ -1054,7 +1057,6 @@ class Tracktime.ActionView.Project extends Backbone.View
   render: () ->
     $(@container).html @$el.html @template @model.toJSON()
     $('placeholder#textarea', @$el).replaceWith (new Tracktime.Element.Textarea()).$el
-    $('placeholder#slider', @$el).replaceWith (new Tracktime.Element.Slider()).$el
 
 
 
@@ -1066,79 +1068,43 @@ class Tracktime.ActionView.Record extends Backbone.View
   template: JST['actions/details/record']
   tmpDetails: {}
   views: {}
+  events:
+    'click #send-form': 'sendForm'
+    'input textarea': 'textareaInput'
 
   initialize: (options) ->
     _.extend @, options
     @render()
-    @initUI()
 
   render: () ->
     $(@container).html @$el.html @template @model.toJSON()
 
-  initUI: () ->
-    $('[data-toggle="tooltip"]', @$el).tooltip()
+    textarea = new Tracktime.Element.Textarea value: ''
+    $('placeholder#textarea', @$el).replaceWith textarea.$el
+    textarea.$el.textareaAutoSize().focus()
 
-    $('textarea', @el)
-      .on('keydown', @fixEnter)
-      .on('change, keyup', @checkContent)
-      .textareaAutoSize()
-    $('#send-form').on 'click', @sendForm
+    $('placeholder#slider', @$el).replaceWith (new Tracktime.Element.Slider()).$el
 
-    @tmpDetails.recordDate = $(".select-date > .btn .caption ruby rt").html()
+    $('placeholder#selectday', @$el).replaceWith (new Tracktime.Element.SelectDay()).$el
 
-    $(".select-date .dropdown-menu").on 'click', '.btn', (event) =>
-      event.preventDefault()
-      $(".select-date > .btn .caption ruby").html $(event.currentTarget).find('ruby').html()
-      @tmpDetails.recordDate = $(".select-date > .btn .caption ruby rt").html()
-
-    $(".slider")
-      .noUiSlider
-        start: [0]
-        step: 5
-        range: {'min': [ 0 ], 'max': [ 720 ] }
-      .on
-        slide: (event, val) =>
-          @tmpDetails.recordTime = val
-          currentHour = val / 720 * 12
-          hour = Math.floor(currentHour)
-          minute = (currentHour - hour) * 60
-          $('.slider .noUi-handle').attr 'data-before', hour
-          $('.slider .noUi-handle').attr 'data-after', Math.round(minute)
-    $(".slider")
-      .noUiSlider_pips
-        mode: 'values'
-        values: [0,60*1,60*2,60*3,60*4,60*5,60*6,60*7,60*8,60*9,60*10,60*11,60*12]
-        density: 2
-        format:
-          to: (value) -> value / 60
-          from: (value) -> value
-
-
-
-  fixEnter: (event) =>
-    if event.keyCode == 13
-      if event.shiftKey
-        event.preventDefault()
-        @tmpDetails.subject = $('textarea', @el).val()
-        @actionSubmit()
-
-  checkContent: () =>
+  textareaInput: (event) =>
     window.setTimeout () =>
       diff = $('#actions-form').outerHeight() - $('.navbar').outerHeight(true)
       $('#actions-form').toggleClass "shadow-z-2", (diff > 10)
-      $(".controls-container").toggleClass 'hidden', _.isEmpty $('textarea').val()
+      $(".details-container").toggleClass 'hidden', _.isEmpty $(event.target).val()
     , 500
 
   sendForm: (event) =>
     event.preventDefault()
-    @tmpDetails.subject = $('textarea', @el).val()
-    @actionSubmit()
-    @checkContent()
+    console.lo 'send form'
+    # @tmpDetails.subject = $('textarea', @el).val()
+    # @actionSubmit()
+    # @checkContent()
 
-  actionSubmit: (val) ->
-    unless _.isEmpty @tmpDetails.subject
-      $('textarea', @el).val('')
-      @model.processAction @tmpDetails
+  # actionSubmit: (val) ->
+  #   unless _.isEmpty @tmpDetails.subject
+  #     $('textarea', @el).val('')
+  #     @model.processAction @tmpDetails
 
   # ============ ============ ============ ============ ============ ============
   #   #add selected detais if exist - will change from action modell call
@@ -1289,42 +1255,93 @@ class Tracktime.Element extends Backbone.View
 (module?.exports = Tracktime.Element) or @Tracktime.Element = Tracktime.Element
 
 
-class Tracktime.Element.Slider extends Tracktime.Element
-  tagName: 'select'
+class Tracktime.Element.SelectDay extends Tracktime.Element
+  className: 'btn-group select-day'
+  template: JST['elements/selectday']
   events:
-    'click': 'sayHello'
+    'click button.btn': 'setDay'
+
+  initialize: (options = {}) ->
+    # @tmpDetails.recordDate = $(".select-day > .btn .caption ruby rt").html()
+    _.extend @, options
+    @render()
+
+  render: () ->
+    @$el.html @template()
+
+  setDay: (event) ->
+    event.preventDefault()
+    $(".dropdown-toggle ruby", @$el).html $('ruby', event.currentTarget).html()
+    # @tmpDetails.recordDate = $(".select-day > .btn .caption ruby rt").html()
+
+
+(module?.exports = Tracktime.Element.Slider) or @Tracktime.Element.Slider = Tracktime.Element.Slider
+
+
+class Tracktime.Element.Slider extends Tracktime.Element
+  className: 'slider shor btn-primary slider-material-orange'
 
   initialize: (options = {}) ->
     _.extend @, options
     @render()
 
   render: () ->
-    # @setElement "#anSlider"
-    # @$el
-    @$el.val 'Slider'
+    @$el
+      .noUiSlider
+        start: [0]
+        step: 5
+        range: {'min': [ 0 ], 'max': [ 720 ] }
+      .on
+        slide: (event, val) =>
+          @tmpDetails.recordTime = val
+          currentHour = val / 720 * 12
+          hour = Math.floor(currentHour)
+          minute = (currentHour - hour) * 60
+          $('.slider .noUi-handle').attr 'data-before', hour
+          $('.slider .noUi-handle').attr 'data-after', Math.round(minute)
+    @$el
+      .noUiSlider_pips
+        mode: 'values'
+        values: [0,60*1,60*2,60*3,60*4,60*5,60*6,60*7,60*8,60*9,60*10,60*11,60*12]
+        density: 2
+        format:
+          to: (value) -> value / 60
+          from: (value) -> value
 
-  sayHello: () ->
-    $.alert 'HELLO Slider!!'
 
 (module?.exports = Tracktime.Element.Slider) or @Tracktime.Element.Slider = Tracktime.Element.Slider
 
 
 class Tracktime.Element.Textarea extends Tracktime.Element
   tagName: 'textarea'
+  className: 'form-control'
   events:
-    'click': 'sayHello'
+    'keydown': 'fixEnter'
 
   initialize: (options = {}) ->
     _.extend @, options
     @render()
 
   render: () ->
-    # @setElement "#antextarea"
-    # @$el
-    @$el.val 'textarea'
+    @$el.attr 'name', 'action_text'
+    @$el.val @value
 
-  sayHello: () ->
-    $.alert 'HELLO !!'
+  fixEnter: (event) =>
+    if event.keyCode == 13 and event.shiftKey
+      event.preventDefault()
+      console.log 'call textarea submit'
+      # @tmpDetails.subject = $('textarea', @el).val()
+      # @actionSubmit()
+
+  checkContent: () =>
+    console.log 'check content'
+    # window.setTimeout () =>
+    #   diff = $('#actions-form').outerHeight() - $('.navbar').outerHeight(true)
+    #   $('#actions-form').toggleClass "shadow-z-2", (diff > 10)
+    #   $(".details-container").toggleClass 'hidden', _.isEmpty $('textarea').val()
+    # , 500
+
+
 
 (module?.exports = Tracktime.Element.Textarea) or @Tracktime.Element.Textarea = Tracktime.Element.Textarea
 

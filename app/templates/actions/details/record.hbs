@@ -1,42 +1,17 @@
 <a id="detailsNew" class="btn btn-fab btn-link" href="javascript:void(0)" data-toggle="popover" title="Popover title" data-content="And here's some amazing content. It's very engaging. Right?" data-placement="left" style="  position: absolute; top: -0.7em; right: 0;">
     <i class="mdi-navigation-more-vert"></i>
 </a>
-<textarea class="form-control" name="action"></textarea>
+{{placeholder 'textarea'}}
 <div class="floating-label">{{title}}</div>
 <span class="material-input"></span>
-<div class="controls-container hidden">
+
+<div class="details-container hidden">
     <div class="row">
         <div class="col-md-2">
-            <div class="btn-group select-date">
-                <a href="javascript:void(0)" class="btn btn-block btn-default dropdown-toggle" data-toggle="dropdown" id="open-cal" data-target="#" style="padding-left: 15px;"><i class="mdi-action-event pull-left"></i><div class="caption" style="display: inline-block;"><ruby>Сегодня<rt>03.01.2015</rt> </ruby></div> <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                    <li>
-                        <a href="javascript:void(0)" class="btn btn-default">
-                            <ruby>Позавчера
-                                <rt>01.01.2015</rt>
-                            </ruby>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0)" class="btn btn-default">
-                            <ruby>Вчера
-                                <rt>02.01.2015</rt>
-                            </ruby>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0)" class="btn btn-default">
-                            <ruby>Сегодня
-                                <rt>03.01.2015</rt>
-                            </ruby>
-                        </a>
-                    </li>
-                    <li><a href="javascript:void(0)" class="btn btn-default disabled">Выбрать дату</a></li>
-                </ul>
-            </div>
+            {{placeholder 'selectday'}}
         </div>
         <div class="col-md-8">
-            <div class="slider shor btn-primary slider-material-orange"></div>
+            {{placeholder 'slider'}}
         </div>
         <div class="col-md-2">
             <button href="#send-form" id="send-form" class="btn btn-primary btn-block"><i class="mdi-action-done pull-left"></i>Send</button>

@@ -14,8 +14,8 @@ Handlebars.registerHelper 'safe_val', (value, safeValue) ->
 
 
 Handlebars.registerHelper 'nl2br', (text) ->
-  value = Handlebars.Utils.escapeExpression value
-  return value.nl2br
+  text = Handlebars.Utils.escapeExpression text
+  return text.nl2br()
 
 Handlebars.registerHelper 'dateFormat', (date) ->
   date

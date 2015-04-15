@@ -15136,7 +15136,7 @@ h1, h2, h3, h4, h5, h6 {
   color: #009688;
 }
 /* line 53, ../../app/assets/sass/blocks/_actions-form.scss */
-#actions-form .form-control-wrapper .controls-container {
+#actions-form .form-control-wrapper .details-container {
   height: 54px;
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
   opacity: 1;
@@ -15147,7 +15147,7 @@ h1, h2, h3, h4, h5, h6 {
   transition: all 0.2s 0.1s;
 }
 /* line 58, ../../app/assets/sass/blocks/_actions-form.scss */
-#actions-form .form-control-wrapper .controls-container.hidden {
+#actions-form .form-control-wrapper .details-container.hidden {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
   opacity: 0;
   height: 0px;

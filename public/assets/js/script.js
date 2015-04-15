@@ -29279,18 +29279,22 @@ this["JST"]["actions/details/project"] = Handlebars.template({"compiler":[6,">= 
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
   return "<div class=\"floating-label\">"
     + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
-    + "</div>\n<li>"
+    + "</div>\n"
     + escapeExpression(((helpers.placeholder || (depth0 && depth0.placeholder) || helperMissing).call(depth0, "textarea", {"name":"placeholder","hash":{},"data":data})))
-    + "</li>\n<li>"
-    + escapeExpression(((helpers.placeholder || (depth0 && depth0.placeholder) || helperMissing).call(depth0, "slider", {"name":"placeholder","hash":{},"data":data})))
-    + "</li>\n<span class=\"material-input\"></span>\n";
+    + "\n<span class=\"material-input\"></span>\n";
 },"useData":true});
 
 this["JST"]["actions/details/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-  return "<a id=\"detailsNew\" class=\"btn btn-fab btn-link\" href=\"javascript:void(0)\" data-toggle=\"popover\" title=\"Popover title\" data-content=\"And here's some amazing content. It's very engaging. Right?\" data-placement=\"left\" style=\"  position: absolute; top: -0.7em; right: 0;\">\n    <i class=\"mdi-navigation-more-vert\"></i>\n</a>\n<textarea class=\"form-control\" name=\"action\"></textarea>\n<div class=\"floating-label\">"
+  var helper, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, functionType="function";
+  return "<a id=\"detailsNew\" class=\"btn btn-fab btn-link\" href=\"javascript:void(0)\" data-toggle=\"popover\" title=\"Popover title\" data-content=\"And here's some amazing content. It's very engaging. Right?\" data-placement=\"left\" style=\"  position: absolute; top: -0.7em; right: 0;\">\n    <i class=\"mdi-navigation-more-vert\"></i>\n</a>\n"
+    + escapeExpression(((helpers.placeholder || (depth0 && depth0.placeholder) || helperMissing).call(depth0, "textarea", {"name":"placeholder","hash":{},"data":data})))
+    + "\n<div class=\"floating-label\">"
     + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
-    + "</div>\n<span class=\"material-input\"></span>\n<div class=\"controls-container hidden\">\n    <div class=\"row\">\n        <div class=\"col-md-2\">\n            <div class=\"btn-group select-date\">\n                <a href=\"javascript:void(0)\" class=\"btn btn-block btn-default dropdown-toggle\" data-toggle=\"dropdown\" id=\"open-cal\" data-target=\"#\" style=\"padding-left: 15px;\"><i class=\"mdi-action-event pull-left\"></i><div class=\"caption\" style=\"display: inline-block;\"><ruby>Сегодня<rt>03.01.2015</rt> </ruby></div> <span class=\"caret\"></span></a>\n                <ul class=\"dropdown-menu\">\n                    <li>\n                        <a href=\"javascript:void(0)\" class=\"btn btn-default\">\n                            <ruby>Позавчера\n                                <rt>01.01.2015</rt>\n                            </ruby>\n                        </a>\n                    </li>\n                    <li>\n                        <a href=\"javascript:void(0)\" class=\"btn btn-default\">\n                            <ruby>Вчера\n                                <rt>02.01.2015</rt>\n                            </ruby>\n                        </a>\n                    </li>\n                    <li>\n                        <a href=\"javascript:void(0)\" class=\"btn btn-default\">\n                            <ruby>Сегодня\n                                <rt>03.01.2015</rt>\n                            </ruby>\n                        </a>\n                    </li>\n                    <li><a href=\"javascript:void(0)\" class=\"btn btn-default disabled\">Выбрать дату</a></li>\n                </ul>\n            </div>\n        </div>\n        <div class=\"col-md-8\">\n            <div class=\"slider shor btn-primary slider-material-orange\"></div>\n        </div>\n        <div class=\"col-md-2\">\n            <button href=\"#send-form\" id=\"send-form\" class=\"btn btn-primary btn-block\"><i class=\"mdi-action-done pull-left\"></i>Send</button>\n        </div>\n    </div>\n    <div class=\"row hidden\">\n        <div class=\"well\">\n            Project:\n            <input type=\"text\" value=\"0\" name=\"project_id\" />\n        </div>\n    </div>\n</div>";
+    + "</div>\n<span class=\"material-input\"></span>\n\n<div class=\"details-container hidden\">\n    <div class=\"row\">\n        <div class=\"col-md-2\">\n            "
+    + escapeExpression(((helpers.placeholder || (depth0 && depth0.placeholder) || helperMissing).call(depth0, "selectday", {"name":"placeholder","hash":{},"data":data})))
+    + "\n        </div>\n        <div class=\"col-md-8\">\n            "
+    + escapeExpression(((helpers.placeholder || (depth0 && depth0.placeholder) || helperMissing).call(depth0, "slider", {"name":"placeholder","hash":{},"data":data})))
+    + "\n        </div>\n        <div class=\"col-md-2\">\n            <button href=\"#send-form\" id=\"send-form\" class=\"btn btn-primary btn-block\"><i class=\"mdi-action-done pull-left\"></i>Send</button>\n        </div>\n    </div>\n    <div class=\"row hidden\">\n        <div class=\"well\">\n            Project:\n            <input type=\"text\" value=\"0\" name=\"project_id\" />\n        </div>\n    </div>\n</div>";
 },"useData":true});
 
 this["JST"]["actions/details/search"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
@@ -29354,6 +29358,10 @@ this["JST"]["admin/projects"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
 this["JST"]["admin/users"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "<h1>admin users</h1>";
+  },"useData":true});
+
+this["JST"]["elements/selectday"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  return "<a href=\"javascript:void(0)\" class=\"btn btn-block btn-default dropdown-toggle\" data-toggle=\"dropdown\" id=\"open-cal\" data-target=\"#\" style=\"padding-left: 15px;\"><i class=\"mdi-action-event pull-left\"></i><div class=\"caption\" style=\"display: inline-block;\"><ruby>Сегодня<rt>03.01.2015</rt> </ruby></div> <span class=\"caret\"></span></a>\n<ul class=\"dropdown-menu\">\n    <li>\n        <button class=\"btn btn-default btn-block\">\n            <ruby>Позавчера\n                <rt>01.01.2015</rt>\n            </ruby>\n        </button>\n    </li>\n    <li>\n        <button class=\"btn btn-default btn-block\">\n            <ruby>Вчера\n                <rt>02.01.2015</rt>\n            </ruby>\n        </button>\n    </li>\n    <li>\n        <button class=\"btn btn-default btn-block\">\n            <ruby>Сегодня\n                <rt>03.01.2015</rt>\n            </ruby>\n        </button>\n    </li>\n    <li><a href=\"javascript:void(0)\" class=\"btn btn-default disabled\">Выбрать дату</a></li>\n</ul>";
   },"useData":true});
 
 this["JST"]["global/app"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
@@ -29697,9 +29705,8 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
   });
 
   Handlebars.registerHelper('nl2br', function(text) {
-    var value;
-    value = Handlebars.Utils.escapeExpression(value);
-    return value.nl2br;
+    text = Handlebars.Utils.escapeExpression(text);
+    return text.nl2br();
   });
 
   Handlebars.registerHelper('dateFormat', function(date) {
@@ -30992,7 +30999,8 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
         model: action
       });
       this.menu.append(listBtn.$el);
-      return this.setSubView("listBtn-" + listBtn.cid, listBtn);
+      this.setSubView("listBtn-" + listBtn.cid, listBtn);
+      return $('[data-toggle="tooltip"]', listBtn.$el).tooltip();
     };
 
     ActionsView.prototype.renderAction = function(action) {
@@ -31133,8 +31141,7 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
     Project.prototype.render = function() {
       $(this.container).html(this.$el.html(this.template(this.model.toJSON())));
-      $('placeholder#textarea', this.$el).replaceWith((new Tracktime.Element.Textarea()).$el);
-      return $('placeholder#slider', this.$el).replaceWith((new Tracktime.Element.Slider()).$el);
+      return $('placeholder#textarea', this.$el).replaceWith((new Tracktime.Element.Textarea()).$el);
     };
 
     return Project;
@@ -31148,8 +31155,7 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
     function Record() {
       this.sendForm = bind(this.sendForm, this);
-      this.checkContent = bind(this.checkContent, this);
-      this.fixEnter = bind(this.fixEnter, this);
+      this.textareaInput = bind(this.textareaInput, this);
       return Record.__super__.constructor.apply(this, arguments);
     }
 
@@ -31161,96 +31167,42 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
     Record.prototype.views = {};
 
+    Record.prototype.events = {
+      'click #send-form': 'sendForm',
+      'input textarea': 'textareaInput'
+    };
+
     Record.prototype.initialize = function(options) {
       _.extend(this, options);
-      this.render();
-      return this.initUI();
+      return this.render();
     };
 
     Record.prototype.render = function() {
-      return $(this.container).html(this.$el.html(this.template(this.model.toJSON())));
-    };
-
-    Record.prototype.initUI = function() {
-      $('[data-toggle="tooltip"]', this.$el).tooltip();
-      $('textarea', this.el).on('keydown', this.fixEnter).on('change, keyup', this.checkContent).textareaAutoSize();
-      $('#send-form').on('click', this.sendForm);
-      this.tmpDetails.recordDate = $(".select-date > .btn .caption ruby rt").html();
-      $(".select-date .dropdown-menu").on('click', '.btn', (function(_this) {
-        return function(event) {
-          event.preventDefault();
-          $(".select-date > .btn .caption ruby").html($(event.currentTarget).find('ruby').html());
-          return _this.tmpDetails.recordDate = $(".select-date > .btn .caption ruby rt").html();
-        };
-      })(this));
-      $(".slider").noUiSlider({
-        start: [0],
-        step: 5,
-        range: {
-          'min': [0],
-          'max': [720]
-        }
-      }).on({
-        slide: (function(_this) {
-          return function(event, val) {
-            var currentHour, hour, minute;
-            _this.tmpDetails.recordTime = val;
-            currentHour = val / 720 * 12;
-            hour = Math.floor(currentHour);
-            minute = (currentHour - hour) * 60;
-            $('.slider .noUi-handle').attr('data-before', hour);
-            return $('.slider .noUi-handle').attr('data-after', Math.round(minute));
-          };
-        })(this)
+      var textarea;
+      $(this.container).html(this.$el.html(this.template(this.model.toJSON())));
+      textarea = new Tracktime.Element.Textarea({
+        value: ''
       });
-      return $(".slider").noUiSlider_pips({
-        mode: 'values',
-        values: [0, 60 * 1, 60 * 2, 60 * 3, 60 * 4, 60 * 5, 60 * 6, 60 * 7, 60 * 8, 60 * 9, 60 * 10, 60 * 11, 60 * 12],
-        density: 2,
-        format: {
-          to: function(value) {
-            return value / 60;
-          },
-          from: function(value) {
-            return value;
-          }
-        }
-      });
+      $('placeholder#textarea', this.$el).replaceWith(textarea.$el);
+      textarea.$el.textareaAutoSize().focus();
+      $('placeholder#slider', this.$el).replaceWith((new Tracktime.Element.Slider()).$el);
+      return $('placeholder#selectday', this.$el).replaceWith((new Tracktime.Element.SelectDay()).$el);
     };
 
-    Record.prototype.fixEnter = function(event) {
-      if (event.keyCode === 13) {
-        if (event.shiftKey) {
-          event.preventDefault();
-          this.tmpDetails.subject = $('textarea', this.el).val();
-          return this.actionSubmit();
-        }
-      }
-    };
-
-    Record.prototype.checkContent = function() {
+    Record.prototype.textareaInput = function(event) {
       return window.setTimeout((function(_this) {
         return function() {
           var diff;
           diff = $('#actions-form').outerHeight() - $('.navbar').outerHeight(true);
           $('#actions-form').toggleClass("shadow-z-2", diff > 10);
-          return $(".controls-container").toggleClass('hidden', _.isEmpty($('textarea').val()));
+          return $(".details-container").toggleClass('hidden', _.isEmpty($(event.target).val()));
         };
       })(this), 500);
     };
 
     Record.prototype.sendForm = function(event) {
       event.preventDefault();
-      this.tmpDetails.subject = $('textarea', this.el).val();
-      this.actionSubmit();
-      return this.checkContent();
-    };
-
-    Record.prototype.actionSubmit = function(val) {
-      if (!_.isEmpty(this.tmpDetails.subject)) {
-        $('textarea', this.el).val('');
-        return this.model.processAction(this.tmpDetails);
-      }
+      return console.lo('send form');
     };
 
     return Record;
@@ -31505,6 +31457,44 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.Element : void 0) || (this.Tracktime.Element = Tracktime.Element);
 
+  Tracktime.Element.SelectDay = (function(superClass) {
+    extend(SelectDay, superClass);
+
+    function SelectDay() {
+      return SelectDay.__super__.constructor.apply(this, arguments);
+    }
+
+    SelectDay.prototype.className = 'btn-group select-day';
+
+    SelectDay.prototype.template = JST['elements/selectday'];
+
+    SelectDay.prototype.events = {
+      'click button.btn': 'setDay'
+    };
+
+    SelectDay.prototype.initialize = function(options) {
+      if (options == null) {
+        options = {};
+      }
+      _.extend(this, options);
+      return this.render();
+    };
+
+    SelectDay.prototype.render = function() {
+      return this.$el.html(this.template());
+    };
+
+    SelectDay.prototype.setDay = function(event) {
+      event.preventDefault();
+      return $(".dropdown-toggle ruby", this.$el).html($('ruby', event.currentTarget).html());
+    };
+
+    return SelectDay;
+
+  })(Tracktime.Element);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.Element.Slider : void 0) || (this.Tracktime.Element.Slider = Tracktime.Element.Slider);
+
   Tracktime.Element.Slider = (function(superClass) {
     extend(Slider, superClass);
 
@@ -31512,11 +31502,7 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       return Slider.__super__.constructor.apply(this, arguments);
     }
 
-    Slider.prototype.tagName = 'select';
-
-    Slider.prototype.events = {
-      'click': 'sayHello'
-    };
+    Slider.prototype.className = 'slider shor btn-primary slider-material-orange';
 
     Slider.prototype.initialize = function(options) {
       if (options == null) {
@@ -31527,11 +31513,39 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     };
 
     Slider.prototype.render = function() {
-      return this.$el.val('Slider');
-    };
-
-    Slider.prototype.sayHello = function() {
-      return $.alert('HELLO Slider!!');
+      this.$el.noUiSlider({
+        start: [0],
+        step: 5,
+        range: {
+          'min': [0],
+          'max': [720]
+        }
+      }).on({
+        slide: (function(_this) {
+          return function(event, val) {
+            var currentHour, hour, minute;
+            _this.tmpDetails.recordTime = val;
+            currentHour = val / 720 * 12;
+            hour = Math.floor(currentHour);
+            minute = (currentHour - hour) * 60;
+            $('.slider .noUi-handle').attr('data-before', hour);
+            return $('.slider .noUi-handle').attr('data-after', Math.round(minute));
+          };
+        })(this)
+      });
+      return this.$el.noUiSlider_pips({
+        mode: 'values',
+        values: [0, 60 * 1, 60 * 2, 60 * 3, 60 * 4, 60 * 5, 60 * 6, 60 * 7, 60 * 8, 60 * 9, 60 * 10, 60 * 11, 60 * 12],
+        density: 2,
+        format: {
+          to: function(value) {
+            return value / 60;
+          },
+          from: function(value) {
+            return value;
+          }
+        }
+      });
     };
 
     return Slider;
@@ -31544,13 +31558,17 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     extend(Textarea, superClass);
 
     function Textarea() {
+      this.checkContent = bind(this.checkContent, this);
+      this.fixEnter = bind(this.fixEnter, this);
       return Textarea.__super__.constructor.apply(this, arguments);
     }
 
     Textarea.prototype.tagName = 'textarea';
 
+    Textarea.prototype.className = 'form-control';
+
     Textarea.prototype.events = {
-      'click': 'sayHello'
+      'keydown': 'fixEnter'
     };
 
     Textarea.prototype.initialize = function(options) {
@@ -31562,11 +31580,19 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     };
 
     Textarea.prototype.render = function() {
-      return this.$el.val('textarea');
+      this.$el.attr('name', 'action_text');
+      return this.$el.val(this.value);
     };
 
-    Textarea.prototype.sayHello = function() {
-      return $.alert('HELLO !!');
+    Textarea.prototype.fixEnter = function(event) {
+      if (event.keyCode === 13 && event.shiftKey) {
+        event.preventDefault();
+        return console.log('call textarea submit');
+      }
+    };
+
+    Textarea.prototype.checkContent = function() {
+      return console.log('check content');
     };
 
     return Textarea;

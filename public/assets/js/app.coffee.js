@@ -189,9 +189,8 @@
   });
 
   Handlebars.registerHelper('nl2br', function(text) {
-    var value;
-    value = Handlebars.Utils.escapeExpression(value);
-    return value.nl2br;
+    text = Handlebars.Utils.escapeExpression(text);
+    return text.nl2br();
   });
 
   Handlebars.registerHelper('dateFormat', function(date) {
@@ -1484,7 +1483,8 @@
         model: action
       });
       this.menu.append(listBtn.$el);
-      return this.setSubView("listBtn-" + listBtn.cid, listBtn);
+      this.setSubView("listBtn-" + listBtn.cid, listBtn);
+      return $('[data-toggle="tooltip"]', listBtn.$el).tooltip();
     };
 
     ActionsView.prototype.renderAction = function(action) {
@@ -1625,8 +1625,7 @@
 
     Project.prototype.render = function() {
       $(this.container).html(this.$el.html(this.template(this.model.toJSON())));
-      $('placeholder#textarea', this.$el).replaceWith((new Tracktime.Element.Textarea()).$el);
-      return $('placeholder#slider', this.$el).replaceWith((new Tracktime.Element.Slider()).$el);
+      return $('placeholder#textarea', this.$el).replaceWith((new Tracktime.Element.Textarea()).$el);
     };
 
     return Project;
@@ -1640,8 +1639,7 @@
 
     function Record() {
       this.sendForm = bind(this.sendForm, this);
-      this.checkContent = bind(this.checkContent, this);
-      this.fixEnter = bind(this.fixEnter, this);
+      this.textareaInput = bind(this.textareaInput, this);
       return Record.__super__.constructor.apply(this, arguments);
     }
 
@@ -1653,96 +1651,42 @@
 
     Record.prototype.views = {};
 
+    Record.prototype.events = {
+      'click #send-form': 'sendForm',
+      'input textarea': 'textareaInput'
+    };
+
     Record.prototype.initialize = function(options) {
       _.extend(this, options);
-      this.render();
-      return this.initUI();
+      return this.render();
     };
 
     Record.prototype.render = function() {
-      return $(this.container).html(this.$el.html(this.template(this.model.toJSON())));
-    };
-
-    Record.prototype.initUI = function() {
-      $('[data-toggle="tooltip"]', this.$el).tooltip();
-      $('textarea', this.el).on('keydown', this.fixEnter).on('change, keyup', this.checkContent).textareaAutoSize();
-      $('#send-form').on('click', this.sendForm);
-      this.tmpDetails.recordDate = $(".select-date > .btn .caption ruby rt").html();
-      $(".select-date .dropdown-menu").on('click', '.btn', (function(_this) {
-        return function(event) {
-          event.preventDefault();
-          $(".select-date > .btn .caption ruby").html($(event.currentTarget).find('ruby').html());
-          return _this.tmpDetails.recordDate = $(".select-date > .btn .caption ruby rt").html();
-        };
-      })(this));
-      $(".slider").noUiSlider({
-        start: [0],
-        step: 5,
-        range: {
-          'min': [0],
-          'max': [720]
-        }
-      }).on({
-        slide: (function(_this) {
-          return function(event, val) {
-            var currentHour, hour, minute;
-            _this.tmpDetails.recordTime = val;
-            currentHour = val / 720 * 12;
-            hour = Math.floor(currentHour);
-            minute = (currentHour - hour) * 60;
-            $('.slider .noUi-handle').attr('data-before', hour);
-            return $('.slider .noUi-handle').attr('data-after', Math.round(minute));
-          };
-        })(this)
+      var textarea;
+      $(this.container).html(this.$el.html(this.template(this.model.toJSON())));
+      textarea = new Tracktime.Element.Textarea({
+        value: ''
       });
-      return $(".slider").noUiSlider_pips({
-        mode: 'values',
-        values: [0, 60 * 1, 60 * 2, 60 * 3, 60 * 4, 60 * 5, 60 * 6, 60 * 7, 60 * 8, 60 * 9, 60 * 10, 60 * 11, 60 * 12],
-        density: 2,
-        format: {
-          to: function(value) {
-            return value / 60;
-          },
-          from: function(value) {
-            return value;
-          }
-        }
-      });
+      $('placeholder#textarea', this.$el).replaceWith(textarea.$el);
+      textarea.$el.textareaAutoSize().focus();
+      $('placeholder#slider', this.$el).replaceWith((new Tracktime.Element.Slider()).$el);
+      return $('placeholder#selectday', this.$el).replaceWith((new Tracktime.Element.SelectDay()).$el);
     };
 
-    Record.prototype.fixEnter = function(event) {
-      if (event.keyCode === 13) {
-        if (event.shiftKey) {
-          event.preventDefault();
-          this.tmpDetails.subject = $('textarea', this.el).val();
-          return this.actionSubmit();
-        }
-      }
-    };
-
-    Record.prototype.checkContent = function() {
+    Record.prototype.textareaInput = function(event) {
       return window.setTimeout((function(_this) {
         return function() {
           var diff;
           diff = $('#actions-form').outerHeight() - $('.navbar').outerHeight(true);
           $('#actions-form').toggleClass("shadow-z-2", diff > 10);
-          return $(".controls-container").toggleClass('hidden', _.isEmpty($('textarea').val()));
+          return $(".details-container").toggleClass('hidden', _.isEmpty($(event.target).val()));
         };
       })(this), 500);
     };
 
     Record.prototype.sendForm = function(event) {
       event.preventDefault();
-      this.tmpDetails.subject = $('textarea', this.el).val();
-      this.actionSubmit();
-      return this.checkContent();
-    };
-
-    Record.prototype.actionSubmit = function(val) {
-      if (!_.isEmpty(this.tmpDetails.subject)) {
-        $('textarea', this.el).val('');
-        return this.model.processAction(this.tmpDetails);
-      }
+      return console.lo('send form');
     };
 
     return Record;
@@ -1997,6 +1941,44 @@
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.Element : void 0) || (this.Tracktime.Element = Tracktime.Element);
 
+  Tracktime.Element.SelectDay = (function(superClass) {
+    extend(SelectDay, superClass);
+
+    function SelectDay() {
+      return SelectDay.__super__.constructor.apply(this, arguments);
+    }
+
+    SelectDay.prototype.className = 'btn-group select-day';
+
+    SelectDay.prototype.template = JST['elements/selectday'];
+
+    SelectDay.prototype.events = {
+      'click button.btn': 'setDay'
+    };
+
+    SelectDay.prototype.initialize = function(options) {
+      if (options == null) {
+        options = {};
+      }
+      _.extend(this, options);
+      return this.render();
+    };
+
+    SelectDay.prototype.render = function() {
+      return this.$el.html(this.template());
+    };
+
+    SelectDay.prototype.setDay = function(event) {
+      event.preventDefault();
+      return $(".dropdown-toggle ruby", this.$el).html($('ruby', event.currentTarget).html());
+    };
+
+    return SelectDay;
+
+  })(Tracktime.Element);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.Element.Slider : void 0) || (this.Tracktime.Element.Slider = Tracktime.Element.Slider);
+
   Tracktime.Element.Slider = (function(superClass) {
     extend(Slider, superClass);
 
@@ -2004,11 +1986,7 @@
       return Slider.__super__.constructor.apply(this, arguments);
     }
 
-    Slider.prototype.tagName = 'select';
-
-    Slider.prototype.events = {
-      'click': 'sayHello'
-    };
+    Slider.prototype.className = 'slider shor btn-primary slider-material-orange';
 
     Slider.prototype.initialize = function(options) {
       if (options == null) {
@@ -2019,11 +1997,39 @@
     };
 
     Slider.prototype.render = function() {
-      return this.$el.val('Slider');
-    };
-
-    Slider.prototype.sayHello = function() {
-      return $.alert('HELLO Slider!!');
+      this.$el.noUiSlider({
+        start: [0],
+        step: 5,
+        range: {
+          'min': [0],
+          'max': [720]
+        }
+      }).on({
+        slide: (function(_this) {
+          return function(event, val) {
+            var currentHour, hour, minute;
+            _this.tmpDetails.recordTime = val;
+            currentHour = val / 720 * 12;
+            hour = Math.floor(currentHour);
+            minute = (currentHour - hour) * 60;
+            $('.slider .noUi-handle').attr('data-before', hour);
+            return $('.slider .noUi-handle').attr('data-after', Math.round(minute));
+          };
+        })(this)
+      });
+      return this.$el.noUiSlider_pips({
+        mode: 'values',
+        values: [0, 60 * 1, 60 * 2, 60 * 3, 60 * 4, 60 * 5, 60 * 6, 60 * 7, 60 * 8, 60 * 9, 60 * 10, 60 * 11, 60 * 12],
+        density: 2,
+        format: {
+          to: function(value) {
+            return value / 60;
+          },
+          from: function(value) {
+            return value;
+          }
+        }
+      });
     };
 
     return Slider;
@@ -2036,13 +2042,17 @@
     extend(Textarea, superClass);
 
     function Textarea() {
+      this.checkContent = bind(this.checkContent, this);
+      this.fixEnter = bind(this.fixEnter, this);
       return Textarea.__super__.constructor.apply(this, arguments);
     }
 
     Textarea.prototype.tagName = 'textarea';
 
+    Textarea.prototype.className = 'form-control';
+
     Textarea.prototype.events = {
-      'click': 'sayHello'
+      'keydown': 'fixEnter'
     };
 
     Textarea.prototype.initialize = function(options) {
@@ -2054,11 +2064,19 @@
     };
 
     Textarea.prototype.render = function() {
-      return this.$el.val('textarea');
+      this.$el.attr('name', 'action_text');
+      return this.$el.val(this.value);
     };
 
-    Textarea.prototype.sayHello = function() {
-      return $.alert('HELLO !!');
+    Textarea.prototype.fixEnter = function(event) {
+      if (event.keyCode === 13 && event.shiftKey) {
+        event.preventDefault();
+        return console.log('call textarea submit');
+      }
+    };
+
+    Textarea.prototype.checkContent = function() {
+      return console.log('check content');
     };
 
     return Textarea;
