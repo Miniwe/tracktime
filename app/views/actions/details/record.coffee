@@ -26,6 +26,7 @@ class Tracktime.ActionView.Record extends Backbone.View
       event.preventDefault()
       $(".select-date > .btn .caption ruby").html $(event.currentTarget).find('ruby').html()
       @tmpDetails.recordDate = $(".select-date > .btn .caption ruby rt").html()
+
     $(".slider")
       .noUiSlider
         start: [0]
@@ -39,7 +40,6 @@ class Tracktime.ActionView.Record extends Backbone.View
           minute = (currentHour - hour) * 60
           $('.slider .noUi-handle').attr 'data-before', hour
           $('.slider .noUi-handle').attr 'data-after', Math.round(minute)
-
     $(".slider")
       .noUiSlider_pips
         mode: 'values'
@@ -83,10 +83,6 @@ class Tracktime.ActionView.Record extends Backbone.View
   #     @container.parent().find("#detailsNew").show().replaceWith (new Tracktime.ActionView.DetailsBtn model: @model).el
   #   else
   #     @container.parent().find("#detailsNew").hide()
-
-  #   $('.floating-label', '#actions-form').html @model.get('title')
-
-  #   @container.parents('.navbar').attr 'class', "navbar #{@model.get('navbarClass')} shadow-z-1"
 
   #   @setInputVal()
 
