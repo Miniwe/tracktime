@@ -3,6 +3,7 @@ class Tracktime.Element.Textarea extends Tracktime.Element
   className: 'form-control'
   events:
     'keydown': 'fixEnter'
+    'keyup': 'changeInput'
     'change': 'changeInput'
 
   initialize: (options = {}) ->
@@ -23,7 +24,6 @@ class Tracktime.Element.Textarea extends Tracktime.Element
   fixEnter: (event) =>
     if event.keyCode == 13 and event.shiftKey
       event.preventDefault()
-      console.log 'call textarea submit'
       @trigger 'tSubmit'
 
 

@@ -39,7 +39,6 @@ class Tracktime.Element.Slider extends Tracktime.Element
     fieldValue = @model.get(@field)
     if fieldValue? and _.isNumber parseFloat fieldValue
       newVal = parseFloat @model.get @field
-      console.log 'call slider change field', newVal
       @$el.val(newVal).trigger('slide')
 
   changeInput: (value) =>

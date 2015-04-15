@@ -190,7 +190,7 @@
 
   Handlebars.registerHelper('nl2br', function(text) {
     text = Handlebars.Utils.escapeExpression(text);
-    return text.nl2br();
+    return new Handlebars.SafeString(text.nl2br());
   });
 
   Handlebars.registerHelper('dateFormat', function(date) {
@@ -647,7 +647,7 @@
       if (recordModel.isValid()) {
         Tracktime.AppChannel.command('newRecord', _.extend({
           project: 0
-        }, recordModel.attributes));
+        }, recordModel.toJSON()));
         return recordModel.clear().set(recordModel.defaults);
       }
     };
@@ -2060,7 +2060,6 @@
       fieldValue = this.model.get(this.field);
       if ((fieldValue != null) && _.isNumber(parseFloat(fieldValue))) {
         newVal = parseFloat(this.model.get(this.field));
-        console.log('call slider change field', newVal);
         return this.$el.val(newVal).trigger('slide');
       }
     };
@@ -2093,6 +2092,7 @@
 
     Textarea.prototype.events = {
       'keydown': 'fixEnter',
+      'keyup': 'changeInput',
       'change': 'changeInput'
     };
 
@@ -2123,7 +2123,6 @@
     Textarea.prototype.fixEnter = function(event) {
       if (event.keyCode === 13 && event.shiftKey) {
         event.preventDefault();
-        console.log('call textarea submit');
         return this.trigger('tSubmit');
       }
     };

@@ -124,7 +124,7 @@ Handlebars.registerHelper 'safe_val', (value, safeValue) ->
 
 Handlebars.registerHelper 'nl2br', (text) ->
   text = Handlebars.Utils.escapeExpression text
-  return text.nl2br()
+  new Handlebars.SafeString text.nl2br()
 
 Handlebars.registerHelper 'dateFormat', (date) ->
   date
@@ -446,7 +446,7 @@ class Tracktime.Action.Record extends Tracktime.Action
   processAction: () ->
     recordModel = @get('recordModel')
     if recordModel.isValid()
-      Tracktime.AppChannel.command 'newRecord', _.extend {project: 0}, recordModel.attributes
+      Tracktime.AppChannel.command 'newRecord', _.extend {project: 0}, recordModel.toJSON()
       recordModel.clear().set(recordModel.defaults)
 
   successAdd: () ->
@@ -1312,7 +1312,6 @@ class Tracktime.Element.Slider extends Tracktime.Element
     fieldValue = @model.get(@field)
     if fieldValue? and _.isNumber parseFloat fieldValue
       newVal = parseFloat @model.get @field
-      console.log 'call slider change field', newVal
       @$el.val(newVal).trigger('slide')
 
   changeInput: (value) =>
@@ -1327,6 +1326,7 @@ class Tracktime.Element.Textarea extends Tracktime.Element
   className: 'form-control'
   events:
     'keydown': 'fixEnter'
+    'keyup': 'changeInput'
     'change': 'changeInput'
 
   initialize: (options = {}) ->
@@ -1347,7 +1347,6 @@ class Tracktime.Element.Textarea extends Tracktime.Element
   fixEnter: (event) =>
     if event.keyCode == 13 and event.shiftKey
       event.preventDefault()
-      console.log 'call textarea submit'
       @trigger 'tSubmit'
 
 

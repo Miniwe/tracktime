@@ -22,7 +22,7 @@ class Tracktime.Action.Record extends Tracktime.Action
   processAction: () ->
     recordModel = @get('recordModel')
     if recordModel.isValid()
-      Tracktime.AppChannel.command 'newRecord', _.extend {project: 0}, recordModel.attributes
+      Tracktime.AppChannel.command 'newRecord', _.extend {project: 0}, recordModel.toJSON()
       recordModel.clear().set(recordModel.defaults)
 
   successAdd: () ->
