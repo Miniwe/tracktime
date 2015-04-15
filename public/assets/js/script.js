@@ -29330,17 +29330,17 @@ this["JST"]["actions/listbtn"] = Handlebars.template({"compiler":[6,">= 2.0.0-be
 
 this["JST"]["admin/actions"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-  return "<h1>admin "
+  return "<header>\n  <h2 class=\"page-title\">"
     + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
-    + "</h1>";
+    + "</h2>\n</header>";
 },"useData":true});
 
 this["JST"]["admin/dashboard"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  return "<h1>admin dashboard</h1>";
+  return "<header>\n  <h2 class=\"page-title\">Dashboard</h2>\n</header>";
   },"useData":true});
 
 this["JST"]["admin/index"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  return "<h1>admin index</h1>";
+  return "<header>\n  <h2 class=\"page-title\">Admin Index</h2>\n</header>";
   },"useData":true});
 
 this["JST"]["admin/layout/header"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
@@ -29349,13 +29349,13 @@ this["JST"]["admin/layout/header"] = Handlebars.template({"compiler":[6,">= 2.0.
 
 this["JST"]["admin/projects"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-  return "<header class=\"well well-sm page-title\">\n  <h2>"
+  return "<header>\n  <h2 class=\"page-title\">"
     + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
     + "</h2>\n</header>";
 },"useData":true});
 
 this["JST"]["admin/users"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  return "<h1>admin users</h1>";
+  return "<header>\n  <h2 class=\"page-title\">Users</h2>\n</header>";
   },"useData":true});
 
 this["JST"]["elements/selectday"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
@@ -29527,24 +29527,24 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
 this["JST"]["reports/report"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-  return "<div class=\"well\">"
+  return "<header>\n  <h2 class=\"page-title\">"
     + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
-    + "</div>\n";
+    + "</h2>\n</header>";
 },"useData":true});
 
 this["JST"]["reports/reports"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-  return "<div class=\"well\">"
+  return "<header>\n  <h2 class=\"page-title\">"
     + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
-    + "</div>\n";
+    + "</h2>\n</header>";
 },"useData":true});
 
 this["JST"]["user/details"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  return "user details";
+  return "<header>\n  <h2 class=\"page-title\">User Details</h2>\n</header>";
   },"useData":true});
 
 this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  return "<div class=\"thumbnail\">user rates</div>";
+  return "<header>\n  <h2 class=\"page-title\">User Rates</h2>\n</header>";
   },"useData":true});
 (function() {
   var Tracktime, config, development, process, production, ref, test,
