@@ -31163,7 +31163,7 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
     Record.prototype.template = JST['actions/details/record'];
 
-    Record.prototype.tmpDetails = {};
+    Record.prototype.recordModel = new Tracktime.Record();
 
     Record.prototype.views = {};
 
@@ -31174,6 +31174,9 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
     Record.prototype.initialize = function(options) {
       _.extend(this, options);
+      if (options.model instanceof Tracktime.Record) {
+        this.recordModel.clear().set(options.model.toJSON);
+      }
       return this.render();
     };
 
@@ -31181,12 +31184,20 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       var textarea;
       $(this.container).html(this.$el.html(this.template(this.model.toJSON())));
       textarea = new Tracktime.Element.Textarea({
-        value: ''
+        model: this.recordModel,
+        field: 'subject'
       });
       $('placeholder#textarea', this.$el).replaceWith(textarea.$el);
       textarea.$el.textareaAutoSize().focus();
-      $('placeholder#slider', this.$el).replaceWith((new Tracktime.Element.Slider()).$el);
-      return $('placeholder#selectday', this.$el).replaceWith((new Tracktime.Element.SelectDay()).$el);
+      textarea.on('tSubmit', this.sendForm);
+      $('placeholder#slider', this.$el).replaceWith((new Tracktime.Element.Slider({
+        model: this.recordModel,
+        field: 'recordTime'
+      })).$el);
+      return $('placeholder#selectday', this.$el).replaceWith((new Tracktime.Element.SelectDay({
+        model: this.recordModel,
+        field: 'recordDate'
+      })).$el);
     };
 
     Record.prototype.textareaInput = function(event) {
@@ -31201,8 +31212,10 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     };
 
     Record.prototype.sendForm = function(event) {
-      event.preventDefault();
-      return console.lo('send form');
+      console.log('send form', this.recordModel.toJSON());
+      if (this.recordModel.isValid()) {
+        return this.recordModel.clear().set(this.recordModel.defaults);
+      }
     };
 
     return Record;
@@ -31461,6 +31474,8 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     extend(SelectDay, superClass);
 
     function SelectDay() {
+      this.changeInput = bind(this.changeInput, this);
+      this.changeField = bind(this.changeField, this);
       return SelectDay.__super__.constructor.apply(this, arguments);
     }
 
@@ -31477,16 +31492,27 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
         options = {};
       }
       _.extend(this, options);
-      return this.render();
+      this.render();
+      this.changeField();
+      return this.listenTo(this.model, "change:" + this.field, this.changeField);
     };
 
     SelectDay.prototype.render = function() {
       return this.$el.html(this.template());
     };
 
+    SelectDay.prototype.changeField = function() {};
+
+    SelectDay.prototype.changeInput = function(value) {
+      return this.model.set(this.field, value, {
+        silent: true
+      });
+    };
+
     SelectDay.prototype.setDay = function(event) {
       event.preventDefault();
-      return $(".dropdown-toggle ruby", this.$el).html($('ruby', event.currentTarget).html());
+      $(".dropdown-toggle ruby", this.$el).html($('ruby', event.currentTarget).html());
+      return this.changeInput($(".dropdown-toggle ruby rt", this.$el).html());
     };
 
     return SelectDay;
@@ -31499,6 +31525,8 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     extend(Slider, superClass);
 
     function Slider() {
+      this.changeInput = bind(this.changeInput, this);
+      this.changeField = bind(this.changeField, this);
       return Slider.__super__.constructor.apply(this, arguments);
     }
 
@@ -31509,7 +31537,9 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
         options = {};
       }
       _.extend(this, options);
-      return this.render();
+      this.render();
+      this.changeField();
+      return this.listenTo(this.model, "change:" + this.field, this.changeField);
     };
 
     Slider.prototype.render = function() {
@@ -31522,9 +31552,14 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
         }
       }).on({
         slide: (function(_this) {
-          return function(event, val) {
-            var currentHour, hour, minute;
-            _this.tmpDetails.recordTime = val;
+          return function(event, inval) {
+            var currentHour, hour, minute, val;
+            if ((inval != null) && _.isNumber(parseFloat(inval))) {
+              _this.changeInput(parseFloat(inval));
+              val = inval;
+            } else {
+              val = 0;
+            }
             currentHour = val / 720 * 12;
             hour = Math.floor(currentHour);
             minute = (currentHour - hour) * 60;
@@ -31548,6 +31583,23 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       });
     };
 
+    Slider.prototype.changeField = function() {
+      var fieldValue, newVal;
+      newVal = 0;
+      fieldValue = this.model.get(this.field);
+      if ((fieldValue != null) && _.isNumber(parseFloat(fieldValue))) {
+        newVal = parseFloat(this.model.get(this.field));
+        console.log('call slider change field', newVal);
+        return this.$el.val(newVal).trigger('slide');
+      }
+    };
+
+    Slider.prototype.changeInput = function(value) {
+      return this.model.set(this.field, parseFloat(value) || 0, {
+        silent: true
+      });
+    };
+
     return Slider;
 
   })(Tracktime.Element);
@@ -31558,8 +31610,9 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     extend(Textarea, superClass);
 
     function Textarea() {
-      this.checkContent = bind(this.checkContent, this);
       this.fixEnter = bind(this.fixEnter, this);
+      this.changeInput = bind(this.changeInput, this);
+      this.changeField = bind(this.changeField, this);
       return Textarea.__super__.constructor.apply(this, arguments);
     }
 
@@ -31568,7 +31621,8 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     Textarea.prototype.className = 'form-control';
 
     Textarea.prototype.events = {
-      'keydown': 'fixEnter'
+      'keydown': 'fixEnter',
+      'change': 'changeInput'
     };
 
     Textarea.prototype.initialize = function(options) {
@@ -31576,23 +31630,31 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
         options = {};
       }
       _.extend(this, options);
-      return this.render();
+      this.render();
+      return this.listenTo(this.model, "change:" + this.field, this.changeField);
     };
 
     Textarea.prototype.render = function() {
       this.$el.attr('name', 'action_text');
-      return this.$el.val(this.value);
+      return this.$el.val(this.model.get(this.field));
+    };
+
+    Textarea.prototype.changeField = function() {
+      return this.$el.val(this.model.get(this.field)).trigger('input');
+    };
+
+    Textarea.prototype.changeInput = function(event) {
+      return this.model.set(this.field, $(event.target).val(), {
+        silent: true
+      });
     };
 
     Textarea.prototype.fixEnter = function(event) {
       if (event.keyCode === 13 && event.shiftKey) {
         event.preventDefault();
-        return console.log('call textarea submit');
+        console.log('call textarea submit');
+        return this.trigger('tSubmit');
       }
-    };
-
-    Textarea.prototype.checkContent = function() {
-      return console.log('check content');
     };
 
     return Textarea;

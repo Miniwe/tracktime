@@ -28,6 +28,7 @@ class Tracktime.Record extends Tracktime.Model
   isValid: () ->
     # @todo add good validation
     true
+
   updateLastAccess: () ->
     @set 'lastAccess', (new Date()).toISOString()
 

@@ -83,6 +83,7 @@ Backbone.Validation.configure
 
 
 _.extend Backbone.Model.prototype, Backbone.Validation.mixin
+
 Backbone.ViewMixin =
   close: () ->
     @onClose() if @onClose
@@ -546,6 +547,7 @@ class Tracktime.Record extends Tracktime.Model
   isValid: () ->
     # @todo add good validation
     true
+
   updateLastAccess: () ->
     @set 'lastAccess', (new Date()).toISOString()
 
@@ -1066,7 +1068,7 @@ class Tracktime.ActionView.Project extends Backbone.View
 class Tracktime.ActionView.Record extends Backbone.View
   container: '.form-control-wrapper'
   template: JST['actions/details/record']
-  tmpDetails: {}
+  recordModel: new Tracktime.Record()
   views: {}
   events:
     'click #send-form': 'sendForm'
@@ -1074,18 +1076,30 @@ class Tracktime.ActionView.Record extends Backbone.View
 
   initialize: (options) ->
     _.extend @, options
+    @recordModel.clear().set options.model.toJSON if options.model instanceof Tracktime.Record
+
     @render()
 
   render: () ->
     $(@container).html @$el.html @template @model.toJSON()
 
-    textarea = new Tracktime.Element.Textarea value: ''
+    textarea = new Tracktime.Element.Textarea
+      model: @recordModel
+      field: 'subject'
+
     $('placeholder#textarea', @$el).replaceWith textarea.$el
     textarea.$el.textareaAutoSize().focus()
+    textarea.on 'tSubmit', @sendForm
 
-    $('placeholder#slider', @$el).replaceWith (new Tracktime.Element.Slider()).$el
+    $('placeholder#slider', @$el).replaceWith (new Tracktime.Element.Slider
+      model: @recordModel
+      field: 'recordTime'
+    ).$el
 
-    $('placeholder#selectday', @$el).replaceWith (new Tracktime.Element.SelectDay()).$el
+    $('placeholder#selectday', @$el).replaceWith (new Tracktime.Element.SelectDay
+      model: @recordModel
+      field: 'recordDate'
+    ).$el
 
   textareaInput: (event) =>
     window.setTimeout () =>
@@ -1095,29 +1109,11 @@ class Tracktime.ActionView.Record extends Backbone.View
     , 500
 
   sendForm: (event) =>
-    event.preventDefault()
-    console.lo 'send form'
-    # @tmpDetails.subject = $('textarea', @el).val()
-    # @actionSubmit()
-    # @checkContent()
+    console.log 'send form', @recordModel.toJSON()
 
-  # actionSubmit: (val) ->
-  #   unless _.isEmpty @tmpDetails.subject
-  #     $('textarea', @el).val('')
-  #     @model.processAction @tmpDetails
+    if @recordModel.isValid()
 
-  # ============ ============ ============ ============ ============ ============
-  #   #add selected detais if exist - will change from action modell call
-  #   @container.parent().find("#detailsNew").popover('destroy')
-  #   unless @model.get('details') is null
-  #     @container.parent().find("#detailsNew").show().replaceWith (new Tracktime.ActionView.DetailsBtn model: @model).el
-  #   else
-  #     @container.parent().find("#detailsNew").hide()
-
-  #   @setInputVal()
-
-  # setInputVal: () ->
-  #   $('textarea', '#actions-form')?.val(@model.get('inputValue')).focus()
+      @recordModel.clear().set(@recordModel.defaults)
 
 (module?.exports = Tracktime.ActionView.Record) or @Tracktime.ActionView.Record = Tracktime.ActionView.Record
 
@@ -1265,14 +1261,23 @@ class Tracktime.Element.SelectDay extends Tracktime.Element
     # @tmpDetails.recordDate = $(".select-day > .btn .caption ruby rt").html()
     _.extend @, options
     @render()
+    @changeField()
+    @listenTo @model, "change:#{@field}", @changeField
 
   render: () ->
     @$el.html @template()
 
+  changeField: () =>
+    # @$el.val @model.get @field
+    # найти в списке тот день который есть в field и нажать на эту кнопку
+
+  changeInput: (value) =>
+    @model.set @field, value, {silent: true}
+
   setDay: (event) ->
     event.preventDefault()
     $(".dropdown-toggle ruby", @$el).html $('ruby', event.currentTarget).html()
-    # @tmpDetails.recordDate = $(".select-day > .btn .caption ruby rt").html()
+    @changeInput $(".dropdown-toggle ruby rt", @$el).html()
 
 
 (module?.exports = Tracktime.Element.Slider) or @Tracktime.Element.Slider = Tracktime.Element.Slider
@@ -1284,6 +1289,8 @@ class Tracktime.Element.Slider extends Tracktime.Element
   initialize: (options = {}) ->
     _.extend @, options
     @render()
+    @changeField()
+    @listenTo @model, "change:#{@field}", @changeField
 
   render: () ->
     @$el
@@ -1292,8 +1299,12 @@ class Tracktime.Element.Slider extends Tracktime.Element
         step: 5
         range: {'min': [ 0 ], 'max': [ 720 ] }
       .on
-        slide: (event, val) =>
-          @tmpDetails.recordTime = val
+        slide: (event, inval) =>
+          if inval? and _.isNumber parseFloat inval
+            @changeInput parseFloat inval
+            val = inval
+          else
+            val = 0
           currentHour = val / 720 * 12
           hour = Math.floor(currentHour)
           minute = (currentHour - hour) * 60
@@ -1308,6 +1319,17 @@ class Tracktime.Element.Slider extends Tracktime.Element
           to: (value) -> value / 60
           from: (value) -> value
 
+  changeField: () =>
+    newVal = 0
+    fieldValue = @model.get(@field)
+    if fieldValue? and _.isNumber parseFloat fieldValue
+      newVal = parseFloat @model.get @field
+      console.log 'call slider change field', newVal
+      @$el.val(newVal).trigger('slide')
+
+  changeInput: (value) =>
+    @model.set @field, parseFloat(value) or 0, {silent: true}
+
 
 (module?.exports = Tracktime.Element.Slider) or @Tracktime.Element.Slider = Tracktime.Element.Slider
 
@@ -1317,30 +1339,28 @@ class Tracktime.Element.Textarea extends Tracktime.Element
   className: 'form-control'
   events:
     'keydown': 'fixEnter'
+    'change': 'changeInput'
 
   initialize: (options = {}) ->
     _.extend @, options
     @render()
+    @listenTo @model, "change:#{@field}", @changeField
 
   render: () ->
     @$el.attr 'name', 'action_text'
-    @$el.val @value
+    @$el.val @model.get @field
+
+  changeField: () =>
+    @$el.val(@model.get @field).trigger('input')
+
+  changeInput: (event) =>
+    @model.set @field, $(event.target).val(), {silent: true}
 
   fixEnter: (event) =>
     if event.keyCode == 13 and event.shiftKey
       event.preventDefault()
       console.log 'call textarea submit'
-      # @tmpDetails.subject = $('textarea', @el).val()
-      # @actionSubmit()
-
-  checkContent: () =>
-    console.log 'check content'
-    # window.setTimeout () =>
-    #   diff = $('#actions-form').outerHeight() - $('.navbar').outerHeight(true)
-    #   $('#actions-form').toggleClass "shadow-z-2", (diff > 10)
-    #   $(".details-container").toggleClass 'hidden', _.isEmpty $('textarea').val()
-    # , 500
-
+      @trigger 'tSubmit'
 
 
 (module?.exports = Tracktime.Element.Textarea) or @Tracktime.Element.Textarea = Tracktime.Element.Textarea

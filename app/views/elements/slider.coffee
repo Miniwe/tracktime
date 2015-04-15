@@ -4,6 +4,8 @@ class Tracktime.Element.Slider extends Tracktime.Element
   initialize: (options = {}) ->
     _.extend @, options
     @render()
+    @changeField()
+    @listenTo @model, "change:#{@field}", @changeField
 
   render: () ->
     @$el
@@ -12,8 +14,12 @@ class Tracktime.Element.Slider extends Tracktime.Element
         step: 5
         range: {'min': [ 0 ], 'max': [ 720 ] }
       .on
-        slide: (event, val) =>
-          @tmpDetails.recordTime = val
+        slide: (event, inval) =>
+          if inval? and _.isNumber parseFloat inval
+            @changeInput parseFloat inval
+            val = inval
+          else
+            val = 0
           currentHour = val / 720 * 12
           hour = Math.floor(currentHour)
           minute = (currentHour - hour) * 60
@@ -27,6 +33,17 @@ class Tracktime.Element.Slider extends Tracktime.Element
         format:
           to: (value) -> value / 60
           from: (value) -> value
+
+  changeField: () =>
+    newVal = 0
+    fieldValue = @model.get(@field)
+    if fieldValue? and _.isNumber parseFloat fieldValue
+      newVal = parseFloat @model.get @field
+      console.log 'call slider change field', newVal
+      @$el.val(newVal).trigger('slide')
+
+  changeInput: (value) =>
+    @model.set @field, parseFloat(value) or 0, {silent: true}
 
 
 (module?.exports = Tracktime.Element.Slider) or @Tracktime.Element.Slider = Tracktime.Element.Slider

@@ -8,14 +8,23 @@ class Tracktime.Element.SelectDay extends Tracktime.Element
     # @tmpDetails.recordDate = $(".select-day > .btn .caption ruby rt").html()
     _.extend @, options
     @render()
+    @changeField()
+    @listenTo @model, "change:#{@field}", @changeField
 
   render: () ->
     @$el.html @template()
 
+  changeField: () =>
+    # @$el.val @model.get @field
+    # найти в списке тот день который есть в field и нажать на эту кнопку
+
+  changeInput: (value) =>
+    @model.set @field, value, {silent: true}
+
   setDay: (event) ->
     event.preventDefault()
     $(".dropdown-toggle ruby", @$el).html $('ruby', event.currentTarget).html()
-    # @tmpDetails.recordDate = $(".select-day > .btn .caption ruby rt").html()
+    @changeInput $(".dropdown-toggle ruby rt", @$el).html()
 
 
 (module?.exports = Tracktime.Element.Slider) or @Tracktime.Element.Slider = Tracktime.Element.Slider
