@@ -1,12 +1,35 @@
-class Tracktime.AdminView.Projects extends Backbone.View
+class Tracktime.AdminView.ProjectsView extends Backbone.View
   container: '#main'
   template: JST['admin/projects']
+  className: 'records-group'
 
   initialize: () ->
+    @views = {}
     @render()
+    @listenTo @collection, "reset", @resetProjectsList
+    @listenTo @collection, "add", @addProject
+    @listenTo @collection, "remove", @removeProject
 
   render: () ->
-    $(@container).html @$el.html @template {title: 'Projects'}
+    $(@container).html @$el.html ''
+    @$el.before @template {title: 'Projects'}
+    @resetProjectsList()
 
-(module?.exports = Tracktime.AdminView.Projects) or @Tracktime.AdminView.Projects = Tracktime.AdminView.Projects
+  resetProjectsList: () ->
+    _.each @collection.where(isDeleted: false), (project) =>
+      projectView =  new Tracktime.AdminView.ProjectView { model: project }
+      @$el.append projectView.el
+      @setSubView "project-#{project.cid}", projectView
+    , @
+
+  addProject: (project, collection, params) ->
+    projectView = new Tracktime.AdminView.ProjectView { model: project }
+    $(projectView.el).prependTo @$el
+    @setSubView "project-#{project.cid}", projectView
+
+  removeProject: (project, args...) ->
+    projectView = @getSubView "project-#{project.cid}"
+    projectView.close() if projectView
+
+(module?.exports = Tracktime.AdminView.ProjectsView) or @Tracktime.AdminView.ProjectsView = Tracktime.AdminView.ProjectsView
 

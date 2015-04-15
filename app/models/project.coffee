@@ -9,7 +9,6 @@ class Tracktime.Project extends Tracktime.Model
     description: ''
     lastAccess: (new Date()).toISOString()
     isDeleted: false
-    # order: Tracktime.ProjectsCollection.nextOrder()
 
   validation:
     name:

@@ -57,44 +57,22 @@
     Tracktime.prototype.urlRoot = config.SERVER;
 
     Tracktime.prototype.defaults = {
-      title: "TrackTime App - from"
+      title: "TrackTime App"
     };
 
     Tracktime.prototype.initialize = function() {
       this.set('actions', new Tracktime.ActionsCollection());
       this.set('records', new Tracktime.RecordsCollection());
+      this.set('projects', new Tracktime.ProjectsCollection());
       return this.listenTo(Tracktime.AppChannel, "isOnline", this.updateApp);
     };
 
     Tracktime.prototype.updateApp = function() {
-      return this.get('records').fetch({
+      this.get('records').fetch({
         ajaxSync: Tracktime.AppChannel.request('isOnline')
       });
-    };
-
-    Tracktime.prototype.addRecord = function(options) {
-      var error, success;
-      _.extend(options, {
-        date: (new Date()).toISOString()
-      });
-      success = (function(_this) {
-        return function(result) {
-          $.alert({
-            content: 'save success',
-            timeout: 2000,
-            style: 'btn-success'
-          });
-          return _this.get('actions').getActive().successAdd();
-        };
-      })(this);
-      error = (function(_this) {
-        return function() {
-          return $.alert('save error');
-        };
-      })(this);
-      return this.get('records').addRecord(options, {
-        success: success,
-        error: error
+      return this.get('projects').fetch({
+        ajaxSync: Tracktime.AppChannel.request('isOnline')
       });
     };
 
@@ -321,17 +299,17 @@
       return Collection.__super__.constructor.apply(this, arguments);
     }
 
-    Collection.prototype.addRecord = function(params, options) {
-      var newRecord;
-      newRecord = new this.model(params);
-      if (newRecord.isValid()) {
-        this.add(newRecord);
+    Collection.prototype.addModel = function(params, options) {
+      var newModel;
+      newModel = new this.model(params);
+      if (newModel.isValid()) {
+        this.add(newModel);
         if (options.ajaxSync == null) {
           options.ajaxSync = Tracktime.AppChannel.request('isOnline');
         }
-        return newRecord.save({}, options);
+        return newModel.save({}, options);
       } else {
-        return $.alert('Erros validation from add record to collection');
+        return $.alert('Erros validation from add curModel to collection');
       }
     };
 
@@ -356,28 +334,28 @@
       var localModels;
       _.each(models, (function(_this) {
         return function(model) {
-          var localLastAccess, localModel, modelLastAccess, record;
-          record = _this.get(model._id);
-          localModel = _this.localStorage.find(record);
+          var curModel, localLastAccess, localModel, modelLastAccess;
+          curModel = _this.get(model._id);
+          localModel = _this.localStorage.find(curModel);
           if (!localModel) {
-            return record.save({
+            return curModel.save({
               ajaxSync: false
             });
           } else {
             modelLastAccess = (new Date(model.lastAccess)).getTime();
             localLastAccess = (new Date(localModel.lastAccess)).getTime();
             if (localModel.isDeleted) {
-              return record.set({
+              return curModel.set({
                 'isDeleted': true
               }, {
                 trigger: false
               });
             } else if (localLastAccess < modelLastAccess) {
-              return record.save(model, {
+              return curModel.save(model, {
                 ajaxSync: false
               });
             } else if (localLastAccess > modelLastAccess) {
-              return record.save(localModel, {
+              return curModel.save(localModel, {
                 ajaxSync: true
               });
             }
@@ -419,7 +397,7 @@
               });
               newModel = replacedModel.toJSON();
               delete newModel._id;
-              return _this.addRecord(newModel, {
+              return _this.addModel(newModel, {
                 success: function(model, response) {
                   return replacedModel.destroy({
                     ajaxSync: false
@@ -570,6 +548,7 @@
 
     Project.prototype.defaults = _.extend({}, Tracktime.Action.prototype.defaults, {
       title: 'Add project',
+      projectModel: null,
       formAction: '#',
       btnClass: 'btn-danger',
       navbarClass: 'navbar-material-indigo',
@@ -586,18 +565,22 @@
         options = {};
       }
       this.set(options);
-      return this.set('details', new Tracktime.Action.Details());
+      if (options.model instanceof Tracktime.Project) {
+        return this.set('projectModel', new Tracktime.Project(options.model.toJSON));
+      } else {
+        return this.set('projectModel', new Tracktime.Project());
+      }
     };
 
-    Project.prototype.processAction = function(options) {
-      this.get('details').set(options);
-      return this.newProject();
-    };
-
-    Project.prototype.newProject = function() {
-      return Tracktime.AppChannel.command('newProject', _.extend({
-        project: 0
-      }, this.get('details').attributes));
+    Project.prototype.processAction = function() {
+      var projectModel;
+      projectModel = this.get('projectModel');
+      if (projectModel.isValid()) {
+        Tracktime.AppChannel.command('newProject', _.extend({
+          project: 0
+        }, projectModel.toJSON()));
+        return projectModel.clear().set(projectModel.defaults);
+      }
     };
 
     Project.prototype.successAdd = function() {};
@@ -891,6 +874,31 @@
       return -(new Date(model.get('date'))).getTime();
     };
 
+    ProjectsCollection.prototype.addProject = function(options) {
+      var error, success;
+      _.extend(options, {
+        date: (new Date()).toISOString()
+      });
+      success = (function(_this) {
+        return function(result) {
+          return $.alert({
+            content: 'Project: save success',
+            timeout: 2000,
+            style: 'btn-success'
+          });
+        };
+      })(this);
+      error = (function(_this) {
+        return function() {
+          return $.alert('Project: save error');
+        };
+      })(this);
+      return this.addModel(options, {
+        success: success,
+        error: error
+      });
+    };
+
     return ProjectsCollection;
 
   })(Tracktime.Collection);
@@ -922,6 +930,31 @@
 
     RecordsCollection.prototype.comparator = function(model) {
       return -(new Date(model.get('date'))).getTime();
+    };
+
+    RecordsCollection.prototype.addRecord = function(options) {
+      var error, success;
+      _.extend(options, {
+        date: (new Date()).toISOString()
+      });
+      success = (function(_this) {
+        return function(result) {
+          return $.alert({
+            content: 'Record: save success',
+            timeout: 2000,
+            style: 'btn-success'
+          });
+        };
+      })(this);
+      error = (function(_this) {
+        return function() {
+          return $.alert('Record: save error');
+        };
+      })(this);
+      return this.addModel(options, {
+        success: success,
+        error: error
+      });
     };
 
     return RecordsCollection;
@@ -1005,6 +1038,7 @@
       return this.comply({
         'start': this.startApp,
         'newRecord': this.newRecord,
+        'newProject': this.newProject,
         'serverOnline': this.serverOnline,
         'serverOffline': this.serverOffline,
         'checkOnline': this.checkOnline
@@ -1026,7 +1060,10 @@
       });
     },
     newRecord: function(options) {
-      return this.model.addRecord(options);
+      return this.model.get('records').addRecord(options);
+    },
+    newProject: function(options) {
+      return this.model.get('projects').addProject(options);
     },
     serverOnline: function() {
       return this.trigger('isOnline', true);
@@ -1076,7 +1113,9 @@
 
     AdminRouter.prototype.projects = function() {
       var newAction;
-      this.parent.view.setSubView('main', new Tracktime.AdminView.Projects());
+      this.parent.view.setSubView('main', new Tracktime.AdminView.ProjectsView({
+        collection: this.parent.model.get('projects')
+      }));
       newAction = this.parent.model.get('actions').addAction({
         title: 'Add projects',
         type: 'Project'
@@ -1602,6 +1641,8 @@
     extend(Project, superClass);
 
     function Project() {
+      this.sendForm = bind(this.sendForm, this);
+      this.textareaInput = bind(this.textareaInput, this);
       return Project.__super__.constructor.apply(this, arguments);
     }
 
@@ -1609,9 +1650,12 @@
 
     Project.prototype.template = JST['actions/details/project'];
 
-    Project.prototype.tmpDetails = {};
-
     Project.prototype.views = {};
+
+    Project.prototype.events = {
+      'click #send-form': 'sendForm',
+      'input textarea': 'textareaInput'
+    };
 
     Project.prototype.initialize = function(options) {
       _.extend(this, options);
@@ -1619,15 +1663,37 @@
     };
 
     Project.prototype.render = function() {
+      var textarea;
       $(this.container).html(this.$el.html(this.template(this.model.toJSON())));
-      return $('placeholder#textarea', this.$el).replaceWith((new Tracktime.Element.Textarea()).$el);
+      textarea = new Tracktime.Element.Textarea({
+        model: this.model.get('projectModel'),
+        field: 'name'
+      });
+      $('placeholder#textarea', this.$el).replaceWith(textarea.$el);
+      textarea.$el.textareaAutoSize().focus();
+      return textarea.on('tSubmit', this.sendForm);
+    };
+
+    Project.prototype.textareaInput = function(event) {
+      return window.setTimeout((function(_this) {
+        return function() {
+          var diff;
+          diff = $('#actions-form').outerHeight() - $('.navbar').outerHeight(true);
+          $('#actions-form').toggleClass("shadow-z-2", diff > 10);
+          return $(".details-container").toggleClass('hidden', _.isEmpty($(event.target).val()));
+        };
+      })(this), 500);
+    };
+
+    Project.prototype.sendForm = function() {
+      return this.model.processAction();
     };
 
     return Project;
 
   })(Backbone.View);
 
-  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.ActionView.Search : void 0) || (this.Tracktime.ActionView.Search = Tracktime.ActionView.Search);
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.ActionView.Project : void 0) || (this.Tracktime.ActionView.Project = Tracktime.ActionView.Project);
 
   Tracktime.ActionView.Record = (function(superClass) {
     extend(Record, superClass);
@@ -1835,32 +1901,73 @@
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AdminView.Dashboard : void 0) || (this.Tracktime.AdminView.Dashboard = Tracktime.AdminView.Dashboard);
 
-  Tracktime.AdminView.Projects = (function(superClass) {
-    extend(Projects, superClass);
+  Tracktime.AdminView.ProjectsView = (function(superClass) {
+    extend(ProjectsView, superClass);
 
-    function Projects() {
-      return Projects.__super__.constructor.apply(this, arguments);
+    function ProjectsView() {
+      return ProjectsView.__super__.constructor.apply(this, arguments);
     }
 
-    Projects.prototype.container = '#main';
+    ProjectsView.prototype.container = '#main';
 
-    Projects.prototype.template = JST['admin/projects'];
+    ProjectsView.prototype.template = JST['admin/projects'];
 
-    Projects.prototype.initialize = function() {
-      return this.render();
+    ProjectsView.prototype.className = 'records-group';
+
+    ProjectsView.prototype.initialize = function() {
+      this.views = {};
+      this.render();
+      this.listenTo(this.collection, "reset", this.resetProjectsList);
+      this.listenTo(this.collection, "add", this.addProject);
+      return this.listenTo(this.collection, "remove", this.removeProject);
     };
 
-    Projects.prototype.render = function() {
-      return $(this.container).html(this.$el.html(this.template({
+    ProjectsView.prototype.render = function() {
+      $(this.container).html(this.$el.html(''));
+      this.$el.before(this.template({
         title: 'Projects'
-      })));
+      }));
+      return this.resetProjectsList();
     };
 
-    return Projects;
+    ProjectsView.prototype.resetProjectsList = function() {
+      return _.each(this.collection.where({
+        isDeleted: false
+      }), (function(_this) {
+        return function(project) {
+          var projectView;
+          projectView = new Tracktime.AdminView.ProjectView({
+            model: project
+          });
+          _this.$el.append(projectView.el);
+          return _this.setSubView("project-" + project.cid, projectView);
+        };
+      })(this), this);
+    };
+
+    ProjectsView.prototype.addProject = function(project, collection, params) {
+      var projectView;
+      projectView = new Tracktime.AdminView.ProjectView({
+        model: project
+      });
+      $(projectView.el).prependTo(this.$el);
+      return this.setSubView("project-" + project.cid, projectView);
+    };
+
+    ProjectsView.prototype.removeProject = function() {
+      var args, project, projectView;
+      project = arguments[0], args = 2 <= arguments.length ? slice.call(arguments, 1) : [];
+      projectView = this.getSubView("project-" + project.cid);
+      if (projectView) {
+        return projectView.close();
+      }
+    };
+
+    return ProjectsView;
 
   })(Backbone.View);
 
-  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AdminView.Projects : void 0) || (this.Tracktime.AdminView.Projects = Tracktime.AdminView.Projects);
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AdminView.ProjectsView : void 0) || (this.Tracktime.AdminView.ProjectsView = Tracktime.AdminView.ProjectsView);
 
   Tracktime.AdminView.Users = (function(superClass) {
     extend(Users, superClass);
@@ -2303,6 +2410,106 @@
   })(Backbone.View);
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AppView.Menu : void 0) || (this.Tracktime.AppView.Menu = Tracktime.AppView.Menu);
+
+  Tracktime.AdminView.ProjectView = (function(superClass) {
+    extend(ProjectView, superClass);
+
+    function ProjectView() {
+      this.fixEnter = bind(this.fixEnter, this);
+      return ProjectView.__super__.constructor.apply(this, arguments);
+    }
+
+    ProjectView.prototype.tagName = 'li';
+
+    ProjectView.prototype.className = 'records-group-item shadow-z-1';
+
+    ProjectView.prototype.template = JST['projects/admin_project'];
+
+    ProjectView.prototype.events = {
+      'click .btn.delete': "deleteProject",
+      'click .subject': "toggleEdit"
+    };
+
+    ProjectView.prototype.initialize = function() {
+      if (!this.model.get('isDeleted')) {
+        this.render();
+      }
+      this.listenTo(this.model, "change:isDeleted", this.change_isDeleted);
+      return this.listenTo(this.model, "change:subject", this.change_subject);
+    };
+
+    ProjectView.prototype.attributes = function() {
+      return {
+        id: this.model.cid
+      };
+    };
+
+    ProjectView.prototype.render = function() {
+      this.$el.html(this.template(this.model.toJSON()));
+      return $('.subject_edit', this.$el).on('keydown', this.fixEnter).textareaAutoSize();
+    };
+
+    ProjectView.prototype.change_isDeleted = function() {
+      return this.$el.remove();
+    };
+
+    ProjectView.prototype.change_subject = function() {
+      $('.subject', this.$el).html(this.model.get('subject').nl2br());
+      return $('.subject_edit', this.$el).val(this.model.get('subject'));
+    };
+
+    ProjectView.prototype.fixEnter = function(event) {
+      var val;
+      if (event.keyCode === 13) {
+        if (event.shiftKey) {
+          val = $(event.target).val();
+          if (!_.isEmpty(val)) {
+            this.model.set('subject', val);
+            this.saveProject();
+            this.toggleEdit();
+          }
+          return event.preventDefault();
+        }
+      }
+    };
+
+    ProjectView.prototype.toggleEdit = function(event) {
+      this.$el.find('.subject_edit').css('min-height', this.$el.find('.subject').height());
+      return this.$el.find('.subject, .subject_edit').css('border', 'apx solid blue').toggleClass('hidden');
+    };
+
+    ProjectView.prototype.saveProject = function() {
+      return this.model.save({}, {
+        ajaxSync: Tracktime.AppChannel.request('isOnline'),
+        success: function(model, respond) {
+          return $.alert({
+            content: 'update project',
+            timeout: 2000,
+            style: 'btn-info'
+          });
+        }
+      });
+    };
+
+    ProjectView.prototype.deleteProject = function(event) {
+      event.preventDefault();
+      return this.model.destroy({
+        ajaxSync: Tracktime.AppChannel.request('isOnline'),
+        success: function(model, respond) {
+          return $.alert({
+            content: 'delete project',
+            timeout: 2000,
+            style: 'btn-danger'
+          });
+        }
+      });
+    };
+
+    return ProjectView;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AdminView.ProjectView : void 0) || (this.Tracktime.AdminView.ProjectView = Tracktime.AdminView.ProjectView);
 
   Tracktime.ProjectView = (function(superClass) {
     extend(ProjectView, superClass);

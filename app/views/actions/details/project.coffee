@@ -1,8 +1,10 @@
 class Tracktime.ActionView.Project extends Backbone.View
   container: '.form-control-wrapper'
   template: JST['actions/details/project']
-  tmpDetails: {}
   views: {}
+  events:
+    'click #send-form': 'sendForm'
+    'input textarea': 'textareaInput'
 
   initialize: (options) ->
     _.extend @, options
@@ -10,9 +12,24 @@ class Tracktime.ActionView.Project extends Backbone.View
 
   render: () ->
     $(@container).html @$el.html @template @model.toJSON()
-    $('placeholder#textarea', @$el).replaceWith (new Tracktime.Element.Textarea()).$el
 
+    textarea = new Tracktime.Element.Textarea
+      model: @model.get 'projectModel'
+      field: 'name'
 
+    $('placeholder#textarea', @$el).replaceWith textarea.$el
+    textarea.$el.textareaAutoSize().focus()
+    textarea.on 'tSubmit', @sendForm
 
-(module?.exports = Tracktime.ActionView.Search) or @Tracktime.ActionView.Search = Tracktime.ActionView.Search
+  textareaInput: (event) =>
+    window.setTimeout () =>
+      diff = $('#actions-form').outerHeight() - $('.navbar').outerHeight(true)
+      $('#actions-form').toggleClass "shadow-z-2", (diff > 10)
+      $(".details-container").toggleClass 'hidden', _.isEmpty $(event.target).val()
+    , 500
+
+  sendForm: () =>
+    @model.processAction()
+
+(module?.exports = Tracktime.ActionView.Project) or @Tracktime.ActionView.Project = Tracktime.ActionView.Project
 

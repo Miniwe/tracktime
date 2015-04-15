@@ -7,12 +7,10 @@ _.extend Tracktime.AppChannel,
     @listenTo @, 'isOnline', (status) => @isOnline = status
     @checkOnline()
     @setWindowListeners()
-
     @model = new Tracktime()
     @bindComply()
     @bindRequest()
     return @
-
 
   checkOnline: () ->
     if window.navigator.onLine == true
@@ -59,6 +57,7 @@ _.extend Tracktime.AppChannel,
     @comply
       'start':           @startApp
       'newRecord':       @newRecord
+      'newProject':      @newProject
       'serverOnline':    @serverOnline
       'serverOffline':   @serverOffline
       'checkOnline':     @checkOnline
@@ -72,7 +71,10 @@ _.extend Tracktime.AppChannel,
       pushState: false
 
   newRecord: (options) ->
-    @model.addRecord(options)
+    @model.get('records').addRecord(options)
+
+  newProject: (options) ->
+    @model.get('projects').addProject(options)
 
   serverOnline: () ->
     @trigger 'isOnline', true

@@ -1,0 +1,8 @@
+@import 'compass/css3/box-shadow';
+
+.page-title {
+  padding: 0.5em .7em;
+  background: #EEE;
+  @include box-shadow(0 3px 6px 0 rgba(0, 0, 0, 0.1), 0 2px 7px 0 rgba(0, 0, 0, 0.1));
+  text-shadow: 2px 1px #FFF
+}

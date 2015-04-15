@@ -14981,7 +14981,7 @@ hr.on-light {
   min-height: 100%;
 }
 
-/* line 20, ../../app/assets/sass/vendor/_slideout.scss */
+/* line 22, ../../app/assets/sass/vendor/_slideout.scss */
 body,
 .slideout-open,
 .slideout-open body {
@@ -15368,6 +15368,16 @@ h1, h2, h3, h4, h5, h6 {
   transform: scale(1.1);
 }
 
+/* line 3, ../../app/assets/sass/blocks/_page-title.scss */
+.page-title {
+  padding: 0.5em .7em;
+  background: #EEE;
+  -moz-box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.1), 0 2px 7px 0 rgba(0, 0, 0, 0.1);
+  -webkit-box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.1), 0 2px 7px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.1), 0 2px 7px 0 rgba(0, 0, 0, 0.1);
+  text-shadow: 2px 1px #FFF;
+}
+
 /* line 3, ../../app/assets/sass/structures/_slider.scss */
 .slider {
   border-radius: 3em;
@@ -15576,7 +15586,7 @@ h1, h2, h3, h4, h5, h6 {
   opacity: 0;
 }
 
-/* line 17, ../../app/assets/sass/app.scss */
+/* line 18, ../../app/assets/sass/app.scss */
 html,
 body {
   overflow: hidden;

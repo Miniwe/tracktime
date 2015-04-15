@@ -29276,18 +29276,16 @@ this["JST"]["actions/actions"] = Handlebars.template({"compiler":[6,">= 2.0.0-be
   },"useData":true});
 
 this["JST"]["actions/details/project"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-  return "<div class=\"floating-label\">"
+  var helper, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, functionType="function";
+  return escapeExpression(((helpers.placeholder || (depth0 && depth0.placeholder) || helperMissing).call(depth0, "textarea", {"name":"placeholder","hash":{},"data":data})))
+    + "\n<div class=\"floating-label\">"
     + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
-    + "</div>\n"
-    + escapeExpression(((helpers.placeholder || (depth0 && depth0.placeholder) || helperMissing).call(depth0, "textarea", {"name":"placeholder","hash":{},"data":data})))
-    + "\n<span class=\"material-input\"></span>\n";
+    + "</div>\n<span class=\"material-input\"></span>\n\n<div class=\"details-container hidden\">\n  project details\n</div>";
 },"useData":true});
 
 this["JST"]["actions/details/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helper, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, functionType="function";
-  return "<a id=\"detailsNew\" class=\"btn btn-fab btn-link\" href=\"javascript:void(0)\" data-toggle=\"popover\" title=\"Popover title\" data-content=\"And here's some amazing content. It's very engaging. Right?\" data-placement=\"left\" style=\"  position: absolute; top: -0.7em; right: 0;\">\n    <i class=\"mdi-navigation-more-vert\"></i>\n</a>\n"
-    + escapeExpression(((helpers.placeholder || (depth0 && depth0.placeholder) || helperMissing).call(depth0, "textarea", {"name":"placeholder","hash":{},"data":data})))
+  return escapeExpression(((helpers.placeholder || (depth0 && depth0.placeholder) || helperMissing).call(depth0, "textarea", {"name":"placeholder","hash":{},"data":data})))
     + "\n<div class=\"floating-label\">"
     + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
     + "</div>\n<span class=\"material-input\"></span>\n\n<div class=\"details-container hidden\">\n    <div class=\"row\">\n        <div class=\"col-md-2\">\n            "
@@ -29299,7 +29297,7 @@ this["JST"]["actions/details/record"] = Handlebars.template({"compiler":[6,">= 2
 
 this["JST"]["actions/details/search"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-  return "<div class=\"badge\">"
+  return "<a id=\"detailsNew\" class=\"btn btn-fab btn-link\" href=\"javascript:void(0)\" data-toggle=\"popover\" title=\"Popover title\" data-content=\"And here's some amazing content. It's very engaging. Right?\" data-placement=\"left\" style=\"  position: absolute; top: -0.7em; right: 0;\">\n    <i class=\"mdi-navigation-more-vert\"></i>\n</a>\n<div class=\"badge\">"
     + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
     + "</div>";
 },"useData":true});
@@ -29351,9 +29349,9 @@ this["JST"]["admin/layout/header"] = Handlebars.template({"compiler":[6,">= 2.0.
 
 this["JST"]["admin/projects"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-  return "<h1>"
+  return "<header class=\"well well-sm page-title\">\n  <h2>"
     + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
-    + "</h1>";
+    + "</h2>\n</header>";
 },"useData":true});
 
 this["JST"]["admin/users"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
@@ -29474,6 +29472,40 @@ this["JST"]["layout/menu"] = Handlebars.template({"1":function(depth0,helpers,pa
     + "\n            </div>\n        </div>\n    </div>\n    <div class=\"panel panel-default\">\n        <a class=\"btn btn-material-yellow btn-block\" data-parent=\"#accordion\" href=\"#user/rates\" aria-expanded=\"true\" aria-controls=\"stats-section\" role=\"tab\" id=\"headingStats\">\n      Stats\n    </a>\n        <div id=\"stats-section\" role=\"tabpanel\" aria-labelledby=\"headingStats\">\n            <table class=\"table table-condensed\">\n                <tbody>\n                    <tr class=\"active\">\n                        <td class=\"when\">Today:</td>\n                        <td class=\"time\">0:00</td>\n                        <td class=\"pounds\">£0.0</td>\n                    </tr>\n                    <tr class=\"nonactual\">\n                        <td class=\"when\">Yesterday:</td>\n                        <td class=\"time\">8:00</td>\n                        <td class=\"pounds\">£8.0</td>\n                    </tr>\n                    <tr class=\"active\">\n                        <td class=\"when\">This week:</td>\n                        <td class=\"time\">16:00</td>\n                        <td class=\"pounds\">£16.0</td>\n                    </tr>\n                    <tr class=\"nonactual\">\n                        <td class=\"when\">Previous week:</td>\n                        <td class=\"time\">32:00</td>\n                        <td class=\"pounds\">£32.0</td>\n                    </tr>\n                    <tr class=\"active\">\n                        <td class=\"when\">This month:</td>\n                        <td class=\"time\">48:00</td>\n                        <td class=\"pounds\">£48.0</td>\n                    </tr>\n                    <tr class=\"nonactual\">\n                        <td class=\"when\">Previous month:</td>\n                        <td class=\"time\">0:00</td>\n                        <td class=\"pounds\">£0.0</td>\n                    </tr>\n                </tbody>\n            </table>\n        </div>\n    </div>\n</div>";
 },"useData":true});
 
+this["JST"]["projects/admin_project"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+  return "<div class=\"row\" id=\""
+    + escapeExpression(((helper = (helper = helpers._id || (depth0 != null ? depth0._id : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"_id","hash":{},"data":data}) : helper)))
+    + "\">\n\n  <div class=\"col-icon col-md-1 col-sm-2\">\n    <a  class=\"type btn btn-fab btn-fab-mini btn-danger\" role=\"menuitem\" tabindex=\"-1\" href=\"#fat\"  data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\""
+    + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
+    + "\">\n      <i class=\"mdi-action-group-work\"></i>\n    </a>\n    <a class=\"edit btn btn-fab btn-fab-mini btn-flat pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Edit action\">\n      <i class=\"mdi-editor-mode-edit\"></i>\n    </a>\n  </div>\n\n  <div class=\"col-subject col-md-10 col-sm-9\">\n\n    <textarea class=\"subject_edit form-control hidden\" style=\"width: 100%; border: none; padding: 0;\">"
+    + escapeExpression(((helper = (helper = helpers.subject || (depth0 != null ? depth0.subject : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"subject","hash":{},"data":data}) : helper)))
+    + "</textarea>\n    <div class=\"subject\" style=\"border: none;\">"
+    + escapeExpression(((helpers.nl2br || (depth0 && depth0.nl2br) || helperMissing).call(depth0, (depth0 != null ? depth0.name : depth0), {"name":"nl2br","hash":{},"data":data})))
+    + "</div>\n\n    <p class=\"last-update\">\n        <time class=\"text-muted\" datetime=\""
+    + escapeExpression(((helper = (helper = helpers.date || (depth0 != null ? depth0.date : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"date","hash":{},"data":data}) : helper)))
+    + "\">"
+    + escapeExpression(((helpers.dateFormat || (depth0 && depth0.dateFormat) || helperMissing).call(depth0, (depth0 != null ? depth0.lastAccess : depth0), {"name":"dateFormat","hash":{},"data":data})))
+    + "</time>\n    </p>\n\n  </div>\n\n  <div class=\"col-menu col-md-1 col-sm-1\">\n    <ul class=\"actions\">\n      <li><a class=\"delete btn btn-fab btn-danger btn-fab-mini pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Delete action\">\n        <i class=\"mdi-navigation-cancel\"></i>\n      </a></li>\n    </ul>\n  </div>\n</div>";
+},"useData":true});
+
+this["JST"]["projects/project"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+  return "<div class=\"row\" id=\""
+    + escapeExpression(((helper = (helper = helpers._id || (depth0 != null ? depth0._id : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"_id","hash":{},"data":data}) : helper)))
+    + "\">\n\n  <div class=\"col-icon col-md-1 col-sm-2\">\n    <a  class=\"type btn btn-fab btn-fab-mini btn-danger\" role=\"menuitem\" tabindex=\"-1\" href=\"#fat\"  data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\""
+    + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
+    + "\">\n      <i class=\"mdi-action-group-work\"></i>\n    </a>\n  </div>\n\n  <div class=\"col-subject col-md-10 col-sm-9\">\n\n    <textarea class=\"subject_edit form-control hidden\" style=\"width: 100%; border: none; padding: 0;\">"
+    + escapeExpression(((helper = (helper = helpers.subject || (depth0 != null ? depth0.subject : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"subject","hash":{},"data":data}) : helper)))
+    + "</textarea>\n    <div class=\"subject\" style=\"border: none;\">"
+    + escapeExpression(((helpers.nl2br || (depth0 && depth0.nl2br) || helperMissing).call(depth0, (depth0 != null ? depth0.name : depth0), {"name":"nl2br","hash":{},"data":data})))
+    + "</div>\n\n    <p class=\"last-update\">\n        <time class=\"text-muted\" datetime=\""
+    + escapeExpression(((helper = (helper = helpers.date || (depth0 != null ? depth0.date : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"date","hash":{},"data":data}) : helper)))
+    + "\">"
+    + escapeExpression(((helpers.dateFormat || (depth0 && depth0.dateFormat) || helperMissing).call(depth0, (depth0 != null ? depth0.lastAccess : depth0), {"name":"dateFormat","hash":{},"data":data})))
+    + "</time>\n    </p>\n\n  </div>\n\n  <div class=\"col-menu col-md-1 col-sm-1\">\n  </div>\n</div>";
+},"useData":true});
+
 this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
   return "<div class=\"row\" id=\""
@@ -29573,44 +29605,22 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     Tracktime.prototype.urlRoot = config.SERVER;
 
     Tracktime.prototype.defaults = {
-      title: "TrackTime App - from"
+      title: "TrackTime App"
     };
 
     Tracktime.prototype.initialize = function() {
       this.set('actions', new Tracktime.ActionsCollection());
       this.set('records', new Tracktime.RecordsCollection());
+      this.set('projects', new Tracktime.ProjectsCollection());
       return this.listenTo(Tracktime.AppChannel, "isOnline", this.updateApp);
     };
 
     Tracktime.prototype.updateApp = function() {
-      return this.get('records').fetch({
+      this.get('records').fetch({
         ajaxSync: Tracktime.AppChannel.request('isOnline')
       });
-    };
-
-    Tracktime.prototype.addRecord = function(options) {
-      var error, success;
-      _.extend(options, {
-        date: (new Date()).toISOString()
-      });
-      success = (function(_this) {
-        return function(result) {
-          $.alert({
-            content: 'save success',
-            timeout: 2000,
-            style: 'btn-success'
-          });
-          return _this.get('actions').getActive().successAdd();
-        };
-      })(this);
-      error = (function(_this) {
-        return function() {
-          return $.alert('save error');
-        };
-      })(this);
-      return this.get('records').addRecord(options, {
-        success: success,
-        error: error
+      return this.get('projects').fetch({
+        ajaxSync: Tracktime.AppChannel.request('isOnline')
       });
     };
 
@@ -29837,17 +29847,17 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       return Collection.__super__.constructor.apply(this, arguments);
     }
 
-    Collection.prototype.addRecord = function(params, options) {
-      var newRecord;
-      newRecord = new this.model(params);
-      if (newRecord.isValid()) {
-        this.add(newRecord);
+    Collection.prototype.addModel = function(params, options) {
+      var newModel;
+      newModel = new this.model(params);
+      if (newModel.isValid()) {
+        this.add(newModel);
         if (options.ajaxSync == null) {
           options.ajaxSync = Tracktime.AppChannel.request('isOnline');
         }
-        return newRecord.save({}, options);
+        return newModel.save({}, options);
       } else {
-        return $.alert('Erros validation from add record to collection');
+        return $.alert('Erros validation from add curModel to collection');
       }
     };
 
@@ -29872,28 +29882,28 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       var localModels;
       _.each(models, (function(_this) {
         return function(model) {
-          var localLastAccess, localModel, modelLastAccess, record;
-          record = _this.get(model._id);
-          localModel = _this.localStorage.find(record);
+          var curModel, localLastAccess, localModel, modelLastAccess;
+          curModel = _this.get(model._id);
+          localModel = _this.localStorage.find(curModel);
           if (!localModel) {
-            return record.save({
+            return curModel.save({
               ajaxSync: false
             });
           } else {
             modelLastAccess = (new Date(model.lastAccess)).getTime();
             localLastAccess = (new Date(localModel.lastAccess)).getTime();
             if (localModel.isDeleted) {
-              return record.set({
+              return curModel.set({
                 'isDeleted': true
               }, {
                 trigger: false
               });
             } else if (localLastAccess < modelLastAccess) {
-              return record.save(model, {
+              return curModel.save(model, {
                 ajaxSync: false
               });
             } else if (localLastAccess > modelLastAccess) {
-              return record.save(localModel, {
+              return curModel.save(localModel, {
                 ajaxSync: true
               });
             }
@@ -29935,7 +29945,7 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
               });
               newModel = replacedModel.toJSON();
               delete newModel._id;
-              return _this.addRecord(newModel, {
+              return _this.addModel(newModel, {
                 success: function(model, response) {
                   return replacedModel.destroy({
                     ajaxSync: false
@@ -30086,6 +30096,7 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
     Project.prototype.defaults = _.extend({}, Tracktime.Action.prototype.defaults, {
       title: 'Add project',
+      projectModel: null,
       formAction: '#',
       btnClass: 'btn-danger',
       navbarClass: 'navbar-material-indigo',
@@ -30102,18 +30113,22 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
         options = {};
       }
       this.set(options);
-      return this.set('details', new Tracktime.Action.Details());
+      if (options.model instanceof Tracktime.Project) {
+        return this.set('projectModel', new Tracktime.Project(options.model.toJSON));
+      } else {
+        return this.set('projectModel', new Tracktime.Project());
+      }
     };
 
-    Project.prototype.processAction = function(options) {
-      this.get('details').set(options);
-      return this.newProject();
-    };
-
-    Project.prototype.newProject = function() {
-      return Tracktime.AppChannel.command('newProject', _.extend({
-        project: 0
-      }, this.get('details').attributes));
+    Project.prototype.processAction = function() {
+      var projectModel;
+      projectModel = this.get('projectModel');
+      if (projectModel.isValid()) {
+        Tracktime.AppChannel.command('newProject', _.extend({
+          project: 0
+        }, projectModel.toJSON()));
+        return projectModel.clear().set(projectModel.defaults);
+      }
     };
 
     Project.prototype.successAdd = function() {};
@@ -30407,6 +30422,31 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       return -(new Date(model.get('date'))).getTime();
     };
 
+    ProjectsCollection.prototype.addProject = function(options) {
+      var error, success;
+      _.extend(options, {
+        date: (new Date()).toISOString()
+      });
+      success = (function(_this) {
+        return function(result) {
+          return $.alert({
+            content: 'Project: save success',
+            timeout: 2000,
+            style: 'btn-success'
+          });
+        };
+      })(this);
+      error = (function(_this) {
+        return function() {
+          return $.alert('Project: save error');
+        };
+      })(this);
+      return this.addModel(options, {
+        success: success,
+        error: error
+      });
+    };
+
     return ProjectsCollection;
 
   })(Tracktime.Collection);
@@ -30438,6 +30478,31 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
     RecordsCollection.prototype.comparator = function(model) {
       return -(new Date(model.get('date'))).getTime();
+    };
+
+    RecordsCollection.prototype.addRecord = function(options) {
+      var error, success;
+      _.extend(options, {
+        date: (new Date()).toISOString()
+      });
+      success = (function(_this) {
+        return function(result) {
+          return $.alert({
+            content: 'Record: save success',
+            timeout: 2000,
+            style: 'btn-success'
+          });
+        };
+      })(this);
+      error = (function(_this) {
+        return function() {
+          return $.alert('Record: save error');
+        };
+      })(this);
+      return this.addModel(options, {
+        success: success,
+        error: error
+      });
     };
 
     return RecordsCollection;
@@ -30521,6 +30586,7 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       return this.comply({
         'start': this.startApp,
         'newRecord': this.newRecord,
+        'newProject': this.newProject,
         'serverOnline': this.serverOnline,
         'serverOffline': this.serverOffline,
         'checkOnline': this.checkOnline
@@ -30542,7 +30608,10 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       });
     },
     newRecord: function(options) {
-      return this.model.addRecord(options);
+      return this.model.get('records').addRecord(options);
+    },
+    newProject: function(options) {
+      return this.model.get('projects').addProject(options);
     },
     serverOnline: function() {
       return this.trigger('isOnline', true);
@@ -30592,7 +30661,9 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
     AdminRouter.prototype.projects = function() {
       var newAction;
-      this.parent.view.setSubView('main', new Tracktime.AdminView.Projects());
+      this.parent.view.setSubView('main', new Tracktime.AdminView.ProjectsView({
+        collection: this.parent.model.get('projects')
+      }));
       newAction = this.parent.model.get('actions').addAction({
         title: 'Add projects',
         type: 'Project'
@@ -31118,6 +31189,8 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     extend(Project, superClass);
 
     function Project() {
+      this.sendForm = bind(this.sendForm, this);
+      this.textareaInput = bind(this.textareaInput, this);
       return Project.__super__.constructor.apply(this, arguments);
     }
 
@@ -31125,9 +31198,12 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
     Project.prototype.template = JST['actions/details/project'];
 
-    Project.prototype.tmpDetails = {};
-
     Project.prototype.views = {};
+
+    Project.prototype.events = {
+      'click #send-form': 'sendForm',
+      'input textarea': 'textareaInput'
+    };
 
     Project.prototype.initialize = function(options) {
       _.extend(this, options);
@@ -31135,15 +31211,37 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     };
 
     Project.prototype.render = function() {
+      var textarea;
       $(this.container).html(this.$el.html(this.template(this.model.toJSON())));
-      return $('placeholder#textarea', this.$el).replaceWith((new Tracktime.Element.Textarea()).$el);
+      textarea = new Tracktime.Element.Textarea({
+        model: this.model.get('projectModel'),
+        field: 'name'
+      });
+      $('placeholder#textarea', this.$el).replaceWith(textarea.$el);
+      textarea.$el.textareaAutoSize().focus();
+      return textarea.on('tSubmit', this.sendForm);
+    };
+
+    Project.prototype.textareaInput = function(event) {
+      return window.setTimeout((function(_this) {
+        return function() {
+          var diff;
+          diff = $('#actions-form').outerHeight() - $('.navbar').outerHeight(true);
+          $('#actions-form').toggleClass("shadow-z-2", diff > 10);
+          return $(".details-container").toggleClass('hidden', _.isEmpty($(event.target).val()));
+        };
+      })(this), 500);
+    };
+
+    Project.prototype.sendForm = function() {
+      return this.model.processAction();
     };
 
     return Project;
 
   })(Backbone.View);
 
-  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.ActionView.Search : void 0) || (this.Tracktime.ActionView.Search = Tracktime.ActionView.Search);
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.ActionView.Project : void 0) || (this.Tracktime.ActionView.Project = Tracktime.ActionView.Project);
 
   Tracktime.ActionView.Record = (function(superClass) {
     extend(Record, superClass);
@@ -31351,32 +31449,73 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AdminView.Dashboard : void 0) || (this.Tracktime.AdminView.Dashboard = Tracktime.AdminView.Dashboard);
 
-  Tracktime.AdminView.Projects = (function(superClass) {
-    extend(Projects, superClass);
+  Tracktime.AdminView.ProjectsView = (function(superClass) {
+    extend(ProjectsView, superClass);
 
-    function Projects() {
-      return Projects.__super__.constructor.apply(this, arguments);
+    function ProjectsView() {
+      return ProjectsView.__super__.constructor.apply(this, arguments);
     }
 
-    Projects.prototype.container = '#main';
+    ProjectsView.prototype.container = '#main';
 
-    Projects.prototype.template = JST['admin/projects'];
+    ProjectsView.prototype.template = JST['admin/projects'];
 
-    Projects.prototype.initialize = function() {
-      return this.render();
+    ProjectsView.prototype.className = 'records-group';
+
+    ProjectsView.prototype.initialize = function() {
+      this.views = {};
+      this.render();
+      this.listenTo(this.collection, "reset", this.resetProjectsList);
+      this.listenTo(this.collection, "add", this.addProject);
+      return this.listenTo(this.collection, "remove", this.removeProject);
     };
 
-    Projects.prototype.render = function() {
-      return $(this.container).html(this.$el.html(this.template({
+    ProjectsView.prototype.render = function() {
+      $(this.container).html(this.$el.html(''));
+      this.$el.before(this.template({
         title: 'Projects'
-      })));
+      }));
+      return this.resetProjectsList();
     };
 
-    return Projects;
+    ProjectsView.prototype.resetProjectsList = function() {
+      return _.each(this.collection.where({
+        isDeleted: false
+      }), (function(_this) {
+        return function(project) {
+          var projectView;
+          projectView = new Tracktime.AdminView.ProjectView({
+            model: project
+          });
+          _this.$el.append(projectView.el);
+          return _this.setSubView("project-" + project.cid, projectView);
+        };
+      })(this), this);
+    };
+
+    ProjectsView.prototype.addProject = function(project, collection, params) {
+      var projectView;
+      projectView = new Tracktime.AdminView.ProjectView({
+        model: project
+      });
+      $(projectView.el).prependTo(this.$el);
+      return this.setSubView("project-" + project.cid, projectView);
+    };
+
+    ProjectsView.prototype.removeProject = function() {
+      var args, project, projectView;
+      project = arguments[0], args = 2 <= arguments.length ? slice.call(arguments, 1) : [];
+      projectView = this.getSubView("project-" + project.cid);
+      if (projectView) {
+        return projectView.close();
+      }
+    };
+
+    return ProjectsView;
 
   })(Backbone.View);
 
-  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AdminView.Projects : void 0) || (this.Tracktime.AdminView.Projects = Tracktime.AdminView.Projects);
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AdminView.ProjectsView : void 0) || (this.Tracktime.AdminView.ProjectsView = Tracktime.AdminView.ProjectsView);
 
   Tracktime.AdminView.Users = (function(superClass) {
     extend(Users, superClass);
@@ -31819,6 +31958,106 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
   })(Backbone.View);
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AppView.Menu : void 0) || (this.Tracktime.AppView.Menu = Tracktime.AppView.Menu);
+
+  Tracktime.AdminView.ProjectView = (function(superClass) {
+    extend(ProjectView, superClass);
+
+    function ProjectView() {
+      this.fixEnter = bind(this.fixEnter, this);
+      return ProjectView.__super__.constructor.apply(this, arguments);
+    }
+
+    ProjectView.prototype.tagName = 'li';
+
+    ProjectView.prototype.className = 'records-group-item shadow-z-1';
+
+    ProjectView.prototype.template = JST['projects/admin_project'];
+
+    ProjectView.prototype.events = {
+      'click .btn.delete': "deleteProject",
+      'click .subject': "toggleEdit"
+    };
+
+    ProjectView.prototype.initialize = function() {
+      if (!this.model.get('isDeleted')) {
+        this.render();
+      }
+      this.listenTo(this.model, "change:isDeleted", this.change_isDeleted);
+      return this.listenTo(this.model, "change:subject", this.change_subject);
+    };
+
+    ProjectView.prototype.attributes = function() {
+      return {
+        id: this.model.cid
+      };
+    };
+
+    ProjectView.prototype.render = function() {
+      this.$el.html(this.template(this.model.toJSON()));
+      return $('.subject_edit', this.$el).on('keydown', this.fixEnter).textareaAutoSize();
+    };
+
+    ProjectView.prototype.change_isDeleted = function() {
+      return this.$el.remove();
+    };
+
+    ProjectView.prototype.change_subject = function() {
+      $('.subject', this.$el).html(this.model.get('subject').nl2br());
+      return $('.subject_edit', this.$el).val(this.model.get('subject'));
+    };
+
+    ProjectView.prototype.fixEnter = function(event) {
+      var val;
+      if (event.keyCode === 13) {
+        if (event.shiftKey) {
+          val = $(event.target).val();
+          if (!_.isEmpty(val)) {
+            this.model.set('subject', val);
+            this.saveProject();
+            this.toggleEdit();
+          }
+          return event.preventDefault();
+        }
+      }
+    };
+
+    ProjectView.prototype.toggleEdit = function(event) {
+      this.$el.find('.subject_edit').css('min-height', this.$el.find('.subject').height());
+      return this.$el.find('.subject, .subject_edit').css('border', 'apx solid blue').toggleClass('hidden');
+    };
+
+    ProjectView.prototype.saveProject = function() {
+      return this.model.save({}, {
+        ajaxSync: Tracktime.AppChannel.request('isOnline'),
+        success: function(model, respond) {
+          return $.alert({
+            content: 'update project',
+            timeout: 2000,
+            style: 'btn-info'
+          });
+        }
+      });
+    };
+
+    ProjectView.prototype.deleteProject = function(event) {
+      event.preventDefault();
+      return this.model.destroy({
+        ajaxSync: Tracktime.AppChannel.request('isOnline'),
+        success: function(model, respond) {
+          return $.alert({
+            content: 'delete project',
+            timeout: 2000,
+            style: 'btn-danger'
+          });
+        }
+      });
+    };
+
+    return ProjectView;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AdminView.ProjectView : void 0) || (this.Tracktime.AdminView.ProjectView = Tracktime.AdminView.ProjectView);
 
   Tracktime.ProjectView = (function(superClass) {
     extend(ProjectView, superClass);

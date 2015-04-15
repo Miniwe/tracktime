@@ -1,13 +1,13 @@
 class Tracktime.Collection extends Backbone.Collection
-  addRecord: (params, options) ->
-    newRecord = new @model params
-    if newRecord.isValid()
-      @add newRecord
+  addModel: (params, options) ->
+    newModel = new @model params
+    if newModel.isValid()
+      @add newModel
       unless options.ajaxSync?
         options.ajaxSync = Tracktime.AppChannel.request 'isOnline'
-      newRecord.save {}, options
+      newModel.save {}, options
     else
-      $.alert 'Erros validation from add record to collection'
+      $.alert 'Erros validation from add curModel to collection'
 
   fetch: (options) ->
     @resetLocalStorage()
@@ -21,11 +21,11 @@ class Tracktime.Collection extends Backbone.Collection
   syncCollection: (models) ->
     # по всем remote model которые вроде как в коллекции уже
     _.each models, (model) =>
-      record = @get(model._id)
-      localModel = @localStorage.find record
+      curModel = @get(model._id)
+      localModel = @localStorage.find curModel
       # если нет локальной то сохраняем (локально)
       unless localModel
-        record.save ajaxSync: false
+        curModel.save ajaxSync: false
       # иначе
       else
         # если локальная старее то обновляем с новых данных (локально)
@@ -33,14 +33,14 @@ class Tracktime.Collection extends Backbone.Collection
         localLastAccess = (new Date(localModel.lastAccess)).getTime()
         if localModel.isDeleted
           # do nothing
-          record.set {'isDeleted': true},  {trigger: false}
+          curModel.set {'isDeleted': true},  {trigger: false}
         else if localLastAccess < modelLastAccess
-          record.save model, ajaxSync: false
+          curModel.save model, ajaxSync: false
         # иначе есть если локальная новее то
         else if localLastAccess > modelLastAccess
           # обновляем модель пришедшую в коллекции
           # сохраняем ее удаленно
-          record.save localModel, ajaxSync: true
+          curModel.save localModel, ajaxSync: true
 
     # по всем local моделям
     localModels = @localStorage.findAll()
@@ -69,7 +69,7 @@ class Tracktime.Collection extends Backbone.Collection
           delete newModel._id
           # то сохраняем ее удаленно
           # добавляем в коллекцию
-          @addRecord newModel,
+          @addModel newModel,
             success: (model, response) =>
               # заменяем на новосохраненную
               replacedModel.destroy {ajaxSync: false}

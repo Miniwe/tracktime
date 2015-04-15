@@ -11,7 +11,18 @@ class Tracktime.ProjectsCollection extends Tracktime.Collection
   comparator: (model) ->
     - (new Date(model.get('date'))).getTime()
 
-
+  addProject: (options) ->
+    _.extend options, {date: (new Date()).toISOString()}
+    success = (result) =>
+      $.alert
+        content: 'Project: save success'
+        timeout: 2000
+        style: 'btn-success'
+    error = () =>
+      $.alert 'Project: save error'
+    @addModel options,
+      success: success,
+      error: error
 
 
 (module?.exports = Tracktime.ProjectsCollection) or @Tracktime.ProjectsCollection = Tracktime.ProjectsCollection

@@ -35,30 +35,19 @@ class Tracktime extends Backbone.Model
   urlRoot: config.SERVER
 
   defaults:
-    title: "TrackTime App - from"
+    title: "TrackTime App"
 
   initialize: () ->
     @set 'actions', new Tracktime.ActionsCollection()
     @set 'records', new Tracktime.RecordsCollection()
+    @set 'projects', new Tracktime.ProjectsCollection()
 
     @listenTo Tracktime.AppChannel, "isOnline", @updateApp
 
   updateApp: ->
     @get('records').fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
+    @get('projects').fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
 
-  addRecord: (options) ->
-    _.extend options, {date: (new Date()).toISOString()}
-    success = (result) =>
-      $.alert
-        content: 'save success'
-        timeout: 2000
-        style: 'btn-success'
-      @get('actions').getActive().successAdd()
-    error = () =>
-      $.alert 'save error'
-    @get('records').addRecord options,
-      success: success,
-      error: error
 
 (module?.exports = Tracktime) or @Tracktime = Tracktime
 
@@ -241,15 +230,15 @@ String::nl2br = ->
   (@ + '').replace /([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + '<br>' + '$2'
 
 class Tracktime.Collection extends Backbone.Collection
-  addRecord: (params, options) ->
-    newRecord = new @model params
-    if newRecord.isValid()
-      @add newRecord
+  addModel: (params, options) ->
+    newModel = new @model params
+    if newModel.isValid()
+      @add newModel
       unless options.ajaxSync?
         options.ajaxSync = Tracktime.AppChannel.request 'isOnline'
-      newRecord.save {}, options
+      newModel.save {}, options
     else
-      $.alert 'Erros validation from add record to collection'
+      $.alert 'Erros validation from add curModel to collection'
 
   fetch: (options) ->
     @resetLocalStorage()
@@ -263,11 +252,11 @@ class Tracktime.Collection extends Backbone.Collection
   syncCollection: (models) ->
     # по всем remote model которые вроде как в коллекции уже
     _.each models, (model) =>
-      record = @get(model._id)
-      localModel = @localStorage.find record
+      curModel = @get(model._id)
+      localModel = @localStorage.find curModel
       # если нет локальной то сохраняем (локально)
       unless localModel
-        record.save ajaxSync: false
+        curModel.save ajaxSync: false
       # иначе
       else
         # если локальная старее то обновляем с новых данных (локально)
@@ -275,14 +264,14 @@ class Tracktime.Collection extends Backbone.Collection
         localLastAccess = (new Date(localModel.lastAccess)).getTime()
         if localModel.isDeleted
           # do nothing
-          record.set {'isDeleted': true},  {trigger: false}
+          curModel.set {'isDeleted': true},  {trigger: false}
         else if localLastAccess < modelLastAccess
-          record.save model, ajaxSync: false
+          curModel.save model, ajaxSync: false
         # иначе есть если локальная новее то
         else if localLastAccess > modelLastAccess
           # обновляем модель пришедшую в коллекции
           # сохраняем ее удаленно
-          record.save localModel, ajaxSync: true
+          curModel.save localModel, ajaxSync: true
 
     # по всем local моделям
     localModels = @localStorage.findAll()
@@ -311,7 +300,7 @@ class Tracktime.Collection extends Backbone.Collection
           delete newModel._id
           # то сохраняем ее удаленно
           # добавляем в коллекцию
-          @addRecord newModel,
+          @addModel newModel,
             success: (model, response) =>
               # заменяем на новосохраненную
               replacedModel.destroy {ajaxSync: false}
@@ -397,6 +386,7 @@ class Tracktime.Action.Project extends Tracktime.Action
 
   defaults: _.extend {}, Tracktime.Action.prototype.defaults,
     title: 'Add project'
+    projectModel: null
     formAction: '#'
     btnClass: 'btn-danger'
     navbarClass: 'navbar-material-indigo'
@@ -408,19 +398,22 @@ class Tracktime.Action.Project extends Tracktime.Action
 
   initialize: (options = {}) ->
     @set options
-    @set 'details', new Tracktime.Action.Details()
+    if options.model instanceof Tracktime.Project
+      @set 'projectModel', new Tracktime.Project options.model.toJSON
+    else
+      @set 'projectModel', new Tracktime.Project()
 
-  processAction: (options) ->
-    @get('details').set(options) # @todo remove possible
-    @newProject()
-
-  newProject: () ->
-    Tracktime.AppChannel.command 'newProject', _.extend {project: 0}, @get('details').attributes
+  processAction: () ->
+    projectModel = @get('projectModel')
+    if projectModel.isValid()
+      Tracktime.AppChannel.command 'newProject', _.extend {project: 0}, projectModel.toJSON()
+      projectModel.clear().set(projectModel.defaults)
 
   successAdd: () ->
     # @details.reset() # @todo on change details change view controls
 
 (module?.exports = Tracktime.Action.Project) or @Tracktime.Action.Project = Tracktime.Action.Project
+
 
 class Tracktime.Action.Record extends Tracktime.Action
 
@@ -491,7 +484,6 @@ class Tracktime.Project extends Tracktime.Model
     description: ''
     lastAccess: (new Date()).toISOString()
     isDeleted: false
-    # order: Tracktime.ProjectsCollection.nextOrder()
 
   validation:
     name:
@@ -527,7 +519,6 @@ class Tracktime.Record extends Tracktime.Model
     recordTime: 0
     project: 0
     isDeleted: false
-    # order: Tracktime.RecordsCollection.nextOrder()
 
   validation:
     subject:
@@ -594,7 +585,18 @@ class Tracktime.ProjectsCollection extends Tracktime.Collection
   comparator: (model) ->
     - (new Date(model.get('date'))).getTime()
 
-
+  addProject: (options) ->
+    _.extend options, {date: (new Date()).toISOString()}
+    success = (result) =>
+      $.alert
+        content: 'Project: save success'
+        timeout: 2000
+        style: 'btn-success'
+    error = () =>
+      $.alert 'Project: save error'
+    @addModel options,
+      success: success,
+      error: error
 
 
 (module?.exports = Tracktime.ProjectsCollection) or @Tracktime.ProjectsCollection = Tracktime.ProjectsCollection
@@ -612,7 +614,18 @@ class Tracktime.RecordsCollection extends Tracktime.Collection
   comparator: (model) ->
     - (new Date(model.get('date'))).getTime()
 
-
+  addRecord: (options) ->
+    _.extend options, {date: (new Date()).toISOString()}
+    success = (result) =>
+      $.alert
+        content: 'Record: save success'
+        timeout: 2000
+        style: 'btn-success'
+    error = () =>
+      $.alert 'Record: save error'
+    @addModel options,
+      success: success,
+      error: error
 
 
 (module?.exports = Tracktime.RecordsCollection) or @Tracktime.RecordsCollection = Tracktime.RecordsCollection
@@ -626,12 +639,10 @@ _.extend Tracktime.AppChannel,
     @listenTo @, 'isOnline', (status) => @isOnline = status
     @checkOnline()
     @setWindowListeners()
-
     @model = new Tracktime()
     @bindComply()
     @bindRequest()
     return @
-
 
   checkOnline: () ->
     if window.navigator.onLine == true
@@ -678,6 +689,7 @@ _.extend Tracktime.AppChannel,
     @comply
       'start':           @startApp
       'newRecord':       @newRecord
+      'newProject':      @newProject
       'serverOnline':    @serverOnline
       'serverOffline':   @serverOffline
       'checkOnline':     @checkOnline
@@ -691,7 +703,10 @@ _.extend Tracktime.AppChannel,
       pushState: false
 
   newRecord: (options) ->
-    @model.addRecord(options)
+    @model.get('records').addRecord(options)
+
+  newProject: (options) ->
+    @model.get('projects').addProject(options)
 
   serverOnline: () ->
     @trigger 'isOnline', true
@@ -728,7 +743,8 @@ class Tracktime.AdminRouter extends Backbone.SubRoute
     @parent.view.setSubView 'main', new Tracktime.AdminView.Users()
 
   projects: () ->
-    @parent.view.setSubView 'main', new Tracktime.AdminView.Projects()
+    @parent.view.setSubView 'main', new Tracktime.AdminView.ProjectsView collection: @parent.model.get 'projects'
+
     newAction = @parent.model.get('actions').addAction
       title: 'Add projects'
       type: 'Project'
@@ -1044,8 +1060,10 @@ class Tracktime.ActionView.ListBtn extends Backbone.View
 class Tracktime.ActionView.Project extends Backbone.View
   container: '.form-control-wrapper'
   template: JST['actions/details/project']
-  tmpDetails: {}
   views: {}
+  events:
+    'click #send-form': 'sendForm'
+    'input textarea': 'textareaInput'
 
   initialize: (options) ->
     _.extend @, options
@@ -1053,11 +1071,26 @@ class Tracktime.ActionView.Project extends Backbone.View
 
   render: () ->
     $(@container).html @$el.html @template @model.toJSON()
-    $('placeholder#textarea', @$el).replaceWith (new Tracktime.Element.Textarea()).$el
 
+    textarea = new Tracktime.Element.Textarea
+      model: @model.get 'projectModel'
+      field: 'name'
 
+    $('placeholder#textarea', @$el).replaceWith textarea.$el
+    textarea.$el.textareaAutoSize().focus()
+    textarea.on 'tSubmit', @sendForm
 
-(module?.exports = Tracktime.ActionView.Search) or @Tracktime.ActionView.Search = Tracktime.ActionView.Search
+  textareaInput: (event) =>
+    window.setTimeout () =>
+      diff = $('#actions-form').outerHeight() - $('.navbar').outerHeight(true)
+      $('#actions-form').toggleClass "shadow-z-2", (diff > 10)
+      $(".details-container").toggleClass 'hidden', _.isEmpty $(event.target).val()
+    , 500
+
+  sendForm: () =>
+    @model.processAction()
+
+(module?.exports = Tracktime.ActionView.Project) or @Tracktime.ActionView.Project = Tracktime.ActionView.Project
 
 
 class Tracktime.ActionView.Record extends Backbone.View
@@ -1181,17 +1214,40 @@ class Tracktime.AdminView.Dashboard extends Backbone.View
 (module?.exports = Tracktime.AdminView.Dashboard) or @Tracktime.AdminView.Dashboard = Tracktime.AdminView.Dashboard
 
 
-class Tracktime.AdminView.Projects extends Backbone.View
+class Tracktime.AdminView.ProjectsView extends Backbone.View
   container: '#main'
   template: JST['admin/projects']
+  className: 'records-group'
 
   initialize: () ->
+    @views = {}
     @render()
+    @listenTo @collection, "reset", @resetProjectsList
+    @listenTo @collection, "add", @addProject
+    @listenTo @collection, "remove", @removeProject
 
   render: () ->
-    $(@container).html @$el.html @template {title: 'Projects'}
+    $(@container).html @$el.html ''
+    @$el.before @template {title: 'Projects'}
+    @resetProjectsList()
 
-(module?.exports = Tracktime.AdminView.Projects) or @Tracktime.AdminView.Projects = Tracktime.AdminView.Projects
+  resetProjectsList: () ->
+    _.each @collection.where(isDeleted: false), (project) =>
+      projectView =  new Tracktime.AdminView.ProjectView { model: project }
+      @$el.append projectView.el
+      @setSubView "project-#{project.cid}", projectView
+    , @
+
+  addProject: (project, collection, params) ->
+    projectView = new Tracktime.AdminView.ProjectView { model: project }
+    $(projectView.el).prependTo @$el
+    @setSubView "project-#{project.cid}", projectView
+
+  removeProject: (project, args...) ->
+    projectView = @getSubView "project-#{project.cid}"
+    projectView.close() if projectView
+
+(module?.exports = Tracktime.AdminView.ProjectsView) or @Tracktime.AdminView.ProjectsView = Tracktime.AdminView.ProjectsView
 
 
 class Tracktime.AdminView.Users extends Backbone.View
@@ -1452,6 +1508,74 @@ class Tracktime.AppView.Menu extends Backbone.View
 
 
 (module?.exports = Tracktime.AppView.Menu) or @Tracktime.AppView.Menu = Tracktime.AppView.Menu
+
+
+class Tracktime.AdminView.ProjectView extends Backbone.View
+  tagName: 'li'
+  className: 'records-group-item shadow-z-1'
+  template: JST['projects/admin_project']
+  events:
+    'click .btn.delete': "deleteProject"
+    'click .subject': "toggleEdit"
+
+
+  initialize: () ->
+    unless @model.get 'isDeleted'
+      @render()
+    @listenTo @model, "change:isDeleted", @change_isDeleted
+    @listenTo @model, "change:subject", @change_subject
+
+  attributes: () ->
+    id: @model.cid
+
+  render: () ->
+    @$el.html @template @model.toJSON()
+    $('.subject_edit', @$el)
+      .on('keydown', @fixEnter)
+      .textareaAutoSize()
+
+  change_isDeleted: () ->
+    @$el.remove() # @todo possible not need
+
+  change_subject: () ->
+    $('.subject', @$el).html @model.get('subject').nl2br()
+    $('.subject_edit', @$el).val @model.get 'subject'
+
+  fixEnter: (event) =>
+    if event.keyCode == 13
+      if event.shiftKey
+        val = $(event.target).val()
+        unless _.isEmpty val
+          @model.set 'subject', val
+          @saveProject()
+          @toggleEdit()
+        event.preventDefault()
+
+  toggleEdit: (event) ->
+    @$el.find('.subject_edit').css 'min-height', @$el.find('.subject').height()
+    @$el.find('.subject, .subject_edit').css('border', 'apx solid blue').toggleClass 'hidden'
+
+  saveProject: () ->
+    @model.save {},
+      ajaxSync: Tracktime.AppChannel.request 'isOnline'
+      success: (model, respond) ->
+        $.alert
+          content: 'update project'
+          timeout: 2000
+          style: 'btn-info'
+
+  deleteProject: (event) ->
+    event.preventDefault()
+
+    @model.destroy
+      ajaxSync: Tracktime.AppChannel.request 'isOnline'
+      success: (model, respond) ->
+        $.alert
+          content: 'delete project'
+          timeout: 2000
+          style: 'btn-danger'
+
+(module?.exports = Tracktime.AdminView.ProjectView) or @Tracktime.AdminView.ProjectView = Tracktime.AdminView.ProjectView
 
 
 class Tracktime.ProjectView extends Backbone.View

@@ -18,7 +18,8 @@ class Tracktime.AdminRouter extends Backbone.SubRoute
     @parent.view.setSubView 'main', new Tracktime.AdminView.Users()
 
   projects: () ->
-    @parent.view.setSubView 'main', new Tracktime.AdminView.Projects()
+    @parent.view.setSubView 'main', new Tracktime.AdminView.ProjectsView collection: @parent.model.get 'projects'
+
     newAction = @parent.model.get('actions').addAction
       title: 'Add projects'
       type: 'Project'

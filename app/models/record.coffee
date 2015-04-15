@@ -13,7 +13,6 @@ class Tracktime.Record extends Tracktime.Model
     recordTime: 0
     project: 0
     isDeleted: false
-    # order: Tracktime.RecordsCollection.nextOrder()
 
   validation:
     subject:
