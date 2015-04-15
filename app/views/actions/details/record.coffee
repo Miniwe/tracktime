@@ -14,6 +14,7 @@ class Tracktime.ActionView.Record extends Backbone.View
 
   initUI: () ->
     $('[data-toggle="tooltip"]', @$el).tooltip()
+
     $('textarea', @el)
       .on('keydown', @fixEnter)
       .on('change, keyup', @checkContent)

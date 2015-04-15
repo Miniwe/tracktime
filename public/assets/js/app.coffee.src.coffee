@@ -122,11 +122,16 @@ Handlebars.registerHelper 'safe_val', (value, safeValue) ->
 
 
 Handlebars.registerHelper 'nl2br', (text) ->
-  nl2br = (text + '').replace /([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + '<br>' + '$2'
-  return new Handlebars.SafeString nl2br
+  value = Handlebars.Utils.escapeExpression value
+  return value.nl2br
 
 Handlebars.registerHelper 'dateFormat', (date) ->
   date
+  # timestamp = Date.parse date
+  # unless _.isNaN(timestamp)
+  #   (new Date(timestamp)).toLocalString()
+  # else
+  #   new Date()
 
 Handlebars.registerHelper 'minuteFormat', (val) ->
   currentHour = val / 720 * 12
@@ -134,13 +139,9 @@ Handlebars.registerHelper 'minuteFormat', (val) ->
   minute = Math.round((currentHour - hour) * 60)
   "#{hour}:#{minute}"
 
-  # timestamp = Date.parse date
-  # unless _.isNaN(timestamp)
-  #   (new Date(timestamp)).toLocalString()
-  # else
-  #   new Date()
-
-
+Handlebars.registerHelper 'placeholder', (name) ->
+  placeholder = "<placeholder id='#{name}'></placeholder>"
+  new Handlebars.SafeString placeholder
 Tracktime.initdata = {}
 
 Tracktime.initdata.defaultActions = [
@@ -232,6 +233,12 @@ Tracktime.initdata.tmpActions = [
       $.snackbar snackbarOptions
   )
 ) jQuery
+String::capitalizeFirstLetter = ->
+  @charAt(0).toUpperCase() + @slice(1)
+
+String::nl2br = ->
+  (@ + '').replace /([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + '<br>' + '$2'
+
 class Tracktime.Collection extends Backbone.Collection
   addRecord: (params, options) ->
     newRecord = new @model params
@@ -358,28 +365,6 @@ class Tracktime.Model extends Backbone.Model
       else
         $.alert "unknown method #{method}"
         Backbone.sync method, model, options
-# class Tracktime.UI
-#   instance = null
-
-#   class PrivateUI
-#     constructor: ->
-
-#     run: ->
-#       $.alert 'run'
-#       $.material.init()
-
-#   @get: () ->
-#     instance ?= new PrivateUI()
-
-# (module?.exports = Tracktime.UI) or @Tracktime.UI = Tracktime.UI
-
-Tracktime.utils = {}
-
-Tracktime.utils.nl2br = (text) ->
-  (text + '').replace /([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + '<br>' + '$2'
-
-(module?.exports = Tracktime.utils) or @Tracktime.utils = Tracktime.utils
-
 class Tracktime.Action extends Backbone.Model
 
   idAttribute: "_id"
@@ -1068,6 +1053,10 @@ class Tracktime.ActionView.Project extends Backbone.View
 
   render: () ->
     $(@container).html @$el.html @template @model.toJSON()
+    $('placeholder#textarea', @$el).replaceWith (new Tracktime.Element.Textarea()).$el
+    $('placeholder#slider', @$el).replaceWith (new Tracktime.Element.Slider()).$el
+
+
 
 (module?.exports = Tracktime.ActionView.Search) or @Tracktime.ActionView.Search = Tracktime.ActionView.Search
 
@@ -1088,6 +1077,7 @@ class Tracktime.ActionView.Record extends Backbone.View
 
   initUI: () ->
     $('[data-toggle="tooltip"]', @$el).tooltip()
+
     $('textarea', @el)
       .on('keydown', @fixEnter)
       .on('change, keyup', @checkContent)
@@ -1287,6 +1277,58 @@ class Tracktime.AppView extends Backbone.View
 (module?.exports = Tracktime.AppView) or @Tracktime.AppView = Tracktime.AppView
 
 
+class Tracktime.Element extends Backbone.View
+
+  initialize: () ->
+    @render()
+
+  render: () ->
+    @$el.html 'void element'
+
+
+(module?.exports = Tracktime.Element) or @Tracktime.Element = Tracktime.Element
+
+
+class Tracktime.Element.Slider extends Tracktime.Element
+  tagName: 'select'
+  events:
+    'click': 'sayHello'
+
+  initialize: (options = {}) ->
+    _.extend @, options
+    @render()
+
+  render: () ->
+    # @setElement "#anSlider"
+    # @$el
+    @$el.val 'Slider'
+
+  sayHello: () ->
+    $.alert 'HELLO Slider!!'
+
+(module?.exports = Tracktime.Element.Slider) or @Tracktime.Element.Slider = Tracktime.Element.Slider
+
+
+class Tracktime.Element.Textarea extends Tracktime.Element
+  tagName: 'textarea'
+  events:
+    'click': 'sayHello'
+
+  initialize: (options = {}) ->
+    _.extend @, options
+    @render()
+
+  render: () ->
+    # @setElement "#antextarea"
+    # @$el
+    @$el.val 'textarea'
+
+  sayHello: () ->
+    $.alert 'HELLO !!'
+
+(module?.exports = Tracktime.Element.Textarea) or @Tracktime.Element.Textarea = Tracktime.Element.Textarea
+
+
 class Tracktime.AppView.Footer extends Backbone.View
   container: '#footer'
   template: JST['layout/footer']
@@ -1442,7 +1484,7 @@ class Tracktime.RecordView extends Backbone.View
     @$el.remove() # @todo possible not need
 
   change_subject: () ->
-    $('.subject', @$el).html Tracktime.utils.nl2br(@model.get 'subject')  # @todo add nl2br
+    $('.subject', @$el).html @model.get('subject').nl2br()
     $('.subject_edit', @$el).val @model.get 'subject'
 
   fixEnter: (event) =>

@@ -14,11 +14,16 @@ Handlebars.registerHelper 'safe_val', (value, safeValue) ->
 
 
 Handlebars.registerHelper 'nl2br', (text) ->
-  nl2br = (text + '').replace /([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + '<br>' + '$2'
-  return new Handlebars.SafeString nl2br
+  value = Handlebars.Utils.escapeExpression value
+  return value.nl2br
 
 Handlebars.registerHelper 'dateFormat', (date) ->
   date
+  # timestamp = Date.parse date
+  # unless _.isNaN(timestamp)
+  #   (new Date(timestamp)).toLocalString()
+  # else
+  #   new Date()
 
 Handlebars.registerHelper 'minuteFormat', (val) ->
   currentHour = val / 720 * 12
@@ -26,9 +31,6 @@ Handlebars.registerHelper 'minuteFormat', (val) ->
   minute = Math.round((currentHour - hour) * 60)
   "#{hour}:#{minute}"
 
-  # timestamp = Date.parse date
-  # unless _.isNaN(timestamp)
-  #   (new Date(timestamp)).toLocalString()
-  # else
-  #   new Date()
-
+Handlebars.registerHelper 'placeholder', (name) ->
+  placeholder = "<placeholder id='#{name}'></placeholder>"
+  new Handlebars.SafeString placeholder

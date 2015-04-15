@@ -10,6 +10,10 @@ class Tracktime.ActionView.Project extends Backbone.View
 
   render: () ->
     $(@container).html @$el.html @template @model.toJSON()
+    $('placeholder#textarea', @$el).replaceWith (new Tracktime.Element.Textarea()).$el
+    $('placeholder#slider', @$el).replaceWith (new Tracktime.Element.Slider()).$el
+
+
 
 (module?.exports = Tracktime.ActionView.Search) or @Tracktime.ActionView.Search = Tracktime.ActionView.Search
 

@@ -26,7 +26,7 @@ class Tracktime.RecordView extends Backbone.View
     @$el.remove() # @todo possible not need
 
   change_subject: () ->
-    $('.subject', @$el).html Tracktime.utils.nl2br(@model.get 'subject')  # @todo add nl2br
+    $('.subject', @$el).html @model.get('subject').nl2br()
     $('.subject_edit', @$el).val @model.get 'subject'
 
   fixEnter: (event) =>

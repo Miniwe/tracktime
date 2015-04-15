@@ -29277,9 +29277,13 @@ this["JST"]["actions/actions"] = Handlebars.template({"compiler":[6,">= 2.0.0-be
 
 this["JST"]["actions/details/project"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-  return "<div class=\"badge\">"
+  return "<div class=\"floating-label\">"
     + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
-    + "</div>";
+    + "</div>\n<li>"
+    + escapeExpression(((helpers.placeholder || (depth0 && depth0.placeholder) || helperMissing).call(depth0, "textarea", {"name":"placeholder","hash":{},"data":data})))
+    + "</li>\n<li>"
+    + escapeExpression(((helpers.placeholder || (depth0 && depth0.placeholder) || helperMissing).call(depth0, "slider", {"name":"placeholder","hash":{},"data":data})))
+    + "</li>\n<span class=\"material-input\"></span>\n";
 },"useData":true});
 
 this["JST"]["actions/details/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
@@ -29693,9 +29697,9 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
   });
 
   Handlebars.registerHelper('nl2br', function(text) {
-    var nl2br;
-    nl2br = (text + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + '<br>' + '$2');
-    return new Handlebars.SafeString(nl2br);
+    var value;
+    value = Handlebars.Utils.escapeExpression(value);
+    return value.nl2br;
   });
 
   Handlebars.registerHelper('dateFormat', function(date) {
@@ -29708,6 +29712,12 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     hour = Math.floor(currentHour);
     minute = Math.round((currentHour - hour) * 60);
     return hour + ":" + minute;
+  });
+
+  Handlebars.registerHelper('placeholder', function(name) {
+    var placeholder;
+    placeholder = "<placeholder id='" + name + "'></placeholder>";
+    return new Handlebars.SafeString(placeholder);
   });
 
   Tracktime.initdata = {};
@@ -29804,6 +29814,14 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       }
     });
   })(jQuery);
+
+  String.prototype.capitalizeFirstLetter = function() {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+  };
+
+  String.prototype.nl2br = function() {
+    return (this + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + '<br>' + '$2');
+  };
 
   Tracktime.Collection = (function(superClass) {
     extend(Collection, superClass);
@@ -30000,14 +30018,6 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     return Model;
 
   })(Backbone.Model);
-
-  Tracktime.utils = {};
-
-  Tracktime.utils.nl2br = function(text) {
-    return (text + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + '<br>' + '$2');
-  };
-
-  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.utils : void 0) || (this.Tracktime.utils = Tracktime.utils);
 
   Tracktime.Action = (function(superClass) {
     extend(Action, superClass);
@@ -31122,7 +31132,9 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     };
 
     Project.prototype.render = function() {
-      return $(this.container).html(this.$el.html(this.template(this.model.toJSON())));
+      $(this.container).html(this.$el.html(this.template(this.model.toJSON())));
+      $('placeholder#textarea', this.$el).replaceWith((new Tracktime.Element.Textarea()).$el);
+      return $('placeholder#slider', this.$el).replaceWith((new Tracktime.Element.Slider()).$el);
     };
 
     return Project;
@@ -31472,6 +31484,97 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AppView : void 0) || (this.Tracktime.AppView = Tracktime.AppView);
 
+  Tracktime.Element = (function(superClass) {
+    extend(Element, superClass);
+
+    function Element() {
+      return Element.__super__.constructor.apply(this, arguments);
+    }
+
+    Element.prototype.initialize = function() {
+      return this.render();
+    };
+
+    Element.prototype.render = function() {
+      return this.$el.html('void element');
+    };
+
+    return Element;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.Element : void 0) || (this.Tracktime.Element = Tracktime.Element);
+
+  Tracktime.Element.Slider = (function(superClass) {
+    extend(Slider, superClass);
+
+    function Slider() {
+      return Slider.__super__.constructor.apply(this, arguments);
+    }
+
+    Slider.prototype.tagName = 'select';
+
+    Slider.prototype.events = {
+      'click': 'sayHello'
+    };
+
+    Slider.prototype.initialize = function(options) {
+      if (options == null) {
+        options = {};
+      }
+      _.extend(this, options);
+      return this.render();
+    };
+
+    Slider.prototype.render = function() {
+      return this.$el.val('Slider');
+    };
+
+    Slider.prototype.sayHello = function() {
+      return $.alert('HELLO Slider!!');
+    };
+
+    return Slider;
+
+  })(Tracktime.Element);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.Element.Slider : void 0) || (this.Tracktime.Element.Slider = Tracktime.Element.Slider);
+
+  Tracktime.Element.Textarea = (function(superClass) {
+    extend(Textarea, superClass);
+
+    function Textarea() {
+      return Textarea.__super__.constructor.apply(this, arguments);
+    }
+
+    Textarea.prototype.tagName = 'textarea';
+
+    Textarea.prototype.events = {
+      'click': 'sayHello'
+    };
+
+    Textarea.prototype.initialize = function(options) {
+      if (options == null) {
+        options = {};
+      }
+      _.extend(this, options);
+      return this.render();
+    };
+
+    Textarea.prototype.render = function() {
+      return this.$el.val('textarea');
+    };
+
+    Textarea.prototype.sayHello = function() {
+      return $.alert('HELLO !!');
+    };
+
+    return Textarea;
+
+  })(Tracktime.Element);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.Element.Textarea : void 0) || (this.Tracktime.Element.Textarea = Tracktime.Element.Textarea);
+
   Tracktime.AppView.Footer = (function(superClass) {
     extend(Footer, superClass);
 
@@ -31740,7 +31843,7 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     };
 
     RecordView.prototype.change_subject = function() {
-      $('.subject', this.$el).html(Tracktime.utils.nl2br(this.model.get('subject')));
+      $('.subject', this.$el).html(this.model.get('subject').nl2br());
       return $('.subject_edit', this.$el).val(this.model.get('subject'));
     };
 
