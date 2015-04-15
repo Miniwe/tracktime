@@ -30086,7 +30086,6 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
     Project.prototype.defaults = _.extend({}, Tracktime.Action.prototype.defaults, {
       title: 'Add project',
-      inputValue: '',
       formAction: '#',
       btnClass: 'btn-danger',
       navbarClass: 'navbar-material-indigo',
@@ -30107,7 +30106,6 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     };
 
     Project.prototype.processAction = function(options) {
-      this.set('inputValue', options.subject);
       this.get('details').set(options);
       return this.newProject();
     };
@@ -30118,9 +30116,7 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       }, this.get('details').attributes));
     };
 
-    Project.prototype.successAdd = function() {
-      return this.set('inputValue', '');
-    };
+    Project.prototype.successAdd = function() {};
 
     return Project;
 
@@ -30137,7 +30133,7 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
     Record.prototype.defaults = _.extend({}, Tracktime.Action.prototype.defaults, {
       title: 'Add record',
-      inputValue: '',
+      recordModel: null,
       formAction: '#',
       btnClass: 'btn-primary',
       navbarClass: 'navbar-material-amber',
@@ -30154,24 +30150,25 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
         options = {};
       }
       this.set(options);
-      return this.set('details', new Tracktime.Action.Details());
+      if (options.model instanceof Tracktime.Record) {
+        return this.set('recordModel', new Tracktime.Record(options.model.toJSON));
+      } else {
+        return this.set('recordModel', new Tracktime.Record());
+      }
     };
 
-    Record.prototype.processAction = function(options) {
-      this.set('inputValue', options.subject);
-      this.get('details').set(options);
-      return this.newRecord();
+    Record.prototype.processAction = function() {
+      var recordModel;
+      recordModel = this.get('recordModel');
+      if (recordModel.isValid()) {
+        Tracktime.AppChannel.command('newRecord', _.extend({
+          project: 0
+        }, recordModel.attributes));
+        return recordModel.clear().set(recordModel.defaults);
+      }
     };
 
-    Record.prototype.newRecord = function() {
-      return Tracktime.AppChannel.command('newRecord', _.extend({
-        project: 0
-      }, this.get('details').attributes));
-    };
-
-    Record.prototype.successAdd = function() {
-      return this.set('inputValue', '');
-    };
+    Record.prototype.successAdd = function() {};
 
     return Record;
 
@@ -30188,7 +30185,6 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
     Search.prototype.defaults = _.extend({}, Tracktime.Action.prototype.defaults, {
       title: 'Search',
-      inputValue: '',
       formAction: '#',
       btnClass: 'btn-white',
       navbarClass: 'navbar-material-light-blue',
@@ -30209,7 +30205,6 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     };
 
     Search.prototype.processAction = function(options) {
-      this.set('inputValue', options.subject);
       this.get('details').set(options);
       return this.search();
     };
@@ -31163,8 +31158,6 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
     Record.prototype.template = JST['actions/details/record'];
 
-    Record.prototype.recordModel = new Tracktime.Record();
-
     Record.prototype.views = {};
 
     Record.prototype.events = {
@@ -31174,9 +31167,6 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
     Record.prototype.initialize = function(options) {
       _.extend(this, options);
-      if (options.model instanceof Tracktime.Record) {
-        this.recordModel.clear().set(options.model.toJSON);
-      }
       return this.render();
     };
 
@@ -31184,18 +31174,18 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       var textarea;
       $(this.container).html(this.$el.html(this.template(this.model.toJSON())));
       textarea = new Tracktime.Element.Textarea({
-        model: this.recordModel,
+        model: this.model.get('recordModel'),
         field: 'subject'
       });
       $('placeholder#textarea', this.$el).replaceWith(textarea.$el);
       textarea.$el.textareaAutoSize().focus();
       textarea.on('tSubmit', this.sendForm);
       $('placeholder#slider', this.$el).replaceWith((new Tracktime.Element.Slider({
-        model: this.recordModel,
+        model: this.model.get('recordModel'),
         field: 'recordTime'
       })).$el);
       return $('placeholder#selectday', this.$el).replaceWith((new Tracktime.Element.SelectDay({
-        model: this.recordModel,
+        model: this.model.get('recordModel'),
         field: 'recordDate'
       })).$el);
     };
@@ -31211,11 +31201,8 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       })(this), 500);
     };
 
-    Record.prototype.sendForm = function(event) {
-      console.log('send form', this.recordModel.toJSON());
-      if (this.recordModel.isValid()) {
-        return this.recordModel.clear().set(this.recordModel.defaults);
-      }
+    Record.prototype.sendForm = function() {
+      return this.model.processAction();
     };
 
     return Record;

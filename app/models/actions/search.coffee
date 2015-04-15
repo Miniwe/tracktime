@@ -2,7 +2,6 @@ class Tracktime.Action.Search extends Tracktime.Action
 
   defaults: _.extend {}, Tracktime.Action.prototype.defaults,
     title: 'Search'
-    inputValue: ''
     formAction: '#'
     btnClass: 'btn-white'
     navbarClass: 'navbar-material-light-blue'
@@ -17,7 +16,6 @@ class Tracktime.Action.Search extends Tracktime.Action
     @set 'details', new Tracktime.Action.Details()
 
   processAction: (options) ->
-    @set 'inputValue', options.subject
     @get('details').set(options) # @todo remove possible
     @search()
 

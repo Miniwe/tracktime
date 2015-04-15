@@ -397,7 +397,6 @@ class Tracktime.Action.Project extends Tracktime.Action
 
   defaults: _.extend {}, Tracktime.Action.prototype.defaults,
     title: 'Add project'
-    inputValue: ''
     formAction: '#'
     btnClass: 'btn-danger'
     navbarClass: 'navbar-material-indigo'
@@ -412,7 +411,6 @@ class Tracktime.Action.Project extends Tracktime.Action
     @set 'details', new Tracktime.Action.Details()
 
   processAction: (options) ->
-    @set 'inputValue', options.subject
     @get('details').set(options) # @todo remove possible
     @newProject()
 
@@ -420,7 +418,6 @@ class Tracktime.Action.Project extends Tracktime.Action
     Tracktime.AppChannel.command 'newProject', _.extend {project: 0}, @get('details').attributes
 
   successAdd: () ->
-    @set 'inputValue', ''
     # @details.reset() # @todo on change details change view controls
 
 (module?.exports = Tracktime.Action.Project) or @Tracktime.Action.Project = Tracktime.Action.Project
@@ -429,7 +426,7 @@ class Tracktime.Action.Record extends Tracktime.Action
 
   defaults: _.extend {}, Tracktime.Action.prototype.defaults,
     title: 'Add record'
-    inputValue: ''
+    recordModel: null
     formAction: '#'
     btnClass: 'btn-primary'
     navbarClass: 'navbar-material-amber'
@@ -441,18 +438,18 @@ class Tracktime.Action.Record extends Tracktime.Action
 
   initialize: (options = {}) ->
     @set options
-    @set 'details', new Tracktime.Action.Details()
+    if options.model instanceof Tracktime.Record
+      @set 'recordModel', new Tracktime.Record options.model.toJSON
+    else
+      @set 'recordModel', new Tracktime.Record()
 
-  processAction: (options) ->
-    @set 'inputValue', options.subject
-    @get('details').set(options) # @todo remove possible
-    @newRecord()
-
-  newRecord: () ->
-    Tracktime.AppChannel.command 'newRecord', _.extend {project: 0}, @get('details').attributes
+  processAction: () ->
+    recordModel = @get('recordModel')
+    if recordModel.isValid()
+      Tracktime.AppChannel.command 'newRecord', _.extend {project: 0}, recordModel.attributes
+      recordModel.clear().set(recordModel.defaults)
 
   successAdd: () ->
-    @set 'inputValue', ''
     # @details.reset() # @todo on change details change view controls
 
 (module?.exports = Tracktime.Action.Record) or @Tracktime.Action.Record = Tracktime.Action.Record
@@ -461,7 +458,6 @@ class Tracktime.Action.Search extends Tracktime.Action
 
   defaults: _.extend {}, Tracktime.Action.prototype.defaults,
     title: 'Search'
-    inputValue: ''
     formAction: '#'
     btnClass: 'btn-white'
     navbarClass: 'navbar-material-light-blue'
@@ -476,7 +472,6 @@ class Tracktime.Action.Search extends Tracktime.Action
     @set 'details', new Tracktime.Action.Details()
 
   processAction: (options) ->
-    @set 'inputValue', options.subject
     @get('details').set(options) # @todo remove possible
     @search()
 
@@ -1068,7 +1063,6 @@ class Tracktime.ActionView.Project extends Backbone.View
 class Tracktime.ActionView.Record extends Backbone.View
   container: '.form-control-wrapper'
   template: JST['actions/details/record']
-  recordModel: new Tracktime.Record()
   views: {}
   events:
     'click #send-form': 'sendForm'
@@ -1076,15 +1070,13 @@ class Tracktime.ActionView.Record extends Backbone.View
 
   initialize: (options) ->
     _.extend @, options
-    @recordModel.clear().set options.model.toJSON if options.model instanceof Tracktime.Record
-
     @render()
 
   render: () ->
     $(@container).html @$el.html @template @model.toJSON()
 
     textarea = new Tracktime.Element.Textarea
-      model: @recordModel
+      model: @model.get 'recordModel'
       field: 'subject'
 
     $('placeholder#textarea', @$el).replaceWith textarea.$el
@@ -1092,12 +1084,12 @@ class Tracktime.ActionView.Record extends Backbone.View
     textarea.on 'tSubmit', @sendForm
 
     $('placeholder#slider', @$el).replaceWith (new Tracktime.Element.Slider
-      model: @recordModel
+      model: @model.get 'recordModel'
       field: 'recordTime'
     ).$el
 
     $('placeholder#selectday', @$el).replaceWith (new Tracktime.Element.SelectDay
-      model: @recordModel
+      model: @model.get 'recordModel'
       field: 'recordDate'
     ).$el
 
@@ -1108,12 +1100,8 @@ class Tracktime.ActionView.Record extends Backbone.View
       $(".details-container").toggleClass 'hidden', _.isEmpty $(event.target).val()
     , 500
 
-  sendForm: (event) =>
-    console.log 'send form', @recordModel.toJSON()
-
-    if @recordModel.isValid()
-
-      @recordModel.clear().set(@recordModel.defaults)
+  sendForm: () =>
+    @model.processAction()
 
 (module?.exports = Tracktime.ActionView.Record) or @Tracktime.ActionView.Record = Tracktime.ActionView.Record
 

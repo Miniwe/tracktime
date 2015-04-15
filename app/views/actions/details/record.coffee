@@ -1,7 +1,6 @@
 class Tracktime.ActionView.Record extends Backbone.View
   container: '.form-control-wrapper'
   template: JST['actions/details/record']
-  recordModel: new Tracktime.Record()
   views: {}
   events:
     'click #send-form': 'sendForm'
@@ -9,15 +8,13 @@ class Tracktime.ActionView.Record extends Backbone.View
 
   initialize: (options) ->
     _.extend @, options
-    @recordModel.clear().set options.model.toJSON if options.model instanceof Tracktime.Record
-
     @render()
 
   render: () ->
     $(@container).html @$el.html @template @model.toJSON()
 
     textarea = new Tracktime.Element.Textarea
-      model: @recordModel
+      model: @model.get 'recordModel'
       field: 'subject'
 
     $('placeholder#textarea', @$el).replaceWith textarea.$el
@@ -25,12 +22,12 @@ class Tracktime.ActionView.Record extends Backbone.View
     textarea.on 'tSubmit', @sendForm
 
     $('placeholder#slider', @$el).replaceWith (new Tracktime.Element.Slider
-      model: @recordModel
+      model: @model.get 'recordModel'
       field: 'recordTime'
     ).$el
 
     $('placeholder#selectday', @$el).replaceWith (new Tracktime.Element.SelectDay
-      model: @recordModel
+      model: @model.get 'recordModel'
       field: 'recordDate'
     ).$el
 
@@ -41,12 +38,8 @@ class Tracktime.ActionView.Record extends Backbone.View
       $(".details-container").toggleClass 'hidden', _.isEmpty $(event.target).val()
     , 500
 
-  sendForm: (event) =>
-    console.log 'send form', @recordModel.toJSON()
-
-    if @recordModel.isValid()
-
-      @recordModel.clear().set(@recordModel.defaults)
+  sendForm: () =>
+    @model.processAction()
 
 (module?.exports = Tracktime.ActionView.Record) or @Tracktime.ActionView.Record = Tracktime.ActionView.Record
 
