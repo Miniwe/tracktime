@@ -2402,7 +2402,17 @@
 
     Menu.prototype.render = function() {
       var ref1;
-      return $(this.container).html(this.$el.html(this.template((ref1 = this.model) != null ? ref1.toJSON() : void 0)));
+      $(this.container).html(this.$el.html(this.template((ref1 = this.model) != null ? ref1.toJSON() : void 0)));
+      return _.each(this.model.get('projects').models, (function(_this) {
+        return function(model) {
+          var projectLink;
+          projectLink = $('<a />', {
+            "class": 'list-group-item',
+            href: "#projects/" + (model.get('_id'))
+          }).html(model.get('name'));
+          return projectLink.appendTo("#projects-section .list-style-group");
+        };
+      })(this));
     };
 
     return Menu;

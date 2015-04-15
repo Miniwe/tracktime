@@ -1505,7 +1505,9 @@ class Tracktime.AppView.Menu extends Backbone.View
 
   render: () ->
     $(@container).html @$el.html @template @model?.toJSON()
-
+    _.each @model.get('projects').models, (model) =>
+      projectLink = $('<a />', {class: 'list-group-item', href:"#projects/#{model.get('_id')}"}).html model.get('name')
+      projectLink.appendTo "#projects-section .list-style-group"
 
 (module?.exports = Tracktime.AppView.Menu) or @Tracktime.AppView.Menu = Tracktime.AppView.Menu
 

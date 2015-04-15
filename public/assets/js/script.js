@@ -29415,19 +29415,7 @@ this["JST"]["layout/menu"] = Handlebars.template({"1":function(depth0,helpers,pa
     'href': ("#projects"),
     'class': ("list-group-item")
   },"data":data})))
-    + "\n                "
-    + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
-    'body': ("Project 1"),
-    'href': ("#projects/1"),
-    'class': ("list-group-item")
-  },"data":data})))
-    + "\n                "
-    + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
-    'body': ("Project 2"),
-    'href': ("#projects/2"),
-    'class': ("list-group-item")
-  },"data":data})))
-    + "\n            </div>\n        </div>\n    </div>\n    <div class=\"panel panel-default\">\n        <a class=\"btn btn-material-purple btn-block\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#reports-section\" aria-expanded=\"true\" aria-controls=\"reports-section\" role=\"tab\" id=\"headingReports\">\n      Reports\n    </a>\n        <div id=\"reports-section\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingReports\">\n            <div class=\"list-style-group\">\n                "
+    + "\n\n            </div>\n        </div>\n    </div>\n    <div class=\"panel panel-default\">\n        <a class=\"btn btn-material-purple btn-block\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#reports-section\" aria-expanded=\"true\" aria-controls=\"reports-section\" role=\"tab\" id=\"headingReports\">\n      Reports\n    </a>\n        <div id=\"reports-section\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingReports\">\n            <div class=\"list-style-group\">\n                "
     + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
     'body': ("Reports list"),
     'href': ("#reports"),
@@ -31950,7 +31938,17 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
     Menu.prototype.render = function() {
       var ref1;
-      return $(this.container).html(this.$el.html(this.template((ref1 = this.model) != null ? ref1.toJSON() : void 0)));
+      $(this.container).html(this.$el.html(this.template((ref1 = this.model) != null ? ref1.toJSON() : void 0)));
+      return _.each(this.model.get('projects').models, (function(_this) {
+        return function(model) {
+          var projectLink;
+          projectLink = $('<a />', {
+            "class": 'list-group-item',
+            href: "#projects/" + (model.get('_id'))
+          }).html(model.get('name'));
+          return projectLink.appendTo("#projects-section .list-style-group");
+        };
+      })(this));
     };
 
     return Menu;
