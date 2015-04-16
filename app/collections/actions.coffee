@@ -8,15 +8,19 @@ class Tracktime.ActionsCollection extends Backbone.Collection
   localStorage: new Backbone.LocalStorage ('records-backbone')
   active: null
 
-  initialize: () ->
+  initialize: ->
+    @on 'remove', @setDefaultActive
     _.each @defaultActions, @addAction
 
   addAction: (action, params = {}) =>
     if (Tracktime.Action[action.type])
-      actionModel = new Tracktime.Action[action.type](action)
+      actionModel = new Tracktime.Action[action.type] action
       actionModel.set params
       @push actionModel
       return actionModel
+
+  setDefaultActive: ->
+    @at(0).setActive() unless @find isActive: true
 
   setActive: (active) ->
     @active?.set 'isActive', false
@@ -24,11 +28,10 @@ class Tracktime.ActionsCollection extends Backbone.Collection
     @active = active
     @trigger 'change:active', @active
 
-  getActive: () ->
+  getActive: ->
     @active
 
-  getActions: () ->
-    # visible actions
+  getActions: ->
     _.filter @models, (model) -> model.get('isVisible')
 
 (module?.exports = Tracktime.ActionsCollection) or @Tracktime.ActionsCollection = Tracktime.ActionsCollection

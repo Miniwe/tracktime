@@ -7,25 +7,28 @@ class Tracktime.Action.Record extends Tracktime.Action
     btnClass: 'btn-primary'
     navbarClass: 'navbar-material-amber'
     icon:
-      className: 'mdi-editor-mode-edit'
+      className: 'mdi-content-add'
       letter: ''
     isActive: null
     isVisible: true
 
-  initialize: (options = {}) ->
-    @set options
-    if options.model instanceof Tracktime.Record
-      @set 'recordModel', new Tracktime.Record options.model.toJSON
-    else
-      @set 'recordModel', new Tracktime.Record()
+  initialize: () ->
+    @set 'recordModel', new Tracktime.Record() unless @get('recordModel') instanceof Tracktime.Record
 
   processAction: () ->
-    recordModel = @get('recordModel')
+    recordModel = @get 'recordModel'
     if recordModel.isValid()
-      Tracktime.AppChannel.command 'newRecord', _.extend {project: 0}, recordModel.toJSON()
-      recordModel.clear().set(recordModel.defaults)
-
-  successAdd: () ->
-    # @details.reset() # @todo on change details change view controls
+      if recordModel.isNew()
+        Tracktime.AppChannel.command 'newRecord', recordModel.toJSON()
+        recordModel.clear().set(recordModel.defaults)
+      else
+        recordModel.save {},
+          ajaxSync: Tracktime.AppChannel.request 'isOnline'
+          success: () =>
+            $.alert
+              content: 'Record: update success'
+              timeout: 2000
+              style: 'btn-success'
+            @destroy()
 
 (module?.exports = Tracktime.Action.Record) or @Tracktime.Action.Record = Tracktime.Action.Record

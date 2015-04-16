@@ -14,8 +14,8 @@ class Tracktime.Action.Project extends Tracktime.Action
 
   initialize: (options = {}) ->
     @set options
-    if options.model instanceof Tracktime.Project
-      @set 'projectModel', new Tracktime.Project options.model.toJSON
+    if options.projectModel instanceof Tracktime.Project
+      @set 'projectModel', new Tracktime.Project options.projectModel.toJSON
     else
       @set 'projectModel', new Tracktime.Project()
 
@@ -24,9 +24,6 @@ class Tracktime.Action.Project extends Tracktime.Action
     if projectModel.isValid()
       Tracktime.AppChannel.command 'newProject', _.extend {project: 0}, projectModel.toJSON()
       projectModel.clear().set(projectModel.defaults)
-
-  successAdd: () ->
-    # @details.reset() # @todo on change details change view controls
 
 (module?.exports = Tracktime.Action.Project) or @Tracktime.Action.Project = Tracktime.Action.Project
 

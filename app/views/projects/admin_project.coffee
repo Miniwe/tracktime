@@ -10,8 +10,8 @@ class Tracktime.AdminView.ProjectView extends Backbone.View
   initialize: () ->
     unless @model.get 'isDeleted'
       @render()
-    @listenTo @model, "change:isDeleted", @change_isDeleted
-    @listenTo @model, "change:subject", @change_subject
+    @listenTo @model, "change:isDeleted", @changeIsDeleted
+    @listenTo @model, "change:subject", @changeSubject
 
   attributes: () ->
     id: @model.cid
@@ -22,11 +22,11 @@ class Tracktime.AdminView.ProjectView extends Backbone.View
       .on('keydown', @fixEnter)
       .textareaAutoSize()
 
-  change_isDeleted: () ->
+  changeIsDeleted: () ->
     @$el.remove() # @todo possible not need
 
-  change_subject: () ->
-    $('.subject', @$el).html @model.get('subject').nl2br()
+  changeSubject: () ->
+    $('.subject', @$el).html (@model.get('subject') + '').nl2br()
     $('.subject_edit', @$el).val @model.get 'subject'
 
   fixEnter: (event) =>

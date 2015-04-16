@@ -4,14 +4,17 @@ class Tracktime.RecordView extends Backbone.View
   template: JST['records/record']
   events:
     'click .btn.delete': "deleteRecord"
-    'click .subject': "toggleEdit"
+    'click .subject': "toggleInlineEdit"
+    'click .edit.btn': "editRecord"
 
 
   initialize: () ->
     unless @model.get 'isDeleted'
       @render()
-    @listenTo @model, "change:isDeleted", @change_isDeleted
-    @listenTo @model, "change:subject", @change_subject
+    @listenTo @model, "change:isDeleted", @changeIsDeleted
+    @listenTo @model, "change:subject", @changeSubject
+    @listenTo @model, "change:isEdit", @changeIsEdit
+    @listenTo @model, "sync", @syncModel
 
   attributes: () ->
     id: @model.cid
@@ -22,11 +25,20 @@ class Tracktime.RecordView extends Backbone.View
       .on('keydown', @fixEnter)
       .textareaAutoSize()
 
-  change_isDeleted: () ->
+  changeIsEdit: () ->
+    @$el.toggleClass 'editmode', @model.isEdit == true
+
+  syncModel: (model, options, params) ->
+    model.isEdit = false
+    model.trigger 'change:isEdit'
+    model.trigger 'change:subject'
+
+
+  changeIsDeleted: () ->
     @$el.remove() # @todo possible not need
 
-  change_subject: () ->
-    $('.subject', @$el).html @model.get('subject').nl2br()
+  changeSubject: () ->
+    $('.subject', @$el).html (@model.get('subject') + '').nl2br()
     $('.subject_edit', @$el).val @model.get 'subject'
 
   fixEnter: (event) =>
@@ -36,10 +48,10 @@ class Tracktime.RecordView extends Backbone.View
         unless _.isEmpty val
           @model.set 'subject', val
           @saveRecord()
-          @toggleEdit()
+          @toggleInlineEdit()
         event.preventDefault()
 
-  toggleEdit: (event) ->
+  toggleInlineEdit: (event) ->
     @$el.find('.subject_edit').css 'min-height', @$el.find('.subject').height()
     @$el.find('.subject, .subject_edit').css('border', 'apx solid blue').toggleClass 'hidden'
 
@@ -51,6 +63,13 @@ class Tracktime.RecordView extends Backbone.View
           content: 'update record'
           timeout: 2000
           style: 'btn-info'
+
+  editRecord: () ->
+    $('.scrollWrapper').animate
+      'scrollTop': @$el.offset().top - $('.scrollWrapper').offset().top + $('.scrollWrapper').scrollTop()
+    , 400, (event) =>
+      @model.isEdit = true
+      @model.trigger 'change:isEdit'
 
   deleteRecord: (event) ->
     event.preventDefault()

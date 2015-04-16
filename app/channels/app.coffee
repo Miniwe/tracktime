@@ -58,6 +58,7 @@ _.extend Tracktime.AppChannel,
       'start':           @startApp
       'newRecord':       @newRecord
       'newProject':      @newProject
+      'addAction':       @addAction
       'serverOnline':    @serverOnline
       'serverOffline':   @serverOffline
       'checkOnline':     @checkOnline
@@ -75,6 +76,10 @@ _.extend Tracktime.AppChannel,
 
   newProject: (options) ->
     @model.get('projects').addProject(options)
+
+  addAction: (options, params) ->
+    action = @model.get('actions').addAction(options, params)
+    action.setActive()
 
   serverOnline: () ->
     @trigger 'isOnline', true

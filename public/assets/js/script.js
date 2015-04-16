@@ -30026,8 +30026,8 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
         options = {};
       }
       this.set(options);
-      if (options.model instanceof Tracktime.Project) {
-        return this.set('projectModel', new Tracktime.Project(options.model.toJSON));
+      if (options.projectModel instanceof Tracktime.Project) {
+        return this.set('projectModel', new Tracktime.Project(options.projectModel.toJSON));
       } else {
         return this.set('projectModel', new Tracktime.Project());
       }
@@ -30043,8 +30043,6 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
         return projectModel.clear().set(projectModel.defaults);
       }
     };
-
-    Project.prototype.successAdd = function() {};
 
     return Project;
 
@@ -30066,21 +30064,15 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       btnClass: 'btn-primary',
       navbarClass: 'navbar-material-amber',
       icon: {
-        className: 'mdi-editor-mode-edit',
+        className: 'mdi-content-add',
         letter: ''
       },
       isActive: null,
       isVisible: true
     });
 
-    Record.prototype.initialize = function(options) {
-      if (options == null) {
-        options = {};
-      }
-      this.set(options);
-      if (options.model instanceof Tracktime.Record) {
-        return this.set('recordModel', new Tracktime.Record(options.model.toJSON));
-      } else {
+    Record.prototype.initialize = function() {
+      if (!(this.get('recordModel') instanceof Tracktime.Record)) {
         return this.set('recordModel', new Tracktime.Record());
       }
     };
@@ -30089,14 +30081,26 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       var recordModel;
       recordModel = this.get('recordModel');
       if (recordModel.isValid()) {
-        Tracktime.AppChannel.command('newRecord', _.extend({
-          project: 0
-        }, recordModel.toJSON()));
-        return recordModel.clear().set(recordModel.defaults);
+        if (recordModel.isNew()) {
+          Tracktime.AppChannel.command('newRecord', recordModel.toJSON());
+          return recordModel.clear().set(recordModel.defaults);
+        } else {
+          return recordModel.save({}, {
+            ajaxSync: Tracktime.AppChannel.request('isOnline'),
+            success: (function(_this) {
+              return function() {
+                $.alert({
+                  content: 'Record: update success',
+                  timeout: 2000,
+                  style: 'btn-success'
+                });
+                return _this.destroy();
+              };
+            })(this)
+          });
+        }
       }
     };
-
-    Record.prototype.successAdd = function() {};
 
     return Record;
 
@@ -30230,11 +30234,31 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     };
 
     Record.prototype.initialize = function(options, params, any) {
-      return this.listenTo(this, 'change:subject', this.updateLastAccess);
+      this.isEdit = false;
+      this.on('change:subject change:recordTime change:recordDate change:project', this.updateLastAccess);
+      return this.on('change:isEdit', this.changeIsEdit);
     };
 
     Record.prototype.isValid = function() {
       return true;
+    };
+
+    Record.prototype.changeIsEdit = function() {
+      if (this.isEdit) {
+        return Tracktime.AppChannel.command('addAction', {
+          title: 'Edit record',
+          type: 'Record'
+        }, {
+          title: 'Edit record: ' + this.get('subject').substr(0, 40),
+          navbarClass: 'navbar-material-indigo',
+          btnClass: 'btn-material-indigo',
+          icon: {
+            className: 'mdi-editor-mode-edit'
+          },
+          recordModel: this,
+          scope: 'edit:action'
+        });
+      }
     };
 
     Record.prototype.updateLastAccess = function() {
@@ -30274,6 +30298,7 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     ActionsCollection.prototype.active = null;
 
     ActionsCollection.prototype.initialize = function() {
+      this.on('remove', this.setDefaultActive);
       return _.each(this.defaultActions, this.addAction);
     };
 
@@ -30287,6 +30312,14 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
         actionModel.set(params);
         this.push(actionModel);
         return actionModel;
+      }
+    };
+
+    ActionsCollection.prototype.setDefaultActive = function() {
+      if (!this.find({
+        isActive: true
+      })) {
+        return this.at(0).setActive();
       }
     };
 
@@ -30508,6 +30541,7 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
         'start': this.startApp,
         'newRecord': this.newRecord,
         'newProject': this.newProject,
+        'addAction': this.addAction,
         'serverOnline': this.serverOnline,
         'serverOffline': this.serverOffline,
         'checkOnline': this.checkOnline
@@ -30533,6 +30567,11 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     },
     newProject: function(options) {
       return this.model.get('projects').addProject(options);
+    },
+    addAction: function(options, params) {
+      var action;
+      action = this.model.get('actions').addAction(options, params);
+      return action.setActive();
     },
     serverOnline: function() {
       return this.trigger('isOnline', true);
@@ -30691,19 +30730,11 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     };
 
     AppRouter.prototype.removeActionsExcept = function(route) {
-      var activeInScope;
-      activeInScope = false;
-      _.each(this.model.get('actions').models, function(action) {
-        if (action.get('scope') && action.get('scope') !== route) {
-          if (action.get('isActive')) {
-            activeInScope = true;
-          }
+      return _.each(this.model.get('actions').models, function(action) {
+        if (action.has('scope') && action.get('scope') !== route) {
           return action.destroy();
         }
       });
-      if (activeInScope) {
-        return this.model.get('actions').at(0).setActive();
-      }
     };
 
     return AppRouter;
@@ -30991,8 +31022,8 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     };
 
     ActionsView.prototype.renderAction = function(action) {
-      this.$el.parents('.navbar').attr('class', "navbar " + (action.get('navbarClass')) + " shadow-z-1");
       if (Tracktime.ActionView[action.get('type')]) {
+        this.$el.parents('.navbar').attr('class', "navbar " + (action.get('navbarClass')) + " shadow-z-1");
         return this.setSubView("actionDetails", new Tracktime.ActionView[action.get('type')]({
           model: action
         }));
@@ -31913,8 +31944,8 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       if (!this.model.get('isDeleted')) {
         this.render();
       }
-      this.listenTo(this.model, "change:isDeleted", this.change_isDeleted);
-      return this.listenTo(this.model, "change:subject", this.change_subject);
+      this.listenTo(this.model, "change:isDeleted", this.changeIsDeleted);
+      return this.listenTo(this.model, "change:subject", this.changeSubject);
     };
 
     ProjectView.prototype.attributes = function() {
@@ -31928,12 +31959,12 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       return $('.subject_edit', this.$el).on('keydown', this.fixEnter).textareaAutoSize();
     };
 
-    ProjectView.prototype.change_isDeleted = function() {
+    ProjectView.prototype.changeIsDeleted = function() {
       return this.$el.remove();
     };
 
-    ProjectView.prototype.change_subject = function() {
-      $('.subject', this.$el).html(this.model.get('subject').nl2br());
+    ProjectView.prototype.changeSubject = function() {
+      $('.subject', this.$el).html((this.model.get('subject') + '').nl2br());
       return $('.subject_edit', this.$el).val(this.model.get('subject'));
     };
 
@@ -32060,15 +32091,18 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
     RecordView.prototype.events = {
       'click .btn.delete': "deleteRecord",
-      'click .subject': "toggleEdit"
+      'click .subject': "toggleInlineEdit",
+      'click .edit.btn': "editRecord"
     };
 
     RecordView.prototype.initialize = function() {
       if (!this.model.get('isDeleted')) {
         this.render();
       }
-      this.listenTo(this.model, "change:isDeleted", this.change_isDeleted);
-      return this.listenTo(this.model, "change:subject", this.change_subject);
+      this.listenTo(this.model, "change:isDeleted", this.changeIsDeleted);
+      this.listenTo(this.model, "change:subject", this.changeSubject);
+      this.listenTo(this.model, "change:isEdit", this.changeIsEdit);
+      return this.listenTo(this.model, "sync", this.syncModel);
     };
 
     RecordView.prototype.attributes = function() {
@@ -32082,12 +32116,22 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       return $('.subject_edit', this.$el).on('keydown', this.fixEnter).textareaAutoSize();
     };
 
-    RecordView.prototype.change_isDeleted = function() {
+    RecordView.prototype.changeIsEdit = function() {
+      return this.$el.toggleClass('editmode', this.model.isEdit === true);
+    };
+
+    RecordView.prototype.syncModel = function(model, options, params) {
+      model.isEdit = false;
+      model.trigger('change:isEdit');
+      return model.trigger('change:subject');
+    };
+
+    RecordView.prototype.changeIsDeleted = function() {
       return this.$el.remove();
     };
 
-    RecordView.prototype.change_subject = function() {
-      $('.subject', this.$el).html(this.model.get('subject').nl2br());
+    RecordView.prototype.changeSubject = function() {
+      $('.subject', this.$el).html((this.model.get('subject') + '').nl2br());
       return $('.subject_edit', this.$el).val(this.model.get('subject'));
     };
 
@@ -32099,14 +32143,14 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
           if (!_.isEmpty(val)) {
             this.model.set('subject', val);
             this.saveRecord();
-            this.toggleEdit();
+            this.toggleInlineEdit();
           }
           return event.preventDefault();
         }
       }
     };
 
-    RecordView.prototype.toggleEdit = function(event) {
+    RecordView.prototype.toggleInlineEdit = function(event) {
       this.$el.find('.subject_edit').css('min-height', this.$el.find('.subject').height());
       return this.$el.find('.subject, .subject_edit').css('border', 'apx solid blue').toggleClass('hidden');
     };
@@ -32122,6 +32166,17 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
           });
         }
       });
+    };
+
+    RecordView.prototype.editRecord = function() {
+      return $('.scrollWrapper').animate({
+        'scrollTop': this.$el.offset().top - $('.scrollWrapper').offset().top + $('.scrollWrapper').scrollTop()
+      }, 400, (function(_this) {
+        return function(event) {
+          _this.model.isEdit = true;
+          return _this.model.trigger('change:isEdit');
+        };
+      })(this));
     };
 
     RecordView.prototype.deleteRecord = function(event) {

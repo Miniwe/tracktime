@@ -473,12 +473,60 @@ h1, h2, h3, h4, h5, h6 {
   min-height: 1em;
   margin: .4em auto .8em;
   padding: 1em;
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+  opacity: 1;
   -webkit-transition: all 0.4s;
   -moz-transition: all 0.4s;
   -o-transition: all 0.4s;
   transition: all 0.4s;
 }
-/* line 25, ../../app/assets/sass/records/_records-group.scss */
+/* line 28, ../../app/assets/sass/records/_records-group.scss */
+.records-group .records-group-item:hover .actions {
+  display: table;
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+  opacity: 1;
+}
+/* line 36, ../../app/assets/sass/records/_records-group.scss */
+.records-group .records-group-item:hover .col-icon .btn {
+  position: absolute;
+}
+/* line 39, ../../app/assets/sass/records/_records-group.scss */
+.records-group .records-group-item:hover .col-icon .btn.type {
+  z-index: 9;
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+  opacity: 0;
+}
+/* line 45, ../../app/assets/sass/records/_records-group.scss */
+.records-group .records-group-item:hover .col-icon .btn.edit {
+  z-index: 10;
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+  opacity: 1;
+}
+/* line 53, ../../app/assets/sass/records/_records-group.scss */
+.records-group .records-group-item.editmode {
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=30);
+  opacity: 0.3;
+  background-color: #ddd;
+  pointer-events: none;
+  text-shadow: 1px 1px #fff;
+}
+/* line 60, ../../app/assets/sass/records/_records-group.scss */
+.records-group .records-group-item.on-show {
+  overflow: hidden;
+  box-sizing: border-box;
+  width: 0;
+  min-height: 0;
+  max-height: 0;
+  margin: 0 auto .2em;
+  padding: 0;
+  border-color: #f00;
+}
+/* line 72, ../../app/assets/sass/records/_records-group.scss */
+.records-group .records-group-item.on-show * {
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+  opacity: 0;
+}
+/* line 77, ../../app/assets/sass/records/_records-group.scss */
 .records-group .records-group-item * {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
   opacity: 1;
@@ -488,7 +536,7 @@ h1, h2, h3, h4, h5, h6 {
   -o-transition: opacity 0.2s 0.4s;
   transition: opacity 0.2s 0.4s;
 }
-/* line 30, ../../app/assets/sass/records/_records-group.scss */
+/* line 82, ../../app/assets/sass/records/_records-group.scss */
 .records-group .records-group-item ul.actions {
   position: absolute;
   right: 1em;
@@ -506,75 +554,37 @@ h1, h2, h3, h4, h5, h6 {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
   opacity: 0;
 }
-/* line 46, ../../app/assets/sass/records/_records-group.scss */
+/* line 98, ../../app/assets/sass/records/_records-group.scss */
 .records-group .records-group-item ul.actions li {
   display: table-cell;
   margin: 1em;
 }
-/* line 55, ../../app/assets/sass/records/_records-group.scss */
-.records-group .records-group-item:hover .actions {
-  display: table;
-  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
-  opacity: 1;
-}
-/* line 63, ../../app/assets/sass/records/_records-group.scss */
-.records-group .records-group-item:hover .col-icon .btn {
-  position: absolute;
-}
-/* line 66, ../../app/assets/sass/records/_records-group.scss */
-.records-group .records-group-item:hover .col-icon .btn.type {
-  z-index: 9;
-  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
-  opacity: 0;
-}
-/* line 72, ../../app/assets/sass/records/_records-group.scss */
-.records-group .records-group-item:hover .col-icon .btn.edit {
-  z-index: 10;
-  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
-  opacity: 1;
-}
-/* line 81, ../../app/assets/sass/records/_records-group.scss */
-.records-group .records-group-item.on-show {
-  overflow: hidden;
-  box-sizing: border-box;
-  width: 0;
-  min-height: 0;
-  max-height: 0;
-  margin: 0 auto .2em;
-  padding: 0;
-  border-color: #f00;
-}
-/* line 93, ../../app/assets/sass/records/_records-group.scss */
-.records-group .records-group-item.on-show * {
-  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
-  opacity: 0;
-}
-/* line 100, ../../app/assets/sass/records/_records-group.scss */
+/* line 107, ../../app/assets/sass/records/_records-group.scss */
 .records-group .records-group-item .date-time i {
   font-size: 1.3em;
   position: relative;
   top: .1em;
   margin-right: .2em;
 }
-/* line 110, ../../app/assets/sass/records/_records-group.scss */
+/* line 117, ../../app/assets/sass/records/_records-group.scss */
 .records-group .records-group-item .last-update {
   margin-top: .6em;
 }
-/* line 113, ../../app/assets/sass/records/_records-group.scss */
+/* line 120, ../../app/assets/sass/records/_records-group.scss */
 .records-group .records-group-item .last-update .text-muted {
   font-size: .85em;
   color: #b4b4b4;
 }
-/* line 118, ../../app/assets/sass/records/_records-group.scss */
+/* line 125, ../../app/assets/sass/records/_records-group.scss */
 .records-group .records-group-item .last-update .text-muted:before {
   content: 'Last Update: ';
   color: #c4c4c4;
 }
-/* line 128, ../../app/assets/sass/records/_records-group.scss */
+/* line 135, ../../app/assets/sass/records/_records-group.scss */
 .records-group .records-group-item .col-icon .btn {
   position: absolute;
 }
-/* line 131, ../../app/assets/sass/records/_records-group.scss */
+/* line 138, ../../app/assets/sass/records/_records-group.scss */
 .records-group .records-group-item .col-icon .btn.type {
   z-index: 10;
   -webkit-transition: opacity 0.8s;
@@ -585,7 +595,7 @@ h1, h2, h3, h4, h5, h6 {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
   opacity: 1;
 }
-/* line 138, ../../app/assets/sass/records/_records-group.scss */
+/* line 145, ../../app/assets/sass/records/_records-group.scss */
 .records-group .records-group-item .col-icon .btn.edit {
   z-index: 9;
   -webkit-transition: opacity 0.8s;

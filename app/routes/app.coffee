@@ -36,7 +36,7 @@ class Tracktime.AppRouter extends Backbone.Router
     @view.setSubView 'menu', new Tracktime.AppView.Menu model: @model
     @view.initUI()
 
-  index: () ->
+  index: ->
     @navigate 'projects', trigger: true, replace: false
 
   default: (actions) ->
@@ -44,13 +44,9 @@ class Tracktime.AppRouter extends Backbone.Router
     @navigate '', true
 
   removeActionsExcept: (route) ->
-    activeInScope = false
     _.each @model.get('actions').models, (action) ->
-      if action.get('scope') and action.get('scope') isnt route
-        activeInScope = true if action.get('isActive')
-        action.destroy()
+      action.destroy() if action.has('scope') and action.get('scope') isnt route
 
-    @model.get('actions').at(0).setActive() if activeInScope
 
 (module?.exports = Tracktime.AppRouter) or @Tracktime.AppRouter = Tracktime.AppRouter
 

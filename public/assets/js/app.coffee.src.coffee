@@ -323,8 +323,8 @@ class Tracktime.Action.Project extends Tracktime.Action
 
   initialize: (options = {}) ->
     @set options
-    if options.model instanceof Tracktime.Project
-      @set 'projectModel', new Tracktime.Project options.model.toJSON
+    if options.projectModel instanceof Tracktime.Project
+      @set 'projectModel', new Tracktime.Project options.projectModel.toJSON
     else
       @set 'projectModel', new Tracktime.Project()
 
@@ -333,9 +333,6 @@ class Tracktime.Action.Project extends Tracktime.Action
     if projectModel.isValid()
       Tracktime.AppChannel.command 'newProject', _.extend {project: 0}, projectModel.toJSON()
       projectModel.clear().set(projectModel.defaults)
-
-  successAdd: () ->
-    # @details.reset() # @todo on change details change view controls
 
 (module?.exports = Tracktime.Action.Project) or @Tracktime.Action.Project = Tracktime.Action.Project
 
@@ -349,26 +346,29 @@ class Tracktime.Action.Record extends Tracktime.Action
     btnClass: 'btn-primary'
     navbarClass: 'navbar-material-amber'
     icon:
-      className: 'mdi-editor-mode-edit'
+      className: 'mdi-content-add'
       letter: ''
     isActive: null
     isVisible: true
 
-  initialize: (options = {}) ->
-    @set options
-    if options.model instanceof Tracktime.Record
-      @set 'recordModel', new Tracktime.Record options.model.toJSON
-    else
-      @set 'recordModel', new Tracktime.Record()
+  initialize: () ->
+    @set 'recordModel', new Tracktime.Record() unless @get('recordModel') instanceof Tracktime.Record
 
   processAction: () ->
-    recordModel = @get('recordModel')
+    recordModel = @get 'recordModel'
     if recordModel.isValid()
-      Tracktime.AppChannel.command 'newRecord', _.extend {project: 0}, recordModel.toJSON()
-      recordModel.clear().set(recordModel.defaults)
-
-  successAdd: () ->
-    # @details.reset() # @todo on change details change view controls
+      if recordModel.isNew()
+        Tracktime.AppChannel.command 'newRecord', recordModel.toJSON()
+        recordModel.clear().set(recordModel.defaults)
+      else
+        recordModel.save {},
+          ajaxSync: Tracktime.AppChannel.request 'isOnline'
+          success: () =>
+            $.alert
+              content: 'Record: update success'
+              timeout: 2000
+              style: 'btn-success'
+            @destroy()
 
 (module?.exports = Tracktime.Action.Record) or @Tracktime.Action.Record = Tracktime.Action.Record
 
@@ -434,6 +434,7 @@ class Tracktime.Record extends Tracktime.Model
   urlRoot: config.SERVER + '/records'
   localStorage: new Backbone.LocalStorage (config.collection.records)
 
+
   defaults:
     _id: null
     subject: ''
@@ -451,13 +452,26 @@ class Tracktime.Record extends Tracktime.Model
       minLength: 4
       msg: 'Please enter a valid subject'
 
-
   initialize: (options, params, any) ->
-    @listenTo @, 'change:subject', @updateLastAccess
+    @isEdit = false
+    @on 'change:subject change:recordTime change:recordDate change:project', @updateLastAccess
+    @on 'change:isEdit', @changeIsEdit
 
-  isValid: () ->
+  isValid: ->
     # @todo add good validation
     true
+
+  changeIsEdit: ->
+    if @isEdit
+      Tracktime.AppChannel.command 'addAction', {title: 'Edit record', type: 'Record'},
+        title: 'Edit record: ' + @get('subject').substr(0, 40)
+        navbarClass: 'navbar-material-indigo'
+        btnClass: 'btn-material-indigo'
+        icon:
+          className: 'mdi-editor-mode-edit'
+        recordModel: @
+        scope: 'edit:action'
+
 
   updateLastAccess: () ->
     @set 'lastAccess', (new Date()).toISOString()
@@ -475,15 +489,19 @@ class Tracktime.ActionsCollection extends Backbone.Collection
   localStorage: new Backbone.LocalStorage ('records-backbone')
   active: null
 
-  initialize: () ->
+  initialize: ->
+    @on 'remove', @setDefaultActive
     _.each @defaultActions, @addAction
 
   addAction: (action, params = {}) =>
     if (Tracktime.Action[action.type])
-      actionModel = new Tracktime.Action[action.type](action)
+      actionModel = new Tracktime.Action[action.type] action
       actionModel.set params
       @push actionModel
       return actionModel
+
+  setDefaultActive: ->
+    @at(0).setActive() unless @find isActive: true
 
   setActive: (active) ->
     @active?.set 'isActive', false
@@ -491,11 +509,10 @@ class Tracktime.ActionsCollection extends Backbone.Collection
     @active = active
     @trigger 'change:active', @active
 
-  getActive: () ->
+  getActive: ->
     @active
 
-  getActions: () ->
-    # visible actions
+  getActions: ->
     _.filter @models, (model) -> model.get('isVisible')
 
 (module?.exports = Tracktime.ActionsCollection) or @Tracktime.ActionsCollection = Tracktime.ActionsCollection
@@ -618,6 +635,7 @@ _.extend Tracktime.AppChannel,
       'start':           @startApp
       'newRecord':       @newRecord
       'newProject':      @newProject
+      'addAction':       @addAction
       'serverOnline':    @serverOnline
       'serverOffline':   @serverOffline
       'checkOnline':     @checkOnline
@@ -635,6 +653,10 @@ _.extend Tracktime.AppChannel,
 
   newProject: (options) ->
     @model.get('projects').addProject(options)
+
+  addAction: (options, params) ->
+    action = @model.get('actions').addAction(options, params)
+    action.setActive()
 
   serverOnline: () ->
     @trigger 'isOnline', true
@@ -723,7 +745,7 @@ class Tracktime.AppRouter extends Backbone.Router
     @view.setSubView 'menu', new Tracktime.AppView.Menu model: @model
     @view.initUI()
 
-  index: () ->
+  index: ->
     @navigate 'projects', trigger: true, replace: false
 
   default: (actions) ->
@@ -731,13 +753,9 @@ class Tracktime.AppRouter extends Backbone.Router
     @navigate '', true
 
   removeActionsExcept: (route) ->
-    activeInScope = false
     _.each @model.get('actions').models, (action) ->
-      if action.get('scope') and action.get('scope') isnt route
-        activeInScope = true if action.get('isActive')
-        action.destroy()
+      action.destroy() if action.has('scope') and action.get('scope') isnt route
 
-    @model.get('actions').at(0).setActive() if activeInScope
 
 (module?.exports = Tracktime.AppRouter) or @Tracktime.AppRouter = Tracktime.AppRouter
 
@@ -906,7 +924,6 @@ class Tracktime.ActionsView extends Backbone.View
     _.each @collection.getActions(), @addAction
     @collection.at(0).setActive()
 
-
   addAction: (action) =>
     listBtn = new Tracktime.ActionView.ListBtn model: action
     @menu.append listBtn.$el
@@ -914,9 +931,8 @@ class Tracktime.ActionsView extends Backbone.View
     $('[data-toggle="tooltip"]', listBtn.$el).tooltip()
 
   renderAction: (action) ->
-    @$el.parents('.navbar').attr 'class', "navbar #{action.get('navbarClass')} shadow-z-1"
-
     if Tracktime.ActionView[action.get('type')]
+      @$el.parents('.navbar').attr 'class', "navbar #{action.get('navbarClass')} shadow-z-1"
       @setSubView "actionDetails", new Tracktime.ActionView[action.get('type')] model: action
 
 
@@ -1452,8 +1468,8 @@ class Tracktime.AdminView.ProjectView extends Backbone.View
   initialize: () ->
     unless @model.get 'isDeleted'
       @render()
-    @listenTo @model, "change:isDeleted", @change_isDeleted
-    @listenTo @model, "change:subject", @change_subject
+    @listenTo @model, "change:isDeleted", @changeIsDeleted
+    @listenTo @model, "change:subject", @changeSubject
 
   attributes: () ->
     id: @model.cid
@@ -1464,11 +1480,11 @@ class Tracktime.AdminView.ProjectView extends Backbone.View
       .on('keydown', @fixEnter)
       .textareaAutoSize()
 
-  change_isDeleted: () ->
+  changeIsDeleted: () ->
     @$el.remove() # @todo possible not need
 
-  change_subject: () ->
-    $('.subject', @$el).html @model.get('subject').nl2br()
+  changeSubject: () ->
+    $('.subject', @$el).html (@model.get('subject') + '').nl2br()
     $('.subject_edit', @$el).val @model.get 'subject'
 
   fixEnter: (event) =>
@@ -1540,14 +1556,17 @@ class Tracktime.RecordView extends Backbone.View
   template: JST['records/record']
   events:
     'click .btn.delete': "deleteRecord"
-    'click .subject': "toggleEdit"
+    'click .subject': "toggleInlineEdit"
+    'click .edit.btn': "editRecord"
 
 
   initialize: () ->
     unless @model.get 'isDeleted'
       @render()
-    @listenTo @model, "change:isDeleted", @change_isDeleted
-    @listenTo @model, "change:subject", @change_subject
+    @listenTo @model, "change:isDeleted", @changeIsDeleted
+    @listenTo @model, "change:subject", @changeSubject
+    @listenTo @model, "change:isEdit", @changeIsEdit
+    @listenTo @model, "sync", @syncModel
 
   attributes: () ->
     id: @model.cid
@@ -1558,11 +1577,20 @@ class Tracktime.RecordView extends Backbone.View
       .on('keydown', @fixEnter)
       .textareaAutoSize()
 
-  change_isDeleted: () ->
+  changeIsEdit: () ->
+    @$el.toggleClass 'editmode', @model.isEdit == true
+
+  syncModel: (model, options, params) ->
+    model.isEdit = false
+    model.trigger 'change:isEdit'
+    model.trigger 'change:subject'
+
+
+  changeIsDeleted: () ->
     @$el.remove() # @todo possible not need
 
-  change_subject: () ->
-    $('.subject', @$el).html @model.get('subject').nl2br()
+  changeSubject: () ->
+    $('.subject', @$el).html (@model.get('subject') + '').nl2br()
     $('.subject_edit', @$el).val @model.get 'subject'
 
   fixEnter: (event) =>
@@ -1572,10 +1600,10 @@ class Tracktime.RecordView extends Backbone.View
         unless _.isEmpty val
           @model.set 'subject', val
           @saveRecord()
-          @toggleEdit()
+          @toggleInlineEdit()
         event.preventDefault()
 
-  toggleEdit: (event) ->
+  toggleInlineEdit: (event) ->
     @$el.find('.subject_edit').css 'min-height', @$el.find('.subject').height()
     @$el.find('.subject, .subject_edit').css('border', 'apx solid blue').toggleClass 'hidden'
 
@@ -1587,6 +1615,13 @@ class Tracktime.RecordView extends Backbone.View
           content: 'update record'
           timeout: 2000
           style: 'btn-info'
+
+  editRecord: () ->
+    $('.scrollWrapper').animate
+      'scrollTop': @$el.offset().top - $('.scrollWrapper').offset().top + $('.scrollWrapper').scrollTop()
+    , 400, (event) =>
+      @model.isEdit = true
+      @model.trigger 'change:isEdit'
 
   deleteRecord: (event) ->
     event.preventDefault()
