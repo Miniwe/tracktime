@@ -1,7 +1,7 @@
 class Tracktime.RecordsView extends Backbone.View
   container: '#main'
   tagName: 'ul'
-  className: 'records-group'
+  className: 'list-group'
 
   initialize: () ->
     @views = {}

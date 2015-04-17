@@ -1876,7 +1876,7 @@
 
     ProjectsView.prototype.template = JST['admin/projects'];
 
-    ProjectsView.prototype.className = 'records-group';
+    ProjectsView.prototype.className = 'list-group';
 
     ProjectsView.prototype.initialize = function() {
       this.views = {};
@@ -2395,7 +2395,7 @@
 
     ProjectView.prototype.tagName = 'li';
 
-    ProjectView.prototype.className = 'records-group-item shadow-z-1';
+    ProjectView.prototype.className = 'list-group-item shadow-z-1';
 
     ProjectView.prototype.template = JST['projects/admin_project'];
 
@@ -2549,7 +2549,7 @@
 
     RecordView.prototype.tagName = 'li';
 
-    RecordView.prototype.className = 'records-group-item shadow-z-1';
+    RecordView.prototype.className = 'list-group-item shadow-z-1';
 
     RecordView.prototype.template = JST['records/record'];
 
@@ -2669,7 +2669,7 @@
 
     RecordsView.prototype.tagName = 'ul';
 
-    RecordsView.prototype.className = 'records-group';
+    RecordsView.prototype.className = 'list-group';
 
     RecordsView.prototype.initialize = function() {
       this.views = {};

@@ -1161,7 +1161,7 @@ class Tracktime.AdminView.Dashboard extends Backbone.View
 class Tracktime.AdminView.ProjectsView extends Backbone.View
   container: '#main'
   template: JST['admin/projects']
-  className: 'records-group'
+  className: 'list-group'
 
   initialize: () ->
     @views = {}
@@ -1458,7 +1458,7 @@ class Tracktime.AppView.Menu extends Backbone.View
 
 class Tracktime.AdminView.ProjectView extends Backbone.View
   tagName: 'li'
-  className: 'records-group-item shadow-z-1'
+  className: 'list-group-item shadow-z-1'
   template: JST['projects/admin_project']
   events:
     'click .btn.delete': "deleteProject"
@@ -1552,7 +1552,7 @@ class Tracktime.ProjectsView extends Backbone.View
 
 class Tracktime.RecordView extends Backbone.View
   tagName: 'li'
-  className: 'records-group-item shadow-z-1'
+  className: 'list-group-item shadow-z-1'
   template: JST['records/record']
   events:
     'click .btn.delete': "deleteRecord"
@@ -1640,7 +1640,7 @@ class Tracktime.RecordView extends Backbone.View
 class Tracktime.RecordsView extends Backbone.View
   container: '#main'
   tagName: 'ul'
-  className: 'records-group'
+  className: 'list-group'
 
   initialize: () ->
     @views = {}

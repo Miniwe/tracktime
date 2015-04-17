@@ -1,6 +1,6 @@
 class Tracktime.AdminView.ProjectView extends Backbone.View
   tagName: 'li'
-  className: 'records-group-item shadow-z-1'
+  className: 'list-group-item shadow-z-1'
   template: JST['projects/admin_project']
   events:
     'click .btn.delete': "deleteProject"

@@ -1,6 +1,6 @@
 class Tracktime.RecordView extends Backbone.View
   tagName: 'li'
-  className: 'records-group-item shadow-z-1'
+  className: 'list-group-item shadow-z-1'
   template: JST['records/record']
   events:
     'click .btn.delete': "deleteRecord"
