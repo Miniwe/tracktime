@@ -15,11 +15,18 @@
     {
         background: rgba(255,255,255, .95);
     }
+    .btn-close-action
+    {
+        position: absolute;
+        top: 0;
+        right: .75em;
+    }
     .form-control-wrapper
     {
+        overflow: visible;
+
         margin-top: 1em;
         padding: 0 5em;
-        overflow: visible;
         textarea
         {
             font-size: 18px;
@@ -49,15 +56,18 @@
 
             color: #009688;
         }
-
-        .details-container {
+        .details-container
+        {
             // overflow: hidden;
             height: 54px;
+
             @include opacity(1);
             @include transition(all .2s .1s);
-            &.hidden {
+            &.hidden
+            {
+                height: 0;
+
                 @include opacity(0);
-                height: 0px;
             }
         }
     }

@@ -2,8 +2,8 @@
   var Tracktime, config, development, process, production, ref, test,
     extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     hasProp = {}.hasOwnProperty,
-    bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    slice = [].slice;
+    slice = [].slice,
+    bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   process = process || window.process || {};
 
@@ -428,7 +428,8 @@
       _id: null,
       title: 'Default action',
       isActive: null,
-      isVisible: false
+      isVisible: false,
+      canClose: false
     };
 
     Action.prototype.attributes = function() {
@@ -564,6 +565,14 @@
           });
         }
       }
+    };
+
+    Record.prototype.destroy = function() {
+      var args;
+      args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+      this.get('recordModel').isEdit = false;
+      this.get('recordModel').trigger('change:isEdit');
+      return Record.__super__.destroy.apply(this, args);
     };
 
     return Record;
@@ -711,7 +720,8 @@
       if (this.isEdit) {
         return Tracktime.AppChannel.command('addAction', {
           title: 'Edit record',
-          type: 'Record'
+          type: 'Record',
+          canClose: true
         }, {
           title: 'Edit record: ' + this.get('subject').substr(0, 40),
           navbarClass: 'navbar-material-indigo',
@@ -1698,10 +1708,15 @@
         model: this.model.get('recordModel'),
         field: 'recordTime'
       })).$el);
-      return $('placeholder#selectday', this.$el).replaceWith((new Tracktime.Element.SelectDay({
+      $('placeholder#selectday', this.$el).replaceWith((new Tracktime.Element.SelectDay({
         model: this.model.get('recordModel'),
         field: 'recordDate'
       })).$el);
+      if (this.model.get('canClose')) {
+        return $('placeholder#btn_close_action', this.$el).replaceWith((new Tracktime.Element.ElementCloseAction({
+          model: this.model
+        })).$el);
+      }
     };
 
     Record.prototype.textareaInput = function(event) {
@@ -2012,6 +2027,48 @@
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.Element : void 0) || (this.Tracktime.Element = Tracktime.Element);
 
+  Tracktime.Element.ElementCloseAction = (function(superClass) {
+    extend(ElementCloseAction, superClass);
+
+    function ElementCloseAction() {
+      this.closeAction = bind(this.closeAction, this);
+      return ElementCloseAction.__super__.constructor.apply(this, arguments);
+    }
+
+    ElementCloseAction.prototype.tagName = 'button';
+
+    ElementCloseAction.prototype.className = 'btn btn-close-action btn-fab btn-flat btn-fab-mini';
+
+    ElementCloseAction.prototype.hint = 'Cancel action';
+
+    ElementCloseAction.prototype.events = {
+      'click': 'closeAction'
+    };
+
+    ElementCloseAction.prototype.initialize = function(options) {
+      if (options == null) {
+        options = {};
+      }
+      _.extend(this, options);
+      return this.render();
+    };
+
+    ElementCloseAction.prototype.render = function() {
+      return this.$el.attr('title', this.hint).append($('<i />', {
+        "class": 'mdi-content-remove'
+      }));
+    };
+
+    ElementCloseAction.prototype.closeAction = function() {
+      return this.model.destroy();
+    };
+
+    return ElementCloseAction;
+
+  })(Tracktime.Element);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.Element.ElementCloseAction : void 0) || (this.Tracktime.Element.ElementCloseAction = Tracktime.Element.ElementCloseAction);
+
   Tracktime.Element.SelectDay = (function(superClass) {
     extend(SelectDay, superClass);
 
@@ -2061,7 +2118,7 @@
 
   })(Tracktime.Element);
 
-  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.Element.Slider : void 0) || (this.Tracktime.Element.Slider = Tracktime.Element.Slider);
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.Element.SelectDay : void 0) || (this.Tracktime.Element.SelectDay = Tracktime.Element.SelectDay);
 
   Tracktime.Element.Slider = (function(superClass) {
     extend(Slider, superClass);

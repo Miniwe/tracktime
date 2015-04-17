@@ -31,4 +31,10 @@ class Tracktime.Action.Record extends Tracktime.Action
               style: 'btn-success'
             @destroy()
 
+  destroy: (args...) ->
+    @get('recordModel').isEdit = false
+    @get('recordModel').trigger 'change:isEdit'
+    super args...
+
+
 (module?.exports = Tracktime.Action.Record) or @Tracktime.Action.Record = Tracktime.Action.Record

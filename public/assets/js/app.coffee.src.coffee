@@ -290,6 +290,7 @@ class Tracktime.Action extends Backbone.Model
     title: 'Default action'
     isActive: null
     isVisible: false
+    canClose: false
 
   attributes: () ->
     id: @model.cid
@@ -369,6 +370,12 @@ class Tracktime.Action.Record extends Tracktime.Action
               timeout: 2000
               style: 'btn-success'
             @destroy()
+
+  destroy: (args...) ->
+    @get('recordModel').isEdit = false
+    @get('recordModel').trigger 'change:isEdit'
+    super args...
+
 
 (module?.exports = Tracktime.Action.Record) or @Tracktime.Action.Record = Tracktime.Action.Record
 
@@ -463,7 +470,7 @@ class Tracktime.Record extends Tracktime.Model
 
   changeIsEdit: ->
     if @isEdit
-      Tracktime.AppChannel.command 'addAction', {title: 'Edit record', type: 'Record'},
+      Tracktime.AppChannel.command 'addAction', {title: 'Edit record', type: 'Record', canClose: true},
         title: 'Edit record: ' + @get('subject').substr(0, 40)
         navbarClass: 'navbar-material-indigo'
         btnClass: 'btn-material-indigo'
@@ -1070,6 +1077,10 @@ class Tracktime.ActionView.Record extends Backbone.View
       field: 'recordDate'
     ).$el
 
+    $('placeholder#btn_close_action', @$el).replaceWith (new Tracktime.Element.ElementCloseAction
+      model: @model
+    ).$el if @model.get 'canClose'
+
   textareaInput: (event) =>
     window.setTimeout () =>
       diff = $('#actions-form').outerHeight() - $('.navbar').outerHeight(true)
@@ -1239,6 +1250,29 @@ class Tracktime.Element extends Backbone.View
 (module?.exports = Tracktime.Element) or @Tracktime.Element = Tracktime.Element
 
 
+class Tracktime.Element.ElementCloseAction extends Tracktime.Element
+  tagName: 'button'
+  className: 'btn btn-close-action btn-fab btn-flat btn-fab-mini'
+  hint: 'Cancel action'
+  events:
+    'click': 'closeAction'
+
+  initialize: (options = {}) ->
+    _.extend @, options
+    @render()
+
+  render: () ->
+    @$el
+      .attr 'title', @hint
+      .append $('<i />', class: 'mdi-content-remove')
+
+  closeAction: () =>
+    @model.destroy()
+
+
+(module?.exports = Tracktime.Element.ElementCloseAction) or @Tracktime.Element.ElementCloseAction = Tracktime.Element.ElementCloseAction
+
+
 class Tracktime.Element.SelectDay extends Tracktime.Element
   className: 'btn-group select-day'
   template: JST['elements/selectday']
@@ -1268,7 +1302,7 @@ class Tracktime.Element.SelectDay extends Tracktime.Element
     @changeInput $(".dropdown-toggle ruby rt", @$el).html()
 
 
-(module?.exports = Tracktime.Element.Slider) or @Tracktime.Element.Slider = Tracktime.Element.Slider
+(module?.exports = Tracktime.Element.SelectDay) or @Tracktime.Element.SelectDay = Tracktime.Element.SelectDay
 
 
 class Tracktime.Element.Slider extends Tracktime.Element

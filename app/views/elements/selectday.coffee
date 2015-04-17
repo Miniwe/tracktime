@@ -27,5 +27,5 @@ class Tracktime.Element.SelectDay extends Tracktime.Element
     @changeInput $(".dropdown-toggle ruby rt", @$el).html()
 
 
-(module?.exports = Tracktime.Element.Slider) or @Tracktime.Element.Slider = Tracktime.Element.Slider
+(module?.exports = Tracktime.Element.SelectDay) or @Tracktime.Element.SelectDay = Tracktime.Element.SelectDay
 
