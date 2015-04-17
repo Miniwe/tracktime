@@ -29502,9 +29502,9 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     + escapeExpression(((helper = (helper = helpers.recordDate || (depth0 != null ? depth0.recordDate : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"recordDate","hash":{},"data":data}) : helper)))
     + "</span>\n      &#0160;\n      <span title=\"Record Time\"><i class=\"mdi-action-schedule\"></i>"
     + escapeExpression(((helpers.minuteFormat || (depth0 && depth0.minuteFormat) || helperMissing).call(depth0, (depth0 != null ? depth0.recordTime : depth0), {"name":"minuteFormat","hash":{},"data":data})))
-    + "</span>\n    </p>\n    <textarea class=\"subject_edit form-control hidden\" style=\"width: 100%; border: none; padding: 0;\">"
-    + escapeExpression(((helper = (helper = helpers.subject || (depth0 != null ? depth0.subject : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"subject","hash":{},"data":data}) : helper)))
-    + "</textarea>\n    <div class=\"subject\" style=\"border: none;\">"
+    + "</span>\n    </p>\n    "
+    + escapeExpression(((helpers.placeholder || (depth0 && depth0.placeholder) || helperMissing).call(depth0, "textarea", {"name":"placeholder","hash":{},"data":data})))
+    + "\n    <div class=\"subject\" style=\"border: none;\">"
     + escapeExpression(((helpers.nl2br || (depth0 && depth0.nl2br) || helperMissing).call(depth0, (depth0 != null ? depth0.subject : depth0), {"name":"nl2br","hash":{},"data":data})))
     + "</div>\n\n    <p class=\"last-update\">\n        <time class=\"text-muted\" datetime=\""
     + escapeExpression(((helper = (helper = helpers.date || (depth0 != null ? depth0.date : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"date","hash":{},"data":data}) : helper)))
@@ -32079,7 +32079,7 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     extend(RecordView, superClass);
 
     function RecordView() {
-      this.fixEnter = bind(this.fixEnter, this);
+      this.sendForm = bind(this.sendForm, this);
       return RecordView.__super__.constructor.apply(this, arguments);
     }
 
@@ -32112,8 +32112,17 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     };
 
     RecordView.prototype.render = function() {
+      var textarea;
       this.$el.html(this.template(this.model.toJSON()));
-      return $('.subject_edit', this.$el).on('keydown', this.fixEnter).textareaAutoSize();
+      $('.subject_edit', this.$el).on('keydown', this.fixEnter).textareaAutoSize();
+      textarea = new Tracktime.Element.Textarea({
+        model: this.model,
+        className: 'subject_edit form-control hidden',
+        field: 'subject'
+      });
+      $('placeholder#textarea', this.$el).replaceWith(textarea.$el);
+      textarea.$el.textareaAutoSize().focus();
+      return textarea.on('tSubmit', this.sendForm);
     };
 
     RecordView.prototype.changeIsEdit = function() {
@@ -32135,27 +32144,13 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       return $('.subject_edit', this.$el).val(this.model.get('subject'));
     };
 
-    RecordView.prototype.fixEnter = function(event) {
-      var val;
-      if (event.keyCode === 13) {
-        if (event.shiftKey) {
-          val = $(event.target).val();
-          if (!_.isEmpty(val)) {
-            this.model.set('subject', val);
-            this.saveRecord();
-            this.toggleInlineEdit();
-          }
-          return event.preventDefault();
-        }
-      }
-    };
-
-    RecordView.prototype.toggleInlineEdit = function(event) {
+    RecordView.prototype.toggleInlineEdit = function() {
       this.$el.find('.subject_edit').css('min-height', this.$el.find('.subject').height());
       return this.$el.find('.subject, .subject_edit').css('border', 'apx solid blue').toggleClass('hidden');
     };
 
-    RecordView.prototype.saveRecord = function() {
+    RecordView.prototype.sendForm = function() {
+      this.toggleInlineEdit();
       return this.model.save({}, {
         ajaxSync: Tracktime.AppChannel.request('isOnline'),
         success: function(model, respond) {

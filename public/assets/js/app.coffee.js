@@ -2543,7 +2543,7 @@
     extend(RecordView, superClass);
 
     function RecordView() {
-      this.fixEnter = bind(this.fixEnter, this);
+      this.sendForm = bind(this.sendForm, this);
       return RecordView.__super__.constructor.apply(this, arguments);
     }
 
@@ -2576,8 +2576,17 @@
     };
 
     RecordView.prototype.render = function() {
+      var textarea;
       this.$el.html(this.template(this.model.toJSON()));
-      return $('.subject_edit', this.$el).on('keydown', this.fixEnter).textareaAutoSize();
+      $('.subject_edit', this.$el).on('keydown', this.fixEnter).textareaAutoSize();
+      textarea = new Tracktime.Element.Textarea({
+        model: this.model,
+        className: 'subject_edit form-control hidden',
+        field: 'subject'
+      });
+      $('placeholder#textarea', this.$el).replaceWith(textarea.$el);
+      textarea.$el.textareaAutoSize().focus();
+      return textarea.on('tSubmit', this.sendForm);
     };
 
     RecordView.prototype.changeIsEdit = function() {
@@ -2599,27 +2608,13 @@
       return $('.subject_edit', this.$el).val(this.model.get('subject'));
     };
 
-    RecordView.prototype.fixEnter = function(event) {
-      var val;
-      if (event.keyCode === 13) {
-        if (event.shiftKey) {
-          val = $(event.target).val();
-          if (!_.isEmpty(val)) {
-            this.model.set('subject', val);
-            this.saveRecord();
-            this.toggleInlineEdit();
-          }
-          return event.preventDefault();
-        }
-      }
-    };
-
-    RecordView.prototype.toggleInlineEdit = function(event) {
+    RecordView.prototype.toggleInlineEdit = function() {
       this.$el.find('.subject_edit').css('min-height', this.$el.find('.subject').height());
       return this.$el.find('.subject, .subject_edit').css('border', 'apx solid blue').toggleClass('hidden');
     };
 
-    RecordView.prototype.saveRecord = function() {
+    RecordView.prototype.sendForm = function() {
+      this.toggleInlineEdit();
       return this.model.save({}, {
         ajaxSync: Tracktime.AppChannel.request('isOnline'),
         success: function(model, respond) {

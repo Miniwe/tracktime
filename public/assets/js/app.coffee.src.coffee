@@ -1560,7 +1560,7 @@ class Tracktime.RecordView extends Backbone.View
     'click .edit.btn': "editRecord"
 
 
-  initialize: () ->
+  initialize: ->
     unless @model.get 'isDeleted'
       @render()
     @listenTo @model, "change:isDeleted", @changeIsDeleted
@@ -1568,46 +1568,46 @@ class Tracktime.RecordView extends Backbone.View
     @listenTo @model, "change:isEdit", @changeIsEdit
     @listenTo @model, "sync", @syncModel
 
-  attributes: () ->
+  attributes: ->
     id: @model.cid
 
-  render: () ->
+  render: ->
     @$el.html @template @model.toJSON()
     $('.subject_edit', @$el)
       .on('keydown', @fixEnter)
       .textareaAutoSize()
 
-  changeIsEdit: () ->
+    textarea = new Tracktime.Element.Textarea
+      model: @model
+      className: 'subject_edit form-control hidden'
+      field: 'subject'
+
+    $('placeholder#textarea', @$el).replaceWith textarea.$el
+    textarea.$el.textareaAutoSize().focus()
+    textarea.on 'tSubmit', @sendForm
+
+  changeIsEdit: ->
     @$el.toggleClass 'editmode', @model.isEdit == true
 
   syncModel: (model, options, params) ->
     model.isEdit = false
     model.trigger 'change:isEdit'
     model.trigger 'change:subject'
+    #todo update all elements after
 
-
-  changeIsDeleted: () ->
+  changeIsDeleted: ->
     @$el.remove() # @todo possible not need
 
-  changeSubject: () ->
+  changeSubject: ->
     $('.subject', @$el).html (@model.get('subject') + '').nl2br()
     $('.subject_edit', @$el).val @model.get 'subject'
 
-  fixEnter: (event) =>
-    if event.keyCode == 13
-      if event.shiftKey
-        val = $(event.target).val()
-        unless _.isEmpty val
-          @model.set 'subject', val
-          @saveRecord()
-          @toggleInlineEdit()
-        event.preventDefault()
-
-  toggleInlineEdit: (event) ->
+  toggleInlineEdit: ->
     @$el.find('.subject_edit').css 'min-height', @$el.find('.subject').height()
     @$el.find('.subject, .subject_edit').css('border', 'apx solid blue').toggleClass 'hidden'
 
-  saveRecord: () ->
+  sendForm: =>
+    @toggleInlineEdit()
     @model.save {},
       ajaxSync: Tracktime.AppChannel.request 'isOnline'
       success: (model, respond) ->
@@ -1616,7 +1616,7 @@ class Tracktime.RecordView extends Backbone.View
           timeout: 2000
           style: 'btn-info'
 
-  editRecord: () ->
+  editRecord: ->
     $('.scrollWrapper').animate
       'scrollTop': @$el.offset().top - $('.scrollWrapper').offset().top + $('.scrollWrapper').scrollTop()
     , 400, (event) =>
