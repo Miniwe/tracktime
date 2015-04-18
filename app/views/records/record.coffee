@@ -31,7 +31,6 @@ class Tracktime.RecordView extends Backbone.View
       field: 'subject'
 
     $('placeholder#textarea', @$el).replaceWith textarea.$el
-    textarea.$el.textareaAutoSize().focus()
     textarea.on 'tSubmit', @sendForm
 
   changeIsEdit: ->
@@ -53,6 +52,7 @@ class Tracktime.RecordView extends Backbone.View
   toggleInlineEdit: ->
     @$el.find('.subject_edit').css 'min-height', @$el.find('.subject').height()
     @$el.find('.subject, .subject_edit').css('border', 'apx solid blue').toggleClass 'hidden'
+    @$el.find('.subject_edit').textareaAutoSize().focus()
 
   sendForm: =>
     @toggleInlineEdit()

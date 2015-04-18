@@ -2642,7 +2642,6 @@
         field: 'subject'
       });
       $('placeholder#textarea', this.$el).replaceWith(textarea.$el);
-      textarea.$el.textareaAutoSize().focus();
       return textarea.on('tSubmit', this.sendForm);
     };
 
@@ -2667,7 +2666,8 @@
 
     RecordView.prototype.toggleInlineEdit = function() {
       this.$el.find('.subject_edit').css('min-height', this.$el.find('.subject').height());
-      return this.$el.find('.subject, .subject_edit').css('border', 'apx solid blue').toggleClass('hidden');
+      this.$el.find('.subject, .subject_edit').css('border', 'apx solid blue').toggleClass('hidden');
+      return this.$el.find('.subject_edit').textareaAutoSize().focus();
     };
 
     RecordView.prototype.sendForm = function() {
