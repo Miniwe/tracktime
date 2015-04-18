@@ -30331,7 +30331,7 @@ this["JST"]["user/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       if (!this.find({
         isActive: true
       })) {
-        return this.at(0).setActive();
+        return this.at(this.models.length - 1).setActive();
       }
     };
 

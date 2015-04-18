@@ -508,7 +508,8 @@ class Tracktime.ActionsCollection extends Backbone.Collection
       return actionModel
 
   setDefaultActive: ->
-    @at(0).setActive() unless @find isActive: true
+
+    @at(@models.length - 1).setActive() unless @find isActive: true
 
   setActive: (active) ->
     @active?.set 'isActive', false

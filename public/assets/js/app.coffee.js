@@ -793,7 +793,7 @@
       if (!this.find({
         isActive: true
       })) {
-        return this.at(0).setActive();
+        return this.at(this.models.length - 1).setActive();
       }
     };
 
