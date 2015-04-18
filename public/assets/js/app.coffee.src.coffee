@@ -41,12 +41,14 @@ class Tracktime extends Backbone.Model
     @set 'actions', new Tracktime.ActionsCollection()
     @set 'records', new Tracktime.RecordsCollection()
     @set 'projects', new Tracktime.ProjectsCollection()
+    @set 'users', new Tracktime.UsersCollection()
 
     @listenTo Tracktime.AppChannel, "isOnline", @updateApp
 
   updateApp: ->
     @get('records').fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
     @get('projects').fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
+    @get('users').fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
 
 
 (module?.exports = Tracktime) or @Tracktime = Tracktime
@@ -416,6 +418,47 @@ class Tracktime.Action.Search extends Tracktime.Action
 
 (module?.exports = Tracktime.Action.Search) or @Tracktime.Action.Search = Tracktime.Action.Search
 
+class Tracktime.Action.User extends Tracktime.Action
+
+  defaults: _.extend {}, Tracktime.Action.prototype.defaults,
+    title: 'Add user'
+    userModel: null
+    formAction: '#'
+    btnClass: 'btn-primary'
+    navbarClass: 'navbar-material-amber'
+    icon:
+      className: 'mdi-content-add'
+      letter: ''
+    isActive: null
+    isVisible: true
+
+  initialize: () ->
+    @set 'userModel', new Tracktime.User() unless @get('userModel') instanceof Tracktime.User
+
+  processAction: () ->
+    userModel = @get 'userModel'
+    if userModel.isValid()
+      if userModel.isNew()
+        Tracktime.AppChannel.command 'newUser', userModel.toJSON()
+        userModel.clear().set(userModel.defaults)
+      else
+        userModel.save {},
+          ajaxSync: Tracktime.AppChannel.request 'isOnline'
+          success: () =>
+            $.alert
+              content: 'User: update success'
+              timeout: 2000
+              style: 'btn-success'
+            @destroy()
+
+  destroy: (args...) ->
+    @get('userModel').isEdit = false
+    @get('userModel').trigger 'change:isEdit'
+    super args...
+
+
+(module?.exports = Tracktime.Action.User) or @Tracktime.Action.User = Tracktime.Action.User
+
 class Tracktime.Project extends Tracktime.Model
   idAttribute: "_id"
   collectionName: config.collection.projects
@@ -511,6 +554,52 @@ class Tracktime.Record extends Tracktime.Model
 
 
 (module?.exports = Tracktime.Record) or @Tracktime.Record = Tracktime.Record
+
+class Tracktime.User extends Tracktime.Model
+  idAttribute: "_id"
+  collectionName: config.collection.users
+  urlRoot: config.SERVER + '/' + 'users'
+  localStorage: new Backbone.LocalStorage 'users'
+
+  defaults:
+    _id: null
+    name: ''
+    description: ''
+    lastAccess: (new Date()).toISOString()
+    isDeleted: false
+
+  validation:
+    name:
+      required: true
+      minLength: 4
+      msg: 'Please enter a valid name'
+
+
+  initialize: ->
+    @isEdit = false
+    @on 'change:name', @updateLastAccess
+    @on 'change:isEdit', @changeIsEdit
+
+  isValid: () ->
+    # @todo add good validation
+    true
+
+  updateLastAccess: () ->
+    @set 'lastAccess', (new Date()).toISOString()
+
+  changeIsEdit: ->
+    if @isEdit
+      Tracktime.AppChannel.command 'addAction', {title: 'Edit user', type: 'User', canClose: true},
+        title: 'Edit user: ' + @get('name').substr(0, 40)
+        navbarClass: 'navbar-material-purple'
+        btnClass: 'btn-material-purple'
+        icon:
+          className: 'mdi-editor-mode-edit'
+        userModel: @
+        scope: 'edit:action'
+
+
+(module?.exports = Tracktime.User) or @Tracktime.User = Tracktime.User
 
 class Tracktime.ActionsCollection extends Backbone.Collection
   model: Tracktime.Action
@@ -608,6 +697,35 @@ class Tracktime.RecordsCollection extends Tracktime.Collection
 
 (module?.exports = Tracktime.RecordsCollection) or @Tracktime.RecordsCollection = Tracktime.RecordsCollection
 
+class Tracktime.UsersCollection extends Tracktime.Collection
+  model: Tracktime.User
+  collectionName: config.collection.users
+  url: config?.SERVER + '/' + 'users'
+  urlRoot: config?.SERVER + '/' + 'users'
+  localStorage: new Backbone.LocalStorage 'users'
+
+  initialize: () ->
+    @fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
+
+  comparator: (model) ->
+    - (new Date(model.get('date'))).getTime()
+
+  addUser: (options) ->
+    _.extend options, {date: (new Date()).toISOString()}
+    success = (result) =>
+      $.alert
+        content: 'User: save success'
+        timeout: 2000
+        style: 'btn-success'
+    error = () =>
+      $.alert 'User: save error'
+    @addModel options,
+      success: success,
+      error: error
+
+
+(module?.exports = Tracktime.UsersCollection) or @Tracktime.UsersCollection = Tracktime.UsersCollection
+
 Tracktime.AppChannel = Backbone.Radio.channel 'app'
 
 _.extend Tracktime.AppChannel,
@@ -668,6 +786,7 @@ _.extend Tracktime.AppChannel,
       'start':           @startApp
       'newRecord':       @newRecord
       'newProject':      @newProject
+      'newUser':         @newUser
       'addAction':       @addAction
       'serverOnline':    @serverOnline
       'serverOffline':   @serverOffline
@@ -686,6 +805,9 @@ _.extend Tracktime.AppChannel,
 
   newProject: (options) ->
     @model.get('projects').addProject(options)
+
+  newUser: (options) ->
+    @model.get('users').addUser(options)
 
   addAction: (options, params) ->
     action = @model.get('actions').addAction(options, params)
@@ -723,11 +845,15 @@ class Tracktime.AdminRouter extends Backbone.SubRoute
     @parent.view.setSubView 'main', new Tracktime.AdminView.Dashboard()
 
   users: () ->
-    @parent.view.setSubView 'main', new Tracktime.AdminView.Users()
+    @parent.view.setSubView 'main', new Tracktime.AdminView.UsersView collection: @parent.model.get 'users'
+    newAction = @parent.model.get('actions').addAction
+      title: 'Add users'
+      type: 'User'
+    , scope: 'admin:users'
+    newAction.setActive()
 
   projects: () ->
     @parent.view.setSubView 'main', new Tracktime.AdminView.ProjectsView collection: @parent.model.get 'projects'
-
     newAction = @parent.model.get('actions').addAction
       title: 'Add projects'
       type: 'Project'
@@ -1126,6 +1252,46 @@ class Tracktime.ActionView.Search extends Backbone.View
 (module?.exports = Tracktime.ActionView.Search) or @Tracktime.ActionView.Search = Tracktime.ActionView.Search
 
 
+class Tracktime.ActionView.User extends Backbone.View
+  container: '.form-control-wrapper'
+  template: JST['actions/details/user']
+  views: {}
+  events:
+    'click #send-form': 'sendForm'
+    'input textarea': 'textareaInput'
+
+  initialize: (options) ->
+    _.extend @, options
+    @render()
+
+  render: () ->
+    $(@container).html @$el.html @template @model.toJSON()
+
+    textarea = new Tracktime.Element.Textarea
+      model: @model.get 'userModel'
+      field: 'name'
+
+    $('placeholder#textarea', @$el).replaceWith textarea.$el
+    textarea.$el.textareaAutoSize().focus()
+    textarea.on 'tSubmit', @sendForm
+
+    $('placeholder#btn_close_action', @$el).replaceWith (new Tracktime.Element.ElementCloseAction
+      model: @model
+    ).$el if @model.get 'canClose'
+
+  textareaInput: (event) =>
+    window.setTimeout () =>
+      diff = $('#actions-form').outerHeight() - $('.navbar').outerHeight(true)
+      $('#actions-form').toggleClass "shadow-z-2", (diff > 10)
+      $(".details-container").toggleClass 'hidden', _.isEmpty $(event.target).val()
+    , 500
+
+  sendForm: () =>
+    @model.processAction()
+
+(module?.exports = Tracktime.ActionView.User) or @Tracktime.ActionView.User = Tracktime.ActionView.User
+
+
 class Tracktime.AdminView extends Backbone.View
   el: '#panel'
   className: ''
@@ -1222,17 +1388,41 @@ class Tracktime.AdminView.ProjectsView extends Backbone.View
 (module?.exports = Tracktime.AdminView.ProjectsView) or @Tracktime.AdminView.ProjectsView = Tracktime.AdminView.ProjectsView
 
 
-class Tracktime.AdminView.Users extends Backbone.View
+class Tracktime.AdminView.UsersView extends Backbone.View
   container: '#main'
   template: JST['admin/users']
+  tagName: 'ul'
+  className: 'list-group'
 
   initialize: () ->
+    @views = {}
     @render()
+    @listenTo @collection, "reset", @resetUsersList
+    @listenTo @collection, "add", @addUser
+    @listenTo @collection, "remove", @removeUser
 
   render: () ->
-    $(@container).html @$el.html @template()
+    $(@container).html @$el.html ''
+    @$el.before @template {title: 'Users'}
+    @resetUsersList()
 
-(module?.exports = Tracktime.AdminView.Users) or @Tracktime.AdminView.Users = Tracktime.AdminView.Users
+  resetUsersList: () ->
+    _.each @collection.where(isDeleted: false), (user) =>
+      userView =  new Tracktime.AdminView.UserView { model: user }
+      @$el.append userView.el
+      @setSubView "user-#{user.cid}", userView
+    , @
+
+  addUser: (user, collection, params) ->
+    userView = new Tracktime.AdminView.UserView { model: user }
+    $(userView.el).prependTo @$el
+    @setSubView "user-#{user.cid}", userView
+
+  removeUser: (user, args...) ->
+    userView = @getSubView "user-#{user.cid}"
+    userView.close() if userView
+
+(module?.exports = Tracktime.AdminView.UsersView) or @Tracktime.AdminView.UsersView = Tracktime.AdminView.UsersView
 
 
 class Tracktime.AppView extends Backbone.View
@@ -1768,6 +1958,93 @@ class Tracktime.ReportsView extends Backbone.View
     $(@container).html @$el.html @template {title: 'Reports HERE'}
 
 (module?.exports = Tracktime.ReportsView) or @Tracktime.ReportsView = Tracktime.ReportsView
+
+
+class Tracktime.AdminView.UserView extends Backbone.View
+  tagName: 'li'
+  className: 'list-group-item shadow-z-1'
+  template: JST['users/admin_user']
+  events:
+    'click .btn.delete': "deleteUser"
+    'click .subject': "toggleInlineEdit"
+    'click .edit.btn': "editUser"
+
+
+  initialize: ->
+    unless @model.get 'isDeleted'
+      @render()
+    @listenTo @model, "change:isDeleted", @changeIsDeleted
+    @listenTo @model, "change:name", @changeName
+    @listenTo @model, "change:isEdit", @changeIsEdit
+    @listenTo @model, "sync", @syncModel
+
+  attributes: ->
+    id: @model.cid
+
+  render: ->
+    @$el.html @template @model.toJSON()
+    $('.subject_edit', @$el)
+      .on('keydown', @fixEnter)
+      .textareaAutoSize()
+
+    textarea = new Tracktime.Element.Textarea
+      model: @model
+      className: 'subject_edit form-control hidden'
+      field: 'name'
+
+    $('placeholder#textarea', @$el).replaceWith textarea.$el
+    textarea.on 'tSubmit', @sendForm
+
+  changeIsEdit: ->
+    @$el.toggleClass 'editmode', @model.isEdit == true
+
+  syncModel: (model, options, params) ->
+    model.isEdit = false
+    model.trigger 'change:isEdit'
+    model.trigger 'change:name'
+    #todo update all elements after
+
+  changeIsDeleted: ->
+    @$el.remove() # @todo possible not need
+
+  changeName: ->
+    $('.subject', @$el).html (@model.get('name') + '').nl2br()
+    $('.name_edit', @$el).val @model.get 'name'
+
+  toggleInlineEdit: ->
+    @$el.find('.subject_edit').css 'min-height', @$el.find('.subject').height()
+    @$el.find('.subject, .subject_edit').css('border', 'apx solid blue').toggleClass 'hidden'
+    @$el.find('.subject_edit').textareaAutoSize().focus()
+
+  sendForm: =>
+    @toggleInlineEdit()
+    @model.save {},
+      ajaxSync: Tracktime.AppChannel.request 'isOnline'
+      success: (model, respond) ->
+        $.alert
+          content: 'update user'
+          timeout: 2000
+          style: 'btn-info'
+
+  editUser: ->
+    $('.scrollWrapper').animate
+      'scrollTop': @$el.offset().top - $('.scrollWrapper').offset().top + $('.scrollWrapper').scrollTop()
+    , 400, (event) =>
+      @model.isEdit = true
+      @model.trigger 'change:isEdit'
+
+  deleteUser: (event) ->
+    event.preventDefault()
+
+    @model.destroy
+      ajaxSync: Tracktime.AppChannel.request 'isOnline'
+      success: (model, respond) ->
+        $.alert
+          content: 'delete user'
+          timeout: 2000
+          style: 'btn-danger'
+
+(module?.exports = Tracktime.AdminView.UserView) or @Tracktime.AdminView.UserView = Tracktime.AdminView.UserView
 
 
 class Tracktime.UserView extends Backbone.View

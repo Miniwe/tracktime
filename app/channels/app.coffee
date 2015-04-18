@@ -58,6 +58,7 @@ _.extend Tracktime.AppChannel,
       'start':           @startApp
       'newRecord':       @newRecord
       'newProject':      @newProject
+      'newUser':         @newUser
       'addAction':       @addAction
       'serverOnline':    @serverOnline
       'serverOffline':   @serverOffline
@@ -76,6 +77,9 @@ _.extend Tracktime.AppChannel,
 
   newProject: (options) ->
     @model.get('projects').addProject(options)
+
+  newUser: (options) ->
+    @model.get('users').addUser(options)
 
   addAction: (options, params) ->
     action = @model.get('actions').addAction(options, params)

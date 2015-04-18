@@ -29306,6 +29306,16 @@ this["JST"]["actions/details/search"] = Handlebars.template({"compiler":[6,">= 2
     + "</div>";
 },"useData":true});
 
+this["JST"]["actions/details/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var helper, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, functionType="function";
+  return escapeExpression(((helpers.placeholder || (depth0 && depth0.placeholder) || helperMissing).call(depth0, "btn_close_action", {"name":"placeholder","hash":{},"data":data})))
+    + "\n"
+    + escapeExpression(((helpers.placeholder || (depth0 && depth0.placeholder) || helperMissing).call(depth0, "textarea", {"name":"placeholder","hash":{},"data":data})))
+    + "\n<div class=\"floating-label\">"
+    + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
+    + "</div>\n<span class=\"material-input\"></span>\n\n<div class=\"details-container hidden\">\n  user details\n</div>";
+},"useData":true});
+
 this["JST"]["actions/listbtn"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, lambda=this.lambda;
   return "<a class=\"btn btn-fab "
@@ -29348,8 +29358,11 @@ this["JST"]["admin/projects"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 },"useData":true});
 
 this["JST"]["admin/users"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  return "<header>\n  <h2 class=\"page-title\">Users</h2>\n</header>";
-  },"useData":true});
+  var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+  return "<header>\n  <h2 class=\"page-title\">"
+    + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
+    + "</h2>\n</header>";
+},"useData":true});
 
 this["JST"]["elements/selectday"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "<a href=\"javascript:void(0)\" class=\"btn btn-block btn-default dropdown-toggle\" data-toggle=\"dropdown\" id=\"open-cal\" data-target=\"#\" style=\"padding-left: 15px;\"><i class=\"mdi-action-event pull-left\"></i><div class=\"caption\" style=\"display: inline-block;\"><ruby>Сегодня<rt>03.01.2015</rt> </ruby></div> <span class=\"caret\"></span></a>\n<ul class=\"dropdown-menu\">\n    <li>\n        <button class=\"btn btn-default btn-block\">\n            <ruby>Позавчера\n                <rt>01.01.2015</rt>\n            </ruby>\n        </button>\n    </li>\n    <li>\n        <button class=\"btn btn-default btn-block\">\n            <ruby>Вчера\n                <rt>02.01.2015</rt>\n            </ruby>\n        </button>\n    </li>\n    <li>\n        <button class=\"btn btn-default btn-block\">\n            <ruby>Сегодня\n                <rt>03.01.2015</rt>\n            </ruby>\n        </button>\n    </li>\n    <li><a href=\"javascript:void(0)\" class=\"btn btn-default disabled\">Выбрать дату</a></li>\n</ul>";
@@ -29525,6 +29538,23 @@ this["JST"]["reports/reports"] = Handlebars.template({"compiler":[6,">= 2.0.0-be
     + "</h2>\n</header>";
 },"useData":true});
 
+this["JST"]["users/admin_user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+  return "<div class=\"row\" id=\""
+    + escapeExpression(((helper = (helper = helpers._id || (depth0 != null ? depth0._id : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"_id","hash":{},"data":data}) : helper)))
+    + "\">\n\n  <div class=\"col-icon col-md-1 col-sm-2\">\n    <a  class=\"type btn btn-fab btn-fab-mini btn-danger\" role=\"menuitem\" tabindex=\"-1\" href=\"#fat\"  data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\""
+    + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
+    + "\">\n      <i class=\"mdi-action-group-work\"></i>\n    </a>\n    <a class=\"edit btn btn-fab btn-fab-mini btn-flat pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Edit action\">\n      <i class=\"mdi-editor-mode-edit\"></i>\n    </a>\n  </div>\n\n  <div class=\"col-subject col-md-10 col-sm-9\">\n\n    "
+    + escapeExpression(((helpers.placeholder || (depth0 && depth0.placeholder) || helperMissing).call(depth0, "textarea", {"name":"placeholder","hash":{},"data":data})))
+    + "\n    <div class=\"subject\" style=\"border: none;\">"
+    + escapeExpression(((helpers.nl2br || (depth0 && depth0.nl2br) || helperMissing).call(depth0, (depth0 != null ? depth0.name : depth0), {"name":"nl2br","hash":{},"data":data})))
+    + "</div>\n\n    <p class=\"last-update\">\n        <time class=\"text-muted\" datetime=\""
+    + escapeExpression(((helper = (helper = helpers.date || (depth0 != null ? depth0.date : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"date","hash":{},"data":data}) : helper)))
+    + "\">"
+    + escapeExpression(((helpers.dateFormat || (depth0 && depth0.dateFormat) || helperMissing).call(depth0, (depth0 != null ? depth0.lastAccess : depth0), {"name":"dateFormat","hash":{},"data":data})))
+    + "</time>\n    </p>\n\n  </div>\n\n  <div class=\"col-menu col-md-1 col-sm-1\">\n    <ul class=\"actions\">\n      <li><a class=\"delete btn btn-fab btn-danger btn-fab-mini pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Delete action\">\n        <i class=\"mdi-navigation-cancel\"></i>\n      </a></li>\n    </ul>\n  </div>\n</div>";
+},"useData":true});
+
 this["JST"]["users/details"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "<header>\n  <h2 class=\"page-title\">User Details</h2>\n</header>";
   },"useData":true});
@@ -29532,6 +29562,21 @@ this["JST"]["users/details"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta
 this["JST"]["users/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "<header>\n  <h2 class=\"page-title\">User Rates</h2>\n</header>";
   },"useData":true});
+
+this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+  return "<div class=\"row\" id=\""
+    + escapeExpression(((helper = (helper = helpers._id || (depth0 != null ? depth0._id : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"_id","hash":{},"data":data}) : helper)))
+    + "\">\n\n  <div class=\"col-icon col-md-1 col-sm-2\">\n    <a  class=\"type btn btn-fab btn-fab-mini btn-danger\" role=\"menuitem\" tabindex=\"-1\" href=\"#fat\"  data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\""
+    + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
+    + "\">\n      <i class=\"mdi-action-group-work\"></i>\n    </a>\n  </div>\n\n  <div class=\"col-subject col-md-10 col-sm-9\">\n\n    <div class=\"subject\" style=\"border: none;\">"
+    + escapeExpression(((helpers.nl2br || (depth0 && depth0.nl2br) || helperMissing).call(depth0, (depth0 != null ? depth0.name : depth0), {"name":"nl2br","hash":{},"data":data})))
+    + "</div>\n\n    <p class=\"last-update\">\n        <time class=\"text-muted\" datetime=\""
+    + escapeExpression(((helper = (helper = helpers.date || (depth0 != null ? depth0.date : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"date","hash":{},"data":data}) : helper)))
+    + "\">"
+    + escapeExpression(((helpers.dateFormat || (depth0 && depth0.dateFormat) || helperMissing).call(depth0, (depth0 != null ? depth0.lastAccess : depth0), {"name":"dateFormat","hash":{},"data":data})))
+    + "</time>\n    </p>\n\n  </div>\n\n  <div class=\"col-menu col-md-1 col-sm-1\">\n  </div>\n</div>";
+},"useData":true});
 (function() {
   var Tracktime, config, development, process, production, ref, test,
     extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
@@ -29598,6 +29643,7 @@ this["JST"]["users/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1
       this.set('actions', new Tracktime.ActionsCollection());
       this.set('records', new Tracktime.RecordsCollection());
       this.set('projects', new Tracktime.ProjectsCollection());
+      this.set('users', new Tracktime.UsersCollection());
       return this.listenTo(Tracktime.AppChannel, "isOnline", this.updateApp);
     };
 
@@ -29605,7 +29651,10 @@ this["JST"]["users/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1
       this.get('records').fetch({
         ajaxSync: Tracktime.AppChannel.request('isOnline')
       });
-      return this.get('projects').fetch({
+      this.get('projects').fetch({
+        ajaxSync: Tracktime.AppChannel.request('isOnline')
+      });
+      return this.get('users').fetch({
         ajaxSync: Tracktime.AppChannel.request('isOnline')
       });
     };
@@ -30174,6 +30223,72 @@ this["JST"]["users/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.Action.Search : void 0) || (this.Tracktime.Action.Search = Tracktime.Action.Search);
 
+  Tracktime.Action.User = (function(superClass) {
+    extend(User, superClass);
+
+    function User() {
+      return User.__super__.constructor.apply(this, arguments);
+    }
+
+    User.prototype.defaults = _.extend({}, Tracktime.Action.prototype.defaults, {
+      title: 'Add user',
+      userModel: null,
+      formAction: '#',
+      btnClass: 'btn-primary',
+      navbarClass: 'navbar-material-amber',
+      icon: {
+        className: 'mdi-content-add',
+        letter: ''
+      },
+      isActive: null,
+      isVisible: true
+    });
+
+    User.prototype.initialize = function() {
+      if (!(this.get('userModel') instanceof Tracktime.User)) {
+        return this.set('userModel', new Tracktime.User());
+      }
+    };
+
+    User.prototype.processAction = function() {
+      var userModel;
+      userModel = this.get('userModel');
+      if (userModel.isValid()) {
+        if (userModel.isNew()) {
+          Tracktime.AppChannel.command('newUser', userModel.toJSON());
+          return userModel.clear().set(userModel.defaults);
+        } else {
+          return userModel.save({}, {
+            ajaxSync: Tracktime.AppChannel.request('isOnline'),
+            success: (function(_this) {
+              return function() {
+                $.alert({
+                  content: 'User: update success',
+                  timeout: 2000,
+                  style: 'btn-success'
+                });
+                return _this.destroy();
+              };
+            })(this)
+          });
+        }
+      }
+    };
+
+    User.prototype.destroy = function() {
+      var args;
+      args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+      this.get('userModel').isEdit = false;
+      this.get('userModel').trigger('change:isEdit');
+      return User.__super__.destroy.apply(this, args);
+    };
+
+    return User;
+
+  })(Tracktime.Action);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.Action.User : void 0) || (this.Tracktime.Action.User = Tracktime.Action.User);
+
   Tracktime.Project = (function(superClass) {
     extend(Project, superClass);
 
@@ -30319,6 +30434,76 @@ this["JST"]["users/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1
   })(Tracktime.Model);
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.Record : void 0) || (this.Tracktime.Record = Tracktime.Record);
+
+  Tracktime.User = (function(superClass) {
+    extend(User, superClass);
+
+    function User() {
+      return User.__super__.constructor.apply(this, arguments);
+    }
+
+    User.prototype.idAttribute = "_id";
+
+    User.prototype.collectionName = config.collection.users;
+
+    User.prototype.urlRoot = config.SERVER + '/' + 'users';
+
+    User.prototype.localStorage = new Backbone.LocalStorage('users');
+
+    User.prototype.defaults = {
+      _id: null,
+      name: '',
+      description: '',
+      lastAccess: (new Date()).toISOString(),
+      isDeleted: false
+    };
+
+    User.prototype.validation = {
+      name: {
+        required: true,
+        minLength: 4,
+        msg: 'Please enter a valid name'
+      }
+    };
+
+    User.prototype.initialize = function() {
+      this.isEdit = false;
+      this.on('change:name', this.updateLastAccess);
+      return this.on('change:isEdit', this.changeIsEdit);
+    };
+
+    User.prototype.isValid = function() {
+      return true;
+    };
+
+    User.prototype.updateLastAccess = function() {
+      return this.set('lastAccess', (new Date()).toISOString());
+    };
+
+    User.prototype.changeIsEdit = function() {
+      if (this.isEdit) {
+        return Tracktime.AppChannel.command('addAction', {
+          title: 'Edit user',
+          type: 'User',
+          canClose: true
+        }, {
+          title: 'Edit user: ' + this.get('name').substr(0, 40),
+          navbarClass: 'navbar-material-purple',
+          btnClass: 'btn-material-purple',
+          icon: {
+            className: 'mdi-editor-mode-edit'
+          },
+          userModel: this,
+          scope: 'edit:action'
+        });
+      }
+    };
+
+    return User;
+
+  })(Tracktime.Model);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.User : void 0) || (this.Tracktime.User = Tracktime.User);
 
   Tracktime.ActionsCollection = (function(superClass) {
     extend(ActionsCollection, superClass);
@@ -30516,6 +30701,64 @@ this["JST"]["users/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.RecordsCollection : void 0) || (this.Tracktime.RecordsCollection = Tracktime.RecordsCollection);
 
+  Tracktime.UsersCollection = (function(superClass) {
+    extend(UsersCollection, superClass);
+
+    function UsersCollection() {
+      return UsersCollection.__super__.constructor.apply(this, arguments);
+    }
+
+    UsersCollection.prototype.model = Tracktime.User;
+
+    UsersCollection.prototype.collectionName = config.collection.users;
+
+    UsersCollection.prototype.url = (config != null ? config.SERVER : void 0) + '/' + 'users';
+
+    UsersCollection.prototype.urlRoot = (config != null ? config.SERVER : void 0) + '/' + 'users';
+
+    UsersCollection.prototype.localStorage = new Backbone.LocalStorage('users');
+
+    UsersCollection.prototype.initialize = function() {
+      return this.fetch({
+        ajaxSync: Tracktime.AppChannel.request('isOnline')
+      });
+    };
+
+    UsersCollection.prototype.comparator = function(model) {
+      return -(new Date(model.get('date'))).getTime();
+    };
+
+    UsersCollection.prototype.addUser = function(options) {
+      var error, success;
+      _.extend(options, {
+        date: (new Date()).toISOString()
+      });
+      success = (function(_this) {
+        return function(result) {
+          return $.alert({
+            content: 'User: save success',
+            timeout: 2000,
+            style: 'btn-success'
+          });
+        };
+      })(this);
+      error = (function(_this) {
+        return function() {
+          return $.alert('User: save error');
+        };
+      })(this);
+      return this.addModel(options, {
+        success: success,
+        error: error
+      });
+    };
+
+    return UsersCollection;
+
+  })(Tracktime.Collection);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.UsersCollection : void 0) || (this.Tracktime.UsersCollection = Tracktime.UsersCollection);
+
   Tracktime.AppChannel = Backbone.Radio.channel('app');
 
   _.extend(Tracktime.AppChannel, {
@@ -30592,6 +30835,7 @@ this["JST"]["users/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1
         'start': this.startApp,
         'newRecord': this.newRecord,
         'newProject': this.newProject,
+        'newUser': this.newUser,
         'addAction': this.addAction,
         'serverOnline': this.serverOnline,
         'serverOffline': this.serverOffline,
@@ -30618,6 +30862,9 @@ this["JST"]["users/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1
     },
     newProject: function(options) {
       return this.model.get('projects').addProject(options);
+    },
+    newUser: function(options) {
+      return this.model.get('users').addUser(options);
     },
     addAction: function(options, params) {
       var action;
@@ -30667,7 +30914,17 @@ this["JST"]["users/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1
     };
 
     AdminRouter.prototype.users = function() {
-      return this.parent.view.setSubView('main', new Tracktime.AdminView.Users());
+      var newAction;
+      this.parent.view.setSubView('main', new Tracktime.AdminView.UsersView({
+        collection: this.parent.model.get('users')
+      }));
+      newAction = this.parent.model.get('actions').addAction({
+        title: 'Add users',
+        type: 'User'
+      }, {
+        scope: 'admin:users'
+      });
+      return newAction.setActive();
     };
 
     AdminRouter.prototype.projects = function() {
@@ -31325,6 +31582,69 @@ this["JST"]["users/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.ActionView.Search : void 0) || (this.Tracktime.ActionView.Search = Tracktime.ActionView.Search);
 
+  Tracktime.ActionView.User = (function(superClass) {
+    extend(User, superClass);
+
+    function User() {
+      this.sendForm = bind(this.sendForm, this);
+      this.textareaInput = bind(this.textareaInput, this);
+      return User.__super__.constructor.apply(this, arguments);
+    }
+
+    User.prototype.container = '.form-control-wrapper';
+
+    User.prototype.template = JST['actions/details/user'];
+
+    User.prototype.views = {};
+
+    User.prototype.events = {
+      'click #send-form': 'sendForm',
+      'input textarea': 'textareaInput'
+    };
+
+    User.prototype.initialize = function(options) {
+      _.extend(this, options);
+      return this.render();
+    };
+
+    User.prototype.render = function() {
+      var textarea;
+      $(this.container).html(this.$el.html(this.template(this.model.toJSON())));
+      textarea = new Tracktime.Element.Textarea({
+        model: this.model.get('userModel'),
+        field: 'name'
+      });
+      $('placeholder#textarea', this.$el).replaceWith(textarea.$el);
+      textarea.$el.textareaAutoSize().focus();
+      textarea.on('tSubmit', this.sendForm);
+      if (this.model.get('canClose')) {
+        return $('placeholder#btn_close_action', this.$el).replaceWith((new Tracktime.Element.ElementCloseAction({
+          model: this.model
+        })).$el);
+      }
+    };
+
+    User.prototype.textareaInput = function(event) {
+      return window.setTimeout((function(_this) {
+        return function() {
+          var diff;
+          diff = $('#actions-form').outerHeight() - $('.navbar').outerHeight(true);
+          $('#actions-form').toggleClass("shadow-z-2", diff > 10);
+          return $(".details-container").toggleClass('hidden', _.isEmpty($(event.target).val()));
+        };
+      })(this), 500);
+    };
+
+    User.prototype.sendForm = function() {
+      return this.model.processAction();
+    };
+
+    return User;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.ActionView.User : void 0) || (this.Tracktime.ActionView.User = Tracktime.ActionView.User);
+
   Tracktime.AdminView = (function(superClass) {
     extend(AdminView, superClass);
 
@@ -31505,30 +31825,75 @@ this["JST"]["users/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AdminView.ProjectsView : void 0) || (this.Tracktime.AdminView.ProjectsView = Tracktime.AdminView.ProjectsView);
 
-  Tracktime.AdminView.Users = (function(superClass) {
-    extend(Users, superClass);
+  Tracktime.AdminView.UsersView = (function(superClass) {
+    extend(UsersView, superClass);
 
-    function Users() {
-      return Users.__super__.constructor.apply(this, arguments);
+    function UsersView() {
+      return UsersView.__super__.constructor.apply(this, arguments);
     }
 
-    Users.prototype.container = '#main';
+    UsersView.prototype.container = '#main';
 
-    Users.prototype.template = JST['admin/users'];
+    UsersView.prototype.template = JST['admin/users'];
 
-    Users.prototype.initialize = function() {
-      return this.render();
+    UsersView.prototype.tagName = 'ul';
+
+    UsersView.prototype.className = 'list-group';
+
+    UsersView.prototype.initialize = function() {
+      this.views = {};
+      this.render();
+      this.listenTo(this.collection, "reset", this.resetUsersList);
+      this.listenTo(this.collection, "add", this.addUser);
+      return this.listenTo(this.collection, "remove", this.removeUser);
     };
 
-    Users.prototype.render = function() {
-      return $(this.container).html(this.$el.html(this.template()));
+    UsersView.prototype.render = function() {
+      $(this.container).html(this.$el.html(''));
+      this.$el.before(this.template({
+        title: 'Users'
+      }));
+      return this.resetUsersList();
     };
 
-    return Users;
+    UsersView.prototype.resetUsersList = function() {
+      return _.each(this.collection.where({
+        isDeleted: false
+      }), (function(_this) {
+        return function(user) {
+          var userView;
+          userView = new Tracktime.AdminView.UserView({
+            model: user
+          });
+          _this.$el.append(userView.el);
+          return _this.setSubView("user-" + user.cid, userView);
+        };
+      })(this), this);
+    };
+
+    UsersView.prototype.addUser = function(user, collection, params) {
+      var userView;
+      userView = new Tracktime.AdminView.UserView({
+        model: user
+      });
+      $(userView.el).prependTo(this.$el);
+      return this.setSubView("user-" + user.cid, userView);
+    };
+
+    UsersView.prototype.removeUser = function() {
+      var args, user, userView;
+      user = arguments[0], args = 2 <= arguments.length ? slice.call(arguments, 1) : [];
+      userView = this.getSubView("user-" + user.cid);
+      if (userView) {
+        return userView.close();
+      }
+    };
+
+    return UsersView;
 
   })(Backbone.View);
 
-  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AdminView.Users : void 0) || (this.Tracktime.AdminView.Users = Tracktime.AdminView.Users);
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AdminView.UsersView : void 0) || (this.Tracktime.AdminView.UsersView = Tracktime.AdminView.UsersView);
 
   Tracktime.AppView = (function(superClass) {
     extend(AppView, superClass);
@@ -32414,6 +32779,125 @@ this["JST"]["users/rates"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1
   })(Backbone.View);
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.ReportsView : void 0) || (this.Tracktime.ReportsView = Tracktime.ReportsView);
+
+  Tracktime.AdminView.UserView = (function(superClass) {
+    extend(UserView, superClass);
+
+    function UserView() {
+      this.sendForm = bind(this.sendForm, this);
+      return UserView.__super__.constructor.apply(this, arguments);
+    }
+
+    UserView.prototype.tagName = 'li';
+
+    UserView.prototype.className = 'list-group-item shadow-z-1';
+
+    UserView.prototype.template = JST['users/admin_user'];
+
+    UserView.prototype.events = {
+      'click .btn.delete': "deleteUser",
+      'click .subject': "toggleInlineEdit",
+      'click .edit.btn': "editUser"
+    };
+
+    UserView.prototype.initialize = function() {
+      if (!this.model.get('isDeleted')) {
+        this.render();
+      }
+      this.listenTo(this.model, "change:isDeleted", this.changeIsDeleted);
+      this.listenTo(this.model, "change:name", this.changeName);
+      this.listenTo(this.model, "change:isEdit", this.changeIsEdit);
+      return this.listenTo(this.model, "sync", this.syncModel);
+    };
+
+    UserView.prototype.attributes = function() {
+      return {
+        id: this.model.cid
+      };
+    };
+
+    UserView.prototype.render = function() {
+      var textarea;
+      this.$el.html(this.template(this.model.toJSON()));
+      $('.subject_edit', this.$el).on('keydown', this.fixEnter).textareaAutoSize();
+      textarea = new Tracktime.Element.Textarea({
+        model: this.model,
+        className: 'subject_edit form-control hidden',
+        field: 'name'
+      });
+      $('placeholder#textarea', this.$el).replaceWith(textarea.$el);
+      return textarea.on('tSubmit', this.sendForm);
+    };
+
+    UserView.prototype.changeIsEdit = function() {
+      return this.$el.toggleClass('editmode', this.model.isEdit === true);
+    };
+
+    UserView.prototype.syncModel = function(model, options, params) {
+      model.isEdit = false;
+      model.trigger('change:isEdit');
+      return model.trigger('change:name');
+    };
+
+    UserView.prototype.changeIsDeleted = function() {
+      return this.$el.remove();
+    };
+
+    UserView.prototype.changeName = function() {
+      $('.subject', this.$el).html((this.model.get('name') + '').nl2br());
+      return $('.name_edit', this.$el).val(this.model.get('name'));
+    };
+
+    UserView.prototype.toggleInlineEdit = function() {
+      this.$el.find('.subject_edit').css('min-height', this.$el.find('.subject').height());
+      this.$el.find('.subject, .subject_edit').css('border', 'apx solid blue').toggleClass('hidden');
+      return this.$el.find('.subject_edit').textareaAutoSize().focus();
+    };
+
+    UserView.prototype.sendForm = function() {
+      this.toggleInlineEdit();
+      return this.model.save({}, {
+        ajaxSync: Tracktime.AppChannel.request('isOnline'),
+        success: function(model, respond) {
+          return $.alert({
+            content: 'update user',
+            timeout: 2000,
+            style: 'btn-info'
+          });
+        }
+      });
+    };
+
+    UserView.prototype.editUser = function() {
+      return $('.scrollWrapper').animate({
+        'scrollTop': this.$el.offset().top - $('.scrollWrapper').offset().top + $('.scrollWrapper').scrollTop()
+      }, 400, (function(_this) {
+        return function(event) {
+          _this.model.isEdit = true;
+          return _this.model.trigger('change:isEdit');
+        };
+      })(this));
+    };
+
+    UserView.prototype.deleteUser = function(event) {
+      event.preventDefault();
+      return this.model.destroy({
+        ajaxSync: Tracktime.AppChannel.request('isOnline'),
+        success: function(model, respond) {
+          return $.alert({
+            content: 'delete user',
+            timeout: 2000,
+            style: 'btn-danger'
+          });
+        }
+      });
+    };
+
+    return UserView;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AdminView.UserView : void 0) || (this.Tracktime.AdminView.UserView = Tracktime.AdminView.UserView);
 
   Tracktime.UserView = (function(superClass) {
     extend(UserView, superClass);

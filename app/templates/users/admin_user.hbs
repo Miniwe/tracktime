@@ -1,0 +1,30 @@
+<div class="row" id="{{_id}}">
+
+  <div class="col-icon col-md-1 col-sm-2">
+    <a  class="type btn btn-fab btn-fab-mini btn-danger" role="menuitem" tabindex="-1" href="#fat"  data-toggle="tooltip" data-placement="right" title="" data-original-title="{{title}}">
+      <i class="mdi-action-group-work"></i>
+    </a>
+    <a class="edit btn btn-fab btn-fab-mini btn-flat pull-right" href="javascript:void(0)" data-toggle="tooltip" data-placement="left" title="" data-original-title="Edit action">
+      <i class="mdi-editor-mode-edit"></i>
+    </a>
+  </div>
+
+  <div class="col-subject col-md-10 col-sm-9">
+
+    {{placeholder 'textarea'}}
+    <div class="subject" style="border: none;">{{nl2br name}}</div>
+
+    <p class="last-update">
+        <time class="text-muted" datetime="{{date}}">{{dateFormat lastAccess}}</time>
+    </p>
+
+  </div>
+
+  <div class="col-menu col-md-1 col-sm-1">
+    <ul class="actions">
+      <li><a class="delete btn btn-fab btn-danger btn-fab-mini pull-right" href="javascript:void(0)" data-toggle="tooltip" data-placement="left" title="" data-original-title="Delete action">
+        <i class="mdi-navigation-cancel"></i>
+      </a></li>
+    </ul>
+  </div>
+</div>
