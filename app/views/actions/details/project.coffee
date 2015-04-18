@@ -21,6 +21,10 @@ class Tracktime.ActionView.Project extends Backbone.View
     textarea.$el.textareaAutoSize().focus()
     textarea.on 'tSubmit', @sendForm
 
+    $('placeholder#btn_close_action', @$el).replaceWith (new Tracktime.Element.ElementCloseAction
+      model: @model
+    ).$el if @model.get 'canClose'
+
   textareaInput: (event) =>
     window.setTimeout () =>
       diff = $('#actions-form').outerHeight() - $('.navbar').outerHeight(true)

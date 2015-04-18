@@ -1,6 +1,6 @@
 class Tracktime.UserView extends Backbone.View
   container: '#main'
-  template: JST['user/user']
+  template: JST['users/user']
 
   initialize: () ->
     @render()

@@ -1,8 +1,8 @@
 class Tracktime.Record extends Tracktime.Model
   idAttribute: "_id"
-  urlRoot: config.SERVER + '/records'
-  localStorage: new Backbone.LocalStorage (config.collection.records)
-
+  collectionName: config.collection.records
+  urlRoot: config.SERVER + '/' + 'records'
+  localStorage: new Backbone.LocalStorage 'records'
 
   defaults:
     _id: null
@@ -21,7 +21,7 @@ class Tracktime.Record extends Tracktime.Model
       minLength: 4
       msg: 'Please enter a valid subject'
 
-  initialize: (options, params, any) ->
+  initialize: ->
     @isEdit = false
     @on 'change:subject change:recordTime change:recordDate change:project', @updateLastAccess
     @on 'change:isEdit', @changeIsEdit
@@ -29,6 +29,10 @@ class Tracktime.Record extends Tracktime.Model
   isValid: ->
     # @todo add good validation
     true
+
+  updateLastAccess: () ->
+    @set 'lastAccess', (new Date()).toISOString()
+
 
   changeIsEdit: ->
     if @isEdit
@@ -40,10 +44,6 @@ class Tracktime.Record extends Tracktime.Model
           className: 'mdi-editor-mode-edit'
         recordModel: @
         scope: 'edit:action'
-
-
-  updateLastAccess: () ->
-    @set 'lastAccess', (new Date()).toISOString()
 
 
 (module?.exports = Tracktime.Record) or @Tracktime.Record = Tracktime.Record

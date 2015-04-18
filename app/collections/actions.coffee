@@ -1,11 +1,12 @@
 class Tracktime.ActionsCollection extends Backbone.Collection
   model: Tracktime.Action
+  collectionName: config.collection.actions
+  url: '/' + 'actions'
+  localStorage: new Backbone.LocalStorage 'actions'
   defaultActions: [
     { title: 'Add Record', type: 'Record' }
     { title: 'Search', type: 'Search' }
   ]
-  url: '/actions'
-  localStorage: new Backbone.LocalStorage ('records-backbone')
   active: null
 
   initialize: ->
@@ -20,8 +21,7 @@ class Tracktime.ActionsCollection extends Backbone.Collection
       return actionModel
 
   setDefaultActive: ->
-
-    @at(@models.length - 1).setActive() unless @find isActive: true
+    @at(0).setActive() unless @find isActive: true
 
   setActive: (active) ->
     @active?.set 'isActive', false
@@ -29,8 +29,7 @@ class Tracktime.ActionsCollection extends Backbone.Collection
     @active = active
     @trigger 'change:active', @active
 
-  getActive: ->
-    @active
+  getActive: -> @active
 
   getActions: ->
     _.filter @models, (model) -> model.get('isVisible')

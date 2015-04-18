@@ -1,5 +1,6 @@
 class Tracktime.RecordsView extends Backbone.View
   container: '#main'
+  template: JST['records/records']
   tagName: 'ul'
   className: 'list-group'
 
@@ -11,7 +12,8 @@ class Tracktime.RecordsView extends Backbone.View
     @listenTo @collection, "remove", @removeRecord
 
   render: () ->
-    $(@container).html @$el.html('')
+    $(@container).html @$el.html ''
+    @$el.before @template {title: 'Records'}
     @resetRecordsList()
 
   resetRecordsList: () ->

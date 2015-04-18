@@ -1,6 +1,6 @@
 class Tracktime.UserView.Rates extends Backbone.View
   container: '#main'
-  template: JST['user/rates']
+  template: JST['users/rates']
 
   initialize: () ->
     @render()

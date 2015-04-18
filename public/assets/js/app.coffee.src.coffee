@@ -21,7 +21,7 @@ development =
     actions: 'actions'
 
 
-switch window.process.env?.NODE_ENV
+switch process.env?.NODE_ENV
   when 'production'
     config = production
   when 'test'
@@ -314,29 +314,40 @@ class Tracktime.Action.Project extends Tracktime.Action
     title: 'Add project'
     projectModel: null
     formAction: '#'
-    btnClass: 'btn-danger'
-    navbarClass: 'navbar-material-indigo'
+    btnClass: 'btn-primary'
+    navbarClass: 'navbar-material-amber'
     icon:
-      className: 'mdi-editor-mode-edit'
+      className: 'mdi-content-add'
       letter: ''
     isActive: null
     isVisible: true
 
-  initialize: (options = {}) ->
-    @set options
-    if options.projectModel instanceof Tracktime.Project
-      @set 'projectModel', new Tracktime.Project options.projectModel.toJSON
-    else
-      @set 'projectModel', new Tracktime.Project()
+  initialize: () ->
+    @set 'projectModel', new Tracktime.Project() unless @get('projectModel') instanceof Tracktime.Project
 
   processAction: () ->
-    projectModel = @get('projectModel')
+    projectModel = @get 'projectModel'
     if projectModel.isValid()
-      Tracktime.AppChannel.command 'newProject', _.extend {project: 0}, projectModel.toJSON()
-      projectModel.clear().set(projectModel.defaults)
+      if projectModel.isNew()
+        Tracktime.AppChannel.command 'newProject', projectModel.toJSON()
+        projectModel.clear().set(projectModel.defaults)
+      else
+        projectModel.save {},
+          ajaxSync: Tracktime.AppChannel.request 'isOnline'
+          success: () =>
+            $.alert
+              content: 'Project: update success'
+              timeout: 2000
+              style: 'btn-success'
+            @destroy()
+
+  destroy: (args...) ->
+    @get('projectModel').isEdit = false
+    @get('projectModel').trigger 'change:isEdit'
+    super args...
+
 
 (module?.exports = Tracktime.Action.Project) or @Tracktime.Action.Project = Tracktime.Action.Project
-
 
 class Tracktime.Action.Record extends Tracktime.Action
 
@@ -407,8 +418,9 @@ class Tracktime.Action.Search extends Tracktime.Action
 
 class Tracktime.Project extends Tracktime.Model
   idAttribute: "_id"
-  urlRoot: config.SERVER + '/projects'
-  localStorage: new Backbone.LocalStorage (config.collection.projects)
+  collectionName: config.collection.projects
+  urlRoot: config.SERVER + '/' + 'projects'
+  localStorage: new Backbone.LocalStorage 'projects'
 
   defaults:
     _id: null
@@ -424,23 +436,37 @@ class Tracktime.Project extends Tracktime.Model
       msg: 'Please enter a valid name'
 
 
-  initialize: (options, params, any) ->
-    @listenTo @, 'change:name', @updateLastAccess
+  initialize: ->
+    @isEdit = false
+    @on 'change:name', @updateLastAccess
+    @on 'change:isEdit', @changeIsEdit
 
   isValid: () ->
     # @todo add good validation
     true
+
   updateLastAccess: () ->
     @set 'lastAccess', (new Date()).toISOString()
+
+  changeIsEdit: ->
+    if @isEdit
+      Tracktime.AppChannel.command 'addAction', {title: 'Edit project', type: 'Project', canClose: true},
+        title: 'Edit project: ' + @get('name').substr(0, 40)
+        navbarClass: 'navbar-material-purple'
+        btnClass: 'btn-material-purple'
+        icon:
+          className: 'mdi-editor-mode-edit'
+        projectModel: @
+        scope: 'edit:action'
 
 
 (module?.exports = Tracktime.Project) or @Tracktime.Project = Tracktime.Project
 
 class Tracktime.Record extends Tracktime.Model
   idAttribute: "_id"
-  urlRoot: config.SERVER + '/records'
-  localStorage: new Backbone.LocalStorage (config.collection.records)
-
+  collectionName: config.collection.records
+  urlRoot: config.SERVER + '/' + 'records'
+  localStorage: new Backbone.LocalStorage 'records'
 
   defaults:
     _id: null
@@ -459,7 +485,7 @@ class Tracktime.Record extends Tracktime.Model
       minLength: 4
       msg: 'Please enter a valid subject'
 
-  initialize: (options, params, any) ->
+  initialize: ->
     @isEdit = false
     @on 'change:subject change:recordTime change:recordDate change:project', @updateLastAccess
     @on 'change:isEdit', @changeIsEdit
@@ -467,6 +493,10 @@ class Tracktime.Record extends Tracktime.Model
   isValid: ->
     # @todo add good validation
     true
+
+  updateLastAccess: () ->
+    @set 'lastAccess', (new Date()).toISOString()
+
 
   changeIsEdit: ->
     if @isEdit
@@ -480,20 +510,17 @@ class Tracktime.Record extends Tracktime.Model
         scope: 'edit:action'
 
 
-  updateLastAccess: () ->
-    @set 'lastAccess', (new Date()).toISOString()
-
-
 (module?.exports = Tracktime.Record) or @Tracktime.Record = Tracktime.Record
 
 class Tracktime.ActionsCollection extends Backbone.Collection
   model: Tracktime.Action
+  collectionName: config.collection.actions
+  url: '/' + 'actions'
+  localStorage: new Backbone.LocalStorage 'actions'
   defaultActions: [
     { title: 'Add Record', type: 'Record' }
     { title: 'Search', type: 'Search' }
   ]
-  url: '/actions'
-  localStorage: new Backbone.LocalStorage ('records-backbone')
   active: null
 
   initialize: ->
@@ -508,8 +535,7 @@ class Tracktime.ActionsCollection extends Backbone.Collection
       return actionModel
 
   setDefaultActive: ->
-
-    @at(@models.length - 1).setActive() unless @find isActive: true
+    @at(0).setActive() unless @find isActive: true
 
   setActive: (active) ->
     @active?.set 'isActive', false
@@ -517,8 +543,7 @@ class Tracktime.ActionsCollection extends Backbone.Collection
     @active = active
     @trigger 'change:active', @active
 
-  getActive: ->
-    @active
+  getActive: -> @active
 
   getActions: ->
     _.filter @models, (model) -> model.get('isVisible')
@@ -527,10 +552,10 @@ class Tracktime.ActionsCollection extends Backbone.Collection
 
 class Tracktime.ProjectsCollection extends Tracktime.Collection
   model: Tracktime.Project
-  url: config?.SERVER + '/projects'
-  urlRoot: config?.SERVER + '/projects'
   collectionName: config.collection.projects
-  localStorage: new Backbone.LocalStorage @collectionName
+  url: config?.SERVER + '/' + 'projects'
+  urlRoot: config?.SERVER + '/' + 'projects'
+  localStorage: new Backbone.LocalStorage 'projects'
 
   initialize: () ->
     @fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
@@ -556,10 +581,10 @@ class Tracktime.ProjectsCollection extends Tracktime.Collection
 
 class Tracktime.RecordsCollection extends Tracktime.Collection
   model: Tracktime.Record
-  url: config?.SERVER + '/records'
-  urlRoot: config?.SERVER + '/records'
   collectionName: config.collection.records
-  localStorage: new Backbone.LocalStorage @collectionName
+  url: config?.SERVER + '/' + 'records'
+  urlRoot: config?.SERVER + '/' + 'records'
+  localStorage: new Backbone.LocalStorage 'records'
 
   initialize: () ->
     @fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
@@ -962,20 +987,6 @@ class Tracktime.ActionView.ActiveBtn extends Backbone.View
 (module?.exports = Tracktime.ActionView.ActiveBtn) or @Tracktime.ActionView.ActiveBtn = Tracktime.ActionView.ActiveBtn
 
 
-class Tracktime.ActionView.DetailsBtn extends Backbone.View
-  el: '#detailsNew'
-  template: JST['actions/detailsbtn']
-
-  initialize: () ->
-    @$el.popover
-      template: @template @model.toJSON()
-
-  remove: () ->
-    @$el.popover 'destroy'
-
-(module?.exports = Tracktime.ActionView.DetailsBtn) or @Tracktime.ActionView.DetailsBtn = Tracktime.ActionView.DetailsBtn
-
-
 class Tracktime.ActionView.ListBtn extends Backbone.View
   tagName: 'li'
   template: JST['actions/listbtn']
@@ -1031,6 +1042,10 @@ class Tracktime.ActionView.Project extends Backbone.View
     $('placeholder#textarea', @$el).replaceWith textarea.$el
     textarea.$el.textareaAutoSize().focus()
     textarea.on 'tSubmit', @sendForm
+
+    $('placeholder#btn_close_action', @$el).replaceWith (new Tracktime.Element.ElementCloseAction
+      model: @model
+    ).$el if @model.get 'canClose'
 
   textareaInput: (event) =>
     window.setTimeout () =>
@@ -1173,6 +1188,7 @@ class Tracktime.AdminView.Dashboard extends Backbone.View
 class Tracktime.AdminView.ProjectsView extends Backbone.View
   container: '#main'
   template: JST['admin/projects']
+  tagName: 'ul'
   className: 'list-group'
 
   initialize: () ->
@@ -1497,46 +1513,58 @@ class Tracktime.AdminView.ProjectView extends Backbone.View
   template: JST['projects/admin_project']
   events:
     'click .btn.delete': "deleteProject"
-    'click .subject': "toggleEdit"
+    'click .subject': "toggleInlineEdit"
+    'click .edit.btn': "editProject"
 
 
-  initialize: () ->
+  initialize: ->
     unless @model.get 'isDeleted'
       @render()
     @listenTo @model, "change:isDeleted", @changeIsDeleted
-    @listenTo @model, "change:subject", @changeSubject
+    @listenTo @model, "change:name", @changeName
+    @listenTo @model, "change:isEdit", @changeIsEdit
+    @listenTo @model, "sync", @syncModel
 
-  attributes: () ->
+  attributes: ->
     id: @model.cid
 
-  render: () ->
+  render: ->
     @$el.html @template @model.toJSON()
     $('.subject_edit', @$el)
       .on('keydown', @fixEnter)
       .textareaAutoSize()
 
-  changeIsDeleted: () ->
+    textarea = new Tracktime.Element.Textarea
+      model: @model
+      className: 'subject_edit form-control hidden'
+      field: 'name'
+
+    $('placeholder#textarea', @$el).replaceWith textarea.$el
+    textarea.on 'tSubmit', @sendForm
+
+  changeIsEdit: ->
+    @$el.toggleClass 'editmode', @model.isEdit == true
+
+  syncModel: (model, options, params) ->
+    model.isEdit = false
+    model.trigger 'change:isEdit'
+    model.trigger 'change:name'
+    #todo update all elements after
+
+  changeIsDeleted: ->
     @$el.remove() # @todo possible not need
 
-  changeSubject: () ->
-    $('.subject', @$el).html (@model.get('subject') + '').nl2br()
-    $('.subject_edit', @$el).val @model.get 'subject'
+  changeName: ->
+    $('.subject', @$el).html (@model.get('name') + '').nl2br()
+    $('.name_edit', @$el).val @model.get 'name'
 
-  fixEnter: (event) =>
-    if event.keyCode == 13
-      if event.shiftKey
-        val = $(event.target).val()
-        unless _.isEmpty val
-          @model.set 'subject', val
-          @saveProject()
-          @toggleEdit()
-        event.preventDefault()
-
-  toggleEdit: (event) ->
+  toggleInlineEdit: ->
     @$el.find('.subject_edit').css 'min-height', @$el.find('.subject').height()
     @$el.find('.subject, .subject_edit').css('border', 'apx solid blue').toggleClass 'hidden'
+    @$el.find('.subject_edit').textareaAutoSize().focus()
 
-  saveProject: () ->
+  sendForm: =>
+    @toggleInlineEdit()
     @model.save {},
       ajaxSync: Tracktime.AppChannel.request 'isOnline'
       success: (model, respond) ->
@@ -1544,6 +1572,13 @@ class Tracktime.AdminView.ProjectView extends Backbone.View
           content: 'update project'
           timeout: 2000
           style: 'btn-info'
+
+  editProject: ->
+    $('.scrollWrapper').animate
+      'scrollTop': @$el.offset().top - $('.scrollWrapper').offset().top + $('.scrollWrapper').scrollTop()
+    , 400, (event) =>
+      @model.isEdit = true
+      @model.trigger 'change:isEdit'
 
   deleteProject: (event) ->
     event.preventDefault()
@@ -1567,7 +1602,7 @@ class Tracktime.ProjectView extends Backbone.View
     @render()
 
   render: () ->
-    $(@container).html @$el.html @template {title: 'Project Details HERE'}
+    $(@container).html @$el.html @template {title: 'Project Details View HERE'}
 
 (module?.exports = Tracktime.ProjectView) or @Tracktime.ProjectView = Tracktime.ProjectView
 
@@ -1580,7 +1615,7 @@ class Tracktime.ProjectsView extends Backbone.View
     @render()
 
   render: () ->
-    $(@container).html @$el.html @template {title: 'Projects HERE'}
+    $(@container).html @$el.html @template {title: 'Projects HERE - Only view'}
 
 (module?.exports = Tracktime.ProjectsView) or @Tracktime.ProjectsView = Tracktime.ProjectsView
 
@@ -1674,6 +1709,7 @@ class Tracktime.RecordView extends Backbone.View
 
 class Tracktime.RecordsView extends Backbone.View
   container: '#main'
+  template: JST['records/records']
   tagName: 'ul'
   className: 'list-group'
 
@@ -1685,7 +1721,8 @@ class Tracktime.RecordsView extends Backbone.View
     @listenTo @collection, "remove", @removeRecord
 
   render: () ->
-    $(@container).html @$el.html('')
+    $(@container).html @$el.html ''
+    @$el.before @template {title: 'Records'}
     @resetRecordsList()
 
   resetRecordsList: () ->
@@ -1735,7 +1772,7 @@ class Tracktime.ReportsView extends Backbone.View
 
 class Tracktime.UserView extends Backbone.View
   container: '#main'
-  template: JST['user/user']
+  template: JST['users/user']
 
   initialize: () ->
     @render()
@@ -1748,7 +1785,7 @@ class Tracktime.UserView extends Backbone.View
 
 class Tracktime.UserView.Details extends Backbone.View
   container: '#main'
-  template: JST['user/details']
+  template: JST['users/details']
 
   initialize: () ->
     @render()
@@ -1761,7 +1798,7 @@ class Tracktime.UserView.Details extends Backbone.View
 
 class Tracktime.UserView.Rates extends Backbone.View
   container: '#main'
-  template: JST['user/rates']
+  template: JST['users/rates']
 
   initialize: () ->
     @render()

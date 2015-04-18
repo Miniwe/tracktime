@@ -34,7 +34,7 @@
     }
   };
 
-  switch ((ref = window.process.env) != null ? ref.NODE_ENV : void 0) {
+  switch ((ref = process.env) != null ? ref.NODE_ENV : void 0) {
     case 'production':
       config = production;
       break;
@@ -476,24 +476,18 @@
       title: 'Add project',
       projectModel: null,
       formAction: '#',
-      btnClass: 'btn-danger',
-      navbarClass: 'navbar-material-indigo',
+      btnClass: 'btn-primary',
+      navbarClass: 'navbar-material-amber',
       icon: {
-        className: 'mdi-editor-mode-edit',
+        className: 'mdi-content-add',
         letter: ''
       },
       isActive: null,
       isVisible: true
     });
 
-    Project.prototype.initialize = function(options) {
-      if (options == null) {
-        options = {};
-      }
-      this.set(options);
-      if (options.projectModel instanceof Tracktime.Project) {
-        return this.set('projectModel', new Tracktime.Project(options.projectModel.toJSON));
-      } else {
+    Project.prototype.initialize = function() {
+      if (!(this.get('projectModel') instanceof Tracktime.Project)) {
         return this.set('projectModel', new Tracktime.Project());
       }
     };
@@ -502,11 +496,33 @@
       var projectModel;
       projectModel = this.get('projectModel');
       if (projectModel.isValid()) {
-        Tracktime.AppChannel.command('newProject', _.extend({
-          project: 0
-        }, projectModel.toJSON()));
-        return projectModel.clear().set(projectModel.defaults);
+        if (projectModel.isNew()) {
+          Tracktime.AppChannel.command('newProject', projectModel.toJSON());
+          return projectModel.clear().set(projectModel.defaults);
+        } else {
+          return projectModel.save({}, {
+            ajaxSync: Tracktime.AppChannel.request('isOnline'),
+            success: (function(_this) {
+              return function() {
+                $.alert({
+                  content: 'Project: update success',
+                  timeout: 2000,
+                  style: 'btn-success'
+                });
+                return _this.destroy();
+              };
+            })(this)
+          });
+        }
       }
+    };
+
+    Project.prototype.destroy = function() {
+      var args;
+      args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+      this.get('projectModel').isEdit = false;
+      this.get('projectModel').trigger('change:isEdit');
+      return Project.__super__.destroy.apply(this, args);
     };
 
     return Project;
@@ -633,9 +649,11 @@
 
     Project.prototype.idAttribute = "_id";
 
-    Project.prototype.urlRoot = config.SERVER + '/projects';
+    Project.prototype.collectionName = config.collection.projects;
 
-    Project.prototype.localStorage = new Backbone.LocalStorage(config.collection.projects);
+    Project.prototype.urlRoot = config.SERVER + '/' + 'projects';
+
+    Project.prototype.localStorage = new Backbone.LocalStorage('projects');
 
     Project.prototype.defaults = {
       _id: null,
@@ -653,8 +671,10 @@
       }
     };
 
-    Project.prototype.initialize = function(options, params, any) {
-      return this.listenTo(this, 'change:name', this.updateLastAccess);
+    Project.prototype.initialize = function() {
+      this.isEdit = false;
+      this.on('change:name', this.updateLastAccess);
+      return this.on('change:isEdit', this.changeIsEdit);
     };
 
     Project.prototype.isValid = function() {
@@ -663,6 +683,25 @@
 
     Project.prototype.updateLastAccess = function() {
       return this.set('lastAccess', (new Date()).toISOString());
+    };
+
+    Project.prototype.changeIsEdit = function() {
+      if (this.isEdit) {
+        return Tracktime.AppChannel.command('addAction', {
+          title: 'Edit project',
+          type: 'Project',
+          canClose: true
+        }, {
+          title: 'Edit project: ' + this.get('name').substr(0, 40),
+          navbarClass: 'navbar-material-purple',
+          btnClass: 'btn-material-purple',
+          icon: {
+            className: 'mdi-editor-mode-edit'
+          },
+          projectModel: this,
+          scope: 'edit:action'
+        });
+      }
     };
 
     return Project;
@@ -680,9 +719,11 @@
 
     Record.prototype.idAttribute = "_id";
 
-    Record.prototype.urlRoot = config.SERVER + '/records';
+    Record.prototype.collectionName = config.collection.records;
 
-    Record.prototype.localStorage = new Backbone.LocalStorage(config.collection.records);
+    Record.prototype.urlRoot = config.SERVER + '/' + 'records';
+
+    Record.prototype.localStorage = new Backbone.LocalStorage('records');
 
     Record.prototype.defaults = {
       _id: null,
@@ -706,7 +747,7 @@
       }
     };
 
-    Record.prototype.initialize = function(options, params, any) {
+    Record.prototype.initialize = function() {
       this.isEdit = false;
       this.on('change:subject change:recordTime change:recordDate change:project', this.updateLastAccess);
       return this.on('change:isEdit', this.changeIsEdit);
@@ -714,6 +755,10 @@
 
     Record.prototype.isValid = function() {
       return true;
+    };
+
+    Record.prototype.updateLastAccess = function() {
+      return this.set('lastAccess', (new Date()).toISOString());
     };
 
     Record.prototype.changeIsEdit = function() {
@@ -735,10 +780,6 @@
       }
     };
 
-    Record.prototype.updateLastAccess = function() {
-      return this.set('lastAccess', (new Date()).toISOString());
-    };
-
     return Record;
 
   })(Tracktime.Model);
@@ -755,6 +796,12 @@
 
     ActionsCollection.prototype.model = Tracktime.Action;
 
+    ActionsCollection.prototype.collectionName = config.collection.actions;
+
+    ActionsCollection.prototype.url = '/' + 'actions';
+
+    ActionsCollection.prototype.localStorage = new Backbone.LocalStorage('actions');
+
     ActionsCollection.prototype.defaultActions = [
       {
         title: 'Add Record',
@@ -764,10 +811,6 @@
         type: 'Search'
       }
     ];
-
-    ActionsCollection.prototype.url = '/actions';
-
-    ActionsCollection.prototype.localStorage = new Backbone.LocalStorage('records-backbone');
 
     ActionsCollection.prototype.active = null;
 
@@ -793,7 +836,7 @@
       if (!this.find({
         isActive: true
       })) {
-        return this.at(this.models.length - 1).setActive();
+        return this.at(0).setActive();
       }
     };
 
@@ -832,13 +875,13 @@
 
     ProjectsCollection.prototype.model = Tracktime.Project;
 
-    ProjectsCollection.prototype.url = (config != null ? config.SERVER : void 0) + '/projects';
-
-    ProjectsCollection.prototype.urlRoot = (config != null ? config.SERVER : void 0) + '/projects';
-
     ProjectsCollection.prototype.collectionName = config.collection.projects;
 
-    ProjectsCollection.prototype.localStorage = new Backbone.LocalStorage(ProjectsCollection.collectionName);
+    ProjectsCollection.prototype.url = (config != null ? config.SERVER : void 0) + '/' + 'projects';
+
+    ProjectsCollection.prototype.urlRoot = (config != null ? config.SERVER : void 0) + '/' + 'projects';
+
+    ProjectsCollection.prototype.localStorage = new Backbone.LocalStorage('projects');
 
     ProjectsCollection.prototype.initialize = function() {
       return this.fetch({
@@ -890,13 +933,13 @@
 
     RecordsCollection.prototype.model = Tracktime.Record;
 
-    RecordsCollection.prototype.url = (config != null ? config.SERVER : void 0) + '/records';
-
-    RecordsCollection.prototype.urlRoot = (config != null ? config.SERVER : void 0) + '/records';
-
     RecordsCollection.prototype.collectionName = config.collection.records;
 
-    RecordsCollection.prototype.localStorage = new Backbone.LocalStorage(RecordsCollection.collectionName);
+    RecordsCollection.prototype.url = (config != null ? config.SERVER : void 0) + '/' + 'records';
+
+    RecordsCollection.prototype.urlRoot = (config != null ? config.SERVER : void 0) + '/' + 'records';
+
+    RecordsCollection.prototype.localStorage = new Backbone.LocalStorage('records');
 
     RecordsCollection.prototype.initialize = function() {
       return this.fetch({
@@ -1533,33 +1576,6 @@
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.ActionView.ActiveBtn : void 0) || (this.Tracktime.ActionView.ActiveBtn = Tracktime.ActionView.ActiveBtn);
 
-  Tracktime.ActionView.DetailsBtn = (function(superClass) {
-    extend(DetailsBtn, superClass);
-
-    function DetailsBtn() {
-      return DetailsBtn.__super__.constructor.apply(this, arguments);
-    }
-
-    DetailsBtn.prototype.el = '#detailsNew';
-
-    DetailsBtn.prototype.template = JST['actions/detailsbtn'];
-
-    DetailsBtn.prototype.initialize = function() {
-      return this.$el.popover({
-        template: this.template(this.model.toJSON())
-      });
-    };
-
-    DetailsBtn.prototype.remove = function() {
-      return this.$el.popover('destroy');
-    };
-
-    return DetailsBtn;
-
-  })(Backbone.View);
-
-  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.ActionView.DetailsBtn : void 0) || (this.Tracktime.ActionView.DetailsBtn = Tracktime.ActionView.DetailsBtn);
-
   Tracktime.ActionView.ListBtn = (function(superClass) {
     extend(ListBtn, superClass);
 
@@ -1645,7 +1661,12 @@
       });
       $('placeholder#textarea', this.$el).replaceWith(textarea.$el);
       textarea.$el.textareaAutoSize().focus();
-      return textarea.on('tSubmit', this.sendForm);
+      textarea.on('tSubmit', this.sendForm);
+      if (this.model.get('canClose')) {
+        return $('placeholder#btn_close_action', this.$el).replaceWith((new Tracktime.Element.ElementCloseAction({
+          model: this.model
+        })).$el);
+      }
     };
 
     Project.prototype.textareaInput = function(event) {
@@ -1890,6 +1911,8 @@
     ProjectsView.prototype.container = '#main';
 
     ProjectsView.prototype.template = JST['admin/projects'];
+
+    ProjectsView.prototype.tagName = 'ul';
 
     ProjectsView.prototype.className = 'list-group';
 
@@ -2446,7 +2469,7 @@
     extend(ProjectView, superClass);
 
     function ProjectView() {
-      this.fixEnter = bind(this.fixEnter, this);
+      this.sendForm = bind(this.sendForm, this);
       return ProjectView.__super__.constructor.apply(this, arguments);
     }
 
@@ -2458,7 +2481,8 @@
 
     ProjectView.prototype.events = {
       'click .btn.delete': "deleteProject",
-      'click .subject': "toggleEdit"
+      'click .subject': "toggleInlineEdit",
+      'click .edit.btn': "editProject"
     };
 
     ProjectView.prototype.initialize = function() {
@@ -2466,7 +2490,9 @@
         this.render();
       }
       this.listenTo(this.model, "change:isDeleted", this.changeIsDeleted);
-      return this.listenTo(this.model, "change:subject", this.changeSubject);
+      this.listenTo(this.model, "change:name", this.changeName);
+      this.listenTo(this.model, "change:isEdit", this.changeIsEdit);
+      return this.listenTo(this.model, "sync", this.syncModel);
     };
 
     ProjectView.prototype.attributes = function() {
@@ -2476,40 +2502,45 @@
     };
 
     ProjectView.prototype.render = function() {
+      var textarea;
       this.$el.html(this.template(this.model.toJSON()));
-      return $('.subject_edit', this.$el).on('keydown', this.fixEnter).textareaAutoSize();
+      $('.subject_edit', this.$el).on('keydown', this.fixEnter).textareaAutoSize();
+      textarea = new Tracktime.Element.Textarea({
+        model: this.model,
+        className: 'subject_edit form-control hidden',
+        field: 'name'
+      });
+      $('placeholder#textarea', this.$el).replaceWith(textarea.$el);
+      return textarea.on('tSubmit', this.sendForm);
+    };
+
+    ProjectView.prototype.changeIsEdit = function() {
+      return this.$el.toggleClass('editmode', this.model.isEdit === true);
+    };
+
+    ProjectView.prototype.syncModel = function(model, options, params) {
+      model.isEdit = false;
+      model.trigger('change:isEdit');
+      return model.trigger('change:name');
     };
 
     ProjectView.prototype.changeIsDeleted = function() {
       return this.$el.remove();
     };
 
-    ProjectView.prototype.changeSubject = function() {
-      $('.subject', this.$el).html((this.model.get('subject') + '').nl2br());
-      return $('.subject_edit', this.$el).val(this.model.get('subject'));
+    ProjectView.prototype.changeName = function() {
+      $('.subject', this.$el).html((this.model.get('name') + '').nl2br());
+      return $('.name_edit', this.$el).val(this.model.get('name'));
     };
 
-    ProjectView.prototype.fixEnter = function(event) {
-      var val;
-      if (event.keyCode === 13) {
-        if (event.shiftKey) {
-          val = $(event.target).val();
-          if (!_.isEmpty(val)) {
-            this.model.set('subject', val);
-            this.saveProject();
-            this.toggleEdit();
-          }
-          return event.preventDefault();
-        }
-      }
-    };
-
-    ProjectView.prototype.toggleEdit = function(event) {
+    ProjectView.prototype.toggleInlineEdit = function() {
       this.$el.find('.subject_edit').css('min-height', this.$el.find('.subject').height());
-      return this.$el.find('.subject, .subject_edit').css('border', 'apx solid blue').toggleClass('hidden');
+      this.$el.find('.subject, .subject_edit').css('border', 'apx solid blue').toggleClass('hidden');
+      return this.$el.find('.subject_edit').textareaAutoSize().focus();
     };
 
-    ProjectView.prototype.saveProject = function() {
+    ProjectView.prototype.sendForm = function() {
+      this.toggleInlineEdit();
       return this.model.save({}, {
         ajaxSync: Tracktime.AppChannel.request('isOnline'),
         success: function(model, respond) {
@@ -2520,6 +2551,17 @@
           });
         }
       });
+    };
+
+    ProjectView.prototype.editProject = function() {
+      return $('.scrollWrapper').animate({
+        'scrollTop': this.$el.offset().top - $('.scrollWrapper').offset().top + $('.scrollWrapper').scrollTop()
+      }, 400, (function(_this) {
+        return function(event) {
+          _this.model.isEdit = true;
+          return _this.model.trigger('change:isEdit');
+        };
+      })(this));
     };
 
     ProjectView.prototype.deleteProject = function(event) {
@@ -2559,7 +2601,7 @@
 
     ProjectView.prototype.render = function() {
       return $(this.container).html(this.$el.html(this.template({
-        title: 'Project Details HERE'
+        title: 'Project Details View HERE'
       })));
     };
 
@@ -2586,7 +2628,7 @@
 
     ProjectsView.prototype.render = function() {
       return $(this.container).html(this.$el.html(this.template({
-        title: 'Projects HERE'
+        title: 'Projects HERE - Only view'
       })));
     };
 
@@ -2724,6 +2766,8 @@
 
     RecordsView.prototype.container = '#main';
 
+    RecordsView.prototype.template = JST['records/records'];
+
     RecordsView.prototype.tagName = 'ul';
 
     RecordsView.prototype.className = 'list-group';
@@ -2738,6 +2782,9 @@
 
     RecordsView.prototype.render = function() {
       $(this.container).html(this.$el.html(''));
+      this.$el.before(this.template({
+        title: 'Records'
+      }));
       return this.resetRecordsList();
     };
 
@@ -2843,7 +2890,7 @@
 
     UserView.prototype.container = '#main';
 
-    UserView.prototype.template = JST['user/user'];
+    UserView.prototype.template = JST['users/user'];
 
     UserView.prototype.initialize = function() {
       return this.render();
@@ -2870,7 +2917,7 @@
 
     Details.prototype.container = '#main';
 
-    Details.prototype.template = JST['user/details'];
+    Details.prototype.template = JST['users/details'];
 
     Details.prototype.initialize = function() {
       return this.render();
@@ -2897,7 +2944,7 @@
 
     Rates.prototype.container = '#main';
 
-    Rates.prototype.template = JST['user/rates'];
+    Rates.prototype.template = JST['users/rates'];
 
     Rates.prototype.initialize = function() {
       return this.render();

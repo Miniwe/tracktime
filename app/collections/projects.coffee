@@ -1,9 +1,9 @@
 class Tracktime.ProjectsCollection extends Tracktime.Collection
   model: Tracktime.Project
-  url: config?.SERVER + '/projects'
-  urlRoot: config?.SERVER + '/projects'
   collectionName: config.collection.projects
-  localStorage: new Backbone.LocalStorage @collectionName
+  url: config?.SERVER + '/' + 'projects'
+  urlRoot: config?.SERVER + '/' + 'projects'
+  localStorage: new Backbone.LocalStorage 'projects'
 
   initialize: () ->
     @fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'

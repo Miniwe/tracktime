@@ -4,26 +4,37 @@ class Tracktime.Action.Project extends Tracktime.Action
     title: 'Add project'
     projectModel: null
     formAction: '#'
-    btnClass: 'btn-danger'
-    navbarClass: 'navbar-material-indigo'
+    btnClass: 'btn-primary'
+    navbarClass: 'navbar-material-amber'
     icon:
-      className: 'mdi-editor-mode-edit'
+      className: 'mdi-content-add'
       letter: ''
     isActive: null
     isVisible: true
 
-  initialize: (options = {}) ->
-    @set options
-    if options.projectModel instanceof Tracktime.Project
-      @set 'projectModel', new Tracktime.Project options.projectModel.toJSON
-    else
-      @set 'projectModel', new Tracktime.Project()
+  initialize: () ->
+    @set 'projectModel', new Tracktime.Project() unless @get('projectModel') instanceof Tracktime.Project
 
   processAction: () ->
-    projectModel = @get('projectModel')
+    projectModel = @get 'projectModel'
     if projectModel.isValid()
-      Tracktime.AppChannel.command 'newProject', _.extend {project: 0}, projectModel.toJSON()
-      projectModel.clear().set(projectModel.defaults)
+      if projectModel.isNew()
+        Tracktime.AppChannel.command 'newProject', projectModel.toJSON()
+        projectModel.clear().set(projectModel.defaults)
+      else
+        projectModel.save {},
+          ajaxSync: Tracktime.AppChannel.request 'isOnline'
+          success: () =>
+            $.alert
+              content: 'Project: update success'
+              timeout: 2000
+              style: 'btn-success'
+            @destroy()
+
+  destroy: (args...) ->
+    @get('projectModel').isEdit = false
+    @get('projectModel').trigger 'change:isEdit'
+    super args...
+
 
 (module?.exports = Tracktime.Action.Project) or @Tracktime.Action.Project = Tracktime.Action.Project
-

@@ -21,7 +21,7 @@ development =
     actions: 'actions'
 
 
-switch window.process.env?.NODE_ENV
+switch process.env?.NODE_ENV
   when 'production'
     config = production
   when 'test'

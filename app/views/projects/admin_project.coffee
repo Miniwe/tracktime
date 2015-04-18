@@ -4,46 +4,58 @@ class Tracktime.AdminView.ProjectView extends Backbone.View
   template: JST['projects/admin_project']
   events:
     'click .btn.delete': "deleteProject"
-    'click .subject': "toggleEdit"
+    'click .subject': "toggleInlineEdit"
+    'click .edit.btn': "editProject"
 
 
-  initialize: () ->
+  initialize: ->
     unless @model.get 'isDeleted'
       @render()
     @listenTo @model, "change:isDeleted", @changeIsDeleted
-    @listenTo @model, "change:subject", @changeSubject
+    @listenTo @model, "change:name", @changeName
+    @listenTo @model, "change:isEdit", @changeIsEdit
+    @listenTo @model, "sync", @syncModel
 
-  attributes: () ->
+  attributes: ->
     id: @model.cid
 
-  render: () ->
+  render: ->
     @$el.html @template @model.toJSON()
     $('.subject_edit', @$el)
       .on('keydown', @fixEnter)
       .textareaAutoSize()
 
-  changeIsDeleted: () ->
+    textarea = new Tracktime.Element.Textarea
+      model: @model
+      className: 'subject_edit form-control hidden'
+      field: 'name'
+
+    $('placeholder#textarea', @$el).replaceWith textarea.$el
+    textarea.on 'tSubmit', @sendForm
+
+  changeIsEdit: ->
+    @$el.toggleClass 'editmode', @model.isEdit == true
+
+  syncModel: (model, options, params) ->
+    model.isEdit = false
+    model.trigger 'change:isEdit'
+    model.trigger 'change:name'
+    #todo update all elements after
+
+  changeIsDeleted: ->
     @$el.remove() # @todo possible not need
 
-  changeSubject: () ->
-    $('.subject', @$el).html (@model.get('subject') + '').nl2br()
-    $('.subject_edit', @$el).val @model.get 'subject'
+  changeName: ->
+    $('.subject', @$el).html (@model.get('name') + '').nl2br()
+    $('.name_edit', @$el).val @model.get 'name'
 
-  fixEnter: (event) =>
-    if event.keyCode == 13
-      if event.shiftKey
-        val = $(event.target).val()
-        unless _.isEmpty val
-          @model.set 'subject', val
-          @saveProject()
-          @toggleEdit()
-        event.preventDefault()
-
-  toggleEdit: (event) ->
+  toggleInlineEdit: ->
     @$el.find('.subject_edit').css 'min-height', @$el.find('.subject').height()
     @$el.find('.subject, .subject_edit').css('border', 'apx solid blue').toggleClass 'hidden'
+    @$el.find('.subject_edit').textareaAutoSize().focus()
 
-  saveProject: () ->
+  sendForm: =>
+    @toggleInlineEdit()
     @model.save {},
       ajaxSync: Tracktime.AppChannel.request 'isOnline'
       success: (model, respond) ->
@@ -51,6 +63,13 @@ class Tracktime.AdminView.ProjectView extends Backbone.View
           content: 'update project'
           timeout: 2000
           style: 'btn-info'
+
+  editProject: ->
+    $('.scrollWrapper').animate
+      'scrollTop': @$el.offset().top - $('.scrollWrapper').offset().top + $('.scrollWrapper').scrollTop()
+    , 400, (event) =>
+      @model.isEdit = true
+      @model.trigger 'change:isEdit'
 
   deleteProject: (event) ->
     event.preventDefault()

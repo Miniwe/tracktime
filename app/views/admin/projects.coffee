@@ -1,6 +1,7 @@
 class Tracktime.AdminView.ProjectsView extends Backbone.View
   container: '#main'
   template: JST['admin/projects']
+  tagName: 'ul'
   className: 'list-group'
 
   initialize: () ->

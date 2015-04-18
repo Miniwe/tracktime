@@ -6,7 +6,7 @@ class Tracktime.ProjectsView extends Backbone.View
     @render()
 
   render: () ->
-    $(@container).html @$el.html @template {title: 'Projects HERE'}
+    $(@container).html @$el.html @template {title: 'Projects HERE - Only view'}
 
 (module?.exports = Tracktime.ProjectsView) or @Tracktime.ProjectsView = Tracktime.ProjectsView
 
