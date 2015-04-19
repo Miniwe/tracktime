@@ -4,10 +4,12 @@ class Tracktime.Action.Project extends Tracktime.Action
     title: 'Add project'
     projectModel: null
     formAction: '#'
-    btnClass: 'btn-primary'
-    navbarClass: 'navbar-material-amber'
+    btnClass: 'btn-material-purple'
+    btnClassEdit: 'btn-material-blue'
+    navbarClass: 'navbar-inverse'
     icon:
-      className: 'mdi-content-add'
+      className: 'mdi-content-add-circle'
+      classNameEdit: 'mdi-content-add-circle-outline'
       letter: ''
     isActive: null
     isVisible: true

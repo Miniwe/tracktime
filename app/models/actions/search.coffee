@@ -4,19 +4,19 @@ class Tracktime.Action.Search extends Tracktime.Action
     title: 'Search'
     formAction: '#'
     btnClass: 'btn-white'
+    btnClassEdit: 'btn-white'
     navbarClass: 'navbar-material-light-blue'
     icon:
       className: 'mdi-action-search'
+      classNameEdit: 'mdi-action-search'
       letter: ''
     isActive: null
     isVisible: true
 
   initialize: (options = {}) ->
     @set options
-    @set 'details', new Tracktime.Action.Details()
 
   processAction: (options) ->
-    @get('details').set(options) # @todo remove possible
     @search()
 
   search: () ->

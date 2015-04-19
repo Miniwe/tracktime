@@ -34,10 +34,6 @@ class Tracktime.User extends Tracktime.Model
     if @isEdit
       Tracktime.AppChannel.command 'addAction', {title: 'Edit user', type: 'User', canClose: true},
         title: 'Edit user: ' + @get('name').substr(0, 40)
-        navbarClass: 'navbar-material-purple'
-        btnClass: 'btn-material-purple'
-        icon:
-          className: 'mdi-editor-mode-edit'
         userModel: @
         scope: 'edit:action'
 

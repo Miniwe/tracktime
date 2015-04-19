@@ -13,7 +13,7 @@ Backbone.ViewMixin =
       view.close(key)
 
   setSubView: (key, view) ->
-    @views[key].close() if @views[key]
+    @views[key].close() if @views[key]?
     @views[key] = view
 
   getSubView: (key) ->

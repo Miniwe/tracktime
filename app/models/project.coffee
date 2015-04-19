@@ -34,10 +34,6 @@ class Tracktime.Project extends Tracktime.Model
     if @isEdit
       Tracktime.AppChannel.command 'addAction', {title: 'Edit project', type: 'Project', canClose: true},
         title: 'Edit project: ' + @get('name').substr(0, 40)
-        navbarClass: 'navbar-material-purple'
-        btnClass: 'btn-material-purple'
-        icon:
-          className: 'mdi-editor-mode-edit'
         projectModel: @
         scope: 'edit:action'
 

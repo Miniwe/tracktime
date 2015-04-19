@@ -4,10 +4,12 @@ class Tracktime.Action.User extends Tracktime.Action
     title: 'Add user'
     userModel: null
     formAction: '#'
-    btnClass: 'btn-primary'
-    navbarClass: 'navbar-material-amber'
+    btnClass: 'btn-material-deep-orange'
+    btnClassEdit: 'btn-material-amber'
+    navbarClass: 'navbar-material-yellow'
     icon:
-      className: 'mdi-content-add'
+      className: 'mdi-social-person'
+      classNameEdit: 'mdi-social-person-outline'
       letter: ''
     isActive: null
     isVisible: true

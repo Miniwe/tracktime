@@ -1,0 +1,24 @@
+<div class="row navbar {{navbarClass}} shadow-z-1" style="padding: 1em">
+    <div class="col-md-2">
+        <a class="btn btn-fab {{btnClass}}" href="{{formAction}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{title}}">
+            <i class="{{icon.className}}">{{icon.letter}}</i>
+        </a>
+    </div>
+    <div class="col-md-2">
+        <a class="btn btn-fab {{btnClassEdit}}" href="{{formAction}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Edit {{title}}">
+            <i class="{{icon.classNameEdit}}">{{icon.letter}}</i>
+        </a>
+    </div>
+    <div class="col-md-6">
+      <div class="navbar-header">
+          <a class="navbar-brand" href="#">
+            {{title}}
+          </a>
+      </div>
+
+    </div>
+    <div class="col-md-2">
+      <button class="btn btn-call-action btn-fab btn-flat btn-fab-mini" title="Call action" style="margin: 10px;"><i class="mdi-action-assignment-turned-in"></i></button>
+
+    </div>
+</div>

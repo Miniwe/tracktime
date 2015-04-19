@@ -4,10 +4,12 @@ class Tracktime.Action.Record extends Tracktime.Action
     title: 'Add record'
     recordModel: null
     formAction: '#'
-    btnClass: 'btn-primary'
-    navbarClass: 'navbar-material-amber'
+    btnClass: 'btn-material-green'
+    btnClassEdit: 'btn-material-lime'
+    navbarClass: 'navbar-primary'
     icon:
-      className: 'mdi-content-add'
+      className: 'mdi-action-bookmark'
+      classNameEdit: 'mdi-action-bookmark-outline'
       letter: ''
     isActive: null
     isVisible: true

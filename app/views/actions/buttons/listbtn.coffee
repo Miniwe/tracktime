@@ -11,7 +11,11 @@ class Tracktime.ActionView.ListBtn extends Backbone.View
     @listenTo @model, 'destroy', @close
 
   render: () ->
-    @$el.html @template @model.toJSON()
+    model = @model.toJSON()
+    if model.canClose
+      model.btnClass = model.btnClassEdit
+      model.icon.className = model.icon.classNameEdit
+    @$el.html @template model
     if @model.get('isActive') == true
       @$el.addClass 'active'
       @updateActionControl()

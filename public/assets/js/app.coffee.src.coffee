@@ -90,7 +90,7 @@ Backbone.ViewMixin =
       view.close(key)
 
   setSubView: (key, view) ->
-    @views[key].close() if @views[key]
+    @views[key].close() if @views[key]?
     @views[key] = view
 
   getSubView: (key) ->
@@ -305,21 +305,18 @@ class Tracktime.Action extends Backbone.Model
 
 (module?.exports = Tracktime.Action) or @Tracktime.Action = Tracktime.Action
 
-class Tracktime.Action.Details extends Backbone.Model
-
-
-(module?.exports = Tracktime.Action.Details) or @Tracktime.Action.Details = Tracktime.Action.Details
-
 class Tracktime.Action.Project extends Tracktime.Action
 
   defaults: _.extend {}, Tracktime.Action.prototype.defaults,
     title: 'Add project'
     projectModel: null
     formAction: '#'
-    btnClass: 'btn-primary'
-    navbarClass: 'navbar-material-amber'
+    btnClass: 'btn-material-purple'
+    btnClassEdit: 'btn-material-blue'
+    navbarClass: 'navbar-inverse'
     icon:
-      className: 'mdi-content-add'
+      className: 'mdi-content-add-circle'
+      classNameEdit: 'mdi-content-add-circle-outline'
       letter: ''
     isActive: null
     isVisible: true
@@ -357,10 +354,12 @@ class Tracktime.Action.Record extends Tracktime.Action
     title: 'Add record'
     recordModel: null
     formAction: '#'
-    btnClass: 'btn-primary'
-    navbarClass: 'navbar-material-amber'
+    btnClass: 'btn-material-green'
+    btnClassEdit: 'btn-material-lime'
+    navbarClass: 'navbar-primary'
     icon:
-      className: 'mdi-content-add'
+      className: 'mdi-action-bookmark'
+      classNameEdit: 'mdi-action-bookmark-outline'
       letter: ''
     isActive: null
     isVisible: true
@@ -398,19 +397,19 @@ class Tracktime.Action.Search extends Tracktime.Action
     title: 'Search'
     formAction: '#'
     btnClass: 'btn-white'
+    btnClassEdit: 'btn-white'
     navbarClass: 'navbar-material-light-blue'
     icon:
       className: 'mdi-action-search'
+      classNameEdit: 'mdi-action-search'
       letter: ''
     isActive: null
     isVisible: true
 
   initialize: (options = {}) ->
     @set options
-    @set 'details', new Tracktime.Action.Details()
 
   processAction: (options) ->
-    @get('details').set(options) # @todo remove possible
     @search()
 
   search: () ->
@@ -424,10 +423,12 @@ class Tracktime.Action.User extends Tracktime.Action
     title: 'Add user'
     userModel: null
     formAction: '#'
-    btnClass: 'btn-primary'
-    navbarClass: 'navbar-material-amber'
+    btnClass: 'btn-material-deep-orange'
+    btnClassEdit: 'btn-material-amber'
+    navbarClass: 'navbar-material-yellow'
     icon:
-      className: 'mdi-content-add'
+      className: 'mdi-social-person'
+      classNameEdit: 'mdi-social-person-outline'
       letter: ''
     isActive: null
     isVisible: true
@@ -495,10 +496,6 @@ class Tracktime.Project extends Tracktime.Model
     if @isEdit
       Tracktime.AppChannel.command 'addAction', {title: 'Edit project', type: 'Project', canClose: true},
         title: 'Edit project: ' + @get('name').substr(0, 40)
-        navbarClass: 'navbar-material-purple'
-        btnClass: 'btn-material-purple'
-        icon:
-          className: 'mdi-editor-mode-edit'
         projectModel: @
         scope: 'edit:action'
 
@@ -545,10 +542,6 @@ class Tracktime.Record extends Tracktime.Model
     if @isEdit
       Tracktime.AppChannel.command 'addAction', {title: 'Edit record', type: 'Record', canClose: true},
         title: 'Edit record: ' + @get('subject').substr(0, 40)
-        navbarClass: 'navbar-material-indigo'
-        btnClass: 'btn-material-indigo'
-        icon:
-          className: 'mdi-editor-mode-edit'
         recordModel: @
         scope: 'edit:action'
 
@@ -591,10 +584,6 @@ class Tracktime.User extends Tracktime.Model
     if @isEdit
       Tracktime.AppChannel.command 'addAction', {title: 'Edit user', type: 'User', canClose: true},
         title: 'Edit user: ' + @get('name').substr(0, 40)
-        navbarClass: 'navbar-material-purple'
-        btnClass: 'btn-material-purple'
-        icon:
-          className: 'mdi-editor-mode-edit'
         userModel: @
         scope: 'edit:action'
 
@@ -861,7 +850,7 @@ class Tracktime.AdminRouter extends Backbone.SubRoute
     newAction.setActive()
 
   actions: () ->
-    @parent.view.setSubView 'main', new Tracktime.AdminView.Actions()
+    @parent.view.setSubView 'main', new Tracktime.AdminView.ActionsView collection: @parent.model.get 'actions'
 
 
 (module?.exports = Tracktime.AdminRouter) or @Tracktime.AdminRouter = Tracktime.AdminRouter
@@ -913,7 +902,7 @@ class Tracktime.AppRouter extends Backbone.Router
 
   removeActionsExcept: (route) ->
     _.each @model.get('actions').models, (action) ->
-      action.destroy() if action.has('scope') and action.get('scope') isnt route
+      action.destroy() if action && action.has('scope') and action.get('scope') isnt route
 
 
 (module?.exports = Tracktime.AppRouter) or @Tracktime.AppRouter = Tracktime.AppRouter
@@ -1105,9 +1094,13 @@ class Tracktime.ActionView.ActiveBtn extends Backbone.View
     @render()
 
   render: () ->
+    model = @model.toJSON()
+    if model.canClose
+      model.btnClass = model.btnClassEdit
+      model.icon.className = model.icon.classNameEdit
     @$el
-      .attr 'class', "btn btn-fab #{@model.get('btnClass')} dropdown-toggle "
-      .find('i').attr('class', @model.get('icon').className).html @model.get('icon').letter
+      .attr 'class', "btn btn-fab #{model.btnClass} dropdown-toggle "
+      .find('i').attr('class', model.icon.className).html model.icon.letter
 
 
 (module?.exports = Tracktime.ActionView.ActiveBtn) or @Tracktime.ActionView.ActiveBtn = Tracktime.ActionView.ActiveBtn
@@ -1126,7 +1119,11 @@ class Tracktime.ActionView.ListBtn extends Backbone.View
     @listenTo @model, 'destroy', @close
 
   render: () ->
-    @$el.html @template @model.toJSON()
+    model = @model.toJSON()
+    if model.canClose
+      model.btnClass = model.btnClassEdit
+      model.icon.className = model.icon.classNameEdit
+    @$el.html @template model
     if @model.get('isActive') == true
       @$el.addClass 'active'
       @updateActionControl()
@@ -1325,17 +1322,57 @@ class Tracktime.AdminView.Header extends Backbone.View
 
 (module?.exports = Tracktime.AdminView.Header) or @Tracktime.AdminView.Header = Tracktime.AdminView.Header
 
-class Tracktime.AdminView.Actions extends Backbone.View
+class Tracktime.AdminView.ActionView extends Backbone.View
+  tagName: 'li'
+  className: 'list-group-item'
+  template: JST['actions/admin_action']
+  events:
+    'click .btn-call-action': "callAction"
+    'click .edit.btn': "editAction"
+
+
+  initialize: ->
+    @render()
+
+  render: ->
+    @$el.html @template @model.toJSON()
+
+  editAction: ->
+
+  callAction: ->
+    $.alert 'Test action call'
+
+
+(module?.exports = Tracktime.AdminView.ActionView) or @Tracktime.AdminView.ActionView = Tracktime.AdminView.ActionView
+
+
+class Tracktime.AdminView.ActionsView extends Backbone.View
   container: '#main'
   template: JST['admin/actions']
+  templateHeader: JST['admin/actions_header']
+  tagName: 'ul'
+  className: 'list-group'
+  views: {}
+  actionsTypes: ['Project', 'Record', 'User', 'Search']
 
   initialize: () ->
     @render()
 
   render: () ->
-    $(@container).html @$el.html @template {title: 'Actions'}
+    $(@container).html @$el.html ''
+    @$el.before @template {title: 'Actions'}
+    @$el.prepend @templateHeader()
+    @renderActionsList()
 
-(module?.exports = Tracktime.AdminView.Actions) or @Tracktime.AdminView.Actions = Tracktime.AdminView.Actions
+  renderActionsList: () ->
+    _.each @actionsTypes, (atype) =>
+      actionView =  new Tracktime.AdminView.ActionView model: new Tracktime.Action[atype]()
+      @$el.append actionView.el
+      @setSubView "atype-#{atype}", actionView
+    , @
+
+
+(module?.exports = Tracktime.AdminView.ActionsView) or @Tracktime.AdminView.ActionsView = Tracktime.AdminView.ActionsView
 
 
 class Tracktime.AdminView.Dashboard extends Backbone.View

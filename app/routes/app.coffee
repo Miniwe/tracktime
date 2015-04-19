@@ -45,7 +45,7 @@ class Tracktime.AppRouter extends Backbone.Router
 
   removeActionsExcept: (route) ->
     _.each @model.get('actions').models, (action) ->
-      action.destroy() if action.has('scope') and action.get('scope') isnt route
+      action.destroy() if action && action.has('scope') and action.get('scope') isnt route
 
 
 (module?.exports = Tracktime.AppRouter) or @Tracktime.AppRouter = Tracktime.AppRouter

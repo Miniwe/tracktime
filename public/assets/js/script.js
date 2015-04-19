@@ -29275,6 +29275,35 @@ this["JST"]["actions/actions"] = Handlebars.template({"compiler":[6,">= 2.0.0-be
   return "<div class=\"select-action dropdown pull-left\">\n    <button id=\"action_type\" type=\"button\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\" class=\"btn btn-fab btn-warning dropdown-toggle\" title=\"SHIFT + ENTER to submit\">\n        <i class=\"\"></i>\n    </button>\n    <ul class=\"dropdown-menu\" role=\"menu\" aria-labelledby=\"dLabel\">\n    </ul>\n</div>\n<div class=\"form-control-wrapper\">\n\n</div>";
   },"useData":true});
 
+this["JST"]["actions/admin_action"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var stack1, helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, lambda=this.lambda;
+  return "<div class=\"row navbar "
+    + escapeExpression(((helper = (helper = helpers.navbarClass || (depth0 != null ? depth0.navbarClass : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"navbarClass","hash":{},"data":data}) : helper)))
+    + " shadow-z-1\" style=\"padding: 1em\">\n    <div class=\"col-md-2\">\n        <a class=\"btn btn-fab "
+    + escapeExpression(((helper = (helper = helpers.btnClass || (depth0 != null ? depth0.btnClass : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"btnClass","hash":{},"data":data}) : helper)))
+    + "\" href=\""
+    + escapeExpression(((helper = (helper = helpers.formAction || (depth0 != null ? depth0.formAction : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"formAction","hash":{},"data":data}) : helper)))
+    + "\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"\" data-original-title=\""
+    + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
+    + "\">\n            <i class=\""
+    + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.icon : depth0)) != null ? stack1.className : stack1), depth0))
+    + "\">"
+    + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.icon : depth0)) != null ? stack1.letter : stack1), depth0))
+    + "</i>\n        </a>\n    </div>\n    <div class=\"col-md-2\">\n        <a class=\"btn btn-fab "
+    + escapeExpression(((helper = (helper = helpers.btnClassEdit || (depth0 != null ? depth0.btnClassEdit : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"btnClassEdit","hash":{},"data":data}) : helper)))
+    + "\" href=\""
+    + escapeExpression(((helper = (helper = helpers.formAction || (depth0 != null ? depth0.formAction : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"formAction","hash":{},"data":data}) : helper)))
+    + "\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"\" data-original-title=\"Edit "
+    + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
+    + "\">\n            <i class=\""
+    + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.icon : depth0)) != null ? stack1.classNameEdit : stack1), depth0))
+    + "\">"
+    + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.icon : depth0)) != null ? stack1.letter : stack1), depth0))
+    + "</i>\n        </a>\n    </div>\n    <div class=\"col-md-6\">\n      <div class=\"navbar-header\">\n          <a class=\"navbar-brand\" href=\"#\">\n            "
+    + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
+    + "\n          </a>\n      </div>\n\n    </div>\n    <div class=\"col-md-2\">\n      <button class=\"btn btn-call-action btn-fab btn-flat btn-fab-mini\" title=\"Call action\" style=\"margin: 10px;\"><i class=\"mdi-action-assignment-turned-in\"></i></button>\n\n    </div>\n</div>";
+},"useData":true});
+
 this["JST"]["actions/details/project"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helper, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, functionType="function";
   return escapeExpression(((helpers.placeholder || (depth0 && depth0.placeholder) || helperMissing).call(depth0, "btn_close_action", {"name":"placeholder","hash":{},"data":data})))
@@ -29337,6 +29366,10 @@ this["JST"]["admin/actions"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta
     + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
     + "</h2>\n</header>";
 },"useData":true});
+
+this["JST"]["admin/actions_header"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  return "<div class=\"row text-muted\">\n  <div class=\"col-md-2\">Icon Add</div>\n  <div class=\"col-md-2\">Icon Edit</div>\n  <div class=\"col-md-6\">Navbar</div>\n  <div class=\"col-md-2\">Call</div>\n</div>";
+  },"useData":true});
 
 this["JST"]["admin/dashboard"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "<header>\n  <h2 class=\"page-title\">Dashboard</h2>\n</header>";
@@ -29711,7 +29744,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       return results;
     },
     setSubView: function(key, view) {
-      if (this.views[key]) {
+      if (this.views[key] != null) {
         this.views[key].close();
       }
       return this.views[key] = view;
@@ -30035,19 +30068,6 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.Action : void 0) || (this.Tracktime.Action = Tracktime.Action);
 
-  Tracktime.Action.Details = (function(superClass) {
-    extend(Details, superClass);
-
-    function Details() {
-      return Details.__super__.constructor.apply(this, arguments);
-    }
-
-    return Details;
-
-  })(Backbone.Model);
-
-  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.Action.Details : void 0) || (this.Tracktime.Action.Details = Tracktime.Action.Details);
-
   Tracktime.Action.Project = (function(superClass) {
     extend(Project, superClass);
 
@@ -30059,10 +30079,12 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       title: 'Add project',
       projectModel: null,
       formAction: '#',
-      btnClass: 'btn-primary',
-      navbarClass: 'navbar-material-amber',
+      btnClass: 'btn-material-purple',
+      btnClassEdit: 'btn-material-blue',
+      navbarClass: 'navbar-inverse',
       icon: {
-        className: 'mdi-content-add',
+        className: 'mdi-content-add-circle',
+        classNameEdit: 'mdi-content-add-circle-outline',
         letter: ''
       },
       isActive: null,
@@ -30125,10 +30147,12 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       title: 'Add record',
       recordModel: null,
       formAction: '#',
-      btnClass: 'btn-primary',
-      navbarClass: 'navbar-material-amber',
+      btnClass: 'btn-material-green',
+      btnClassEdit: 'btn-material-lime',
+      navbarClass: 'navbar-primary',
       icon: {
-        className: 'mdi-content-add',
+        className: 'mdi-action-bookmark',
+        classNameEdit: 'mdi-action-bookmark-outline',
         letter: ''
       },
       isActive: null,
@@ -30191,9 +30215,11 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       title: 'Search',
       formAction: '#',
       btnClass: 'btn-white',
+      btnClassEdit: 'btn-white',
       navbarClass: 'navbar-material-light-blue',
       icon: {
         className: 'mdi-action-search',
+        classNameEdit: 'mdi-action-search',
         letter: ''
       },
       isActive: null,
@@ -30204,12 +30230,10 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       if (options == null) {
         options = {};
       }
-      this.set(options);
-      return this.set('details', new Tracktime.Action.Details());
+      return this.set(options);
     };
 
     Search.prototype.processAction = function(options) {
-      this.get('details').set(options);
       return this.search();
     };
 
@@ -30234,10 +30258,12 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       title: 'Add user',
       userModel: null,
       formAction: '#',
-      btnClass: 'btn-primary',
-      navbarClass: 'navbar-material-amber',
+      btnClass: 'btn-material-deep-orange',
+      btnClassEdit: 'btn-material-amber',
+      navbarClass: 'navbar-material-yellow',
       icon: {
-        className: 'mdi-content-add',
+        className: 'mdi-social-person',
+        classNameEdit: 'mdi-social-person-outline',
         letter: ''
       },
       isActive: null,
@@ -30342,11 +30368,6 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
           canClose: true
         }, {
           title: 'Edit project: ' + this.get('name').substr(0, 40),
-          navbarClass: 'navbar-material-purple',
-          btnClass: 'btn-material-purple',
-          icon: {
-            className: 'mdi-editor-mode-edit'
-          },
           projectModel: this,
           scope: 'edit:action'
         });
@@ -30418,11 +30439,6 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
           canClose: true
         }, {
           title: 'Edit record: ' + this.get('subject').substr(0, 40),
-          navbarClass: 'navbar-material-indigo',
-          btnClass: 'btn-material-indigo',
-          icon: {
-            className: 'mdi-editor-mode-edit'
-          },
           recordModel: this,
           scope: 'edit:action'
         });
@@ -30488,11 +30504,6 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
           canClose: true
         }, {
           title: 'Edit user: ' + this.get('name').substr(0, 40),
-          navbarClass: 'navbar-material-purple',
-          btnClass: 'btn-material-purple',
-          icon: {
-            className: 'mdi-editor-mode-edit'
-          },
           userModel: this,
           scope: 'edit:action'
         });
@@ -30942,7 +30953,9 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     };
 
     AdminRouter.prototype.actions = function() {
-      return this.parent.view.setSubView('main', new Tracktime.AdminView.Actions());
+      return this.parent.view.setSubView('main', new Tracktime.AdminView.ActionsView({
+        collection: this.parent.model.get('actions')
+      }));
     };
 
     return AdminRouter;
@@ -31039,7 +31052,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
     AppRouter.prototype.removeActionsExcept = function(route) {
       return _.each(this.model.get('actions').models, function(action) {
-        if (action.has('scope') && action.get('scope') !== route) {
+        if (action && action.has('scope') && action.get('scope') !== route) {
           return action.destroy();
         }
       });
@@ -31358,7 +31371,13 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     };
 
     ActiveBtn.prototype.render = function() {
-      return this.$el.attr('class', "btn btn-fab " + (this.model.get('btnClass')) + " dropdown-toggle ").find('i').attr('class', this.model.get('icon').className).html(this.model.get('icon').letter);
+      var model;
+      model = this.model.toJSON();
+      if (model.canClose) {
+        model.btnClass = model.btnClassEdit;
+        model.icon.className = model.icon.classNameEdit;
+      }
+      return this.$el.attr('class', "btn btn-fab " + model.btnClass + " dropdown-toggle ").find('i').attr('class', model.icon.className).html(model.icon.letter);
     };
 
     return ActiveBtn;
@@ -31390,7 +31409,13 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     };
 
     ListBtn.prototype.render = function() {
-      this.$el.html(this.template(this.model.toJSON()));
+      var model;
+      model = this.model.toJSON();
+      if (model.canClose) {
+        model.btnClass = model.btnClassEdit;
+        model.icon.className = model.icon.classNameEdit;
+      }
+      this.$el.html(this.template(model));
       if (this.model.get('isActive') === true) {
         this.$el.addClass('active');
         return this.updateActionControl();
@@ -31703,32 +31728,96 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AdminView.Header : void 0) || (this.Tracktime.AdminView.Header = Tracktime.AdminView.Header);
 
-  Tracktime.AdminView.Actions = (function(superClass) {
-    extend(Actions, superClass);
+  Tracktime.AdminView.ActionView = (function(superClass) {
+    extend(ActionView, superClass);
 
-    function Actions() {
-      return Actions.__super__.constructor.apply(this, arguments);
+    function ActionView() {
+      return ActionView.__super__.constructor.apply(this, arguments);
     }
 
-    Actions.prototype.container = '#main';
+    ActionView.prototype.tagName = 'li';
 
-    Actions.prototype.template = JST['admin/actions'];
+    ActionView.prototype.className = 'list-group-item';
 
-    Actions.prototype.initialize = function() {
+    ActionView.prototype.template = JST['actions/admin_action'];
+
+    ActionView.prototype.events = {
+      'click .btn-call-action': "callAction",
+      'click .edit.btn': "editAction"
+    };
+
+    ActionView.prototype.initialize = function() {
       return this.render();
     };
 
-    Actions.prototype.render = function() {
-      return $(this.container).html(this.$el.html(this.template({
-        title: 'Actions'
-      })));
+    ActionView.prototype.render = function() {
+      return this.$el.html(this.template(this.model.toJSON()));
     };
 
-    return Actions;
+    ActionView.prototype.editAction = function() {};
+
+    ActionView.prototype.callAction = function() {
+      return $.alert('Test action call');
+    };
+
+    return ActionView;
 
   })(Backbone.View);
 
-  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AdminView.Actions : void 0) || (this.Tracktime.AdminView.Actions = Tracktime.AdminView.Actions);
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AdminView.ActionView : void 0) || (this.Tracktime.AdminView.ActionView = Tracktime.AdminView.ActionView);
+
+  Tracktime.AdminView.ActionsView = (function(superClass) {
+    extend(ActionsView, superClass);
+
+    function ActionsView() {
+      return ActionsView.__super__.constructor.apply(this, arguments);
+    }
+
+    ActionsView.prototype.container = '#main';
+
+    ActionsView.prototype.template = JST['admin/actions'];
+
+    ActionsView.prototype.templateHeader = JST['admin/actions_header'];
+
+    ActionsView.prototype.tagName = 'ul';
+
+    ActionsView.prototype.className = 'list-group';
+
+    ActionsView.prototype.views = {};
+
+    ActionsView.prototype.actionsTypes = ['Project', 'Record', 'User', 'Search'];
+
+    ActionsView.prototype.initialize = function() {
+      return this.render();
+    };
+
+    ActionsView.prototype.render = function() {
+      $(this.container).html(this.$el.html(''));
+      this.$el.before(this.template({
+        title: 'Actions'
+      }));
+      this.$el.prepend(this.templateHeader());
+      return this.renderActionsList();
+    };
+
+    ActionsView.prototype.renderActionsList = function() {
+      return _.each(this.actionsTypes, (function(_this) {
+        return function(atype) {
+          var actionView;
+          actionView = new Tracktime.AdminView.ActionView({
+            model: new Tracktime.Action[atype]()
+          });
+          _this.$el.append(actionView.el);
+          return _this.setSubView("atype-" + atype, actionView);
+        };
+      })(this), this);
+    };
+
+    return ActionsView;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AdminView.ActionsView : void 0) || (this.Tracktime.AdminView.ActionsView = Tracktime.AdminView.ActionsView);
 
   Tracktime.AdminView.Dashboard = (function(superClass) {
     extend(Dashboard, superClass);

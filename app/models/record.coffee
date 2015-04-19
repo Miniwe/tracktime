@@ -38,10 +38,6 @@ class Tracktime.Record extends Tracktime.Model
     if @isEdit
       Tracktime.AppChannel.command 'addAction', {title: 'Edit record', type: 'Record', canClose: true},
         title: 'Edit record: ' + @get('subject').substr(0, 40)
-        navbarClass: 'navbar-material-indigo'
-        btnClass: 'btn-material-indigo'
-        icon:
-          className: 'mdi-editor-mode-edit'
         recordModel: @
         scope: 'edit:action'
 

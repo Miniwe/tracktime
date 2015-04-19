@@ -31,7 +31,7 @@ class Tracktime.AdminRouter extends Backbone.SubRoute
     newAction.setActive()
 
   actions: () ->
-    @parent.view.setSubView 'main', new Tracktime.AdminView.Actions()
+    @parent.view.setSubView 'main', new Tracktime.AdminView.ActionsView collection: @parent.model.get 'actions'
 
 
 (module?.exports = Tracktime.AdminRouter) or @Tracktime.AdminRouter = Tracktime.AdminRouter
