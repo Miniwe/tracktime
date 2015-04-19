@@ -30580,20 +30580,16 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     };
 
     ActionsCollection.prototype.addAction = function(action, params) {
-      var actionModel;
       if (params == null) {
         params = {};
       }
       if (Tracktime.Action[action.type]) {
-        actionModel = new Tracktime.Action[action.type](action);
-        actionModel.set(params);
-        this.push(actionModel);
-        return actionModel;
+        return this.push(new Tracktime.Action[action.type](_.extend(action, params)));
       }
     };
 
     ActionsCollection.prototype.setDefaultActive = function() {
-      if (!this.find({
+      if (!this.findWhere({
         isActive: true
       })) {
         return this.at(0).setActive();
@@ -32703,12 +32699,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     };
 
     AdminRouter.prototype.initialize = function(options) {
-      _.extend(this, options);
-      return this.on('route', (function(_this) {
-        return function(route, params) {
-          return _this.parent.trigger('subroute', "admin:" + route, params);
-        };
-      })(this));
+      return _.extend(this, options);
     };
 
     AdminRouter.prototype.dashboard = function() {
@@ -32773,7 +32764,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
     AppRouter.prototype.initialize = function(options) {
       _.extend(this, options);
-      this.on('route subroute', (function(_this) {
+      this.on('route', (function(_this) {
         return function(route, params) {
           if (route.substr(0, 6) !== 'invoke') {
             return _this.removeActionsExcept(route);
@@ -32783,35 +32774,47 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       return this.initAuthInterface();
     };
 
+    AppRouter.prototype.addListener = function(subroute, scope) {
+      return this.listenTo(subroute, 'route', (function(_this) {
+        return function(route, params) {
+          return _this.removeActionsExcept(scope + ":" + route);
+        };
+      })(this));
+    };
+
     AppRouter.prototype.invokeProjectsRouter = function(subroute) {
       if (!this.projectsRouter) {
-        return this.projectsRouter = new Tracktime.ProjectsRouter('projects', {
+        this.projectsRouter = new Tracktime.ProjectsRouter('projects', {
           parent: this
         });
+        return this.addListener(this.projectsRouter, 'projects');
       }
     };
 
     AppRouter.prototype.invokeReportsRouter = function(subroute) {
       if (!this.reportsRouter) {
-        return this.reportsRouter = new Tracktime.ReportsRouter('reports', {
+        this.reportsRouter = new Tracktime.ReportsRouter('reports', {
           parent: this
         });
+        return this.addListener(this.reportsRouter, 'reports');
       }
     };
 
     AppRouter.prototype.invokeUserRouter = function(subroute) {
       if (!this.userRouter) {
-        return this.userRouter = new Tracktime.UserRouter('user', {
+        this.userRouter = new Tracktime.UserRouter('user', {
           parent: this
         });
+        return this.addListener(this.userRouter, 'users');
       }
     };
 
     AppRouter.prototype.invokeAdminRouter = function(subroute) {
       if (!this.adminRouter) {
-        return this.adminRouter = new Tracktime.AdminRouter('admin', {
+        this.adminRouter = new Tracktime.AdminRouter('admin', {
           parent: this
         });
+        return this.addListener(this.adminRouter, 'admin');
       }
     };
 
@@ -32872,12 +32875,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     };
 
     ProjectsRouter.prototype.initialize = function(options) {
-      _.extend(this, options);
-      return this.on('route', (function(_this) {
-        return function(route, params) {
-          return _this.parent.trigger('subroute', "projects:" + route, params);
-        };
-      })(this));
+      return _.extend(this, options);
     };
 
     ProjectsRouter.prototype.list = function() {
@@ -32932,12 +32930,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     };
 
     RecordsRouter.prototype.initialize = function(options) {
-      _.extend(this, options);
-      return this.on('route', (function(_this) {
-        return function(route, params) {
-          return _this.parent.trigger('subroute', "records:" + route, params);
-        };
-      })(this));
+      return _.extend(this, options);
     };
 
     RecordsRouter.prototype.list = function() {
@@ -32988,11 +32981,6 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
     ReportsRouter.prototype.initialize = function(options) {
       _.extend(this, options);
-      this.on('route', (function(_this) {
-        return function(route, params) {
-          return _this.parent.trigger('subroute', "reports:" + route, params);
-        };
-      })(this));
       return this.parent.view.setSubView('main', new Tracktime.ReportsView());
     };
 
@@ -33040,12 +33028,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     };
 
     UserRouter.prototype.initialize = function(options) {
-      _.extend(this, options);
-      return this.on('route', (function(_this) {
-        return function(route, params) {
-          return _this.parent.trigger('subroute', "user:" + route, params);
-        };
-      })(this));
+      return _.extend(this, options);
     };
 
     UserRouter.prototype.details = function() {

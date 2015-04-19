@@ -7,8 +7,6 @@ class Tracktime.UserRouter extends Backbone.SubRoute
 
   initialize: (options) ->
     _.extend @, options
-    @on 'route', (route, params) =>
-      @parent.trigger 'subroute', "user:#{route}", params
     # @parent.view.setSubView 'main', new Tracktime.UserView()
 
   details: () ->

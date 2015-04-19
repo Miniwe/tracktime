@@ -9,25 +9,33 @@ class Tracktime.AppRouter extends Backbone.Router
 
   initialize: (options) ->
     _.extend @, options
-    @on 'route subroute', (route, params) =>
+    @on 'route', (route, params) =>
       @removeActionsExcept(route) unless route.substr(0,6) == 'invoke'
     @initAuthInterface()
+
+  addListener: (subroute, scope) ->
+    @listenTo subroute, 'route', (route, params) =>
+      @removeActionsExcept "#{scope}:#{route}"
 
   invokeProjectsRouter: (subroute) ->
     unless @projectsRouter
       @projectsRouter = new Tracktime.ProjectsRouter 'projects', parent: @
+      @addListener @projectsRouter, 'projects'
 
   invokeReportsRouter: (subroute) ->
     unless @reportsRouter
       @reportsRouter = new Tracktime.ReportsRouter 'reports', parent: @
+      @addListener @reportsRouter, 'reports'
 
   invokeUserRouter: (subroute) ->
     unless @userRouter
       @userRouter = new Tracktime.UserRouter 'user', parent: @
+      @addListener @userRouter, 'users'
 
   invokeAdminRouter: (subroute) ->
     unless @adminRouter
       @adminRouter = new Tracktime.AdminRouter 'admin', parent: @
+      @addListener @adminRouter, 'admin'
 
   initAuthInterface: () ->
     @view = new Tracktime.AppView model: @model

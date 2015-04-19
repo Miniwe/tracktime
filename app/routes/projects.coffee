@@ -9,8 +9,6 @@ class Tracktime.ProjectsRouter extends Backbone.SubRoute
 
   initialize: (options) ->
     _.extend @, options
-    @on 'route', (route, params) =>
-      @parent.trigger 'subroute', "projects:#{route}", params
 
   list: () ->
     $.alert "whole records list in projects section"

@@ -626,14 +626,10 @@ class Tracktime.ActionsCollection extends Backbone.Collection
     _.each @defaultActions, @addAction
 
   addAction: (action, params = {}) =>
-    if (Tracktime.Action[action.type])
-      actionModel = new Tracktime.Action[action.type] action
-      actionModel.set params
-      @push actionModel
-      return actionModel
+    @push new Tracktime.Action[action.type] _.extend action, params if (Tracktime.Action[action.type])
 
   setDefaultActive: ->
-    @at(0).setActive() unless @find isActive: true
+    @at(0).setActive() unless @findWhere isActive: true
 
   setActive: (active) ->
     @active?.set 'isActive', false
@@ -1912,8 +1908,6 @@ class Tracktime.AdminRouter extends Backbone.SubRoute
 
   initialize: (options) ->
     _.extend @, options
-    @on 'route', (route, params) =>
-      @parent.trigger 'subroute', "admin:#{route}", params
 
   dashboard: () ->
     @parent.view.setSubView 'main', new Tracktime.AdminView.Dashboard()
@@ -1951,25 +1945,33 @@ class Tracktime.AppRouter extends Backbone.Router
 
   initialize: (options) ->
     _.extend @, options
-    @on 'route subroute', (route, params) =>
+    @on 'route', (route, params) =>
       @removeActionsExcept(route) unless route.substr(0,6) == 'invoke'
     @initAuthInterface()
+
+  addListener: (subroute, scope) ->
+    @listenTo subroute, 'route', (route, params) =>
+      @removeActionsExcept "#{scope}:#{route}"
 
   invokeProjectsRouter: (subroute) ->
     unless @projectsRouter
       @projectsRouter = new Tracktime.ProjectsRouter 'projects', parent: @
+      @addListener @projectsRouter, 'projects'
 
   invokeReportsRouter: (subroute) ->
     unless @reportsRouter
       @reportsRouter = new Tracktime.ReportsRouter 'reports', parent: @
+      @addListener @reportsRouter, 'reports'
 
   invokeUserRouter: (subroute) ->
     unless @userRouter
       @userRouter = new Tracktime.UserRouter 'user', parent: @
+      @addListener @userRouter, 'users'
 
   invokeAdminRouter: (subroute) ->
     unless @adminRouter
       @adminRouter = new Tracktime.AdminRouter 'admin', parent: @
+      @addListener @adminRouter, 'admin'
 
   initAuthInterface: () ->
     @view = new Tracktime.AppView model: @model
@@ -2004,8 +2006,6 @@ class Tracktime.ProjectsRouter extends Backbone.SubRoute
 
   initialize: (options) ->
     _.extend @, options
-    @on 'route', (route, params) =>
-      @parent.trigger 'subroute', "projects:#{route}", params
 
   list: () ->
     $.alert "whole records list in projects section"
@@ -2039,8 +2039,6 @@ class Tracktime.RecordsRouter extends Backbone.Router
 
   initialize: (options) ->
     _.extend @, options
-    @on 'route', (route, params) =>
-      @parent.trigger 'subroute', "records:#{route}", params
 
   list: () ->
     $.alert "records list"
@@ -2073,8 +2071,6 @@ class Tracktime.ReportsRouter extends Backbone.SubRoute
 
   initialize: (options) ->
     _.extend @, options
-    @on 'route', (route, params) =>
-      @parent.trigger 'subroute', "reports:#{route}", params
     @parent.view.setSubView 'main', new Tracktime.ReportsView()
 
   list: () ->
@@ -2106,8 +2102,6 @@ class Tracktime.UserRouter extends Backbone.SubRoute
 
   initialize: (options) ->
     _.extend @, options
-    @on 'route', (route, params) =>
-      @parent.trigger 'subroute', "user:#{route}", params
     # @parent.view.setSubView 'main', new Tracktime.UserView()
 
   details: () ->
