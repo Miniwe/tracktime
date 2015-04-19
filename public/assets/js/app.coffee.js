@@ -136,10 +136,7 @@
     };
   })();
 
-  Backbone.Validation.configure({
-    selector: 'class_v',
-    labelFormatter: 'label_v'
-  });
+  Backbone.Validation.configure;
 
   _.extend(Backbone.Model.prototype, Backbone.Validation.mixin);
 

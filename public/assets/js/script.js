@@ -29748,10 +29748,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     };
   })();
 
-  Backbone.Validation.configure({
-    selector: 'class_v',
-    labelFormatter: 'label_v'
-  });
+  Backbone.Validation.configure;
 
   _.extend(Backbone.Model.prototype, Backbone.Validation.mixin);
 
