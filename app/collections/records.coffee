@@ -1,9 +1,9 @@
 class Tracktime.RecordsCollection extends Tracktime.Collection
   model: Tracktime.Record
   collectionName: config.collection.records
-  url: config?.SERVER + '/' + 'records'
-  urlRoot: config?.SERVER + '/' + 'records'
-  localStorage: new Backbone.LocalStorage 'records'
+  url: config?.SERVER + '/' + @collectionName
+  urlRoot: config?.SERVER + '/' + @collectionName
+  localStorage: new Backbone.LocalStorage @collectionName
 
   initialize: () ->
     # @fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'

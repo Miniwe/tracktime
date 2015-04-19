@@ -12,7 +12,8 @@
     collection: {
       records: 'records',
       projects: 'projects',
-      actions: 'actions'
+      actions: 'actions',
+      users: 'users'
     }
   };
 
@@ -21,7 +22,8 @@
     collection: {
       records: 'records',
       projects: 'projects',
-      actions: 'actions'
+      actions: 'actions',
+      users: 'users'
     }
   };
 
@@ -30,7 +32,8 @@
     collection: {
       records: 'records',
       projects: 'projects',
-      actions: 'actions'
+      actions: 'actions',
+      users: 'users'
     }
   };
 
@@ -455,6 +458,8 @@
     }
 
     Action.prototype.idAttribute = "_id";
+
+    Action.prototype.collectionName = config.collection.actions;
 
     Action.prototype.url = '/actions';
 
@@ -946,9 +951,9 @@
 
     ActionsCollection.prototype.collectionName = config.collection.actions;
 
-    ActionsCollection.prototype.url = '/' + 'actions';
+    ActionsCollection.prototype.url = '/' + ActionsCollection.collectionName;
 
-    ActionsCollection.prototype.localStorage = new Backbone.LocalStorage('actions');
+    ActionsCollection.prototype.localStorage = new Backbone.LocalStorage(ActionsCollection.collectionName);
 
     ActionsCollection.prototype.defaultActions = [
       {
@@ -1021,11 +1026,11 @@
 
     ProjectsCollection.prototype.collectionName = config.collection.projects;
 
-    ProjectsCollection.prototype.url = (config != null ? config.SERVER : void 0) + '/' + 'projects';
+    ProjectsCollection.prototype.url = (config != null ? config.SERVER : void 0) + '/' + ProjectsCollection.collectionName;
 
-    ProjectsCollection.prototype.urlRoot = (config != null ? config.SERVER : void 0) + '/' + 'projects';
+    ProjectsCollection.prototype.urlRoot = (config != null ? config.SERVER : void 0) + '/' + ProjectsCollection.collectionName;
 
-    ProjectsCollection.prototype.localStorage = new Backbone.LocalStorage('projects');
+    ProjectsCollection.prototype.localStorage = new Backbone.LocalStorage(ProjectsCollection.collectionName);
 
     ProjectsCollection.prototype.initialize = function() {};
 
@@ -1075,11 +1080,11 @@
 
     RecordsCollection.prototype.collectionName = config.collection.records;
 
-    RecordsCollection.prototype.url = (config != null ? config.SERVER : void 0) + '/' + 'records';
+    RecordsCollection.prototype.url = (config != null ? config.SERVER : void 0) + '/' + RecordsCollection.collectionName;
 
-    RecordsCollection.prototype.urlRoot = (config != null ? config.SERVER : void 0) + '/' + 'records';
+    RecordsCollection.prototype.urlRoot = (config != null ? config.SERVER : void 0) + '/' + RecordsCollection.collectionName;
 
-    RecordsCollection.prototype.localStorage = new Backbone.LocalStorage('records');
+    RecordsCollection.prototype.localStorage = new Backbone.LocalStorage(RecordsCollection.collectionName);
 
     RecordsCollection.prototype.initialize = function() {};
 
@@ -1129,11 +1134,11 @@
 
     UsersCollection.prototype.collectionName = config.collection.users;
 
-    UsersCollection.prototype.url = (config != null ? config.SERVER : void 0) + '/' + 'users';
+    UsersCollection.prototype.url = (config != null ? config.SERVER : void 0) + '/' + UsersCollection.collectionName;
 
-    UsersCollection.prototype.urlRoot = (config != null ? config.SERVER : void 0) + '/' + 'users';
+    UsersCollection.prototype.urlRoot = (config != null ? config.SERVER : void 0) + '/' + UsersCollection.collectionName;
 
-    UsersCollection.prototype.localStorage = new Backbone.LocalStorage('users');
+    UsersCollection.prototype.localStorage = new Backbone.LocalStorage(UsersCollection.collectionName);
 
     UsersCollection.prototype.initialize = function() {};
 

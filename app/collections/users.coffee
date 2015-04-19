@@ -1,9 +1,9 @@
 class Tracktime.UsersCollection extends Tracktime.Collection
   model: Tracktime.User
   collectionName: config.collection.users
-  url: config?.SERVER + '/' + 'users'
-  urlRoot: config?.SERVER + '/' + 'users'
-  localStorage: new Backbone.LocalStorage 'users'
+  url: config?.SERVER + '/' + @collectionName
+  urlRoot: config?.SERVER + '/' + @collectionName
+  localStorage: new Backbone.LocalStorage @collectionName
 
   initialize: () ->
     # @fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'

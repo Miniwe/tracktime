@@ -7,18 +7,21 @@ production =
     records: 'records'
     projects: 'projects'
     actions: 'actions'
+    users: 'users'
 test =
   SERVER: 'http://localhost:5000'
   collection:
     records: 'records'
     projects: 'projects'
     actions: 'actions'
+    users: 'users'
 development =
   SERVER: 'http://localhost:5000'
   collection:
     records: 'records'
     projects: 'projects'
     actions: 'actions'
+    users: 'users'
 
 
 switch process.env?.NODE_ENV
@@ -305,6 +308,7 @@ class Tracktime.Model extends Backbone.Model
 class Tracktime.Action extends Backbone.Model
 
   idAttribute: "_id"
+  collectionName: config.collection.actions
   url: '/actions' #receive on activate actions for user (!)
 
   defaults:
@@ -611,8 +615,8 @@ class Tracktime.User extends Tracktime.Model
 class Tracktime.ActionsCollection extends Backbone.Collection
   model: Tracktime.Action
   collectionName: config.collection.actions
-  url: '/' + 'actions'
-  localStorage: new Backbone.LocalStorage 'actions'
+  url: '/' + @collectionName
+  localStorage: new Backbone.LocalStorage @collectionName
   defaultActions: [
     { title: 'Add Record', type: 'Record' }
     { title: 'Search', type: 'Search' }
@@ -645,9 +649,9 @@ class Tracktime.ActionsCollection extends Backbone.Collection
 class Tracktime.ProjectsCollection extends Tracktime.Collection
   model: Tracktime.Project
   collectionName: config.collection.projects
-  url: config?.SERVER + '/' + 'projects'
-  urlRoot: config?.SERVER + '/' + 'projects'
-  localStorage: new Backbone.LocalStorage 'projects'
+  url: config?.SERVER + '/' + @collectionName
+  urlRoot: config?.SERVER + '/' + @collectionName
+  localStorage: new Backbone.LocalStorage @collectionName
 
   initialize: () ->
     # @fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
@@ -674,9 +678,9 @@ class Tracktime.ProjectsCollection extends Tracktime.Collection
 class Tracktime.RecordsCollection extends Tracktime.Collection
   model: Tracktime.Record
   collectionName: config.collection.records
-  url: config?.SERVER + '/' + 'records'
-  urlRoot: config?.SERVER + '/' + 'records'
-  localStorage: new Backbone.LocalStorage 'records'
+  url: config?.SERVER + '/' + @collectionName
+  urlRoot: config?.SERVER + '/' + @collectionName
+  localStorage: new Backbone.LocalStorage @collectionName
 
   initialize: () ->
     # @fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
@@ -703,9 +707,9 @@ class Tracktime.RecordsCollection extends Tracktime.Collection
 class Tracktime.UsersCollection extends Tracktime.Collection
   model: Tracktime.User
   collectionName: config.collection.users
-  url: config?.SERVER + '/' + 'users'
-  urlRoot: config?.SERVER + '/' + 'users'
-  localStorage: new Backbone.LocalStorage 'users'
+  url: config?.SERVER + '/' + @collectionName
+  urlRoot: config?.SERVER + '/' + @collectionName
+  localStorage: new Backbone.LocalStorage @collectionName
 
   initialize: () ->
     # @fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'

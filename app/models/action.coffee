@@ -1,6 +1,7 @@
 class Tracktime.Action extends Backbone.Model
 
   idAttribute: "_id"
+  collectionName: config.collection.actions
   url: '/actions' #receive on activate actions for user (!)
 
   defaults:

@@ -7,18 +7,21 @@ production =
     records: 'records'
     projects: 'projects'
     actions: 'actions'
+    users: 'users'
 test =
   SERVER: 'http://localhost:5000'
   collection:
     records: 'records'
     projects: 'projects'
     actions: 'actions'
+    users: 'users'
 development =
   SERVER: 'http://localhost:5000'
   collection:
     records: 'records'
     projects: 'projects'
     actions: 'actions'
+    users: 'users'
 
 
 switch process.env?.NODE_ENV
