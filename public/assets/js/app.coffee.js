@@ -1483,7 +1483,7 @@
       return Project.__super__.constructor.apply(this, arguments);
     }
 
-    Project.prototype.container = '.form-control-wrapper';
+    Project.prototype.container = '.action-wrapper';
 
     Project.prototype.template = JST['actions/details/project'];
 
@@ -1504,9 +1504,11 @@
       $(this.container).html(this.$el.html(this.template(this.model.toJSON())));
       textarea = new Tracktime.Element.Textarea({
         model: this.model.get('projectModel'),
+        placeholder: this.model.get('title'),
         field: 'name'
       });
       $('placeholder#textarea', this.$el).replaceWith(textarea.$el);
+      $.material.input("[name=" + textarea.name + "]");
       textarea.$el.textareaAutoSize().focus();
       textarea.on('tSubmit', this.sendForm);
       if (this.model.get('canClose')) {
@@ -1546,7 +1548,7 @@
       return Record.__super__.constructor.apply(this, arguments);
     }
 
-    Record.prototype.container = '.form-control-wrapper';
+    Record.prototype.container = '.action-wrapper';
 
     Record.prototype.template = JST['actions/details/record'];
 
@@ -1567,9 +1569,11 @@
       $(this.container).html(this.$el.html(this.template(this.model.toJSON())));
       textarea = new Tracktime.Element.Textarea({
         model: this.model.get('recordModel'),
+        placeholder: this.model.get('title'),
         field: 'subject'
       });
       $('placeholder#textarea', this.$el).replaceWith(textarea.$el);
+      $.material.input("[name=" + textarea.name + "]");
       textarea.$el.textareaAutoSize().focus();
       textarea.on('tSubmit', this.sendForm);
       $('placeholder#slider', this.$el).replaceWith((new Tracktime.Element.Slider({
@@ -1579,6 +1583,10 @@
       $('placeholder#selectday', this.$el).replaceWith((new Tracktime.Element.SelectDay({
         model: this.model.get('recordModel'),
         field: 'recordDate'
+      })).$el);
+      $('placeholder#project_definition', this.$el).replaceWith((new Tracktime.Element.ProjectDefinition({
+        model: this.model.get('recordModel'),
+        field: 'project'
       })).$el);
       if (this.model.get('canClose')) {
         return $('placeholder#btn_close_action', this.$el).replaceWith((new Tracktime.Element.ElementCloseAction({
@@ -1615,7 +1623,7 @@
       return Search.__super__.constructor.apply(this, arguments);
     }
 
-    Search.prototype.container = '.form-control-wrapper';
+    Search.prototype.container = '.action-wrapper';
 
     Search.prototype.template = JST['actions/details/search'];
 
@@ -1647,7 +1655,7 @@
       return User.__super__.constructor.apply(this, arguments);
     }
 
-    User.prototype.container = '.form-control-wrapper';
+    User.prototype.container = '.action-wrapper';
 
     User.prototype.template = JST['actions/details/user'];
 
@@ -1668,9 +1676,11 @@
       $(this.container).html(this.$el.html(this.template(this.model.toJSON())));
       textarea = new Tracktime.Element.Textarea({
         model: this.model.get('userModel'),
+        placeholder: this.model.get('title'),
         field: 'name'
       });
       $('placeholder#textarea', this.$el).replaceWith(textarea.$el);
+      $.material.input("[name=" + textarea.name + "]");
       textarea.$el.textareaAutoSize().focus();
       textarea.on('tSubmit', this.sendForm);
       if (this.model.get('canClose')) {
@@ -2078,6 +2088,35 @@
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.Element.ElementCloseAction : void 0) || (this.Tracktime.Element.ElementCloseAction = Tracktime.Element.ElementCloseAction);
 
+  Tracktime.Element.ProjectDefinition = (function(superClass) {
+    extend(ProjectDefinition, superClass);
+
+    function ProjectDefinition() {
+      return ProjectDefinition.__super__.constructor.apply(this, arguments);
+    }
+
+    ProjectDefinition.prototype.className = 'project_definition';
+
+    ProjectDefinition.prototype.template = JST['elements/project_definition'];
+
+    ProjectDefinition.prototype.initialize = function(options) {
+      if (options == null) {
+        options = {};
+      }
+      _.extend(this, options);
+      return this.render();
+    };
+
+    ProjectDefinition.prototype.render = function() {
+      return this.$el.html(this.template());
+    };
+
+    return ProjectDefinition;
+
+  })(Tracktime.Element);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.Element.ProjectDefinition : void 0) || (this.Tracktime.Element.ProjectDefinition = Tracktime.Element.ProjectDefinition);
+
   Tracktime.Element.SelectDay = (function(superClass) {
     extend(SelectDay, superClass);
 
@@ -2223,9 +2262,11 @@
       return Textarea.__super__.constructor.apply(this, arguments);
     }
 
+    Textarea.prototype.name = 'action_text';
+
     Textarea.prototype.tagName = 'textarea';
 
-    Textarea.prototype.className = 'form-control';
+    Textarea.prototype.className = 'form-control floating-label';
 
     Textarea.prototype.events = {
       'keydown': 'fixEnter',
@@ -2238,12 +2279,14 @@
         options = {};
       }
       _.extend(this, options);
+      this.name = this.name + "-" + this.model.cid;
       this.render();
       return this.listenTo(this.model, "change:" + this.field, this.changeField);
     };
 
     Textarea.prototype.render = function() {
-      this.$el.attr('name', 'action_text');
+      this.$el.attr('name', this.name);
+      this.$el.attr('placeholder', this.placeholder);
       return this.$el.val(this.model.get(this.field));
     };
 

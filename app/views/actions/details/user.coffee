@@ -1,5 +1,5 @@
 class Tracktime.ActionView.User extends Backbone.View
-  container: '.form-control-wrapper'
+  container: '.action-wrapper'
   template: JST['actions/details/user']
   views: {}
   events:
@@ -15,9 +15,12 @@ class Tracktime.ActionView.User extends Backbone.View
 
     textarea = new Tracktime.Element.Textarea
       model: @model.get 'userModel'
+      placeholder: @model.get 'title'
       field: 'name'
 
     $('placeholder#textarea', @$el).replaceWith textarea.$el
+
+    $.material.input "[name=#{textarea.name}]"
     textarea.$el.textareaAutoSize().focus()
     textarea.on 'tSubmit', @sendForm
 

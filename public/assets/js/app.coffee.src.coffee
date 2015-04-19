@@ -933,7 +933,7 @@ class Tracktime.ActionView.ListBtn extends Backbone.View
 
 
 class Tracktime.ActionView.Project extends Backbone.View
-  container: '.form-control-wrapper'
+  container: '.action-wrapper'
   template: JST['actions/details/project']
   views: {}
   events:
@@ -949,9 +949,12 @@ class Tracktime.ActionView.Project extends Backbone.View
 
     textarea = new Tracktime.Element.Textarea
       model: @model.get 'projectModel'
+      placeholder: @model.get 'title'
       field: 'name'
 
     $('placeholder#textarea', @$el).replaceWith textarea.$el
+
+    $.material.input "[name=#{textarea.name}]"
     textarea.$el.textareaAutoSize().focus()
     textarea.on 'tSubmit', @sendForm
 
@@ -973,7 +976,7 @@ class Tracktime.ActionView.Project extends Backbone.View
 
 
 class Tracktime.ActionView.Record extends Backbone.View
-  container: '.form-control-wrapper'
+  container: '.action-wrapper'
   template: JST['actions/details/record']
   views: {}
   events:
@@ -989,9 +992,11 @@ class Tracktime.ActionView.Record extends Backbone.View
 
     textarea = new Tracktime.Element.Textarea
       model: @model.get 'recordModel'
+      placeholder: @model.get 'title'
       field: 'subject'
 
     $('placeholder#textarea', @$el).replaceWith textarea.$el
+    $.material.input "[name=#{textarea.name}]"
     textarea.$el.textareaAutoSize().focus()
     textarea.on 'tSubmit', @sendForm
 
@@ -1003,6 +1008,11 @@ class Tracktime.ActionView.Record extends Backbone.View
     $('placeholder#selectday', @$el).replaceWith (new Tracktime.Element.SelectDay
       model: @model.get 'recordModel'
       field: 'recordDate'
+    ).$el
+
+    $('placeholder#project_definition', @$el).replaceWith (new Tracktime.Element.ProjectDefinition
+      model: @model.get 'recordModel'
+      field: 'project'
     ).$el
 
     $('placeholder#btn_close_action', @$el).replaceWith (new Tracktime.Element.ElementCloseAction
@@ -1023,7 +1033,7 @@ class Tracktime.ActionView.Record extends Backbone.View
 
 
 class Tracktime.ActionView.Search extends Backbone.View
-  container: '.form-control-wrapper'
+  container: '.action-wrapper'
   template: JST['actions/details/search']
   tmpDetails: {}
   views: {}
@@ -1039,7 +1049,7 @@ class Tracktime.ActionView.Search extends Backbone.View
 
 
 class Tracktime.ActionView.User extends Backbone.View
-  container: '.form-control-wrapper'
+  container: '.action-wrapper'
   template: JST['actions/details/user']
   views: {}
   events:
@@ -1055,9 +1065,12 @@ class Tracktime.ActionView.User extends Backbone.View
 
     textarea = new Tracktime.Element.Textarea
       model: @model.get 'userModel'
+      placeholder: @model.get 'title'
       field: 'name'
 
     $('placeholder#textarea', @$el).replaceWith textarea.$el
+
+    $.material.input "[name=#{textarea.name}]"
     textarea.$el.textareaAutoSize().focus()
     textarea.on 'tSubmit', @sendForm
 
@@ -1286,6 +1299,20 @@ class Tracktime.Element.ElementCloseAction extends Tracktime.Element
 (module?.exports = Tracktime.Element.ElementCloseAction) or @Tracktime.Element.ElementCloseAction = Tracktime.Element.ElementCloseAction
 
 
+class Tracktime.Element.ProjectDefinition extends Tracktime.Element
+  className: 'project_definition'
+  template: JST['elements/project_definition']
+
+  initialize: (options = {}) ->
+    _.extend @, options
+    @render()
+
+  render: () ->
+    @$el.html @template()
+
+(module?.exports = Tracktime.Element.ProjectDefinition) or @Tracktime.Element.ProjectDefinition = Tracktime.Element.ProjectDefinition
+
+
 class Tracktime.Element.SelectDay extends Tracktime.Element
   className: 'btn-group select-day'
   template: JST['elements/selectday']
@@ -1368,9 +1395,11 @@ class Tracktime.Element.Slider extends Tracktime.Element
 (module?.exports = Tracktime.Element.Slider) or @Tracktime.Element.Slider = Tracktime.Element.Slider
 
 
+#<textarea class="form-control floating-label" placeholder="textarea floating label"></textarea>
 class Tracktime.Element.Textarea extends Tracktime.Element
+  name: 'action_text'
   tagName: 'textarea'
-  className: 'form-control'
+  className: 'form-control floating-label'
   events:
     'keydown': 'fixEnter'
     'keyup': 'changeInput'
@@ -1378,11 +1407,13 @@ class Tracktime.Element.Textarea extends Tracktime.Element
 
   initialize: (options = {}) ->
     _.extend @, options
+    @name = "#{@name}-#{@model.cid}"
     @render()
     @listenTo @model, "change:#{@field}", @changeField
 
   render: () ->
-    @$el.attr 'name', 'action_text'
+    @$el.attr 'name', @name
+    @$el.attr 'placeholder', @placeholder
     @$el.val @model.get @field
 
   changeField: () =>

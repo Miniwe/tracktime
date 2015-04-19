@@ -103,17 +103,17 @@ h1, h2, h3, h4, h5, h6 {
 /* line 18, ../../app/assets/sass/blocks/_actions-form.scss */
 #actions-form .btn-close-action {
   position: absolute;
-  top: 0;
-  right: .75em;
+  top: 1em;
+  right: 2em;
 }
 /* line 24, ../../app/assets/sass/blocks/_actions-form.scss */
-#actions-form .form-control-wrapper {
+#actions-form .action-wrapper {
   overflow: visible;
   margin-top: 1em;
   padding: 0 5em;
 }
 /* line 30, ../../app/assets/sass/blocks/_actions-form.scss */
-#actions-form .form-control-wrapper textarea {
+#actions-form .action-wrapper textarea {
   font-size: 18px;
   display: block;
   overflow-x: hidden;
@@ -128,19 +128,16 @@ h1, h2, h3, h4, h5, h6 {
   padding: .2em 0;
 }
 /* line 45, ../../app/assets/sass/blocks/_actions-form.scss */
-#actions-form .form-control-wrapper .floating-label {
-  left: 70px;
+#actions-form .action-wrapper .floating-label {
   color: rgba(0, 0, 0, 0.4);
 }
-/* line 51, ../../app/assets/sass/blocks/_actions-form.scss */
-#actions-form .form-control-wrapper .form-control:focus ~ .floating-label,
-#actions-form .form-control-wrapper .form-control:not(.empty) ~ .floating-label {
-  top: -14px;
-  left: 70px;
+/* line 49, ../../app/assets/sass/blocks/_actions-form.scss */
+#actions-form .action-wrapper .form-control:focus ~ .floating-label,
+#actions-form .action-wrapper .form-control:not(.empty) ~ .floating-label {
   color: #009688;
 }
-/* line 59, ../../app/assets/sass/blocks/_actions-form.scss */
-#actions-form .form-control-wrapper .details-container {
+/* line 54, ../../app/assets/sass/blocks/_actions-form.scss */
+#actions-form .action-wrapper .details-container {
   height: 54px;
   filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
   opacity: 1;
@@ -150,8 +147,8 @@ h1, h2, h3, h4, h5, h6 {
   -webkit-transition-delay: 0.1s;
   transition: all 0.2s 0.1s;
 }
-/* line 66, ../../app/assets/sass/blocks/_actions-form.scss */
-#actions-form .form-control-wrapper .details-container.hidden {
+/* line 61, ../../app/assets/sass/blocks/_actions-form.scss */
+#actions-form .action-wrapper .details-container.hidden {
   height: 0;
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
   opacity: 0;
@@ -537,6 +534,18 @@ h1, h2, h3, h4, h5, h6 {
   opacity: 0;
 }
 
+/* line 1, ../../app/assets/sass/blocks/_project-definition.scss */
+.project_definition {
+  display: inline-block;
+  pointer-events: auto;
+}
+/* line 4, ../../app/assets/sass/blocks/_project-definition.scss */
+.project_definition .toggler {
+  font-weight: bold;
+  font-style: italic;
+  font-size: 0.9em;
+}
+
 /* line 3, ../../app/assets/sass/structures/_slider.scss */
 .slider {
   border-radius: 3em;
@@ -606,7 +615,7 @@ h1, h2, h3, h4, h5, h6 {
   left: 1px;
 }
 
-/* line 18, ../../app/assets/sass/app.scss */
+/* line 19, ../../app/assets/sass/app.scss */
 html,
 body {
   overflow: hidden;

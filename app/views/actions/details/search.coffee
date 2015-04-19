@@ -1,5 +1,5 @@
 class Tracktime.ActionView.Search extends Backbone.View
-  container: '.form-control-wrapper'
+  container: '.action-wrapper'
   template: JST['actions/details/search']
   tmpDetails: {}
   views: {}

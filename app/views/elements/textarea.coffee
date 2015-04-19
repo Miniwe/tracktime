@@ -1,6 +1,8 @@
+#<textarea class="form-control floating-label" placeholder="textarea floating label"></textarea>
 class Tracktime.Element.Textarea extends Tracktime.Element
+  name: 'action_text'
   tagName: 'textarea'
-  className: 'form-control'
+  className: 'form-control floating-label'
   events:
     'keydown': 'fixEnter'
     'keyup': 'changeInput'
@@ -8,11 +10,13 @@ class Tracktime.Element.Textarea extends Tracktime.Element
 
   initialize: (options = {}) ->
     _.extend @, options
+    @name = "#{@name}-#{@model.cid}"
     @render()
     @listenTo @model, "change:#{@field}", @changeField
 
   render: () ->
-    @$el.attr 'name', 'action_text'
+    @$el.attr 'name', @name
+    @$el.attr 'placeholder', @placeholder
     @$el.val @model.get @field
 
   changeField: () =>

@@ -18,10 +18,10 @@
     .btn-close-action
     {
         position: absolute;
-        top: 0;
-        right: .75em;
+        top: 1em;
+        right: 2em;
     }
-    .form-control-wrapper
+    .action-wrapper
     {
         overflow: visible;
 
@@ -44,16 +44,11 @@
         }
         .floating-label
         {
-            left: 70px;
-
             color: rgba(0, 0, 0, .4);
         }
         .form-control:focus ~ .floating-label,
         .form-control:not(.empty) ~ .floating-label
         {
-            top: -14px;
-            left: 70px;
-
             color: #009688;
         }
         .details-container

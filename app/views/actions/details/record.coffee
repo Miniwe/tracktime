@@ -1,5 +1,5 @@
 class Tracktime.ActionView.Record extends Backbone.View
-  container: '.form-control-wrapper'
+  container: '.action-wrapper'
   template: JST['actions/details/record']
   views: {}
   events:
@@ -15,9 +15,11 @@ class Tracktime.ActionView.Record extends Backbone.View
 
     textarea = new Tracktime.Element.Textarea
       model: @model.get 'recordModel'
+      placeholder: @model.get 'title'
       field: 'subject'
 
     $('placeholder#textarea', @$el).replaceWith textarea.$el
+    $.material.input "[name=#{textarea.name}]"
     textarea.$el.textareaAutoSize().focus()
     textarea.on 'tSubmit', @sendForm
 
@@ -29,6 +31,11 @@ class Tracktime.ActionView.Record extends Backbone.View
     $('placeholder#selectday', @$el).replaceWith (new Tracktime.Element.SelectDay
       model: @model.get 'recordModel'
       field: 'recordDate'
+    ).$el
+
+    $('placeholder#project_definition', @$el).replaceWith (new Tracktime.Element.ProjectDefinition
+      model: @model.get 'recordModel'
+      field: 'project'
     ).$el
 
     $('placeholder#btn_close_action', @$el).replaceWith (new Tracktime.Element.ElementCloseAction

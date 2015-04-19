@@ -29272,7 +29272,7 @@ function toArray(list, index) {
 this["JST"] = this["JST"] || {};
 
 this["JST"]["actions/actions"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  return "<div class=\"select-action dropdown pull-left\">\n    <button id=\"action_type\" type=\"button\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\" class=\"btn btn-fab btn-warning dropdown-toggle\" title=\"SHIFT + ENTER to submit\">\n        <i class=\"\"></i>\n    </button>\n    <ul class=\"dropdown-menu\" role=\"menu\" aria-labelledby=\"dLabel\">\n    </ul>\n</div>\n<div class=\"form-control-wrapper\">\n\n</div>";
+  return "<div class=\"select-action dropdown pull-left\">\n    <button id=\"action_type\" type=\"button\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\" class=\"btn btn-fab btn-warning dropdown-toggle\" title=\"SHIFT + ENTER to submit\">\n        <i class=\"\"></i>\n    </button>\n    <ul class=\"dropdown-menu\" role=\"menu\" aria-labelledby=\"dLabel\">\n    </ul>\n</div>\n<div class=\"action-wrapper\">\n\n</div>";
   },"useData":true});
 
 this["JST"]["actions/admin_action"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
@@ -29305,23 +29305,19 @@ this["JST"]["actions/admin_action"] = Handlebars.template({"compiler":[6,">= 2.0
 },"useData":true});
 
 this["JST"]["actions/details/project"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  var helper, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, functionType="function";
+  var helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
   return escapeExpression(((helpers.placeholder || (depth0 && depth0.placeholder) || helperMissing).call(depth0, "btn_close_action", {"name":"placeholder","hash":{},"data":data})))
     + "\n"
     + escapeExpression(((helpers.placeholder || (depth0 && depth0.placeholder) || helperMissing).call(depth0, "textarea", {"name":"placeholder","hash":{},"data":data})))
-    + "\n<div class=\"floating-label\">"
-    + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
-    + "</div>\n<span class=\"material-input\"></span>\n\n<div class=\"details-container hidden\">\n  project details\n</div>";
+    + "\n<div class=\"details-container hidden\">\n  project details\n</div>\n";
 },"useData":true});
 
 this["JST"]["actions/details/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  var helper, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, functionType="function";
+  var helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
   return escapeExpression(((helpers.placeholder || (depth0 && depth0.placeholder) || helperMissing).call(depth0, "btn_close_action", {"name":"placeholder","hash":{},"data":data})))
     + "\n"
     + escapeExpression(((helpers.placeholder || (depth0 && depth0.placeholder) || helperMissing).call(depth0, "textarea", {"name":"placeholder","hash":{},"data":data})))
-    + "\n<div class=\"floating-label\">"
-    + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
-    + "</div>\n<span class=\"material-input\"></span>\n\n<div class=\"details-container hidden\">\n    <div class=\"row\">\n        <div class=\"col-md-2\">\n            "
+    + "\n<div class=\"details-container hidden\">\n    <div class=\"row\">\n        <div class=\"col-md-2\">\n            "
     + escapeExpression(((helpers.placeholder || (depth0 && depth0.placeholder) || helperMissing).call(depth0, "selectday", {"name":"placeholder","hash":{},"data":data})))
     + "\n        </div>\n        <div class=\"col-md-8\">\n            "
     + escapeExpression(((helpers.placeholder || (depth0 && depth0.placeholder) || helperMissing).call(depth0, "slider", {"name":"placeholder","hash":{},"data":data})))
@@ -29336,13 +29332,11 @@ this["JST"]["actions/details/search"] = Handlebars.template({"compiler":[6,">= 2
 },"useData":true});
 
 this["JST"]["actions/details/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  var helper, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, functionType="function";
+  var helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
   return escapeExpression(((helpers.placeholder || (depth0 && depth0.placeholder) || helperMissing).call(depth0, "btn_close_action", {"name":"placeholder","hash":{},"data":data})))
     + "\n"
     + escapeExpression(((helpers.placeholder || (depth0 && depth0.placeholder) || helperMissing).call(depth0, "textarea", {"name":"placeholder","hash":{},"data":data})))
-    + "\n<div class=\"floating-label\">"
-    + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
-    + "</div>\n<span class=\"material-input\"></span>\n\n<div class=\"details-container hidden\">\n  user details\n</div>";
+    + "\n<div class=\"details-container hidden\">\n  user details\n</div>\n";
 },"useData":true});
 
 this["JST"]["actions/listbtn"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
@@ -29396,6 +29390,10 @@ this["JST"]["admin/users"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1
     + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
     + "</h2>\n</header>";
 },"useData":true});
+
+this["JST"]["elements/project_definition"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  return "<!-- <a href=\"#define-project\" class=\"toggler\">Define project here</a>\n<textarea class=\"form-control\" placeholder=\"textarea label\"></textarea>\n-->\n";
+  },"useData":true});
 
 this["JST"]["elements/selectday"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "<a href=\"javascript:void(0)\" class=\"btn btn-block btn-default dropdown-toggle\" data-toggle=\"dropdown\" id=\"open-cal\" data-target=\"#\" style=\"padding-left: 15px;\"><i class=\"mdi-action-event pull-left\"></i><div class=\"caption\" style=\"display: inline-block;\"><ruby>Сегодня<rt>03.01.2015</rt> </ruby></div> <span class=\"caret\"></span></a>\n<ul class=\"dropdown-menu\">\n    <li>\n        <button class=\"btn btn-default btn-block\">\n            <ruby>Позавчера\n                <rt>01.01.2015</rt>\n            </ruby>\n        </button>\n    </li>\n    <li>\n        <button class=\"btn btn-default btn-block\">\n            <ruby>Вчера\n                <rt>02.01.2015</rt>\n            </ruby>\n        </button>\n    </li>\n    <li>\n        <button class=\"btn btn-default btn-block\">\n            <ruby>Сегодня\n                <rt>03.01.2015</rt>\n            </ruby>\n        </button>\n    </li>\n    <li><a href=\"javascript:void(0)\" class=\"btn btn-default disabled\">Выбрать дату</a></li>\n</ul>";
@@ -31095,7 +31093,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       return Project.__super__.constructor.apply(this, arguments);
     }
 
-    Project.prototype.container = '.form-control-wrapper';
+    Project.prototype.container = '.action-wrapper';
 
     Project.prototype.template = JST['actions/details/project'];
 
@@ -31116,9 +31114,11 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       $(this.container).html(this.$el.html(this.template(this.model.toJSON())));
       textarea = new Tracktime.Element.Textarea({
         model: this.model.get('projectModel'),
+        placeholder: this.model.get('title'),
         field: 'name'
       });
       $('placeholder#textarea', this.$el).replaceWith(textarea.$el);
+      $.material.input("[name=" + textarea.name + "]");
       textarea.$el.textareaAutoSize().focus();
       textarea.on('tSubmit', this.sendForm);
       if (this.model.get('canClose')) {
@@ -31158,7 +31158,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       return Record.__super__.constructor.apply(this, arguments);
     }
 
-    Record.prototype.container = '.form-control-wrapper';
+    Record.prototype.container = '.action-wrapper';
 
     Record.prototype.template = JST['actions/details/record'];
 
@@ -31179,9 +31179,11 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       $(this.container).html(this.$el.html(this.template(this.model.toJSON())));
       textarea = new Tracktime.Element.Textarea({
         model: this.model.get('recordModel'),
+        placeholder: this.model.get('title'),
         field: 'subject'
       });
       $('placeholder#textarea', this.$el).replaceWith(textarea.$el);
+      $.material.input("[name=" + textarea.name + "]");
       textarea.$el.textareaAutoSize().focus();
       textarea.on('tSubmit', this.sendForm);
       $('placeholder#slider', this.$el).replaceWith((new Tracktime.Element.Slider({
@@ -31191,6 +31193,10 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       $('placeholder#selectday', this.$el).replaceWith((new Tracktime.Element.SelectDay({
         model: this.model.get('recordModel'),
         field: 'recordDate'
+      })).$el);
+      $('placeholder#project_definition', this.$el).replaceWith((new Tracktime.Element.ProjectDefinition({
+        model: this.model.get('recordModel'),
+        field: 'project'
       })).$el);
       if (this.model.get('canClose')) {
         return $('placeholder#btn_close_action', this.$el).replaceWith((new Tracktime.Element.ElementCloseAction({
@@ -31227,7 +31233,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       return Search.__super__.constructor.apply(this, arguments);
     }
 
-    Search.prototype.container = '.form-control-wrapper';
+    Search.prototype.container = '.action-wrapper';
 
     Search.prototype.template = JST['actions/details/search'];
 
@@ -31259,7 +31265,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       return User.__super__.constructor.apply(this, arguments);
     }
 
-    User.prototype.container = '.form-control-wrapper';
+    User.prototype.container = '.action-wrapper';
 
     User.prototype.template = JST['actions/details/user'];
 
@@ -31280,9 +31286,11 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       $(this.container).html(this.$el.html(this.template(this.model.toJSON())));
       textarea = new Tracktime.Element.Textarea({
         model: this.model.get('userModel'),
+        placeholder: this.model.get('title'),
         field: 'name'
       });
       $('placeholder#textarea', this.$el).replaceWith(textarea.$el);
+      $.material.input("[name=" + textarea.name + "]");
       textarea.$el.textareaAutoSize().focus();
       textarea.on('tSubmit', this.sendForm);
       if (this.model.get('canClose')) {
@@ -31690,6 +31698,35 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.Element.ElementCloseAction : void 0) || (this.Tracktime.Element.ElementCloseAction = Tracktime.Element.ElementCloseAction);
 
+  Tracktime.Element.ProjectDefinition = (function(superClass) {
+    extend(ProjectDefinition, superClass);
+
+    function ProjectDefinition() {
+      return ProjectDefinition.__super__.constructor.apply(this, arguments);
+    }
+
+    ProjectDefinition.prototype.className = 'project_definition';
+
+    ProjectDefinition.prototype.template = JST['elements/project_definition'];
+
+    ProjectDefinition.prototype.initialize = function(options) {
+      if (options == null) {
+        options = {};
+      }
+      _.extend(this, options);
+      return this.render();
+    };
+
+    ProjectDefinition.prototype.render = function() {
+      return this.$el.html(this.template());
+    };
+
+    return ProjectDefinition;
+
+  })(Tracktime.Element);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.Element.ProjectDefinition : void 0) || (this.Tracktime.Element.ProjectDefinition = Tracktime.Element.ProjectDefinition);
+
   Tracktime.Element.SelectDay = (function(superClass) {
     extend(SelectDay, superClass);
 
@@ -31835,9 +31872,11 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       return Textarea.__super__.constructor.apply(this, arguments);
     }
 
+    Textarea.prototype.name = 'action_text';
+
     Textarea.prototype.tagName = 'textarea';
 
-    Textarea.prototype.className = 'form-control';
+    Textarea.prototype.className = 'form-control floating-label';
 
     Textarea.prototype.events = {
       'keydown': 'fixEnter',
@@ -31850,12 +31889,14 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
         options = {};
       }
       _.extend(this, options);
+      this.name = this.name + "-" + this.model.cid;
       this.render();
       return this.listenTo(this.model, "change:" + this.field, this.changeField);
     };
 
     Textarea.prototype.render = function() {
-      this.$el.attr('name', 'action_text');
+      this.$el.attr('name', this.name);
+      this.$el.attr('placeholder', this.placeholder);
       return this.$el.val(this.model.get(this.field));
     };
 
