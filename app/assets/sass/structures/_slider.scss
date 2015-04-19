@@ -26,7 +26,7 @@
       font-size: 1em;
       cursor: pointer;
       &.noUi-active {
-        @include transform(scale3d(1.3, 1.3, 1));
+        @include transform(scale3d(1.2, 1.2, 1));
         cursor: ew-resize;
       }
       &:before {
@@ -56,5 +56,29 @@
         left: 1px;
       }
     }
+  }
+  .noUi-pips {
+    margin-top: -2px;
+    color: #fff;
+    font-size: 9px;
+    .noUi-value-horizontal {
+      @include opacity(0.5);
+      margin-top: -68px;
+    }
+    .noUi-marker {
+      background: #fff;
+    }
+    .noUi-marker-large, .noUi-marker-sub {
+      margin-top: -4px;
+      background: #fff;
+    }
+  }
+  &:hover {
+    .noUi-pips {
+      .noUi-value-horizontal {
+        @include opacity(1);
+      }
+    }
+
   }
 }

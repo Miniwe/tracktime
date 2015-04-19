@@ -21,6 +21,10 @@ class Tracktime.ActionView.Record extends Backbone.View
     $('placeholder#textarea', @$el).replaceWith textarea.$el
     $.material.input "[name=#{textarea.name}]"
     textarea.$el.textareaAutoSize().focus()
+    window.setTimeout () =>
+      textarea.$el.trigger 'input'
+    , 100
+
     textarea.on 'tSubmit', @sendForm
 
     $('placeholder#slider', @$el).replaceWith (new Tracktime.Element.Slider
@@ -42,12 +46,12 @@ class Tracktime.ActionView.Record extends Backbone.View
       model: @model
     ).$el if @model.get 'canClose'
 
-  textareaInput: (event) =>
-    window.setTimeout () =>
-      diff = $('#actions-form').outerHeight() - $('.navbar').outerHeight(true)
-      $('#actions-form').toggleClass "shadow-z-2", (diff > 10)
-      $(".details-container").toggleClass 'hidden', _.isEmpty $(event.target).val()
-    , 500
+    $('[data-toggle="tooltip"]').tooltip()
+
+  textareaInput: (event) ->
+    diff = $('#actions-form').outerHeight() - $('.navbar').outerHeight(true)
+    $('#actions-form').toggleClass "shadow-z-2", (diff > 10)
+    $(".details-container").toggleClass 'hidden', _.isEmpty $(event.target).val()
 
   sendForm: () =>
     @model.processAction()

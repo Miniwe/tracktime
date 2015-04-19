@@ -1,0 +1,29 @@
+.ani {
+    background: linear-gradient(320deg, rgba(255,255,255,.6), rgba(255,255,255,0), rgba(255,255,255,.6), rgba(255,255,255,0), rgba(255,255,255,.6), rgba(255,255,255,0), rgba(255,255,255,.6), rgba(255,255,255,0));
+    background-size: 28% 100%;
+    -webkit-animation: AnimationName 20s linear infinite;
+    -moz-animation: AnimationName 20s linear infinite;
+    -o-animation: AnimationName 20s linear infinite;
+    animation: AnimationName 20s linear infinite;
+
+}
+@-webkit-keyframes AnimationName {
+    0%{background-position:0% 2%}
+    50%{background-position:100% 99%}
+    100%{background-position:0% 2%}
+}
+@-moz-keyframes AnimationName {
+    0%{background-position:0% 2%}
+    50%{background-position:100% 99%}
+    100%{background-position:0% 2%}
+}
+@-o-keyframes AnimationName {
+    0%{background-position:0% 2%}
+    50%{background-position:100% 99%}
+    100%{background-position:0% 2%}
+}
+@keyframes AnimationName {
+    0%{background-position:0% 2%}
+    50%{background-position:100% 99%}
+    100%{background-position:0% 2%}
+}

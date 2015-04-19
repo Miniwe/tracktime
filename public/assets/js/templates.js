@@ -1,7 +1,7 @@
 this["JST"] = this["JST"] || {};
 
 this["JST"]["actions/actions"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  return "<div class=\"select-action dropdown pull-left\">\n    <button id=\"action_type\" type=\"button\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\" class=\"btn btn-fab btn-warning dropdown-toggle\" title=\"SHIFT + ENTER to submit\">\n        <i class=\"\"></i>\n    </button>\n    <ul class=\"dropdown-menu\" role=\"menu\" aria-labelledby=\"dLabel\">\n    </ul>\n</div>\n<div class=\"action-wrapper\">\n\n</div>";
+  return "<div class=\"select-action dropdown pull-left\">\n    <button id=\"action_type\" type=\"button\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\" class=\"btn btn-fab btn-warning dropdown-toggle\" title=\"\">\n        <i class=\"\"></i>\n    </button>\n    <ul class=\"dropdown-menu\" role=\"menu\" aria-labelledby=\"dLabel\">\n    </ul>\n</div>\n<div class=\"action-wrapper\">\n\n</div>";
   },"useData":true});
 
 this["JST"]["actions/admin_action"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
@@ -42,15 +42,17 @@ this["JST"]["actions/details/project"] = Handlebars.template({"compiler":[6,">= 
 },"useData":true});
 
 this["JST"]["actions/details/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  var helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+  var helper, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, functionType="function";
   return escapeExpression(((helpers.placeholder || (depth0 && depth0.placeholder) || helperMissing).call(depth0, "btn_close_action", {"name":"placeholder","hash":{},"data":data})))
     + "\n"
     + escapeExpression(((helpers.placeholder || (depth0 && depth0.placeholder) || helperMissing).call(depth0, "textarea", {"name":"placeholder","hash":{},"data":data})))
-    + "\n<div class=\"details-container hidden\">\n    <div class=\"row\">\n        <div class=\"col-md-2\">\n            "
+    + "\n<div class=\"details-container navbar "
+    + escapeExpression(((helper = (helper = helpers.navbarClass || (depth0 != null ? depth0.navbarClass : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"navbarClass","hash":{},"data":data}) : helper)))
+    + " hidden\">\n    <div class=\"row\" style=\"margin: 0\">\n        <div class=\"col-md-2\">\n            "
     + escapeExpression(((helpers.placeholder || (depth0 && depth0.placeholder) || helperMissing).call(depth0, "selectday", {"name":"placeholder","hash":{},"data":data})))
-    + "\n        </div>\n        <div class=\"col-md-8\">\n            "
+    + "\n        </div>\n        <div class=\"col-md-9\">\n            "
     + escapeExpression(((helpers.placeholder || (depth0 && depth0.placeholder) || helperMissing).call(depth0, "slider", {"name":"placeholder","hash":{},"data":data})))
-    + "\n        </div>\n        <div class=\"col-md-2\">\n            <button href=\"#send-form\" id=\"send-form\" class=\"btn btn-primary btn-block\"><i class=\"mdi-action-done pull-left\"></i>Send</button>\n        </div>\n    </div>\n    <div class=\"row hidden\">\n        <div class=\"well\">\n            Project:\n            <input type=\"text\" value=\"0\" name=\"project_id\" />\n        </div>\n    </div>\n</div>";
+    + "\n        </div>\n        <div class=\"col-md-1\">\n            <button href=\"#send-form\" id=\"send-form\" class=\"btn btn-white btn-fab btn-fab-mini pull-right\" style=\"margin: 7px; display: block;\" data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\"SAVE Shift+Enter\"><i class=\"mdi-action-done pull-left\"></i><!-- Send --></button>\n        </div>\n    </div>\n\n</div>";
 },"useData":true});
 
 this["JST"]["actions/details/search"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
@@ -125,7 +127,7 @@ this["JST"]["elements/project_definition"] = Handlebars.template({"compiler":[6,
   },"useData":true});
 
 this["JST"]["elements/selectday"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  return "<a href=\"javascript:void(0)\" class=\"btn btn-block btn-default dropdown-toggle\" data-toggle=\"dropdown\" id=\"open-cal\" data-target=\"#\" style=\"padding-left: 15px;\"><i class=\"mdi-action-event pull-left\"></i><div class=\"caption\" style=\"display: inline-block;\"><ruby>Сегодня<rt>03.01.2015</rt> </ruby></div> <span class=\"caret\"></span></a>\n<ul class=\"dropdown-menu\">\n    <li>\n        <button class=\"btn btn-default btn-block\">\n            <ruby>Позавчера\n                <rt>01.01.2015</rt>\n            </ruby>\n        </button>\n    </li>\n    <li>\n        <button class=\"btn btn-default btn-block\">\n            <ruby>Вчера\n                <rt>02.01.2015</rt>\n            </ruby>\n        </button>\n    </li>\n    <li>\n        <button class=\"btn btn-default btn-block\">\n            <ruby>Сегодня\n                <rt>03.01.2015</rt>\n            </ruby>\n        </button>\n    </li>\n    <li><a href=\"javascript:void(0)\" class=\"btn btn-default disabled\">Выбрать дату</a></li>\n</ul>";
+  return "<a href=\"javascript:void(0)\" class=\"btn btn-block btn-white btn-xs dropdown-toggle\" data-toggle=\"dropdown\" id=\"open-cal\" data-target=\"#\" style=\"padding-left: 15px;\"><i class=\"mdi-action-event pull-left\"></i><div class=\"caption\" style=\"display: inline-block;\"><ruby>Сегодня<rt>03.01.2015</rt> </ruby></div> <span class=\"caret\"></span></a>\n<ul class=\"dropdown-menu\">\n    <li>\n        <button class=\"btn btn-default btn-block\">\n            <ruby>Позавчера\n                <rt>01.01.2015</rt>\n            </ruby>\n        </button>\n    </li>\n    <li>\n        <button class=\"btn btn-default btn-block\">\n            <ruby>Вчера\n                <rt>02.01.2015</rt>\n            </ruby>\n        </button>\n    </li>\n    <li>\n        <button class=\"btn btn-default btn-block\">\n            <ruby>Сегодня\n                <rt>03.01.2015</rt>\n            </ruby>\n        </button>\n    </li>\n    <li><a href=\"javascript:void(0)\" class=\"btn btn-default disabled\">Выбрать дату</a></li>\n</ul>";
   },"useData":true});
 
 this["JST"]["global/app"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {

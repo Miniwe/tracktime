@@ -1,21 +1,16 @@
 {{placeholder 'btn_close_action'}}
 {{placeholder 'textarea'}}
-<div class="details-container hidden">
-    <div class="row">
+<div class="details-container navbar {{navbarClass}} hidden">
+    <div class="row" style="margin: 0">
         <div class="col-md-2">
             {{placeholder 'selectday'}}
         </div>
-        <div class="col-md-8">
+        <div class="col-md-9">
             {{placeholder 'slider'}}
         </div>
-        <div class="col-md-2">
-            <button href="#send-form" id="send-form" class="btn btn-primary btn-block"><i class="mdi-action-done pull-left"></i>Send</button>
+        <div class="col-md-1">
+            <button href="#send-form" id="send-form" class="btn btn-white btn-fab btn-fab-mini pull-right" style="margin: 7px; display: block;" data-toggle="tooltip" data-placement="right" title="" data-original-title="SAVE Shift+Enter"><i class="mdi-action-done pull-left"></i><!-- Send --></button>
         </div>
     </div>
-    <div class="row hidden">
-        <div class="well">
-            Project:
-            <input type="text" value="0" name="project_id" />
-        </div>
-    </div>
+
 </div>

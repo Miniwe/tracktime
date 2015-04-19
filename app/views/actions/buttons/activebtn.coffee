@@ -11,7 +11,7 @@ class Tracktime.ActionView.ActiveBtn extends Backbone.View
       model.icon.className = model.icon.classNameEdit
     @$el
       .attr 'class', "btn btn-fab #{model.btnClass} dropdown-toggle "
-      .find('i').attr('class', model.icon.className).html model.icon.letter
+      .find('i').attr('title', model.title).attr('class', model.icon.className).html model.icon.letter
 
 
 (module?.exports = Tracktime.ActionView.ActiveBtn) or @Tracktime.ActionView.ActiveBtn = Tracktime.ActionView.ActiveBtn

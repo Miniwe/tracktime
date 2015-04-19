@@ -888,7 +888,7 @@ class Tracktime.ActionView.ActiveBtn extends Backbone.View
       model.icon.className = model.icon.classNameEdit
     @$el
       .attr 'class', "btn btn-fab #{model.btnClass} dropdown-toggle "
-      .find('i').attr('class', model.icon.className).html model.icon.letter
+      .find('i').attr('title', model.title).attr('class', model.icon.className).html model.icon.letter
 
 
 (module?.exports = Tracktime.ActionView.ActiveBtn) or @Tracktime.ActionView.ActiveBtn = Tracktime.ActionView.ActiveBtn
@@ -997,6 +997,10 @@ class Tracktime.ActionView.Record extends Backbone.View
     $('placeholder#textarea', @$el).replaceWith textarea.$el
     $.material.input "[name=#{textarea.name}]"
     textarea.$el.textareaAutoSize().focus()
+    window.setTimeout () =>
+      textarea.$el.trigger 'input'
+    , 100
+
     textarea.on 'tSubmit', @sendForm
 
     $('placeholder#slider', @$el).replaceWith (new Tracktime.Element.Slider
@@ -1018,12 +1022,12 @@ class Tracktime.ActionView.Record extends Backbone.View
       model: @model
     ).$el if @model.get 'canClose'
 
-  textareaInput: (event) =>
-    window.setTimeout () =>
-      diff = $('#actions-form').outerHeight() - $('.navbar').outerHeight(true)
-      $('#actions-form').toggleClass "shadow-z-2", (diff > 10)
-      $(".details-container").toggleClass 'hidden', _.isEmpty $(event.target).val()
-    , 500
+    $('[data-toggle="tooltip"]').tooltip()
+
+  textareaInput: (event) ->
+    diff = $('#actions-form').outerHeight() - $('.navbar').outerHeight(true)
+    $('#actions-form').toggleClass "shadow-z-2", (diff > 10)
+    $(".details-container").toggleClass 'hidden', _.isEmpty $(event.target).val()
 
   sendForm: () =>
     @model.processAction()

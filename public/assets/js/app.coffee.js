@@ -1397,7 +1397,7 @@
         model.btnClass = model.btnClassEdit;
         model.icon.className = model.icon.classNameEdit;
       }
-      return this.$el.attr('class', "btn btn-fab " + model.btnClass + " dropdown-toggle ").find('i').attr('class', model.icon.className).html(model.icon.letter);
+      return this.$el.attr('class', "btn btn-fab " + model.btnClass + " dropdown-toggle ").find('i').attr('title', model.title).attr('class', model.icon.className).html(model.icon.letter);
     };
 
     return ActiveBtn;
@@ -1533,7 +1533,6 @@
 
     function Record() {
       this.sendForm = bind(this.sendForm, this);
-      this.textareaInput = bind(this.textareaInput, this);
       return Record.__super__.constructor.apply(this, arguments);
     }
 
@@ -1564,6 +1563,11 @@
       $('placeholder#textarea', this.$el).replaceWith(textarea.$el);
       $.material.input("[name=" + textarea.name + "]");
       textarea.$el.textareaAutoSize().focus();
+      window.setTimeout((function(_this) {
+        return function() {
+          return textarea.$el.trigger('input');
+        };
+      })(this), 100);
       textarea.on('tSubmit', this.sendForm);
       $('placeholder#slider', this.$el).replaceWith((new Tracktime.Element.Slider({
         model: this.model.get('recordModel'),
@@ -1578,21 +1582,18 @@
         field: 'project'
       })).$el);
       if (this.model.get('canClose')) {
-        return $('placeholder#btn_close_action', this.$el).replaceWith((new Tracktime.Element.ElementCloseAction({
+        $('placeholder#btn_close_action', this.$el).replaceWith((new Tracktime.Element.ElementCloseAction({
           model: this.model
         })).$el);
       }
+      return $('[data-toggle="tooltip"]').tooltip();
     };
 
     Record.prototype.textareaInput = function(event) {
-      return window.setTimeout((function(_this) {
-        return function() {
-          var diff;
-          diff = $('#actions-form').outerHeight() - $('.navbar').outerHeight(true);
-          $('#actions-form').toggleClass("shadow-z-2", diff > 10);
-          return $(".details-container").toggleClass('hidden', _.isEmpty($(event.target).val()));
-        };
-      })(this), 500);
+      var diff;
+      diff = $('#actions-form').outerHeight() - $('.navbar').outerHeight(true);
+      $('#actions-form').toggleClass("shadow-z-2", diff > 10);
+      return $(".details-container").toggleClass('hidden', _.isEmpty($(event.target).val()));
     };
 
     Record.prototype.sendForm = function() {
