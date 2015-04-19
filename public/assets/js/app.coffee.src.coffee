@@ -53,6 +53,26 @@ class Tracktime extends Backbone.Model
 
 (module?.exports = Tracktime) or @Tracktime = Tracktime
 
+class Tracktime.AdminView extends Backbone.View
+  el: '#panel'
+  className: ''
+  template: JST['admin/index']
+  views: {}
+
+  initialize: ->
+    @render()
+
+  render: ->
+    # $(document).title @model.get 'title'
+    @$el.html @template()
+
+  initUI: ->
+    $.material.init()
+
+
+(module?.exports = Tracktime.AdminView) or @Tracktime.AdminView = Tracktime.AdminView
+
+
 do ->
   proxiedSync = Backbone.sync
 
@@ -811,233 +831,6 @@ _.extend Tracktime.AppChannel,
 
 (module?.exports = Tracktime.AppChannel) or @Tracktime.AppChannel = Tracktime.AppChannel
 
-$ ->
-
-  Tracktime.AppChannel.init().command 'start'
-
-  return
-
-class Tracktime.AdminRouter extends Backbone.SubRoute
-  routes:
-    '':          'dashboard'
-    'users':     'users'
-    'projects':  'projects'
-    'dashboard': 'dashboard'
-    'actions':   'actions'
-
-  initialize: (options) ->
-    _.extend @, options
-    @on 'route', (route, params) =>
-      @parent.trigger 'subroute', "admin:#{route}", params
-
-  dashboard: () ->
-    @parent.view.setSubView 'main', new Tracktime.AdminView.Dashboard()
-
-  users: () ->
-    @parent.view.setSubView 'main', new Tracktime.AdminView.UsersView collection: @parent.model.get 'users'
-    newAction = @parent.model.get('actions').addAction
-      title: 'Add users'
-      type: 'User'
-    , scope: 'admin:users'
-    newAction.setActive()
-
-  projects: () ->
-    @parent.view.setSubView 'main', new Tracktime.AdminView.ProjectsView collection: @parent.model.get 'projects'
-    newAction = @parent.model.get('actions').addAction
-      title: 'Add projects'
-      type: 'Project'
-    , scope: 'admin:projects'
-    newAction.setActive()
-
-  actions: () ->
-    @parent.view.setSubView 'main', new Tracktime.AdminView.ActionsView collection: @parent.model.get 'actions'
-
-
-(module?.exports = Tracktime.AdminRouter) or @Tracktime.AdminRouter = Tracktime.AdminRouter
-
-class Tracktime.AppRouter extends Backbone.Router
-  routes:
-    '':                  'index'                #index
-    'projects*subroute': 'invokeProjectsRouter' #Projects
-    'reports*subroute':  'invokeReportsRouter'  #Reports
-    'user*subroute':     'invokeUserRouter'     #User
-    'admin*subroute':    'invokeAdminRouter'    #Admin
-    '*actions':          'default'              #???
-
-  initialize: (options) ->
-    _.extend @, options
-    @on 'route subroute', (route, params) =>
-      @removeActionsExcept(route) unless route.substr(0,6) == 'invoke'
-    @initAuthInterface()
-
-  invokeProjectsRouter: (subroute) ->
-    unless @projectsRouter
-      @projectsRouter = new Tracktime.ProjectsRouter 'projects', parent: @
-
-  invokeReportsRouter: (subroute) ->
-    unless @reportsRouter
-      @reportsRouter = new Tracktime.ReportsRouter 'reports', parent: @
-
-  invokeUserRouter: (subroute) ->
-    unless @userRouter
-      @userRouter = new Tracktime.UserRouter 'user', parent: @
-
-  invokeAdminRouter: (subroute) ->
-    unless @adminRouter
-      @adminRouter = new Tracktime.AdminRouter 'admin', parent: @
-
-  initAuthInterface: () ->
-    @view = new Tracktime.AppView model: @model
-    @view.setSubView 'header', new Tracktime.AppView.Header model: @model
-    @view.setSubView 'footer', new Tracktime.AppView.Footer()
-    @view.setSubView 'menu', new Tracktime.AppView.Menu model: @model
-    @view.initUI()
-
-  index: ->
-    @navigate 'projects', trigger: true, replace: false
-
-  default: (actions) ->
-    $.alert 'Unknown page'
-    @navigate '', true
-
-  removeActionsExcept: (route) ->
-    _.each @model.get('actions').models, (action) ->
-      action.destroy() if action && action.has('scope') and action.get('scope') isnt route
-
-
-(module?.exports = Tracktime.AppRouter) or @Tracktime.AppRouter = Tracktime.AppRouter
-
-
-class Tracktime.ProjectsRouter extends Backbone.SubRoute
-  routes:
-    '':             'list'
-    ':id':          'details'
-    ':id/edit':     'edit'
-    ':id/delete':   'delete'
-    ':id/add':      'add'
-    ':id/save':     'save'
-
-  initialize: (options) ->
-    _.extend @, options
-    @on 'route', (route, params) =>
-      @parent.trigger 'subroute', "projects:#{route}", params
-
-  list: () ->
-    $.alert "whole records list in projects section"
-    @parent.view.setSubView 'main', new Tracktime.RecordsView collection: @parent.model.get 'records'
-
-  details: (id) ->
-    @parent.view.setSubView 'main', new Tracktime.RecordsView collection: @parent.model.get 'records'
-
-  edit: (id) ->
-    $.alert "projects edit #{id}"
-
-  delete: (id) ->
-    $.alert "projects delete #{id}"
-
-  add: (id) ->
-    $.alert "projects add #{id}"
-
-  save: (id) ->
-    $.alert "projects save #{id}"
-
-(module?.exports = Tracktime.ProjectsRouter) or @Tracktime.ProjectsRouter = Tracktime.ProjectsRouter
-
-class Tracktime.RecordsRouter extends Backbone.Router
-  routes:
-    '':             'list'
-    ':id':         'details'
-    ':id/edit':    'edit'
-    ':id/delete':  'delete'
-    ':id/add':     'add'
-    ':id/save':    'save'
-
-  initialize: (options) ->
-    _.extend @, options
-    @on 'route', (route, params) =>
-      @parent.trigger 'subroute', "records:#{route}", params
-
-  list: () ->
-    $.alert "records list"
-
-  details: (id) ->
-    $.alert "records detaids #{id}"
-
-  edit: (id) ->
-    $.alert "records edit #{id}"
-
-  delete: (id) ->
-    $.alert "records delete #{id}"
-
-  add: (id) ->
-    $.alert "records add #{id}"
-
-  save: (id) ->
-    $.alert "records save #{id}"
-
-(module?.exports = Tracktime.RecordsRouter) or @Tracktime.RecordsRouter = Tracktime.RecordsRouter
-
-class Tracktime.ReportsRouter extends Backbone.SubRoute
-  routes:
-    '':             'list'
-    ':id':          'details'
-    ':id/edit':     'edit'
-    ':id/delete':   'delete'
-    ':id/add':      'add'
-    ':id/save':     'save'
-
-  initialize: (options) ->
-    _.extend @, options
-    @on 'route', (route, params) =>
-      @parent.trigger 'subroute', "reports:#{route}", params
-    @parent.view.setSubView 'main', new Tracktime.ReportsView()
-
-  list: () ->
-    @parent.view.setSubView 'main', new Tracktime.ReportsView()
-
-  details: (id) ->
-    @parent.view.setSubView 'main', new Tracktime.ReportView()
-
-  edit: (id) ->
-    $.alert "reports edit #{id}"
-
-  delete: (id) ->
-    $.alert "reports delete #{id}"
-
-  add: (id) ->
-    $.alert "reports add #{id}"
-
-  save: (id) ->
-    $.alert "reports save #{id}"
-
-(module?.exports = Tracktime.ReportsRouter) or @Tracktime.ReportsRouter = Tracktime.ReportsRouter
-
-class Tracktime.UserRouter extends Backbone.SubRoute
-  routes:
-    '':       'details'
-    'rates':  'rates'
-    'logout': 'logout'
-
-
-  initialize: (options) ->
-    _.extend @, options
-    @on 'route', (route, params) =>
-      @parent.trigger 'subroute', "user:#{route}", params
-    # @parent.view.setSubView 'main', new Tracktime.UserView()
-
-  details: () ->
-    @parent.view.setSubView 'main', new Tracktime.UserView.Details()
-
-  rates: () ->
-    @parent.view.setSubView 'main', new Tracktime.UserView.Rates()
-
-  logout: () ->
-    $.alert "user logout process"
-
-
-
-(module?.exports = Tracktime.UserRouter) or @Tracktime.UserRouter = Tracktime.UserRouter
-
 class Tracktime.ActionView extends Backbone.View
   tagName: 'li'
   className: 'btn'
@@ -1287,26 +1080,6 @@ class Tracktime.ActionView.User extends Backbone.View
     @model.processAction()
 
 (module?.exports = Tracktime.ActionView.User) or @Tracktime.ActionView.User = Tracktime.ActionView.User
-
-
-class Tracktime.AdminView extends Backbone.View
-  el: '#panel'
-  className: ''
-  template: JST['admin/index']
-  views: {}
-
-  initialize: ->
-    @render()
-
-  render: ->
-    # $(document).title @model.get 'title'
-    @$el.html @template()
-
-  initUI: ->
-    $.material.init()
-
-
-(module?.exports = Tracktime.AdminView) or @Tracktime.AdminView = Tracktime.AdminView
 
 
 class Tracktime.AdminView.Header extends Backbone.View
@@ -2122,3 +1895,230 @@ class Tracktime.UserView.Rates extends Backbone.View
 
 (module?.exports = Tracktime.UserView.Rates) or @Tracktime.UserView.Rates = Tracktime.UserView.Rates
 
+
+$ ->
+
+  Tracktime.AppChannel.init().command 'start'
+
+  return
+
+class Tracktime.AdminRouter extends Backbone.SubRoute
+  routes:
+    '':          'dashboard'
+    'users':     'users'
+    'projects':  'projects'
+    'dashboard': 'dashboard'
+    'actions':   'actions'
+
+  initialize: (options) ->
+    _.extend @, options
+    @on 'route', (route, params) =>
+      @parent.trigger 'subroute', "admin:#{route}", params
+
+  dashboard: () ->
+    @parent.view.setSubView 'main', new Tracktime.AdminView.Dashboard()
+
+  users: () ->
+    @parent.view.setSubView 'main', new Tracktime.AdminView.UsersView collection: @parent.model.get 'users'
+    newAction = @parent.model.get('actions').addAction
+      title: 'Add users'
+      type: 'User'
+    , scope: 'admin:users'
+    newAction.setActive()
+
+  projects: () ->
+    @parent.view.setSubView 'main', new Tracktime.AdminView.ProjectsView collection: @parent.model.get 'projects'
+    newAction = @parent.model.get('actions').addAction
+      title: 'Add projects'
+      type: 'Project'
+    , scope: 'admin:projects'
+    newAction.setActive()
+
+  actions: () ->
+    @parent.view.setSubView 'main', new Tracktime.AdminView.ActionsView collection: @parent.model.get 'actions'
+
+
+(module?.exports = Tracktime.AdminRouter) or @Tracktime.AdminRouter = Tracktime.AdminRouter
+
+class Tracktime.AppRouter extends Backbone.Router
+  routes:
+    '':                  'index'                #index
+    'projects*subroute': 'invokeProjectsRouter' #Projects
+    'reports*subroute':  'invokeReportsRouter'  #Reports
+    'user*subroute':     'invokeUserRouter'     #User
+    'admin*subroute':    'invokeAdminRouter'    #Admin
+    '*actions':          'default'              #???
+
+  initialize: (options) ->
+    _.extend @, options
+    @on 'route subroute', (route, params) =>
+      @removeActionsExcept(route) unless route.substr(0,6) == 'invoke'
+    @initAuthInterface()
+
+  invokeProjectsRouter: (subroute) ->
+    unless @projectsRouter
+      @projectsRouter = new Tracktime.ProjectsRouter 'projects', parent: @
+
+  invokeReportsRouter: (subroute) ->
+    unless @reportsRouter
+      @reportsRouter = new Tracktime.ReportsRouter 'reports', parent: @
+
+  invokeUserRouter: (subroute) ->
+    unless @userRouter
+      @userRouter = new Tracktime.UserRouter 'user', parent: @
+
+  invokeAdminRouter: (subroute) ->
+    unless @adminRouter
+      @adminRouter = new Tracktime.AdminRouter 'admin', parent: @
+
+  initAuthInterface: () ->
+    @view = new Tracktime.AppView model: @model
+    @view.setSubView 'header', new Tracktime.AppView.Header model: @model
+    @view.setSubView 'footer', new Tracktime.AppView.Footer()
+    @view.setSubView 'menu', new Tracktime.AppView.Menu model: @model
+    @view.initUI()
+
+  index: ->
+    @navigate 'projects', trigger: true, replace: false
+
+  default: (actions) ->
+    $.alert 'Unknown page'
+    @navigate '', true
+
+  removeActionsExcept: (route) ->
+    _.each @model.get('actions').models, (action) ->
+      action.destroy() if action && action.has('scope') and action.get('scope') isnt route
+
+
+(module?.exports = Tracktime.AppRouter) or @Tracktime.AppRouter = Tracktime.AppRouter
+
+
+class Tracktime.ProjectsRouter extends Backbone.SubRoute
+  routes:
+    '':             'list'
+    ':id':          'details'
+    ':id/edit':     'edit'
+    ':id/delete':   'delete'
+    ':id/add':      'add'
+    ':id/save':     'save'
+
+  initialize: (options) ->
+    _.extend @, options
+    @on 'route', (route, params) =>
+      @parent.trigger 'subroute', "projects:#{route}", params
+
+  list: () ->
+    $.alert "whole records list in projects section"
+    @parent.view.setSubView 'main', new Tracktime.RecordsView collection: @parent.model.get 'records'
+
+  details: (id) ->
+    @parent.view.setSubView 'main', new Tracktime.RecordsView collection: @parent.model.get 'records'
+
+  edit: (id) ->
+    $.alert "projects edit #{id}"
+
+  delete: (id) ->
+    $.alert "projects delete #{id}"
+
+  add: (id) ->
+    $.alert "projects add #{id}"
+
+  save: (id) ->
+    $.alert "projects save #{id}"
+
+(module?.exports = Tracktime.ProjectsRouter) or @Tracktime.ProjectsRouter = Tracktime.ProjectsRouter
+
+class Tracktime.RecordsRouter extends Backbone.Router
+  routes:
+    '':             'list'
+    ':id':         'details'
+    ':id/edit':    'edit'
+    ':id/delete':  'delete'
+    ':id/add':     'add'
+    ':id/save':    'save'
+
+  initialize: (options) ->
+    _.extend @, options
+    @on 'route', (route, params) =>
+      @parent.trigger 'subroute', "records:#{route}", params
+
+  list: () ->
+    $.alert "records list"
+
+  details: (id) ->
+    $.alert "records detaids #{id}"
+
+  edit: (id) ->
+    $.alert "records edit #{id}"
+
+  delete: (id) ->
+    $.alert "records delete #{id}"
+
+  add: (id) ->
+    $.alert "records add #{id}"
+
+  save: (id) ->
+    $.alert "records save #{id}"
+
+(module?.exports = Tracktime.RecordsRouter) or @Tracktime.RecordsRouter = Tracktime.RecordsRouter
+
+class Tracktime.ReportsRouter extends Backbone.SubRoute
+  routes:
+    '':             'list'
+    ':id':          'details'
+    ':id/edit':     'edit'
+    ':id/delete':   'delete'
+    ':id/add':      'add'
+    ':id/save':     'save'
+
+  initialize: (options) ->
+    _.extend @, options
+    @on 'route', (route, params) =>
+      @parent.trigger 'subroute', "reports:#{route}", params
+    @parent.view.setSubView 'main', new Tracktime.ReportsView()
+
+  list: () ->
+    @parent.view.setSubView 'main', new Tracktime.ReportsView()
+
+  details: (id) ->
+    @parent.view.setSubView 'main', new Tracktime.ReportView()
+
+  edit: (id) ->
+    $.alert "reports edit #{id}"
+
+  delete: (id) ->
+    $.alert "reports delete #{id}"
+
+  add: (id) ->
+    $.alert "reports add #{id}"
+
+  save: (id) ->
+    $.alert "reports save #{id}"
+
+(module?.exports = Tracktime.ReportsRouter) or @Tracktime.ReportsRouter = Tracktime.ReportsRouter
+
+class Tracktime.UserRouter extends Backbone.SubRoute
+  routes:
+    '':       'details'
+    'rates':  'rates'
+    'logout': 'logout'
+
+
+  initialize: (options) ->
+    _.extend @, options
+    @on 'route', (route, params) =>
+      @parent.trigger 'subroute', "user:#{route}", params
+    # @parent.view.setSubView 'main', new Tracktime.UserView()
+
+  details: () ->
+    @parent.view.setSubView 'main', new Tracktime.UserView.Details()
+
+  rates: () ->
+    @parent.view.setSubView 'main', new Tracktime.UserView.Rates()
+
+  logout: () ->
+    $.alert "user logout process"
+
+
+
+(module?.exports = Tracktime.UserRouter) or @Tracktime.UserRouter = Tracktime.UserRouter
