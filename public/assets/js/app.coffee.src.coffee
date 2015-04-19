@@ -38,17 +38,17 @@ class Tracktime extends Backbone.Model
     title: "TrackTime App"
 
   initialize: () ->
+    @set 'users', new Tracktime.UsersCollection()
     @set 'actions', new Tracktime.ActionsCollection()
     @set 'records', new Tracktime.RecordsCollection()
     @set 'projects', new Tracktime.ProjectsCollection()
-    @set 'users', new Tracktime.UsersCollection()
 
     @listenTo Tracktime.AppChannel, "isOnline", @updateApp
 
   updateApp: ->
+    @get('users').fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
     @get('records').fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
     @get('projects').fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
-    @get('users').fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
 
 
 (module?.exports = Tracktime) or @Tracktime = Tracktime
@@ -499,7 +499,6 @@ class Tracktime.Project extends Tracktime.Model
       minLength: 4
       msg: 'Please enter a valid name'
 
-
   initialize: ->
     @isEdit = false
     @on 'change:name', @updateLastAccess
@@ -587,7 +586,6 @@ class Tracktime.User extends Tracktime.Model
       minLength: 4
       msg: 'Please enter a valid name'
 
-
   initialize: ->
     @isEdit = false
     @on 'change:name', @updateLastAccess
@@ -652,7 +650,7 @@ class Tracktime.ProjectsCollection extends Tracktime.Collection
   localStorage: new Backbone.LocalStorage 'projects'
 
   initialize: () ->
-    @fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
+    # @fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
 
   comparator: (model) ->
     - (new Date(model.get('date'))).getTime()
@@ -681,7 +679,7 @@ class Tracktime.RecordsCollection extends Tracktime.Collection
   localStorage: new Backbone.LocalStorage 'records'
 
   initialize: () ->
-    @fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
+    # @fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
 
   comparator: (model) ->
     - (new Date(model.get('date'))).getTime()
@@ -710,10 +708,7 @@ class Tracktime.UsersCollection extends Tracktime.Collection
   localStorage: new Backbone.LocalStorage 'users'
 
   initialize: () ->
-    @fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
-
-  comparator: (model) ->
-    - (new Date(model.get('date'))).getTime()
+    # @fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
 
   addUser: (options) ->
     _.extend options, {date: (new Date()).toISOString()}
@@ -1227,6 +1222,7 @@ class Tracktime.AdminView.UsersView extends Backbone.View
 
   resetUsersList: () ->
     _.each @collection.where(isDeleted: false), (user) =>
+      console.log 'render user view'
       userView =  new Tracktime.AdminView.UserView { model: user }
       @$el.append userView.el
       @setSubView "user-#{user.cid}", userView

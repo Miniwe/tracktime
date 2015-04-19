@@ -18,6 +18,7 @@ class Tracktime.AdminView.UsersView extends Backbone.View
 
   resetUsersList: () ->
     _.each @collection.where(isDeleted: false), (user) =>
+      console.log 'render user view'
       userView =  new Tracktime.AdminView.UserView { model: user }
       @$el.append userView.el
       @setSubView "user-#{user.cid}", userView

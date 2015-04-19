@@ -29671,21 +29671,21 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     };
 
     Tracktime.prototype.initialize = function() {
+      this.set('users', new Tracktime.UsersCollection());
       this.set('actions', new Tracktime.ActionsCollection());
       this.set('records', new Tracktime.RecordsCollection());
       this.set('projects', new Tracktime.ProjectsCollection());
-      this.set('users', new Tracktime.UsersCollection());
       return this.listenTo(Tracktime.AppChannel, "isOnline", this.updateApp);
     };
 
     Tracktime.prototype.updateApp = function() {
+      this.get('users').fetch({
+        ajaxSync: Tracktime.AppChannel.request('isOnline')
+      });
       this.get('records').fetch({
         ajaxSync: Tracktime.AppChannel.request('isOnline')
       });
-      this.get('projects').fetch({
-        ajaxSync: Tracktime.AppChannel.request('isOnline')
-      });
-      return this.get('users').fetch({
+      return this.get('projects').fetch({
         ajaxSync: Tracktime.AppChannel.request('isOnline')
       });
     };
@@ -30637,11 +30637,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
     ProjectsCollection.prototype.localStorage = new Backbone.LocalStorage('projects');
 
-    ProjectsCollection.prototype.initialize = function() {
-      return this.fetch({
-        ajaxSync: Tracktime.AppChannel.request('isOnline')
-      });
-    };
+    ProjectsCollection.prototype.initialize = function() {};
 
     ProjectsCollection.prototype.comparator = function(model) {
       return -(new Date(model.get('date'))).getTime();
@@ -30695,11 +30691,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
     RecordsCollection.prototype.localStorage = new Backbone.LocalStorage('records');
 
-    RecordsCollection.prototype.initialize = function() {
-      return this.fetch({
-        ajaxSync: Tracktime.AppChannel.request('isOnline')
-      });
-    };
+    RecordsCollection.prototype.initialize = function() {};
 
     RecordsCollection.prototype.comparator = function(model) {
       return -(new Date(model.get('date'))).getTime();
@@ -30753,15 +30745,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
     UsersCollection.prototype.localStorage = new Backbone.LocalStorage('users');
 
-    UsersCollection.prototype.initialize = function() {
-      return this.fetch({
-        ajaxSync: Tracktime.AppChannel.request('isOnline')
-      });
-    };
-
-    UsersCollection.prototype.comparator = function(model) {
-      return -(new Date(model.get('date'))).getTime();
-    };
+    UsersCollection.prototype.initialize = function() {};
 
     UsersCollection.prototype.addUser = function(options) {
       var error, success;
@@ -31569,6 +31553,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       }), (function(_this) {
         return function(user) {
           var userView;
+          console.log('render user view');
           userView = new Tracktime.AdminView.UserView({
             model: user
           });

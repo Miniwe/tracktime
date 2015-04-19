@@ -6,10 +6,7 @@ class Tracktime.UsersCollection extends Tracktime.Collection
   localStorage: new Backbone.LocalStorage 'users'
 
   initialize: () ->
-    @fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
-
-  comparator: (model) ->
-    - (new Date(model.get('date'))).getTime()
+    # @fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
 
   addUser: (options) ->
     _.extend options, {date: (new Date()).toISOString()}

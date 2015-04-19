@@ -6,7 +6,7 @@ class Tracktime.ProjectsCollection extends Tracktime.Collection
   localStorage: new Backbone.LocalStorage 'projects'
 
   initialize: () ->
-    @fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
+    # @fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
 
   comparator: (model) ->
     - (new Date(model.get('date'))).getTime()

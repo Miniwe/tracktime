@@ -17,7 +17,6 @@ class Tracktime.Project extends Tracktime.Model
       minLength: 4
       msg: 'Please enter a valid name'
 
-
   initialize: ->
     @isEdit = false
     @on 'change:name', @updateLastAccess
