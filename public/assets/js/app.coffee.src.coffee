@@ -655,7 +655,7 @@ class Tracktime.ProjectsCollection extends Tracktime.Collection
 
   initialize: () ->
     # @fetch ajaxSync: Tracktime.AppChannel.reply 'isOnline'
-
+    @on 'sync', @makeList
 
   comparator: (model) ->
     - (new Date(model.get('date'))).getTime()
@@ -672,6 +672,12 @@ class Tracktime.ProjectsCollection extends Tracktime.Collection
     @addModel options,
       success: success,
       error: error
+
+  makeList: (collection, models) ->
+    list = []
+    _.each collection.models, (model, index) ->
+      list[model.get('_id')] = model.get('name')
+    Tracktime.AppChannel.reply 'projectsList', () -> list
 
 
 (module?.exports = Tracktime.ProjectsCollection) or @Tracktime.ProjectsCollection = Tracktime.ProjectsCollection
@@ -799,7 +805,8 @@ _.extend Tracktime.AppChannel,
 
   bindRequest: ->
     @reply 'isOnline', => @isOnline
-    @reply 'projects', => []
+    @reply 'projects', => @model.get 'projects'
+    @reply 'projectsList', => []
 
   startApp: ->
     @router = new Tracktime.AppRouter model: @model
@@ -1233,7 +1240,6 @@ class Tracktime.AdminView.UsersView extends Backbone.View
 
   resetUsersList: () ->
     _.each @collection.where(isDeleted: false), (user) =>
-      console.log 'render user view'
       userView =  new Tracktime.AdminView.UserView { model: user }
       @$el.append userView.el
       @setSubView "user-#{user.cid}", userView
@@ -1315,8 +1321,9 @@ class Tracktime.Element.ProjectDefinition extends Tracktime.Element
 
   initialize: (options = {}) ->
     _.extend @, options
-    @projects = Tracktime.AppChannel.request 'projects'
     @render()
+    @projects = Tracktime.AppChannel.request 'projects'
+    @projectsList = Tracktime.AppChannel.request 'projectsList'
     @projects.on 'sync', @renderProjectsList
 
   render: ->
@@ -1325,29 +1332,27 @@ class Tracktime.Element.ProjectDefinition extends Tracktime.Element
     @renderProjectsList()
 
   renderProjectsList: =>
-    console.log 'call renderProjectsList'
-    @projects = Tracktime.AppChannel.request 'projects'
-    console.log '@projects', @projects
+    @projectsList = Tracktime.AppChannel.request 'projectsList'
     menu = $('.dropdown-menu', @$el)
     menu.children().remove()
 
-    if @projects?
-      @updateTitle()
-      _.each @projects.models, (model) =>
-        menu.append $("<li><a class='btn btn-white noDefault' data-project='#{model.get('_id')}' href='##{model.get('_id')}'>#{model.get('name')}</a></li>")
+    @updateTitle()
+    for own key, value of @projectsList
+      menu.append $("<li><a class='btn btn-white' data-project='#{key}' href='##{key}'>#{value}</a></li>")
 
     menu.append $("<li><a class='btn btn-white' data-project='0' href='#0'><span class='text-muted'>No project</span></a></li>")
 
   getTitle: ->
     project_id = @model.get @field
-    unless project_id == 0
-      "to " + @projects.get(project_id).get 'name'
+    if project_id of @projectsList
+      "to " + @projectsList[project_id]
     else
       @defaultTitle
 
   selectProject: (event) =>
     event.preventDefault()
-    @model.set @field, $(event.currentTarget).data 'project'
+    project_id = $(event.currentTarget).data 'project'
+    @model.set @field, project_id
     @updateTitle()
     @$el.parents('.form-control-wrapper').find('textarea').focus()
 
@@ -1711,8 +1716,9 @@ class Tracktime.RecordView extends Backbone.View
     @listenTo @model, "change:isEdit", @changeIsEdit
     @listenTo @model, "sync", @syncModel
 
-    # @projects = Tracktime.AppChannel.request 'projects'
-    # @projects.on 'sync', (projects, models) => @renderProjectInfo projects
+    @projects = Tracktime.AppChannel.request 'projects'
+    @projectsList = Tracktime.AppChannel.request 'projectsList'
+    @projects.on 'sync', @renderProjectInfo
 
   attributes: ->
     id: @model.cid
@@ -1731,7 +1737,7 @@ class Tracktime.RecordView extends Backbone.View
     $('placeholder#textarea', @$el).replaceWith textarea.$el
     textarea.on 'tSubmit', @sendForm
 
-    # @renderProjectInfo()
+    @renderProjectInfo()
 
   changeIsEdit: ->
     @$el.toggleClass 'editmode', @model.isEdit == true
@@ -1752,14 +1758,14 @@ class Tracktime.RecordView extends Backbone.View
   changeProject: ->
     @renderProjectInfo()
 
-  renderProjectInfo: (projects) ->
-    console.log 'renderProjectInfo', project
+  renderProjectInfo: =>
     project_id = @model.get('project')
-    project = projects.get project_id
-    if project instanceof Tracktime.Project
-      $(".record-info-project span", @$el).html "#{project.get('name')}"
+    @projectsList = Tracktime.AppChannel.request 'projectsList'
+    if project_id of @projectsList
+      $(".record-info-project span", @$el).html @projectsList[project_id]
+      $(".record-info-project", @$el).removeClass 'hidden'
     else
-      $(".record-info-project span", @$el).addClass 'hidden'
+      $(".record-info-project", @$el).addClass 'hidden'
 
   toggleInlineEdit: ->
     @$el.find('.subject_edit').css 'min-height', @$el.find('.subject').height()

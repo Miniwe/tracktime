@@ -66,7 +66,8 @@ _.extend Tracktime.AppChannel,
 
   bindRequest: ->
     @reply 'isOnline', => @isOnline
-    @reply 'projects', => []
+    @reply 'projects', => @model.get 'projects'
+    @reply 'projectsList', => []
 
   startApp: ->
     @router = new Tracktime.AppRouter model: @model

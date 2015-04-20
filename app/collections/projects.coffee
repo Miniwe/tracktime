@@ -7,7 +7,7 @@ class Tracktime.ProjectsCollection extends Tracktime.Collection
 
   initialize: () ->
     # @fetch ajaxSync: Tracktime.AppChannel.reply 'isOnline'
-
+    @on 'sync', @makeList
 
   comparator: (model) ->
     - (new Date(model.get('date'))).getTime()
@@ -24,6 +24,12 @@ class Tracktime.ProjectsCollection extends Tracktime.Collection
     @addModel options,
       success: success,
       error: error
+
+  makeList: (collection, models) ->
+    list = []
+    _.each collection.models, (model, index) ->
+      list[model.get('_id')] = model.get('name')
+    Tracktime.AppChannel.reply 'projectsList', () -> list
 
 
 (module?.exports = Tracktime.ProjectsCollection) or @Tracktime.ProjectsCollection = Tracktime.ProjectsCollection

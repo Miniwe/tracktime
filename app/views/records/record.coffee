@@ -17,8 +17,9 @@ class Tracktime.RecordView extends Backbone.View
     @listenTo @model, "change:isEdit", @changeIsEdit
     @listenTo @model, "sync", @syncModel
 
-    # @projects = Tracktime.AppChannel.request 'projects'
-    # @projects.on 'sync', (projects, models) => @renderProjectInfo projects
+    @projects = Tracktime.AppChannel.request 'projects'
+    @projectsList = Tracktime.AppChannel.request 'projectsList'
+    @projects.on 'sync', @renderProjectInfo
 
   attributes: ->
     id: @model.cid
@@ -37,7 +38,7 @@ class Tracktime.RecordView extends Backbone.View
     $('placeholder#textarea', @$el).replaceWith textarea.$el
     textarea.on 'tSubmit', @sendForm
 
-    # @renderProjectInfo()
+    @renderProjectInfo()
 
   changeIsEdit: ->
     @$el.toggleClass 'editmode', @model.isEdit == true
@@ -58,14 +59,14 @@ class Tracktime.RecordView extends Backbone.View
   changeProject: ->
     @renderProjectInfo()
 
-  renderProjectInfo: (projects) ->
-    console.log 'renderProjectInfo', project
+  renderProjectInfo: =>
     project_id = @model.get('project')
-    project = projects.get project_id
-    if project instanceof Tracktime.Project
-      $(".record-info-project span", @$el).html "#{project.get('name')}"
+    @projectsList = Tracktime.AppChannel.request 'projectsList'
+    if project_id of @projectsList
+      $(".record-info-project span", @$el).html @projectsList[project_id]
+      $(".record-info-project", @$el).removeClass 'hidden'
     else
-      $(".record-info-project span", @$el).addClass 'hidden'
+      $(".record-info-project", @$el).addClass 'hidden'
 
   toggleInlineEdit: ->
     @$el.find('.subject_edit').css 'min-height', @$el.find('.subject').height()

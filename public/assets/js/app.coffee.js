@@ -1032,7 +1032,9 @@
 
     ProjectsCollection.prototype.localStorage = new Backbone.LocalStorage(ProjectsCollection.collectionName);
 
-    ProjectsCollection.prototype.initialize = function() {};
+    ProjectsCollection.prototype.initialize = function() {
+      return this.on('sync', this.makeList);
+    };
 
     ProjectsCollection.prototype.comparator = function(model) {
       return -(new Date(model.get('date'))).getTime();
@@ -1060,6 +1062,17 @@
       return this.addModel(options, {
         success: success,
         error: error
+      });
+    };
+
+    ProjectsCollection.prototype.makeList = function(collection, models) {
+      var list;
+      list = [];
+      _.each(collection.models, function(model, index) {
+        return list[model.get('_id')] = model.get('name');
+      });
+      return Tracktime.AppChannel.reply('projectsList', function() {
+        return list;
       });
     };
 
@@ -1262,7 +1275,12 @@
           return _this.isOnline;
         };
       })(this));
-      return this.reply('projects', (function(_this) {
+      this.reply('projects', (function(_this) {
+        return function() {
+          return _this.model.get('projects');
+        };
+      })(this));
+      return this.reply('projectsList', (function(_this) {
         return function() {
           return [];
         };
@@ -1955,7 +1973,6 @@
       }), (function(_this) {
         return function(user) {
           var userView;
-          console.log('render user view');
           userView = new Tracktime.AdminView.UserView({
             model: user
           });
@@ -2109,8 +2126,9 @@
         options = {};
       }
       _.extend(this, options);
-      this.projects = Tracktime.AppChannel.request('projects');
       this.render();
+      this.projects = Tracktime.AppChannel.request('projects');
+      this.projectsList = Tracktime.AppChannel.request('projectsList');
       return this.projects.on('sync', this.renderProjectsList);
     };
 
@@ -2122,19 +2140,16 @@
     };
 
     ProjectDefinition.prototype.renderProjectsList = function() {
-      var menu;
-      console.log('call renderProjectsList');
-      this.projects = Tracktime.AppChannel.request('projects');
-      console.log('@projects', this.projects);
+      var key, menu, ref1, value;
+      this.projectsList = Tracktime.AppChannel.request('projectsList');
       menu = $('.dropdown-menu', this.$el);
       menu.children().remove();
-      if (this.projects != null) {
-        this.updateTitle();
-        _.each(this.projects.models, (function(_this) {
-          return function(model) {
-            return menu.append($("<li><a class='btn btn-white noDefault' data-project='" + (model.get('_id')) + "' href='#" + (model.get('_id')) + "'>" + (model.get('name')) + "</a></li>"));
-          };
-        })(this));
+      this.updateTitle();
+      ref1 = this.projectsList;
+      for (key in ref1) {
+        if (!hasProp.call(ref1, key)) continue;
+        value = ref1[key];
+        menu.append($("<li><a class='btn btn-white' data-project='" + key + "' href='#" + key + "'>" + value + "</a></li>"));
       }
       return menu.append($("<li><a class='btn btn-white' data-project='0' href='#0'><span class='text-muted'>No project</span></a></li>"));
     };
@@ -2142,16 +2157,18 @@
     ProjectDefinition.prototype.getTitle = function() {
       var project_id;
       project_id = this.model.get(this.field);
-      if (project_id !== 0) {
-        return "to " + this.projects.get(project_id).get('name');
+      if (project_id in this.projectsList) {
+        return "to " + this.projectsList[project_id];
       } else {
         return this.defaultTitle;
       }
     };
 
     ProjectDefinition.prototype.selectProject = function(event) {
+      var project_id;
       event.preventDefault();
-      this.model.set(this.field, $(event.currentTarget).data('project'));
+      project_id = $(event.currentTarget).data('project');
+      this.model.set(this.field, project_id);
       this.updateTitle();
       return this.$el.parents('.form-control-wrapper').find('textarea').focus();
     };
@@ -2721,6 +2738,7 @@
 
     function RecordView() {
       this.sendForm = bind(this.sendForm, this);
+      this.renderProjectInfo = bind(this.renderProjectInfo, this);
       return RecordView.__super__.constructor.apply(this, arguments);
     }
 
@@ -2744,7 +2762,10 @@
       this.listenTo(this.model, "change:subject", this.changeSubject);
       this.listenTo(this.model, "change:project", this.changeProject);
       this.listenTo(this.model, "change:isEdit", this.changeIsEdit);
-      return this.listenTo(this.model, "sync", this.syncModel);
+      this.listenTo(this.model, "sync", this.syncModel);
+      this.projects = Tracktime.AppChannel.request('projects');
+      this.projectsList = Tracktime.AppChannel.request('projectsList');
+      return this.projects.on('sync', this.renderProjectInfo);
     };
 
     RecordView.prototype.attributes = function() {
@@ -2763,7 +2784,8 @@
         field: 'subject'
       });
       $('placeholder#textarea', this.$el).replaceWith(textarea.$el);
-      return textarea.on('tSubmit', this.sendForm);
+      textarea.on('tSubmit', this.sendForm);
+      return this.renderProjectInfo();
     };
 
     RecordView.prototype.changeIsEdit = function() {
@@ -2789,15 +2811,15 @@
       return this.renderProjectInfo();
     };
 
-    RecordView.prototype.renderProjectInfo = function(projects) {
-      var project, project_id;
-      console.log('renderProjectInfo', project);
+    RecordView.prototype.renderProjectInfo = function() {
+      var project_id;
       project_id = this.model.get('project');
-      project = projects.get(project_id);
-      if (project instanceof Tracktime.Project) {
-        return $(".record-info-project span", this.$el).html("" + (project.get('name')));
+      this.projectsList = Tracktime.AppChannel.request('projectsList');
+      if (project_id in this.projectsList) {
+        $(".record-info-project span", this.$el).html(this.projectsList[project_id]);
+        return $(".record-info-project", this.$el).removeClass('hidden');
       } else {
-        return $(".record-info-project span", this.$el).addClass('hidden');
+        return $(".record-info-project", this.$el).addClass('hidden');
       }
     };
 

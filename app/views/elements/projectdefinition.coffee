@@ -7,8 +7,9 @@ class Tracktime.Element.ProjectDefinition extends Tracktime.Element
 
   initialize: (options = {}) ->
     _.extend @, options
-    @projects = Tracktime.AppChannel.request 'projects'
     @render()
+    @projects = Tracktime.AppChannel.request 'projects'
+    @projectsList = Tracktime.AppChannel.request 'projectsList'
     @projects.on 'sync', @renderProjectsList
 
   render: ->
@@ -17,29 +18,27 @@ class Tracktime.Element.ProjectDefinition extends Tracktime.Element
     @renderProjectsList()
 
   renderProjectsList: =>
-    console.log 'call renderProjectsList'
-    @projects = Tracktime.AppChannel.request 'projects'
-    console.log '@projects', @projects
+    @projectsList = Tracktime.AppChannel.request 'projectsList'
     menu = $('.dropdown-menu', @$el)
     menu.children().remove()
 
-    if @projects?
-      @updateTitle()
-      _.each @projects.models, (model) =>
-        menu.append $("<li><a class='btn btn-white noDefault' data-project='#{model.get('_id')}' href='##{model.get('_id')}'>#{model.get('name')}</a></li>")
+    @updateTitle()
+    for own key, value of @projectsList
+      menu.append $("<li><a class='btn btn-white' data-project='#{key}' href='##{key}'>#{value}</a></li>")
 
     menu.append $("<li><a class='btn btn-white' data-project='0' href='#0'><span class='text-muted'>No project</span></a></li>")
 
   getTitle: ->
     project_id = @model.get @field
-    unless project_id == 0
-      "to " + @projects.get(project_id).get 'name'
+    if project_id of @projectsList
+      "to " + @projectsList[project_id]
     else
       @defaultTitle
 
   selectProject: (event) =>
     event.preventDefault()
-    @model.set @field, $(event.currentTarget).data 'project'
+    project_id = $(event.currentTarget).data 'project'
+    @model.set @field, project_id
     @updateTitle()
     @$el.parents('.form-control-wrapper').find('textarea').focus()
 
