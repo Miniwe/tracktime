@@ -32,7 +32,7 @@ class Tracktime.ActionView.Project extends Backbone.View
     window.setTimeout () =>
       diff = $('#actions-form').outerHeight() - $('.navbar').outerHeight(true)
       $('#actions-form').toggleClass "shadow-z-2", (diff > 10)
-      $(".details-container").toggleClass 'hidden', _.isEmpty $(event.target).val()
+      $(".details-container").toggleClass 'hidden', _.isEmpty $(event.currentTarget).val()
     , 500
 
   sendForm: () =>

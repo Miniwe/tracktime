@@ -799,7 +799,7 @@ _.extend Tracktime.AppChannel,
 
   bindRequest: ->
     @reply 'isOnline', => @isOnline
-    @reply 'projects', => @model.get 'projects'
+    @reply 'projects', => []
 
   startApp: ->
     @router = new Tracktime.AppRouter model: @model
@@ -967,7 +967,7 @@ class Tracktime.ActionView.Project extends Backbone.View
     window.setTimeout () =>
       diff = $('#actions-form').outerHeight() - $('.navbar').outerHeight(true)
       $('#actions-form').toggleClass "shadow-z-2", (diff > 10)
-      $(".details-container").toggleClass 'hidden', _.isEmpty $(event.target).val()
+      $(".details-container").toggleClass 'hidden', _.isEmpty $(event.currentTarget).val()
     , 500
 
   sendForm: () =>
@@ -1317,37 +1317,42 @@ class Tracktime.Element.ProjectDefinition extends Tracktime.Element
     _.extend @, options
     @projects = Tracktime.AppChannel.request 'projects'
     @render()
-    @projects.on 'sync', (project, models) => @renderProjectsList project.models
-
+    @projects.on 'sync', @renderProjectsList
 
   render: ->
     @$el.html @template
-      title: @getTitle()
-    @renderProjectsList @projects.models
+      title: @defaultTitle
+    @renderProjectsList()
 
-  renderProjectsList: (models) ->
+  renderProjectsList: =>
+    console.log 'call renderProjectsList'
+    @projects = Tracktime.AppChannel.request 'projects'
+    console.log '@projects', @projects
     menu = $('.dropdown-menu', @$el)
     menu.children().remove()
-    _.each models, (model) =>
-      menu.append $("<li><a class='btn btn-white noDefault' data-project='#{model.get('_id')}' href='##{model.get('_id')}'>#{model.get('name')}</a></li>")
+
+    if @projects?
+      @updateTitle()
+      _.each @projects.models, (model) =>
+        menu.append $("<li><a class='btn btn-white noDefault' data-project='#{model.get('_id')}' href='##{model.get('_id')}'>#{model.get('name')}</a></li>")
 
     menu.append $("<li><a class='btn btn-white' data-project='0' href='#0'><span class='text-muted'>No project</span></a></li>")
 
   getTitle: ->
-    projectId = @model.get @field
-    unless projectId == 0
-      "to " + @projects.get(projectId).get 'name'
+    project_id = @model.get @field
+    unless project_id == 0
+      "to " + @projects.get(project_id).get 'name'
     else
       @defaultTitle
 
   selectProject: (event) =>
     event.preventDefault()
-    @model.set @field, $(event.target).data 'project'
+    @model.set @field, $(event.currentTarget).data 'project'
     @updateTitle()
+    @$el.parents('.form-control-wrapper').find('textarea').focus()
 
   updateTitle: ->
     $('.project_definition-toggler span.caption', @$el).text @getTitle()
-    @$el.parents('.form-control-wrapper').find('textarea').focus()
 
 
 (module?.exports = Tracktime.Element.ProjectDefinition) or @Tracktime.Element.ProjectDefinition = Tracktime.Element.ProjectDefinition
@@ -1702,8 +1707,12 @@ class Tracktime.RecordView extends Backbone.View
       @render()
     @listenTo @model, "change:isDeleted", @changeIsDeleted
     @listenTo @model, "change:subject", @changeSubject
+    @listenTo @model, "change:project", @changeProject
     @listenTo @model, "change:isEdit", @changeIsEdit
     @listenTo @model, "sync", @syncModel
+
+    # @projects = Tracktime.AppChannel.request 'projects'
+    # @projects.on 'sync', (projects, models) => @renderProjectInfo projects
 
   attributes: ->
     id: @model.cid
@@ -1722,6 +1731,8 @@ class Tracktime.RecordView extends Backbone.View
     $('placeholder#textarea', @$el).replaceWith textarea.$el
     textarea.on 'tSubmit', @sendForm
 
+    # @renderProjectInfo()
+
   changeIsEdit: ->
     @$el.toggleClass 'editmode', @model.isEdit == true
 
@@ -1737,6 +1748,18 @@ class Tracktime.RecordView extends Backbone.View
   changeSubject: ->
     $('.subject', @$el).html (@model.get('subject') + '').nl2br()
     $('.subject_edit', @$el).val @model.get 'subject'
+
+  changeProject: ->
+    @renderProjectInfo()
+
+  renderProjectInfo: (projects) ->
+    console.log 'renderProjectInfo', project
+    project_id = @model.get('project')
+    project = projects.get project_id
+    if project instanceof Tracktime.Project
+      $(".record-info-project span", @$el).html "#{project.get('name')}"
+    else
+      $(".record-info-project span", @$el).addClass 'hidden'
 
   toggleInlineEdit: ->
     @$el.find('.subject_edit').css 'min-height', @$el.find('.subject').height()

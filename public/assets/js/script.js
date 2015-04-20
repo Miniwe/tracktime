@@ -29540,7 +29540,9 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
   return "<div class=\"row\" id=\""
     + escapeExpression(((helper = (helper = helpers._id || (depth0 != null ? depth0._id : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"_id","hash":{},"data":data}) : helper)))
-    + "\">\n\n  <div class=\"col-icon col-md-1 col-sm-2\">\n    <a  class=\"type btn btn-fab btn-fab-mini btn-material-lime\" role=\"menuitem\" tabindex=\"-1\" href=\"#fat\"  data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\"Other wroject will be thouched\">\n      <i class=\"mdi-action-bookmark-outline\"></i>\n    </a>\n    <a class=\"edit btn btn-fab btn-fab-mini btn-flat pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Edit action\">\n      <i class=\"mdi-editor-mode-edit\"></i>\n    </a>\n  </div>\n\n  <div class=\"col-subject col-md-10 col-sm-9\">\n    <p class=\"date-time text-info\">\n      <span title=\"Record Date\"><i class=\"mdi-action-event\"></i>"
+    + "\">\n\n  <div class=\"col-icon col-md-1 col-sm-2\">\n    <a  class=\"type btn btn-fab btn-fab-mini btn-material-lime\" role=\"menuitem\" tabindex=\"-1\" href=\"#fat\"  data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\"Other wroject will be thouched\">\n      <i class=\"mdi-action-bookmark-outline\"></i>\n    </a>\n    <a class=\"edit btn btn-fab btn-fab-mini btn-flat pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Edit action\">\n      <i class=\"mdi-editor-mode-edit\"></i>\n    </a>\n  </div>\n\n  <div class=\"col-subject col-md-10 col-sm-9\">\n    <p class=\"record-info text-info\">\n      <span class='record-info-project' title=\"Project\"><i class=\"mdi-content-add-circle\"></i><span>"
+    + escapeExpression(((helper = (helper = helpers.project || (depth0 != null ? depth0.project : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"project","hash":{},"data":data}) : helper)))
+    + "</span></span>\n      &#0160;\n      <span title=\"Record Date\"><i class=\"mdi-action-event\"></i>"
     + escapeExpression(((helper = (helper = helpers.recordDate || (depth0 != null ? depth0.recordDate : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"recordDate","hash":{},"data":data}) : helper)))
     + "</span>\n      &#0160;\n      <span title=\"Record Time\"><i class=\"mdi-action-schedule\"></i>"
     + escapeExpression(((helpers.minuteFormat || (depth0 && depth0.minuteFormat) || helperMissing).call(depth0, (depth0 != null ? depth0.recordTime : depth0), {"name":"minuteFormat","hash":{},"data":data})))
@@ -30881,7 +30883,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       })(this));
       return this.reply('projects', (function(_this) {
         return function() {
-          return _this.model.get('projects');
+          return [];
         };
       })(this));
     },
@@ -31135,7 +31137,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
           var diff;
           diff = $('#actions-form').outerHeight() - $('.navbar').outerHeight(true);
           $('#actions-form').toggleClass("shadow-z-2", diff > 10);
-          return $(".details-container").toggleClass('hidden', _.isEmpty($(event.target).val()));
+          return $(".details-container").toggleClass('hidden', _.isEmpty($(event.currentTarget).val()));
         };
       })(this), 500);
     };
@@ -31707,6 +31709,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
     function ProjectDefinition() {
       this.selectProject = bind(this.selectProject, this);
+      this.renderProjectsList = bind(this.renderProjectsList, this);
       return ProjectDefinition.__super__.constructor.apply(this, arguments);
     }
 
@@ -31727,37 +31730,39 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       _.extend(this, options);
       this.projects = Tracktime.AppChannel.request('projects');
       this.render();
-      return this.projects.on('sync', (function(_this) {
-        return function(project, models) {
-          return _this.renderProjectsList(project.models);
-        };
-      })(this));
+      return this.projects.on('sync', this.renderProjectsList);
     };
 
     ProjectDefinition.prototype.render = function() {
       this.$el.html(this.template({
-        title: this.getTitle()
+        title: this.defaultTitle
       }));
-      return this.renderProjectsList(this.projects.models);
+      return this.renderProjectsList();
     };
 
-    ProjectDefinition.prototype.renderProjectsList = function(models) {
+    ProjectDefinition.prototype.renderProjectsList = function() {
       var menu;
+      console.log('call renderProjectsList');
+      this.projects = Tracktime.AppChannel.request('projects');
+      console.log('@projects', this.projects);
       menu = $('.dropdown-menu', this.$el);
       menu.children().remove();
-      _.each(models, (function(_this) {
-        return function(model) {
-          return menu.append($("<li><a class='btn btn-white noDefault' data-project='" + (model.get('_id')) + "' href='#" + (model.get('_id')) + "'>" + (model.get('name')) + "</a></li>"));
-        };
-      })(this));
+      if (this.projects != null) {
+        this.updateTitle();
+        _.each(this.projects.models, (function(_this) {
+          return function(model) {
+            return menu.append($("<li><a class='btn btn-white noDefault' data-project='" + (model.get('_id')) + "' href='#" + (model.get('_id')) + "'>" + (model.get('name')) + "</a></li>"));
+          };
+        })(this));
+      }
       return menu.append($("<li><a class='btn btn-white' data-project='0' href='#0'><span class='text-muted'>No project</span></a></li>"));
     };
 
     ProjectDefinition.prototype.getTitle = function() {
-      var projectId;
-      projectId = this.model.get(this.field);
-      if (projectId !== 0) {
-        return "to " + this.projects.get(projectId).get('name');
+      var project_id;
+      project_id = this.model.get(this.field);
+      if (project_id !== 0) {
+        return "to " + this.projects.get(project_id).get('name');
       } else {
         return this.defaultTitle;
       }
@@ -31765,13 +31770,13 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
     ProjectDefinition.prototype.selectProject = function(event) {
       event.preventDefault();
-      this.model.set(this.field, $(event.target).data('project'));
-      return this.updateTitle();
+      this.model.set(this.field, $(event.currentTarget).data('project'));
+      this.updateTitle();
+      return this.$el.parents('.form-control-wrapper').find('textarea').focus();
     };
 
     ProjectDefinition.prototype.updateTitle = function() {
-      $('.project_definition-toggler span.caption', this.$el).text(this.getTitle());
-      return this.$el.parents('.form-control-wrapper').find('textarea').focus();
+      return $('.project_definition-toggler span.caption', this.$el).text(this.getTitle());
     };
 
     return ProjectDefinition;
@@ -32356,6 +32361,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       }
       this.listenTo(this.model, "change:isDeleted", this.changeIsDeleted);
       this.listenTo(this.model, "change:subject", this.changeSubject);
+      this.listenTo(this.model, "change:project", this.changeProject);
       this.listenTo(this.model, "change:isEdit", this.changeIsEdit);
       return this.listenTo(this.model, "sync", this.syncModel);
     };
@@ -32396,6 +32402,22 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     RecordView.prototype.changeSubject = function() {
       $('.subject', this.$el).html((this.model.get('subject') + '').nl2br());
       return $('.subject_edit', this.$el).val(this.model.get('subject'));
+    };
+
+    RecordView.prototype.changeProject = function() {
+      return this.renderProjectInfo();
+    };
+
+    RecordView.prototype.renderProjectInfo = function(projects) {
+      var project, project_id;
+      console.log('renderProjectInfo', project);
+      project_id = this.model.get('project');
+      project = projects.get(project_id);
+      if (project instanceof Tracktime.Project) {
+        return $(".record-info-project span", this.$el).html("" + (project.get('name')));
+      } else {
+        return $(".record-info-project span", this.$el).addClass('hidden');
+      }
     };
 
     RecordView.prototype.toggleInlineEdit = function() {
