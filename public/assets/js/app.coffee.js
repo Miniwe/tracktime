@@ -951,7 +951,7 @@
 
     ActionsCollection.prototype.collectionName = config.collection.actions;
 
-    ActionsCollection.prototype.url = '/' + ActionsCollection.collectionName;
+    ActionsCollection.prototype.url = '/actions';
 
     ActionsCollection.prototype.localStorage = new Backbone.LocalStorage(ActionsCollection.collectionName);
 
@@ -1026,9 +1026,9 @@
 
     ProjectsCollection.prototype.collectionName = config.collection.projects;
 
-    ProjectsCollection.prototype.url = (config != null ? config.SERVER : void 0) + '/' + ProjectsCollection.collectionName;
+    ProjectsCollection.prototype.url = (config != null ? config.SERVER : void 0) + '/projects';
 
-    ProjectsCollection.prototype.urlRoot = (config != null ? config.SERVER : void 0) + '/' + ProjectsCollection.collectionName;
+    ProjectsCollection.prototype.urlRoot = (config != null ? config.SERVER : void 0) + '/projects';
 
     ProjectsCollection.prototype.localStorage = new Backbone.LocalStorage(ProjectsCollection.collectionName);
 
@@ -1080,9 +1080,9 @@
 
     RecordsCollection.prototype.collectionName = config.collection.records;
 
-    RecordsCollection.prototype.url = (config != null ? config.SERVER : void 0) + '/' + RecordsCollection.collectionName;
+    RecordsCollection.prototype.url = (config != null ? config.SERVER : void 0) + '/records';
 
-    RecordsCollection.prototype.urlRoot = (config != null ? config.SERVER : void 0) + '/' + RecordsCollection.collectionName;
+    RecordsCollection.prototype.urlRoot = (config != null ? config.SERVER : void 0) + '/records';
 
     RecordsCollection.prototype.localStorage = new Backbone.LocalStorage(RecordsCollection.collectionName);
 
@@ -1134,9 +1134,9 @@
 
     UsersCollection.prototype.collectionName = config.collection.users;
 
-    UsersCollection.prototype.url = (config != null ? config.SERVER : void 0) + '/' + UsersCollection.collectionName;
+    UsersCollection.prototype.url = (config != null ? config.SERVER : void 0) + '/users';
 
-    UsersCollection.prototype.urlRoot = (config != null ? config.SERVER : void 0) + '/' + UsersCollection.collectionName;
+    UsersCollection.prototype.urlRoot = (config != null ? config.SERVER : void 0) + '/users';
 
     UsersCollection.prototype.localStorage = new Backbone.LocalStorage(UsersCollection.collectionName);
 
@@ -1257,9 +1257,14 @@
       });
     },
     bindRequest: function() {
-      return this.reply('isOnline', (function(_this) {
+      this.reply('isOnline', (function(_this) {
         return function() {
           return _this.isOnline;
+        };
+      })(this));
+      return this.reply('projects', (function(_this) {
+        return function() {
+          return _this.model.get('projects');
         };
       })(this));
     },
@@ -1553,7 +1558,7 @@
     };
 
     Record.prototype.render = function() {
-      var textarea;
+      var projectDefinition, textarea;
       $(this.container).html(this.$el.html(this.template(this.model.toJSON())));
       textarea = new Tracktime.Element.Textarea({
         model: this.model.get('recordModel'),
@@ -1577,10 +1582,11 @@
         model: this.model.get('recordModel'),
         field: 'recordDate'
       })).$el);
-      $('placeholder#project_definition', this.$el).replaceWith((new Tracktime.Element.ProjectDefinition({
+      projectDefinition = new Tracktime.Element.ProjectDefinition({
         model: this.model.get('recordModel'),
         field: 'project'
-      })).$el);
+      });
+      $('.floating-label', "#actions-form").append(projectDefinition.$el);
       if (this.model.get('canClose')) {
         $('placeholder#btn_close_action', this.$el).replaceWith((new Tracktime.Element.ElementCloseAction({
           model: this.model
@@ -2083,6 +2089,7 @@
     extend(ProjectDefinition, superClass);
 
     function ProjectDefinition() {
+      this.selectProject = bind(this.selectProject, this);
       return ProjectDefinition.__super__.constructor.apply(this, arguments);
     }
 
@@ -2090,16 +2097,64 @@
 
     ProjectDefinition.prototype.template = JST['elements/project_definition'];
 
+    ProjectDefinition.prototype.defaultTitle = 'Select project';
+
+    ProjectDefinition.prototype.events = {
+      'click .btn-white': 'selectProject'
+    };
+
     ProjectDefinition.prototype.initialize = function(options) {
       if (options == null) {
         options = {};
       }
       _.extend(this, options);
-      return this.render();
+      this.projects = Tracktime.AppChannel.request('projects');
+      this.render();
+      return this.projects.on('sync', (function(_this) {
+        return function(project, models) {
+          return _this.renderProjectsList(project.models);
+        };
+      })(this));
     };
 
     ProjectDefinition.prototype.render = function() {
-      return this.$el.html(this.template());
+      this.$el.html(this.template({
+        title: this.getTitle()
+      }));
+      return this.renderProjectsList(this.projects.models);
+    };
+
+    ProjectDefinition.prototype.renderProjectsList = function(models) {
+      var menu;
+      menu = $('.dropdown-menu', this.$el);
+      menu.children().remove();
+      _.each(models, (function(_this) {
+        return function(model) {
+          return menu.append($("<li><a class='btn btn-white noDefault' data-project='" + (model.get('_id')) + "' href='#" + (model.get('_id')) + "'>" + (model.get('name')) + "</a></li>"));
+        };
+      })(this));
+      return menu.append($("<li><a class='btn btn-white' data-project='0' href='#0'><span class='text-muted'>No project</span></a></li>"));
+    };
+
+    ProjectDefinition.prototype.getTitle = function() {
+      var projectId;
+      projectId = this.model.get(this.field);
+      if (projectId !== 0) {
+        return "to " + this.projects.get(projectId).get('name');
+      } else {
+        return this.defaultTitle;
+      }
+    };
+
+    ProjectDefinition.prototype.selectProject = function(event) {
+      event.preventDefault();
+      this.model.set(this.field, $(event.target).data('project'));
+      return this.updateTitle();
+    };
+
+    ProjectDefinition.prototype.updateTitle = function() {
+      $('.project_definition-toggler span.caption', this.$el).text(this.getTitle());
+      return this.$el.parents('.form-control-wrapper').find('textarea').focus();
     };
 
     return ProjectDefinition;
@@ -2292,7 +2347,7 @@
     };
 
     Textarea.prototype.fixEnter = function(event) {
-      if (event.keyCode === 13 && event.shiftKey) {
+      if (event.keyCode === 13 && !event.shiftKey) {
         event.preventDefault();
         return this.trigger('tSubmit');
       }

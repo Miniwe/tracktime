@@ -14981,7 +14981,7 @@ hr.on-light {
   min-height: 100%;
 }
 
-/* line 22, ../../app/assets/sass/vendor/_slideout.scss */
+/* line 20, ../../app/assets/sass/vendor/_slideout.scss */
 body,
 .slideout-open,
 .slideout-open body {
@@ -15541,12 +15541,37 @@ h1, h2, h3, h4, h5, h6 {
 .project_definition {
   display: inline-block;
   pointer-events: auto;
+  position: relative;
 }
-/* line 4, ../../app/assets/sass/blocks/_project-definition.scss */
-.project_definition .toggler {
+/* line 5, ../../app/assets/sass/blocks/_project-definition.scss */
+.project_definition .project_definition-toggler {
   font-weight: bold;
   font-style: italic;
   font-size: 0.9em;
+  margin-left: .4em;
+  display: inline-block;
+}
+/* line 12, ../../app/assets/sass/blocks/_project-definition.scss */
+.project_definition .dropdown-menu {
+  border-radius: 0;
+  padding: 0;
+  padding: 0;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+/* line 17, ../../app/assets/sass/blocks/_project-definition.scss */
+.project_definition .dropdown-menu li {
+  margin: 0;
+}
+/* line 19, ../../app/assets/sass/blocks/_project-definition.scss */
+.project_definition .dropdown-menu li .btn {
+  margin: 0;
+  border-radius: 0;
+  text-transform: none;
+  text-align: left;
+}
+/* line 24, ../../app/assets/sass/blocks/_project-definition.scss */
+.project_definition .dropdown-menu li .btn.noDefault:before {
+  content: "to ";
 }
 
 /* line 1, ../../app/assets/sass/blocks/_ani.scss */

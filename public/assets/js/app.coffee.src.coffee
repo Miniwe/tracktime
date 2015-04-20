@@ -615,7 +615,7 @@ class Tracktime.User extends Tracktime.Model
 class Tracktime.ActionsCollection extends Backbone.Collection
   model: Tracktime.Action
   collectionName: config.collection.actions
-  url: '/' + @collectionName
+  url: '/actions'
   localStorage: new Backbone.LocalStorage @collectionName
   defaultActions: [
     { title: 'Add Record', type: 'Record' }
@@ -649,12 +649,13 @@ class Tracktime.ActionsCollection extends Backbone.Collection
 class Tracktime.ProjectsCollection extends Tracktime.Collection
   model: Tracktime.Project
   collectionName: config.collection.projects
-  url: config?.SERVER + '/' + @collectionName
-  urlRoot: config?.SERVER + '/' + @collectionName
+  url: config?.SERVER + '/projects'
+  urlRoot: config?.SERVER + '/projects'
   localStorage: new Backbone.LocalStorage @collectionName
 
   initialize: () ->
-    # @fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
+    # @fetch ajaxSync: Tracktime.AppChannel.reply 'isOnline'
+
 
   comparator: (model) ->
     - (new Date(model.get('date'))).getTime()
@@ -678,8 +679,8 @@ class Tracktime.ProjectsCollection extends Tracktime.Collection
 class Tracktime.RecordsCollection extends Tracktime.Collection
   model: Tracktime.Record
   collectionName: config.collection.records
-  url: config?.SERVER + '/' + @collectionName
-  urlRoot: config?.SERVER + '/' + @collectionName
+  url: config?.SERVER + '/records'
+  urlRoot: config?.SERVER + '/records'
   localStorage: new Backbone.LocalStorage @collectionName
 
   initialize: () ->
@@ -707,8 +708,8 @@ class Tracktime.RecordsCollection extends Tracktime.Collection
 class Tracktime.UsersCollection extends Tracktime.Collection
   model: Tracktime.User
   collectionName: config.collection.users
-  url: config?.SERVER + '/' + @collectionName
-  urlRoot: config?.SERVER + '/' + @collectionName
+  url: config?.SERVER + '/users'
+  urlRoot: config?.SERVER + '/users'
   localStorage: new Backbone.LocalStorage @collectionName
 
   initialize: () ->
@@ -735,7 +736,7 @@ Tracktime.AppChannel = Backbone.Radio.channel 'app'
 _.extend Tracktime.AppChannel,
   isOnline: null
 
-  init: () ->
+  init: ->
     @listenTo @, 'isOnline', (status) => @isOnline = status
     @checkOnline()
     @setWindowListeners()
@@ -744,13 +745,13 @@ _.extend Tracktime.AppChannel,
     @bindRequest()
     return @
 
-  checkOnline: () ->
+  checkOnline: ->
     if window.navigator.onLine == true
       @checkServer()
     else
       @trigger 'isOnline', false
 
-  checkServer: () ->
+  checkServer: ->
     deferred = $.Deferred()
 
     serverOnlineCallback = (status) => @trigger 'isOnline', true
@@ -776,7 +777,7 @@ _.extend Tracktime.AppChannel,
 
     return deferred.promise()
 
-  setWindowListeners: () ->
+  setWindowListeners: ->
     window.addEventListener "offline", (e) =>
       @trigger 'isOnline', false
     , false
@@ -785,7 +786,7 @@ _.extend Tracktime.AppChannel,
       @checkServer()
     , false
 
-  bindComply: () ->
+  bindComply: ->
     @comply
       'start':           @startApp
       'newRecord':       @newRecord
@@ -796,10 +797,11 @@ _.extend Tracktime.AppChannel,
       'serverOffline':   @serverOffline
       'checkOnline':     @checkOnline
 
-  bindRequest: () ->
-    @reply 'isOnline', () => @isOnline
+  bindRequest: ->
+    @reply 'isOnline', => @isOnline
+    @reply 'projects', => @model.get 'projects'
 
-  startApp: () ->
+  startApp: ->
     @router = new Tracktime.AppRouter model: @model
     Backbone.history.start
       pushState: false
@@ -817,10 +819,10 @@ _.extend Tracktime.AppChannel,
     action = @model.get('actions').addAction(options, params)
     action.setActive()
 
-  serverOnline: () ->
+  serverOnline: ->
     @trigger 'isOnline', true
 
-  serverOffline: () ->
+  serverOffline: ->
     @trigger 'isOnline', false
 
 
@@ -1013,10 +1015,11 @@ class Tracktime.ActionView.Record extends Backbone.View
       field: 'recordDate'
     ).$el
 
-    $('placeholder#project_definition', @$el).replaceWith (new Tracktime.Element.ProjectDefinition
+    projectDefinition = new Tracktime.Element.ProjectDefinition
       model: @model.get 'recordModel'
       field: 'project'
-    ).$el
+
+    $('.floating-label', "#actions-form").append projectDefinition.$el
 
     $('placeholder#btn_close_action', @$el).replaceWith (new Tracktime.Element.ElementCloseAction
       model: @model
@@ -1306,13 +1309,46 @@ class Tracktime.Element.ElementCloseAction extends Tracktime.Element
 class Tracktime.Element.ProjectDefinition extends Tracktime.Element
   className: 'project_definition'
   template: JST['elements/project_definition']
+  defaultTitle: 'Select project'
+  events:
+    'click .btn-white': 'selectProject'
 
   initialize: (options = {}) ->
     _.extend @, options
+    @projects = Tracktime.AppChannel.request 'projects'
     @render()
+    @projects.on 'sync', (project, models) => @renderProjectsList project.models
 
-  render: () ->
-    @$el.html @template()
+
+  render: ->
+    @$el.html @template
+      title: @getTitle()
+    @renderProjectsList @projects.models
+
+  renderProjectsList: (models) ->
+    menu = $('.dropdown-menu', @$el)
+    menu.children().remove()
+    _.each models, (model) =>
+      menu.append $("<li><a class='btn btn-white noDefault' data-project='#{model.get('_id')}' href='##{model.get('_id')}'>#{model.get('name')}</a></li>")
+
+    menu.append $("<li><a class='btn btn-white' data-project='0' href='#0'><span class='text-muted'>No project</span></a></li>")
+
+  getTitle: ->
+    projectId = @model.get @field
+    unless projectId == 0
+      "to " + @projects.get(projectId).get 'name'
+    else
+      @defaultTitle
+
+  selectProject: (event) =>
+    event.preventDefault()
+    @model.set @field, $(event.target).data 'project'
+    @updateTitle()
+
+  updateTitle: ->
+    $('.project_definition-toggler span.caption', @$el).text @getTitle()
+    @$el.parents('.form-control-wrapper').find('textarea').focus()
+
 
 (module?.exports = Tracktime.Element.ProjectDefinition) or @Tracktime.Element.ProjectDefinition = Tracktime.Element.ProjectDefinition
 
@@ -1427,7 +1463,7 @@ class Tracktime.Element.Textarea extends Tracktime.Element
     @model.set @field, $(event.target).val(), {silent: true}
 
   fixEnter: (event) =>
-    if event.keyCode == 13 and event.shiftKey
+    if event.keyCode == 13 and not event.shiftKey
       event.preventDefault()
       @trigger 'tSubmit'
 

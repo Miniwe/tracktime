@@ -3,7 +3,7 @@ Tracktime.AppChannel = Backbone.Radio.channel 'app'
 _.extend Tracktime.AppChannel,
   isOnline: null
 
-  init: () ->
+  init: ->
     @listenTo @, 'isOnline', (status) => @isOnline = status
     @checkOnline()
     @setWindowListeners()
@@ -12,13 +12,13 @@ _.extend Tracktime.AppChannel,
     @bindRequest()
     return @
 
-  checkOnline: () ->
+  checkOnline: ->
     if window.navigator.onLine == true
       @checkServer()
     else
       @trigger 'isOnline', false
 
-  checkServer: () ->
+  checkServer: ->
     deferred = $.Deferred()
 
     serverOnlineCallback = (status) => @trigger 'isOnline', true
@@ -44,7 +44,7 @@ _.extend Tracktime.AppChannel,
 
     return deferred.promise()
 
-  setWindowListeners: () ->
+  setWindowListeners: ->
     window.addEventListener "offline", (e) =>
       @trigger 'isOnline', false
     , false
@@ -53,7 +53,7 @@ _.extend Tracktime.AppChannel,
       @checkServer()
     , false
 
-  bindComply: () ->
+  bindComply: ->
     @comply
       'start':           @startApp
       'newRecord':       @newRecord
@@ -64,10 +64,11 @@ _.extend Tracktime.AppChannel,
       'serverOffline':   @serverOffline
       'checkOnline':     @checkOnline
 
-  bindRequest: () ->
-    @reply 'isOnline', () => @isOnline
+  bindRequest: ->
+    @reply 'isOnline', => @isOnline
+    @reply 'projects', => @model.get 'projects'
 
-  startApp: () ->
+  startApp: ->
     @router = new Tracktime.AppRouter model: @model
     Backbone.history.start
       pushState: false
@@ -85,10 +86,10 @@ _.extend Tracktime.AppChannel,
     action = @model.get('actions').addAction(options, params)
     action.setActive()
 
-  serverOnline: () ->
+  serverOnline: ->
     @trigger 'isOnline', true
 
-  serverOffline: () ->
+  serverOffline: ->
     @trigger 'isOnline', false
 
 

@@ -1,7 +1,7 @@
 class Tracktime.ActionsCollection extends Backbone.Collection
   model: Tracktime.Action
   collectionName: config.collection.actions
-  url: '/' + @collectionName
+  url: '/actions'
   localStorage: new Backbone.LocalStorage @collectionName
   defaultActions: [
     { title: 'Add Record', type: 'Record' }

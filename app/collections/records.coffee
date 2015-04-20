@@ -1,8 +1,8 @@
 class Tracktime.RecordsCollection extends Tracktime.Collection
   model: Tracktime.Record
   collectionName: config.collection.records
-  url: config?.SERVER + '/' + @collectionName
-  urlRoot: config?.SERVER + '/' + @collectionName
+  url: config?.SERVER + '/records'
+  urlRoot: config?.SERVER + '/records'
   localStorage: new Backbone.LocalStorage @collectionName
 
   initialize: () ->

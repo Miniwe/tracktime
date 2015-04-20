@@ -37,10 +37,11 @@ class Tracktime.ActionView.Record extends Backbone.View
       field: 'recordDate'
     ).$el
 
-    $('placeholder#project_definition', @$el).replaceWith (new Tracktime.Element.ProjectDefinition
+    projectDefinition = new Tracktime.Element.ProjectDefinition
       model: @model.get 'recordModel'
       field: 'project'
-    ).$el
+
+    $('.floating-label', "#actions-form").append projectDefinition.$el
 
     $('placeholder#btn_close_action', @$el).replaceWith (new Tracktime.Element.ElementCloseAction
       model: @model

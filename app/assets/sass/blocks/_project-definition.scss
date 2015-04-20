@@ -1,9 +1,30 @@
 .project_definition {
   display: inline-block;
   pointer-events: auto;
-  .toggler {
+  position: relative;
+  .project_definition-toggler {
     font-weight: bold;
     font-style: italic;
     font-size: 0.9em;
+    margin-left: .4em;
+    display: inline-block;
+  }
+  .dropdown-menu {
+    border-radius: 0;
+    padding: 0;
+    padding: 0;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    li {
+      margin: 0;
+      .btn {
+        margin: 0;
+        border-radius: 0;
+        text-transform: none;
+        text-align: left;
+        &.noDefault:before {
+          content: "to ";
+        }
+      }
+    }
   }
 }

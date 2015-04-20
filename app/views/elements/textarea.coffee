@@ -26,7 +26,7 @@ class Tracktime.Element.Textarea extends Tracktime.Element
     @model.set @field, $(event.target).val(), {silent: true}
 
   fixEnter: (event) =>
-    if event.keyCode == 13 and event.shiftKey
+    if event.keyCode == 13 and not event.shiftKey
       event.preventDefault()
       @trigger 'tSubmit'
 

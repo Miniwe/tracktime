@@ -46,13 +46,13 @@ this["JST"]["actions/details/record"] = Handlebars.template({"compiler":[6,">= 2
   return escapeExpression(((helpers.placeholder || (depth0 && depth0.placeholder) || helperMissing).call(depth0, "btn_close_action", {"name":"placeholder","hash":{},"data":data})))
     + "\n"
     + escapeExpression(((helpers.placeholder || (depth0 && depth0.placeholder) || helperMissing).call(depth0, "textarea", {"name":"placeholder","hash":{},"data":data})))
-    + "\n<div class=\"details-container navbar "
+    + "\n\n<div class=\"details-container navbar "
     + escapeExpression(((helper = (helper = helpers.navbarClass || (depth0 != null ? depth0.navbarClass : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"navbarClass","hash":{},"data":data}) : helper)))
     + " hidden\">\n    <div class=\"row\" style=\"margin: 0\">\n        <div class=\"col-md-2\">\n            "
     + escapeExpression(((helpers.placeholder || (depth0 && depth0.placeholder) || helperMissing).call(depth0, "selectday", {"name":"placeholder","hash":{},"data":data})))
     + "\n        </div>\n        <div class=\"col-md-9\">\n            "
     + escapeExpression(((helpers.placeholder || (depth0 && depth0.placeholder) || helperMissing).call(depth0, "slider", {"name":"placeholder","hash":{},"data":data})))
-    + "\n        </div>\n        <div class=\"col-md-1\">\n            <button href=\"#send-form\" id=\"send-form\" class=\"btn btn-white btn-fab btn-fab-mini pull-right\" style=\"margin: 7px; display: block;\" data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\"SAVE Shift+Enter\"><i class=\"mdi-action-done pull-left\"></i><!-- Send --></button>\n        </div>\n    </div>\n\n</div>";
+    + "\n        </div>\n        <div class=\"col-md-1\">\n            <button href=\"#send-form\" id=\"send-form\" class=\"btn btn-white btn-fab btn-fab-mini pull-right\" style=\"margin: 7px; display: block;\" data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\"SAVE-Enter NEWLINE-Shift+Enter\"><i class=\"mdi-action-done pull-left\"></i><!-- Send --></button>\n        </div>\n    </div>\n\n</div>\n\n";
 },"useData":true});
 
 this["JST"]["actions/details/search"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
@@ -123,8 +123,13 @@ this["JST"]["admin/users"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1
 },"useData":true});
 
 this["JST"]["elements/project_definition"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  return "<!-- <a href=\"#define-project\" class=\"toggler\">Define project here</a>\n<textarea class=\"form-control\" placeholder=\"textarea label\"></textarea>\n-->\n";
-  },"useData":true});
+  var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+  return "<div class=\"project_definition\">\n  <a href=\"#define_project\" class=\"project_definition-toggler dropdown-toggle\" data-toggle=\"dropdown\" aria-expanded=\"false\"><span class=\"caption\">"
+    + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
+    + "</span></a>\n  <ul class=\"dropdown-menu\" role=\"menu\">\n    <li><a class=\"btn btn-white\" href=\"#\">Action</a></li>\n    <li><a class=\"btn btn-white\" href=\"#\">Another action</a></li>\n    <li><a class=\"btn btn-white\" href=\"#\">Something else here</a></li>\n    <li><a class=\"btn btn-white\" href=\"#\">Separated link</a></li>\n    <li class=\"divider\"></li>\n    <li><a class=\"btn btn-white\" href=\"#\">"
+    + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
+    + "</a></li>\n  </ul>\n</div>";
+},"useData":true});
 
 this["JST"]["elements/selectday"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "<a href=\"javascript:void(0)\" class=\"btn btn-block btn-white btn-xs dropdown-toggle\" data-toggle=\"dropdown\" id=\"open-cal\" data-target=\"#\" style=\"padding-left: 15px;\"><i class=\"mdi-action-event pull-left\"></i><div class=\"caption\" style=\"display: inline-block;\"><ruby>Сегодня<rt>03.01.2015</rt> </ruby></div> <span class=\"caret\"></span></a>\n<ul class=\"dropdown-menu\">\n    <li>\n        <button class=\"btn btn-default btn-block\">\n            <ruby>Позавчера\n                <rt>01.01.2015</rt>\n            </ruby>\n        </button>\n    </li>\n    <li>\n        <button class=\"btn btn-default btn-block\">\n            <ruby>Вчера\n                <rt>02.01.2015</rt>\n            </ruby>\n        </button>\n    </li>\n    <li>\n        <button class=\"btn btn-default btn-block\">\n            <ruby>Сегодня\n                <rt>03.01.2015</rt>\n            </ruby>\n        </button>\n    </li>\n    <li><a href=\"javascript:void(0)\" class=\"btn btn-default disabled\">Выбрать дату</a></li>\n</ul>";

@@ -1,8 +1,8 @@
 class Tracktime.UsersCollection extends Tracktime.Collection
   model: Tracktime.User
   collectionName: config.collection.users
-  url: config?.SERVER + '/' + @collectionName
-  urlRoot: config?.SERVER + '/' + @collectionName
+  url: config?.SERVER + '/users'
+  urlRoot: config?.SERVER + '/users'
   localStorage: new Backbone.LocalStorage @collectionName
 
   initialize: () ->
