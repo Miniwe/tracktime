@@ -141,7 +141,11 @@ Handlebars.registerHelper 'nl2br', (text) ->
   new Handlebars.SafeString text.nl2br()
 
 Handlebars.registerHelper 'dateFormat', (date) ->
-  date
+  moment = window.moment
+  localeData = moment.localeData('ru')
+  moment(date).format("MMM Do YYYY")
+
+
   # timestamp = Date.parse date
   # unless _.isNaN(timestamp)
   #   (new Date(timestamp)).toLocalString()
@@ -178,6 +182,9 @@ String::capitalizeFirstLetter = ->
 
 String::nl2br = ->
   (@ + '').replace /([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + '<br>' + '$2'
+
+String::letter = ->
+  @charAt(0).toUpperCase()
 
 class Tracktime.Collection extends Backbone.Collection
   addModel: (params, options) ->
@@ -1376,10 +1383,28 @@ class Tracktime.Element.SelectDay extends Tracktime.Element
     @changeField()
     @listenTo @model, "change:#{@field}", @changeField
 
-  render: () ->
-    @$el.html @template()
+  render: ->
+    @$el.html @template @setDays()
 
-  changeField: () =>
+  setDays: ->
+    moment = window.moment
+    localeData = moment.localeData('ru')
+
+    current:
+      name: localeData.weekdays(moment())
+      day: moment().format("MMM Do YYYY")
+    days: [
+      name: localeData.weekdays(moment().subtract(2, 'days'))
+      day: moment().subtract(2, 'day').format("MMM Do YYYY")
+    ,
+      name: localeData.weekdays(moment().subtract(1, 'day'))
+      day: moment().subtract(1, 'day').format("MMM Do YYYY")
+    ,
+      name: localeData.weekdays(moment())
+      day: moment().format("MMM Do YYYY")
+    ]
+
+  changeField: =>
     # @$el.val @model.get @field
     # найти в списке тот день который есть в field и нажать на эту кнопку
 
@@ -1762,10 +1787,13 @@ class Tracktime.RecordView extends Backbone.View
     project_id = @model.get('project')
     @projectsList = Tracktime.AppChannel.request 'projectsList'
     if project_id of @projectsList
-      $(".record-info-project span", @$el).html @projectsList[project_id]
+      title = @projectsList[project_id]
+      $(".record-info-project span", @$el).html title
       $(".record-info-project", @$el).removeClass 'hidden'
+      $(".btn.type i", @$el).removeClass().addClass('letter').html title.letter()
     else
       $(".record-info-project", @$el).addClass 'hidden'
+      $(".btn.type i", @$el).removeClass().addClass('mdi-action-bookmark-outline').html ''
 
   toggleInlineEdit: ->
     @$el.find('.subject_edit').css 'min-height', @$el.find('.subject').height()

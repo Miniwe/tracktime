@@ -63,10 +63,13 @@ class Tracktime.RecordView extends Backbone.View
     project_id = @model.get('project')
     @projectsList = Tracktime.AppChannel.request 'projectsList'
     if project_id of @projectsList
-      $(".record-info-project span", @$el).html @projectsList[project_id]
+      title = @projectsList[project_id]
+      $(".record-info-project span", @$el).html title
       $(".record-info-project", @$el).removeClass 'hidden'
+      $(".btn.type i", @$el).removeClass().addClass('letter').html title.letter()
     else
       $(".record-info-project", @$el).addClass 'hidden'
+      $(".btn.type i", @$el).removeClass().addClass('mdi-action-bookmark-outline').html ''
 
   toggleInlineEdit: ->
     @$el.find('.subject_edit').css 'min-height', @$el.find('.subject').height()

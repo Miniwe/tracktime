@@ -1,12 +1,15 @@
 .btn {
-  i.letter {
-    font-weight: 700;
-    font-style: normal;
-  }
-  .btn-fab-mini {
+  &.btn-fab {
     i.letter {
-      top: -9px;
-      left: 2px;
+      font-weight: 700;
+      font-style: normal;
     }
+    &.btn-fab-mini {
+      i.letter {
+        top: -9px;
+        left: 2px;
+      }
+    }
+
   }
 }

@@ -18,7 +18,11 @@ Handlebars.registerHelper 'nl2br', (text) ->
   new Handlebars.SafeString text.nl2br()
 
 Handlebars.registerHelper 'dateFormat', (date) ->
-  date
+  moment = window.moment
+  localeData = moment.localeData('ru')
+  moment(date).format("MMM Do YYYY")
+
+
   # timestamp = Date.parse date
   # unless _.isNaN(timestamp)
   #   (new Date(timestamp)).toLocalString()

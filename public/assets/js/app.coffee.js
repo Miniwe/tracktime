@@ -209,7 +209,10 @@
   });
 
   Handlebars.registerHelper('dateFormat', function(date) {
-    return date;
+    var localeData, moment;
+    moment = window.moment;
+    localeData = moment.localeData('ru');
+    return moment(date).format("MMM Do YYYY");
   });
 
   Handlebars.registerHelper('minuteFormat', function(val) {
@@ -252,6 +255,10 @@
 
   String.prototype.nl2br = function() {
     return (this + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + '<br>' + '$2');
+  };
+
+  String.prototype.letter = function() {
+    return this.charAt(0).toUpperCase();
   };
 
   Tracktime.Collection = (function(superClass) {
@@ -2211,7 +2218,31 @@
     };
 
     SelectDay.prototype.render = function() {
-      return this.$el.html(this.template());
+      return this.$el.html(this.template(this.setDays()));
+    };
+
+    SelectDay.prototype.setDays = function() {
+      var localeData, moment;
+      moment = window.moment;
+      localeData = moment.localeData('ru');
+      return {
+        current: {
+          name: localeData.weekdays(moment()),
+          day: moment().format("MMM Do YYYY")
+        },
+        days: [
+          {
+            name: localeData.weekdays(moment().subtract(2, 'days')),
+            day: moment().subtract(2, 'day').format("MMM Do YYYY")
+          }, {
+            name: localeData.weekdays(moment().subtract(1, 'day')),
+            day: moment().subtract(1, 'day').format("MMM Do YYYY")
+          }, {
+            name: localeData.weekdays(moment()),
+            day: moment().format("MMM Do YYYY")
+          }
+        ]
+      };
     };
 
     SelectDay.prototype.changeField = function() {};
@@ -2812,14 +2843,17 @@
     };
 
     RecordView.prototype.renderProjectInfo = function() {
-      var project_id;
+      var project_id, title;
       project_id = this.model.get('project');
       this.projectsList = Tracktime.AppChannel.request('projectsList');
       if (project_id in this.projectsList) {
-        $(".record-info-project span", this.$el).html(this.projectsList[project_id]);
-        return $(".record-info-project", this.$el).removeClass('hidden');
+        title = this.projectsList[project_id];
+        $(".record-info-project span", this.$el).html(title);
+        $(".record-info-project", this.$el).removeClass('hidden');
+        return $(".btn.type i", this.$el).removeClass().addClass('letter').html(title.letter());
       } else {
-        return $(".record-info-project", this.$el).addClass('hidden');
+        $(".record-info-project", this.$el).addClass('hidden');
+        return $(".btn.type i", this.$el).removeClass().addClass('mdi-action-bookmark-outline').html('');
       }
     };
 

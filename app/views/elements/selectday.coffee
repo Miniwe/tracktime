@@ -11,10 +11,28 @@ class Tracktime.Element.SelectDay extends Tracktime.Element
     @changeField()
     @listenTo @model, "change:#{@field}", @changeField
 
-  render: () ->
-    @$el.html @template()
+  render: ->
+    @$el.html @template @setDays()
 
-  changeField: () =>
+  setDays: ->
+    moment = window.moment
+    localeData = moment.localeData('ru')
+
+    current:
+      name: localeData.weekdays(moment())
+      day: moment().format("MMM Do YYYY")
+    days: [
+      name: localeData.weekdays(moment().subtract(2, 'days'))
+      day: moment().subtract(2, 'day').format("MMM Do YYYY")
+    ,
+      name: localeData.weekdays(moment().subtract(1, 'day'))
+      day: moment().subtract(1, 'day').format("MMM Do YYYY")
+    ,
+      name: localeData.weekdays(moment())
+      day: moment().format("MMM Do YYYY")
+    ]
+
+  changeField: =>
     # @$el.val @model.get @field
     # найти в списке тот день который есть в field и нажать на эту кнопку
 
