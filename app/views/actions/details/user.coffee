@@ -16,7 +16,7 @@ class Tracktime.ActionView.User extends Backbone.View
     textarea = new Tracktime.Element.Textarea
       model: @model.get 'userModel'
       placeholder: @model.get 'title'
-      field: 'name'
+      field: 'first_name'
 
     $('placeholder#textarea', @$el).replaceWith textarea.$el
 

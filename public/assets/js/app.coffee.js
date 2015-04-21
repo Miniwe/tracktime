@@ -836,6 +836,7 @@
       recordDate: '',
       recordTime: 0,
       project: 0,
+      user: 0,
       isDeleted: false
     };
 
@@ -898,23 +899,29 @@
 
     User.prototype.defaults = {
       _id: null,
-      name: '',
+      first_name: '',
+      last_name: '',
+      email: '',
+      password: '',
       description: '',
+      default_pay_rate: '',
       lastAccess: (new Date()).toISOString(),
       isDeleted: false
     };
 
     User.prototype.validation = {
-      name: {
+      first_name: {
         required: true,
         minLength: 4,
-        msg: 'Please enter a valid name'
+        msg: 'Please enter a valid first_name'
       }
     };
 
     User.prototype.initialize = function() {
       this.isEdit = false;
-      this.on('change:name', this.updateLastAccess);
+      this.on('change:first_name', this.updateLastAccess);
+      this.on('change:last_name', this.updateLastAccess);
+      this.on('change:description', this.updateLastAccess);
       return this.on('change:isEdit', this.changeIsEdit);
     };
 
@@ -933,7 +940,7 @@
           type: 'User',
           canClose: true
         }, {
-          title: 'Edit user: ' + this.get('name').substr(0, 40),
+          title: 'Edit user: ' + this.get('first_name').substr(0, 40),
           userModel: this,
           scope: 'edit:action'
         });
@@ -1698,7 +1705,7 @@
       textarea = new Tracktime.Element.Textarea({
         model: this.model.get('userModel'),
         placeholder: this.model.get('title'),
-        field: 'name'
+        field: 'first_name'
       });
       $('placeholder#textarea', this.$el).replaceWith(textarea.$el);
       $.material.input("[name=" + textarea.name + "]");
@@ -3057,7 +3064,7 @@
         this.render();
       }
       this.listenTo(this.model, "change:isDeleted", this.changeIsDeleted);
-      this.listenTo(this.model, "change:name", this.changeName);
+      this.listenTo(this.model, "change:first_name", this.changeName);
       this.listenTo(this.model, "change:isEdit", this.changeIsEdit);
       return this.listenTo(this.model, "sync", this.syncModel);
     };
@@ -3075,7 +3082,7 @@
       textarea = new Tracktime.Element.Textarea({
         model: this.model,
         className: 'subject_edit form-control hidden',
-        field: 'name'
+        field: 'first_name'
       });
       $('placeholder#textarea', this.$el).replaceWith(textarea.$el);
       return textarea.on('tSubmit', this.sendForm);
@@ -3088,7 +3095,7 @@
     UserView.prototype.syncModel = function(model, options, params) {
       model.isEdit = false;
       model.trigger('change:isEdit');
-      return model.trigger('change:name');
+      return model.trigger('change:first_name');
     };
 
     UserView.prototype.changeIsDeleted = function() {
@@ -3096,8 +3103,8 @@
     };
 
     UserView.prototype.changeName = function() {
-      $('.subject', this.$el).html((this.model.get('name') + '').nl2br());
-      return $('.name_edit', this.$el).val(this.model.get('name'));
+      $('.subject', this.$el).html((this.model.get('first_name') + '').nl2br());
+      return $('.name_edit', this.$el).val(this.model.get('first_name'));
     };
 
     UserView.prototype.toggleInlineEdit = function() {

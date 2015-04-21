@@ -547,6 +547,7 @@ class Tracktime.Record extends Tracktime.Model
     recordDate: ''
     recordTime: 0
     project: 0
+    user: 0
     isDeleted: false
 
   validation:
@@ -586,20 +587,26 @@ class Tracktime.User extends Tracktime.Model
 
   defaults:
     _id: null
-    name: ''
+    first_name: ''
+    last_name: ''
+    email: ''
+    password: ''
     description: ''
+    default_pay_rate: ''
     lastAccess: (new Date()).toISOString()
     isDeleted: false
 
   validation:
-    name:
+    first_name:
       required: true
       minLength: 4
-      msg: 'Please enter a valid name'
+      msg: 'Please enter a valid first_name'
 
   initialize: ->
     @isEdit = false
-    @on 'change:name', @updateLastAccess
+    @on 'change:first_name', @updateLastAccess
+    @on 'change:last_name', @updateLastAccess
+    @on 'change:description', @updateLastAccess
     @on 'change:isEdit', @changeIsEdit
 
   isValid: () ->
@@ -612,7 +619,7 @@ class Tracktime.User extends Tracktime.Model
   changeIsEdit: ->
     if @isEdit
       Tracktime.AppChannel.command 'addAction', {title: 'Edit user', type: 'User', canClose: true},
-        title: 'Edit user: ' + @get('name').substr(0, 40)
+        title: 'Edit user: ' + @get('first_name').substr(0, 40)
         userModel: @
         scope: 'edit:action'
 
@@ -1086,7 +1093,7 @@ class Tracktime.ActionView.User extends Backbone.View
     textarea = new Tracktime.Element.Textarea
       model: @model.get 'userModel'
       placeholder: @model.get 'title'
-      field: 'name'
+      field: 'first_name'
 
     $('placeholder#textarea', @$el).replaceWith textarea.$el
 
@@ -1908,7 +1915,7 @@ class Tracktime.AdminView.UserView extends Backbone.View
     unless @model.get 'isDeleted'
       @render()
     @listenTo @model, "change:isDeleted", @changeIsDeleted
-    @listenTo @model, "change:name", @changeName
+    @listenTo @model, "change:first_name", @changeName
     @listenTo @model, "change:isEdit", @changeIsEdit
     @listenTo @model, "sync", @syncModel
 
@@ -1924,7 +1931,7 @@ class Tracktime.AdminView.UserView extends Backbone.View
     textarea = new Tracktime.Element.Textarea
       model: @model
       className: 'subject_edit form-control hidden'
-      field: 'name'
+      field: 'first_name'
 
     $('placeholder#textarea', @$el).replaceWith textarea.$el
     textarea.on 'tSubmit', @sendForm
@@ -1935,15 +1942,15 @@ class Tracktime.AdminView.UserView extends Backbone.View
   syncModel: (model, options, params) ->
     model.isEdit = false
     model.trigger 'change:isEdit'
-    model.trigger 'change:name'
+    model.trigger 'change:first_name'
     #todo update all elements after
 
   changeIsDeleted: ->
     @$el.remove() # @todo possible not need
 
   changeName: ->
-    $('.subject', @$el).html (@model.get('name') + '').nl2br()
-    $('.name_edit', @$el).val @model.get 'name'
+    $('.subject', @$el).html (@model.get('first_name') + '').nl2br()
+    $('.name_edit', @$el).val @model.get 'first_name'
 
   toggleInlineEdit: ->
     @$el.find('.subject_edit').css 'min-height', @$el.find('.subject').height()

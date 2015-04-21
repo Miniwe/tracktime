@@ -330,7 +330,7 @@ this["JST"]["users/admin_user"] = Handlebars.template({"compiler":[6,">= 2.0.0-b
     + "\">\n      <i class=\"mdi-social-person-outline\"></i>\n    </a>\n    <a class=\"edit btn btn-fab btn-fab-mini btn-flat pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Edit action\">\n      <i class=\"mdi-editor-mode-edit\"></i>\n    </a>\n  </div>\n\n  <div class=\"col-subject col-md-10 col-sm-9\">\n\n    "
     + escapeExpression(((helpers.placeholder || (depth0 && depth0.placeholder) || helperMissing).call(depth0, "textarea", {"name":"placeholder","hash":{},"data":data})))
     + "\n    <div class=\"subject\" style=\"border: none;\">"
-    + escapeExpression(((helpers.nl2br || (depth0 && depth0.nl2br) || helperMissing).call(depth0, (depth0 != null ? depth0.name : depth0), {"name":"nl2br","hash":{},"data":data})))
+    + escapeExpression(((helpers.nl2br || (depth0 && depth0.nl2br) || helperMissing).call(depth0, (depth0 != null ? depth0.first_name : depth0), {"name":"nl2br","hash":{},"data":data})))
     + "</div>\n\n    <p class=\"last-update\">\n        <time class=\"text-muted\" datetime=\""
     + escapeExpression(((helper = (helper = helpers.date || (depth0 != null ? depth0.date : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"date","hash":{},"data":data}) : helper)))
     + "\">"
@@ -353,7 +353,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     + "\">\n\n  <div class=\"col-icon col-md-1 col-sm-2\">\n    <a  class=\"type btn btn-fab btn-fab-mini btn-material-amber\" role=\"menuitem\" tabindex=\"-1\" href=\"#fat\"  data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\""
     + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
     + "\">\n      <i class=\"mdi-social-person-outline\"></i>\n    </a>\n  </div>\n\n  <div class=\"col-subject col-md-10 col-sm-9\">\n\n    <div class=\"subject\" style=\"border: none;\">"
-    + escapeExpression(((helpers.nl2br || (depth0 && depth0.nl2br) || helperMissing).call(depth0, (depth0 != null ? depth0.name : depth0), {"name":"nl2br","hash":{},"data":data})))
+    + escapeExpression(((helpers.nl2br || (depth0 && depth0.nl2br) || helperMissing).call(depth0, (depth0 != null ? depth0.first_name : depth0), {"name":"nl2br","hash":{},"data":data})))
     + "</div>\n\n    <p class=\"last-update\">\n        <time class=\"text-muted\" datetime=\""
     + escapeExpression(((helper = (helper = helpers.date || (depth0 != null ? depth0.date : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"date","hash":{},"data":data}) : helper)))
     + "\">"

@@ -6,20 +6,26 @@ class Tracktime.User extends Tracktime.Model
 
   defaults:
     _id: null
-    name: ''
+    first_name: ''
+    last_name: ''
+    email: ''
+    password: ''
     description: ''
+    default_pay_rate: ''
     lastAccess: (new Date()).toISOString()
     isDeleted: false
 
   validation:
-    name:
+    first_name:
       required: true
       minLength: 4
-      msg: 'Please enter a valid name'
+      msg: 'Please enter a valid first_name'
 
   initialize: ->
     @isEdit = false
-    @on 'change:name', @updateLastAccess
+    @on 'change:first_name', @updateLastAccess
+    @on 'change:last_name', @updateLastAccess
+    @on 'change:description', @updateLastAccess
     @on 'change:isEdit', @changeIsEdit
 
   isValid: () ->
@@ -32,7 +38,7 @@ class Tracktime.User extends Tracktime.Model
   changeIsEdit: ->
     if @isEdit
       Tracktime.AppChannel.command 'addAction', {title: 'Edit user', type: 'User', canClose: true},
-        title: 'Edit user: ' + @get('name').substr(0, 40)
+        title: 'Edit user: ' + @get('first_name').substr(0, 40)
         userModel: @
         scope: 'edit:action'
 

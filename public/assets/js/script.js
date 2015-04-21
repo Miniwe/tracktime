@@ -32847,7 +32847,7 @@ this["JST"]["users/admin_user"] = Handlebars.template({"compiler":[6,">= 2.0.0-b
     + "\">\n      <i class=\"mdi-social-person-outline\"></i>\n    </a>\n    <a class=\"edit btn btn-fab btn-fab-mini btn-flat pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Edit action\">\n      <i class=\"mdi-editor-mode-edit\"></i>\n    </a>\n  </div>\n\n  <div class=\"col-subject col-md-10 col-sm-9\">\n\n    "
     + escapeExpression(((helpers.placeholder || (depth0 && depth0.placeholder) || helperMissing).call(depth0, "textarea", {"name":"placeholder","hash":{},"data":data})))
     + "\n    <div class=\"subject\" style=\"border: none;\">"
-    + escapeExpression(((helpers.nl2br || (depth0 && depth0.nl2br) || helperMissing).call(depth0, (depth0 != null ? depth0.name : depth0), {"name":"nl2br","hash":{},"data":data})))
+    + escapeExpression(((helpers.nl2br || (depth0 && depth0.nl2br) || helperMissing).call(depth0, (depth0 != null ? depth0.first_name : depth0), {"name":"nl2br","hash":{},"data":data})))
     + "</div>\n\n    <p class=\"last-update\">\n        <time class=\"text-muted\" datetime=\""
     + escapeExpression(((helper = (helper = helpers.date || (depth0 != null ? depth0.date : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"date","hash":{},"data":data}) : helper)))
     + "\">"
@@ -32870,7 +32870,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     + "\">\n\n  <div class=\"col-icon col-md-1 col-sm-2\">\n    <a  class=\"type btn btn-fab btn-fab-mini btn-material-amber\" role=\"menuitem\" tabindex=\"-1\" href=\"#fat\"  data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\""
     + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
     + "\">\n      <i class=\"mdi-social-person-outline\"></i>\n    </a>\n  </div>\n\n  <div class=\"col-subject col-md-10 col-sm-9\">\n\n    <div class=\"subject\" style=\"border: none;\">"
-    + escapeExpression(((helpers.nl2br || (depth0 && depth0.nl2br) || helperMissing).call(depth0, (depth0 != null ? depth0.name : depth0), {"name":"nl2br","hash":{},"data":data})))
+    + escapeExpression(((helpers.nl2br || (depth0 && depth0.nl2br) || helperMissing).call(depth0, (depth0 != null ? depth0.first_name : depth0), {"name":"nl2br","hash":{},"data":data})))
     + "</div>\n\n    <p class=\"last-update\">\n        <time class=\"text-muted\" datetime=\""
     + escapeExpression(((helper = (helper = helpers.date || (depth0 != null ? depth0.date : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"date","hash":{},"data":data}) : helper)))
     + "\">"
@@ -33715,6 +33715,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       recordDate: '',
       recordTime: 0,
       project: 0,
+      user: 0,
       isDeleted: false
     };
 
@@ -33777,23 +33778,29 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
     User.prototype.defaults = {
       _id: null,
-      name: '',
+      first_name: '',
+      last_name: '',
+      email: '',
+      password: '',
       description: '',
+      default_pay_rate: '',
       lastAccess: (new Date()).toISOString(),
       isDeleted: false
     };
 
     User.prototype.validation = {
-      name: {
+      first_name: {
         required: true,
         minLength: 4,
-        msg: 'Please enter a valid name'
+        msg: 'Please enter a valid first_name'
       }
     };
 
     User.prototype.initialize = function() {
       this.isEdit = false;
-      this.on('change:name', this.updateLastAccess);
+      this.on('change:first_name', this.updateLastAccess);
+      this.on('change:last_name', this.updateLastAccess);
+      this.on('change:description', this.updateLastAccess);
       return this.on('change:isEdit', this.changeIsEdit);
     };
 
@@ -33812,7 +33819,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
           type: 'User',
           canClose: true
         }, {
-          title: 'Edit user: ' + this.get('name').substr(0, 40),
+          title: 'Edit user: ' + this.get('first_name').substr(0, 40),
           userModel: this,
           scope: 'edit:action'
         });
@@ -34577,7 +34584,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       textarea = new Tracktime.Element.Textarea({
         model: this.model.get('userModel'),
         placeholder: this.model.get('title'),
-        field: 'name'
+        field: 'first_name'
       });
       $('placeholder#textarea', this.$el).replaceWith(textarea.$el);
       $.material.input("[name=" + textarea.name + "]");
@@ -35936,7 +35943,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
         this.render();
       }
       this.listenTo(this.model, "change:isDeleted", this.changeIsDeleted);
-      this.listenTo(this.model, "change:name", this.changeName);
+      this.listenTo(this.model, "change:first_name", this.changeName);
       this.listenTo(this.model, "change:isEdit", this.changeIsEdit);
       return this.listenTo(this.model, "sync", this.syncModel);
     };
@@ -35954,7 +35961,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       textarea = new Tracktime.Element.Textarea({
         model: this.model,
         className: 'subject_edit form-control hidden',
-        field: 'name'
+        field: 'first_name'
       });
       $('placeholder#textarea', this.$el).replaceWith(textarea.$el);
       return textarea.on('tSubmit', this.sendForm);
@@ -35967,7 +35974,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     UserView.prototype.syncModel = function(model, options, params) {
       model.isEdit = false;
       model.trigger('change:isEdit');
-      return model.trigger('change:name');
+      return model.trigger('change:first_name');
     };
 
     UserView.prototype.changeIsDeleted = function() {
@@ -35975,8 +35982,8 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     };
 
     UserView.prototype.changeName = function() {
-      $('.subject', this.$el).html((this.model.get('name') + '').nl2br());
-      return $('.name_edit', this.$el).val(this.model.get('name'));
+      $('.subject', this.$el).html((this.model.get('first_name') + '').nl2br());
+      return $('.name_edit', this.$el).val(this.model.get('first_name'));
     };
 
     UserView.prototype.toggleInlineEdit = function() {

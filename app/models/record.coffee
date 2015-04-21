@@ -13,6 +13,7 @@ class Tracktime.Record extends Tracktime.Model
     recordDate: ''
     recordTime: 0
     project: 0
+    user: 0
     isDeleted: false
 
   validation:

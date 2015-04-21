@@ -12,7 +12,7 @@ class Tracktime.AdminView.UserView extends Backbone.View
     unless @model.get 'isDeleted'
       @render()
     @listenTo @model, "change:isDeleted", @changeIsDeleted
-    @listenTo @model, "change:name", @changeName
+    @listenTo @model, "change:first_name", @changeName
     @listenTo @model, "change:isEdit", @changeIsEdit
     @listenTo @model, "sync", @syncModel
 
@@ -28,7 +28,7 @@ class Tracktime.AdminView.UserView extends Backbone.View
     textarea = new Tracktime.Element.Textarea
       model: @model
       className: 'subject_edit form-control hidden'
-      field: 'name'
+      field: 'first_name'
 
     $('placeholder#textarea', @$el).replaceWith textarea.$el
     textarea.on 'tSubmit', @sendForm
@@ -39,15 +39,15 @@ class Tracktime.AdminView.UserView extends Backbone.View
   syncModel: (model, options, params) ->
     model.isEdit = false
     model.trigger 'change:isEdit'
-    model.trigger 'change:name'
+    model.trigger 'change:first_name'
     #todo update all elements after
 
   changeIsDeleted: ->
     @$el.remove() # @todo possible not need
 
   changeName: ->
-    $('.subject', @$el).html (@model.get('name') + '').nl2br()
-    $('.name_edit', @$el).val @model.get 'name'
+    $('.subject', @$el).html (@model.get('first_name') + '').nl2br()
+    $('.name_edit', @$el).val @model.get 'first_name'
 
   toggleInlineEdit: ->
     @$el.find('.subject_edit').css 'min-height', @$el.find('.subject').height()
