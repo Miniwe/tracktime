@@ -1167,7 +1167,9 @@
 
     UsersCollection.prototype.localStorage = new Backbone.LocalStorage(UsersCollection.collectionName);
 
-    UsersCollection.prototype.initialize = function() {};
+    UsersCollection.prototype.initialize = function() {
+      return this.on('sync', this.makeList);
+    };
 
     UsersCollection.prototype.addUser = function(options) {
       var error, success;
@@ -1191,6 +1193,17 @@
       return this.addModel(options, {
         success: success,
         error: error
+      });
+    };
+
+    UsersCollection.prototype.makeList = function(collection, models) {
+      var list;
+      list = [];
+      _.each(collection.models, function(model, index) {
+        return list[model.get('_id')] = (model.get('first_name')) + " " + (model.get('last_name'));
+      });
+      return Tracktime.AppChannel.reply('usersList', function() {
+        return list;
       });
     };
 
@@ -1294,7 +1307,17 @@
           return _this.model.get('projects');
         };
       })(this));
-      return this.reply('projectsList', (function(_this) {
+      this.reply('users', (function(_this) {
+        return function() {
+          return _this.model.get('users');
+        };
+      })(this));
+      this.reply('projectsList', (function(_this) {
+        return function() {
+          return [];
+        };
+      })(this));
+      return this.reply('usersList', (function(_this) {
         return function() {
           return [];
         };
@@ -2154,15 +2177,18 @@
     };
 
     ProjectDefinition.prototype.renderProjectsList = function() {
-      var key, menu, ref1, value;
+      var key, menu, sublist, value;
       this.projectsList = Tracktime.AppChannel.request('projectsList');
       menu = $('.dropdown-menu', this.$el);
       menu.children().remove();
       this.updateTitle();
-      ref1 = this.projectsList;
-      for (key in ref1) {
-        if (!hasProp.call(ref1, key)) continue;
-        value = ref1[key];
+      sublist = this.projectsList;
+      if (this.projectsList.length > 20) {
+        sublist = _.first(this.projectsList, 20);
+      }
+      for (key in sublist) {
+        if (!hasProp.call(sublist, key)) continue;
+        value = sublist[key];
         menu.append($("<li><a class='btn btn-white' data-project='" + key + "' href='#" + key + "'>" + value + "</a></li>"));
       }
       return menu.append($("<li><a class='btn btn-white' data-project='0' href='#0'><span class='text-muted'>No project</span></a></li>"));
@@ -2776,6 +2802,7 @@
 
     function RecordView() {
       this.sendForm = bind(this.sendForm, this);
+      this.renderUserInfo = bind(this.renderUserInfo, this);
       this.renderProjectInfo = bind(this.renderProjectInfo, this);
       return RecordView.__super__.constructor.apply(this, arguments);
     }
@@ -2803,7 +2830,10 @@
       this.listenTo(this.model, "sync", this.syncModel);
       this.projects = Tracktime.AppChannel.request('projects');
       this.projectsList = Tracktime.AppChannel.request('projectsList');
-      return this.projects.on('sync', this.renderProjectInfo);
+      this.projects.on('sync', this.renderProjectInfo);
+      this.users = Tracktime.AppChannel.request('users');
+      this.usersList = Tracktime.AppChannel.request('usersList');
+      return this.users.on('sync', this.renderUserInfo);
     };
 
     RecordView.prototype.attributes = function() {
@@ -2823,7 +2853,8 @@
       });
       $('placeholder#textarea', this.$el).replaceWith(textarea.$el);
       textarea.on('tSubmit', this.sendForm);
-      return this.renderProjectInfo();
+      this.renderProjectInfo();
+      return this.renderUserInfo();
     };
 
     RecordView.prototype.changeIsEdit = function() {
@@ -2861,6 +2892,19 @@
       } else {
         $(".record-info-project", this.$el).addClass('hidden');
         return $(".btn.type i", this.$el).removeClass().addClass('mdi-action-bookmark-outline').html('');
+      }
+    };
+
+    RecordView.prototype.renderUserInfo = function() {
+      var title, user_id;
+      user_id = this.model.get('user');
+      this.usersList = Tracktime.AppChannel.request('usersList');
+      if (user_id in this.usersList) {
+        title = this.usersList[user_id];
+        $(".record-info-user span", this.$el).html(title);
+        return $(".record-info-user", this.$el).removeClass('hidden');
+      } else {
+        return $(".record-info-user", this.$el).addClass('hidden');
       }
     };
 
@@ -3076,8 +3120,11 @@
     };
 
     UserView.prototype.render = function() {
-      var textarea;
-      this.$el.html(this.template(this.model.toJSON()));
+      var data, textarea;
+      data = _.extend({}, this.model.toJSON(), {
+        hash: window.md5(this.model.get('email').toLowerCase())
+      });
+      this.$el.html(this.template(data));
       $('.subject_edit', this.$el).on('keydown', this.fixEnter).textareaAutoSize();
       textarea = new Tracktime.Element.Textarea({
         model: this.model,

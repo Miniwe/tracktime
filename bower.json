@@ -29,6 +29,7 @@
     "textarea-autosize": "~0.4.0",
     "nouislider": "~7.0.10",
     "backbone.subroute": "~0.4.5",
-    "moment": "~2.10.2"
+    "moment": "~2.10.2",
+    "js-md5": "~1.1.0"
   }
 }

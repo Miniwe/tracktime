@@ -9,10 +9,18 @@
     </a>
   </div>
 
+  <!-- <div class="col-subject col-md-1 col-sm-1">
+    <img src="http://www.gravatar.com/avatar/{{hash}}?s=100" alt="" style="width:100%; border-radius: 50px;" />
+  </div> -->
   <div class="col-subject col-md-10 col-sm-9">
 
-    {{placeholder 'textarea'}}
-    <div class="subject" style="border: none;">{{nl2br first_name}}</div>
+    <!-- {{placeholder 'textarea'}} -->
+    <div class="subject" style="border: none;">
+      {{nl2br first_name}} {{nl2br last_name}}
+      &nbsp;<a href="mailto:{{email}}">{{email}}</a>
+      <br />
+      DPR: {{default_pay_rate}}
+    </div>
 
     <p class="last-update">
         <time class="text-muted" datetime="{{date}}">{{dateFormat lastAccess}}</time>

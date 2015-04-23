@@ -21,6 +21,10 @@ class Tracktime.RecordView extends Backbone.View
     @projectsList = Tracktime.AppChannel.request 'projectsList'
     @projects.on 'sync', @renderProjectInfo
 
+    @users = Tracktime.AppChannel.request 'users'
+    @usersList = Tracktime.AppChannel.request 'usersList'
+    @users.on 'sync', @renderUserInfo
+
   attributes: ->
     id: @model.cid
 
@@ -39,6 +43,7 @@ class Tracktime.RecordView extends Backbone.View
     textarea.on 'tSubmit', @sendForm
 
     @renderProjectInfo()
+    @renderUserInfo()
 
   changeIsEdit: ->
     @$el.toggleClass 'editmode', @model.isEdit == true
@@ -70,6 +75,16 @@ class Tracktime.RecordView extends Backbone.View
     else
       $(".record-info-project", @$el).addClass 'hidden'
       $(".btn.type i", @$el).removeClass().addClass('mdi-action-bookmark-outline').html ''
+
+  renderUserInfo: =>
+    user_id = @model.get('user')
+    @usersList = Tracktime.AppChannel.request 'usersList'
+    if user_id of @usersList
+      title = @usersList[user_id]
+      $(".record-info-user span", @$el).html title
+      $(".record-info-user", @$el).removeClass 'hidden'
+    else
+      $(".record-info-user", @$el).addClass 'hidden'
 
   toggleInlineEdit: ->
     @$el.find('.subject_edit').css 'min-height', @$el.find('.subject').height()

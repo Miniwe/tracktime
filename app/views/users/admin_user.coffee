@@ -20,7 +20,8 @@ class Tracktime.AdminView.UserView extends Backbone.View
     id: @model.cid
 
   render: ->
-    @$el.html @template @model.toJSON()
+    data = _.extend {}, @model.toJSON(), hash: window.md5 @model.get('email').toLowerCase()
+    @$el.html @template data
     $('.subject_edit', @$el)
       .on('keydown', @fixEnter)
       .textareaAutoSize()

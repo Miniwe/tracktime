@@ -734,6 +734,7 @@ class Tracktime.UsersCollection extends Tracktime.Collection
 
   initialize: () ->
     # @fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
+    @on 'sync', @makeList
 
   addUser: (options) ->
     _.extend options, {date: (new Date()).toISOString()}
@@ -747,6 +748,12 @@ class Tracktime.UsersCollection extends Tracktime.Collection
     @addModel options,
       success: success,
       error: error
+
+  makeList: (collection, models) ->
+    list = []
+    _.each collection.models, (model, index) ->
+      list[model.get('_id')] = "#{model.get('first_name')} #{model.get('last_name')}"
+    Tracktime.AppChannel.reply 'usersList', () -> list
 
 
 (module?.exports = Tracktime.UsersCollection) or @Tracktime.UsersCollection = Tracktime.UsersCollection
@@ -820,7 +827,9 @@ _.extend Tracktime.AppChannel,
   bindRequest: ->
     @reply 'isOnline', => @isOnline
     @reply 'projects', => @model.get 'projects'
+    @reply 'users', => @model.get 'users'
     @reply 'projectsList', => []
+    @reply 'usersList', => []
 
   startApp: ->
     @router = new Tracktime.AppRouter model: @model
@@ -1351,7 +1360,11 @@ class Tracktime.Element.ProjectDefinition extends Tracktime.Element
     menu.children().remove()
 
     @updateTitle()
-    for own key, value of @projectsList
+    sublist = @projectsList
+    if @projectsList.length > 20
+      sublist = _.first(@projectsList, 20)
+
+    for own key, value of sublist
       menu.append $("<li><a class='btn btn-white' data-project='#{key}' href='##{key}'>#{value}</a></li>")
 
     menu.append $("<li><a class='btn btn-white' data-project='0' href='#0'><span class='text-muted'>No project</span></a></li>")
@@ -1752,6 +1765,10 @@ class Tracktime.RecordView extends Backbone.View
     @projectsList = Tracktime.AppChannel.request 'projectsList'
     @projects.on 'sync', @renderProjectInfo
 
+    @users = Tracktime.AppChannel.request 'users'
+    @usersList = Tracktime.AppChannel.request 'usersList'
+    @users.on 'sync', @renderUserInfo
+
   attributes: ->
     id: @model.cid
 
@@ -1770,6 +1787,7 @@ class Tracktime.RecordView extends Backbone.View
     textarea.on 'tSubmit', @sendForm
 
     @renderProjectInfo()
+    @renderUserInfo()
 
   changeIsEdit: ->
     @$el.toggleClass 'editmode', @model.isEdit == true
@@ -1801,6 +1819,16 @@ class Tracktime.RecordView extends Backbone.View
     else
       $(".record-info-project", @$el).addClass 'hidden'
       $(".btn.type i", @$el).removeClass().addClass('mdi-action-bookmark-outline').html ''
+
+  renderUserInfo: =>
+    user_id = @model.get('user')
+    @usersList = Tracktime.AppChannel.request 'usersList'
+    if user_id of @usersList
+      title = @usersList[user_id]
+      $(".record-info-user span", @$el).html title
+      $(".record-info-user", @$el).removeClass 'hidden'
+    else
+      $(".record-info-user", @$el).addClass 'hidden'
 
   toggleInlineEdit: ->
     @$el.find('.subject_edit').css 'min-height', @$el.find('.subject').height()
@@ -1923,7 +1951,8 @@ class Tracktime.AdminView.UserView extends Backbone.View
     id: @model.cid
 
   render: ->
-    @$el.html @template @model.toJSON()
+    data = _.extend {}, @model.toJSON(), hash: window.md5 @model.get('email').toLowerCase()
+    @$el.html @template data
     $('.subject_edit', @$el)
       .on('keydown', @fixEnter)
       .textareaAutoSize()

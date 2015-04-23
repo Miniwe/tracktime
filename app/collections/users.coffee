@@ -7,6 +7,7 @@ class Tracktime.UsersCollection extends Tracktime.Collection
 
   initialize: () ->
     # @fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
+    @on 'sync', @makeList
 
   addUser: (options) ->
     _.extend options, {date: (new Date()).toISOString()}
@@ -20,6 +21,12 @@ class Tracktime.UsersCollection extends Tracktime.Collection
     @addModel options,
       success: success,
       error: error
+
+  makeList: (collection, models) ->
+    list = []
+    _.each collection.models, (model, index) ->
+      list[model.get('_id')] = "#{model.get('first_name')} #{model.get('last_name')}"
+    Tracktime.AppChannel.reply 'usersList', () -> list
 
 
 (module?.exports = Tracktime.UsersCollection) or @Tracktime.UsersCollection = Tracktime.UsersCollection
