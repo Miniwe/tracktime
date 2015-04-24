@@ -2519,24 +2519,25 @@
 
     GuestView.prototype.views = {};
 
-    GuestView.prototype.events = {
-      'click .btn-login': 'auth'
-    };
-
     GuestView.prototype.initialize = function() {
       return this.render();
     };
 
     GuestView.prototype.render = function() {
-      return $(this.container).html(this.$el.html(this.template(this.model.toJSON())));
+      $(this.container).html(this.$el.html(this.template(this.model.toJSON())));
+      this.setSubView('login', new Tracktime.GuestView.Login({
+        model: this.model
+      }));
+      this.setSubView('signin', new Tracktime.GuestView.Signin({
+        model: this.model
+      }));
+      return this.setSubView('fopass', new Tracktime.GuestView.Fopass({
+        model: this.model
+      }));
     };
 
     GuestView.prototype.initUI = function() {
       return $.material.init();
-    };
-
-    GuestView.prototype.auth = function() {
-      return this.model.changeUserStatus(true);
     };
 
     return GuestView;
@@ -2544,6 +2545,89 @@
   })(Backbone.View);
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AppView : void 0) || (this.Tracktime.AppView = Tracktime.AppView);
+
+  Tracktime.GuestView.Fopass = (function(superClass) {
+    extend(Fopass, superClass);
+
+    function Fopass() {
+      return Fopass.__super__.constructor.apply(this, arguments);
+    }
+
+    Fopass.prototype.el = '#forgotpassword';
+
+    Fopass.prototype.events = {
+      'click .btn-forgotpassword': 'forgotpasswordProcess'
+    };
+
+    Fopass.prototype.initialize = function() {};
+
+    Fopass.prototype.forgotpasswordProcess = function(event) {
+      event.preventDefault();
+      return $.alert('fopass process');
+    };
+
+    return Fopass;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.GuestView.Fopass : void 0) || (this.Tracktime.GuestView.Fopass = Tracktime.GuestView.Fopass);
+
+  Tracktime.GuestView.Login = (function(superClass) {
+    extend(Login, superClass);
+
+    function Login() {
+      return Login.__super__.constructor.apply(this, arguments);
+    }
+
+    Login.prototype.el = '#login';
+
+    Login.prototype.events = {
+      'click .btn-login': 'loginProcess'
+    };
+
+    Login.prototype.initialize = function() {};
+
+    Login.prototype.loginProcess = function(event) {
+      event.preventDefault();
+      $.alert('login process');
+      return this.auth();
+    };
+
+    Login.prototype.auth = function() {
+      return this.model.changeUserStatus(true);
+    };
+
+    return Login;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.GuestView.Login : void 0) || (this.Tracktime.GuestView.Login = Tracktime.GuestView.Login);
+
+  Tracktime.GuestView.Signin = (function(superClass) {
+    extend(Signin, superClass);
+
+    function Signin() {
+      return Signin.__super__.constructor.apply(this, arguments);
+    }
+
+    Signin.prototype.el = '#signin';
+
+    Signin.prototype.events = {
+      'click .btn-signin': 'signinProcess'
+    };
+
+    Signin.prototype.initialize = function() {};
+
+    Signin.prototype.signinProcess = function(event) {
+      event.preventDefault();
+      return $.alert('signin process');
+    };
+
+    return Signin;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.GuestView.Signin : void 0) || (this.Tracktime.GuestView.Signin = Tracktime.GuestView.Signin);
 
   Tracktime.AppView.Footer = (function(superClass) {
     extend(Footer, superClass);

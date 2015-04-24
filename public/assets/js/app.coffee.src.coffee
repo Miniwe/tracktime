@@ -1580,23 +1580,69 @@ class Tracktime.GuestView extends Backbone.View
   className: ''
   template: JST['global/guest']
   views: {}
-  events:
-    'click .btn-login': 'auth'
 
   initialize: ->
     @render()
 
   render: ->
     $(@container).html @$el.html @template @model.toJSON()
+    @setSubView 'login', new Tracktime.GuestView.Login model: @model
+    @setSubView 'signin', new Tracktime.GuestView.Signin model: @model
+    @setSubView 'fopass', new Tracktime.GuestView.Fopass model: @model
 
   initUI: ->
     $.material.init()
 
+
+(module?.exports = Tracktime.AppView) or @Tracktime.AppView = Tracktime.AppView
+
+
+class Tracktime.GuestView.Fopass extends Backbone.View
+  el: '#forgotpassword'
+  events:
+    'click .btn-forgotpassword': 'forgotpasswordProcess'
+
+  initialize: () ->
+
+  forgotpasswordProcess: (event) ->
+    event.preventDefault()
+    $.alert 'fopass process'
+
+
+(module?.exports = Tracktime.GuestView.Fopass) or @Tracktime.GuestView.Fopass = Tracktime.GuestView.Fopass
+
+
+class Tracktime.GuestView.Login extends Backbone.View
+  el: '#login'
+  events:
+    'click .btn-login': 'loginProcess'
+
+  initialize: () ->
+
+  loginProcess: (event) ->
+    event.preventDefault()
+    $.alert 'login process'
+    @auth()
+
   auth: ->
     @model.changeUserStatus true
 
+(module?.exports = Tracktime.GuestView.Login) or @Tracktime.GuestView.Login = Tracktime.GuestView.Login
 
-(module?.exports = Tracktime.AppView) or @Tracktime.AppView = Tracktime.AppView
+
+class Tracktime.GuestView.Signin extends Backbone.View
+  el: '#signin'
+  events:
+    'click .btn-signin': 'signinProcess'
+
+  initialize: () ->
+
+  signinProcess: (event) ->
+    event.preventDefault()
+    $.alert 'signin process'
+
+
+(module?.exports = Tracktime.GuestView.Signin) or @Tracktime.GuestView.Signin = Tracktime.GuestView.Signin
 
 
 class Tracktime.AppView.Footer extends Backbone.View

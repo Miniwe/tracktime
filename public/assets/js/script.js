@@ -32947,9 +32947,9 @@ this["JST"]["global/app"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
 this["JST"]["global/guest"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-  return "<div class=\"scrollWrapper\">\n  <div class=\"container\" style=\"padding: 0\">\n    <div id=\"main\">\n<div class=\"well\" style=\"width: 40em; margin: 0 auto;\">\n      <h1>"
+  return "<div class=\"scrollWrapper\">\n    <div class=\"container\" style=\"padding: 0\">\n        <div id=\"main\">\n            <div class=\"well\" style=\"width: 40em; margin: 0 auto;\">\n                <h1>"
     + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
-    + "</h1>\n<ul class=\"nav nav-tabs\" style=\"margin-bottom: 15px;\">\n    <li class=\"active\"><a href=\"#home\" data-toggle=\"tab\">Home</a></li>\n    <li><a href=\"#profile\" data-toggle=\"tab\">Profile</a></li>\n    <li class=\"disabled\"><a>Disabled</a></li>\n    <li class=\"dropdown\">\n        <a class=\"dropdown-toggle\" data-toggle=\"dropdown\" href=\"bootstrap-elements.html\" data-target=\"#\">\n            Dropdown <span class=\"caret\"></span>\n        </a>\n        <ul class=\"dropdown-menu\">\n            <li><a href=\"#dropdown1\" data-toggle=\"tab\">Action</a></li>\n            <li class=\"divider\"></li>\n            <li><a href=\"#dropdown2\" data-toggle=\"tab\">Another action</a></li>\n        </ul>\n    </li>\n</ul>\n<div id=\"myTabContent\" class=\"tab-content\">\n    <div class=\"tab-pane fade active in\" id=\"home\">\n        <p>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui.</p>\n        <p>\n\n            <button class=\"btn btn-lg btn-block btn-login btn-inverse\">AUTH</button>\n        </p>\n    </div>\n    <div class=\"tab-pane fade\" id=\"profile\">\n        <p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui photo booth letterpress, commodo enim craft beer mlkshk aliquip jean shorts ullamco ad vinyl cillum PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus mollit.</p>\n    </div>\n    <div class=\"tab-pane fade\" id=\"dropdown1\">\n        <p>Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo retro fanny pack lo-fi farm-to-table readymade. Messenger bag gentrify pitchfork tattooed craft beer, iphone skateboard locavore carles etsy salvia banksy hoodie helvetica. DIY synth PBR banksy irony. Leggings gentrify squid 8-bit cred pitchfork.</p>\n    </div>\n    <div class=\"tab-pane fade\" id=\"dropdown2\">\n        <p>Trust fund seitan letterpress, keytar raw denim keffiyeh etsy art party before they sold out master cleanse gluten-free squid scenester freegan cosby sweater. Fanny pack portland seitan DIY, art party locavore wolf cliche high life echo park Austin. Cred vinyl keffiyeh DIY salvia PBR, banh mi before they sold out farm-to-table VHS viral locavore cosby sweater.</p>\n    </div>\n</div>\n    </div>\n\n</div>\n  </div>\n  <footer id=\"footer\">\n  </footer>\n</div>\n";
+    + "</h1>\n                <ul class=\"nav nav-tabs\" style=\"margin-bottom: 1em\">\n                    <li class=\"active\"><a href=\"#login\" data-toggle=\"tab\">Log In</a></li>\n                    <li><a href=\"#signin\" data-toggle=\"tab\">Sign In</a></li>\n                    <li class=\"hidden\"><a href=\"#forgotpassword\" data-toggle=\"tab\">Forgot Password</a></li>\n                </ul>\n                <div id=\"myTabContent\" class=\"tab-content\">\n                    <div class=\"tab-pane fade active in\" id=\"login\">\n                        <form class=\"form-horizontal\">\n                            <fieldset>\n                                <legend>Log In</legend>\n                                <div class=\"form-group\">\n                                    <label for=\"inputEmail\" class=\"col-lg-2 control-label\">Email</label>\n                                    <div class=\"col-lg-10\">\n                                        <input type=\"email\" class=\"form-control\" id=\"inputEmail\" placeholder=\"Email\">\n                                    </div>\n                                </div>\n                                <div class=\"form-group\">\n                                    <label for=\"inputPassword\" class=\"col-lg-2 control-label\">Password</label>\n                                    <div class=\"col-lg-10\">\n                                        <input type=\"password\" class=\"form-control\" id=\"inputPassword\" placeholder=\"Password\">\n                                    </div>\n                                </div>\n                                <div class=\"form-group hidden\">\n                                    <label class=\"col-lg-2 control-label\"></label>\n                                    <div class=\"col-lg-10\">\n                                        <div class=\"togglebutton\">\n                                            <label>\n                                                <input type=\"checkbox\" checked=\"\"> Toggle button\n                                            </label>\n                                        </div>\n                                    </div>\n                                </div>\n                                <div class=\"form-group\">\n                                    <div class=\"col-lg-10 col-lg-offset-2\"> <button class=\"btn btn-lg btn-block btn-login btn-inverse\">Log In</button></div>\n                                </div>\n                            </fieldset>\n                        </form>\n                    </div>\n                    <div class=\"tab-pane fade\" id=\"signin\">\n                        <form class=\"form-horizontal\">\n                            <fieldset>\n                                <legend>Sign In</legend>\n                                <div class=\"form-group\">\n                                    <label for=\"inputEmail\" class=\"col-lg-2 control-label\">Email</label>\n                                    <div class=\"col-lg-10\">\n                                        <input type=\"email\" class=\"form-control\" id=\"inputEmail\" placeholder=\"Email\">\n                                    </div>\n                                </div>\n                                <div class=\"form-group\">\n                                    <label for=\"inputPassword\" class=\"col-lg-2 control-label\">Password</label>\n                                    <div class=\"col-lg-10\">\n                                        <input type=\"password\" class=\"form-control\" id=\"inputPassword\" placeholder=\"Password\">\n                                    </div>\n                                </div>\n                                <div class=\"form-group\">\n                                    <label for=\"repeatPassword\" class=\"col-lg-2 control-label\">Repeat Password</label>\n                                    <div class=\"col-lg-10\">\n                                        <input type=\"password\" class=\"form-control\" id=\"repeatPassword\" placeholder=\"Repeat Password\">\n                                    </div>\n                                </div>\n                                <div class=\"form-group\">\n                                    <div class=\"col-lg-10 col-lg-offset-2\"> <button class=\"btn btn-lg btn-block btn-signin btn-inverse\">Sign In</button></div>\n                                </div>\n                            </fieldset>\n                        </form>\n                    </div>\n                    <div class=\"tab-pane fade\" id=\"forgotpassword\">\n                        <form class=\"form-horizontal\">\n                            <fieldset>\n                                <legend>Forgot Password</legend>\n                                <div class=\"form-group\">\n                                    <label for=\"inputEmail\" class=\"col-lg-2 control-label\">Email</label>\n                                    <div class=\"col-lg-10\">\n                                        <input type=\"email\" class=\"form-control\" id=\"inputEmail\" placeholder=\"Email\">\n                                    </div>\n                                </div>\n                                <div class=\"form-group\">\n                                    <div class=\"col-lg-10 col-lg-offset-2\"> <button class=\"btn btn-lg btn-block btn-forgotpassword btn-inverse\">Send</button></div>\n                                </div>\n                            </fieldset>\n                        </form>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n    <footer id=\"footer\">\n    </footer>\n</div>";
 },"useData":true});
 
 this["JST"]["layout/footer"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
@@ -35692,24 +35692,25 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
     GuestView.prototype.views = {};
 
-    GuestView.prototype.events = {
-      'click .btn-login': 'auth'
-    };
-
     GuestView.prototype.initialize = function() {
       return this.render();
     };
 
     GuestView.prototype.render = function() {
-      return $(this.container).html(this.$el.html(this.template(this.model.toJSON())));
+      $(this.container).html(this.$el.html(this.template(this.model.toJSON())));
+      this.setSubView('login', new Tracktime.GuestView.Login({
+        model: this.model
+      }));
+      this.setSubView('signin', new Tracktime.GuestView.Signin({
+        model: this.model
+      }));
+      return this.setSubView('fopass', new Tracktime.GuestView.Fopass({
+        model: this.model
+      }));
     };
 
     GuestView.prototype.initUI = function() {
       return $.material.init();
-    };
-
-    GuestView.prototype.auth = function() {
-      return this.model.changeUserStatus(true);
     };
 
     return GuestView;
@@ -35717,6 +35718,89 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
   })(Backbone.View);
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AppView : void 0) || (this.Tracktime.AppView = Tracktime.AppView);
+
+  Tracktime.GuestView.Fopass = (function(superClass) {
+    extend(Fopass, superClass);
+
+    function Fopass() {
+      return Fopass.__super__.constructor.apply(this, arguments);
+    }
+
+    Fopass.prototype.el = '#forgotpassword';
+
+    Fopass.prototype.events = {
+      'click .btn-forgotpassword': 'forgotpasswordProcess'
+    };
+
+    Fopass.prototype.initialize = function() {};
+
+    Fopass.prototype.forgotpasswordProcess = function(event) {
+      event.preventDefault();
+      return $.alert('fopass process');
+    };
+
+    return Fopass;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.GuestView.Fopass : void 0) || (this.Tracktime.GuestView.Fopass = Tracktime.GuestView.Fopass);
+
+  Tracktime.GuestView.Login = (function(superClass) {
+    extend(Login, superClass);
+
+    function Login() {
+      return Login.__super__.constructor.apply(this, arguments);
+    }
+
+    Login.prototype.el = '#login';
+
+    Login.prototype.events = {
+      'click .btn-login': 'loginProcess'
+    };
+
+    Login.prototype.initialize = function() {};
+
+    Login.prototype.loginProcess = function(event) {
+      event.preventDefault();
+      $.alert('login process');
+      return this.auth();
+    };
+
+    Login.prototype.auth = function() {
+      return this.model.changeUserStatus(true);
+    };
+
+    return Login;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.GuestView.Login : void 0) || (this.Tracktime.GuestView.Login = Tracktime.GuestView.Login);
+
+  Tracktime.GuestView.Signin = (function(superClass) {
+    extend(Signin, superClass);
+
+    function Signin() {
+      return Signin.__super__.constructor.apply(this, arguments);
+    }
+
+    Signin.prototype.el = '#signin';
+
+    Signin.prototype.events = {
+      'click .btn-signin': 'signinProcess'
+    };
+
+    Signin.prototype.initialize = function() {};
+
+    Signin.prototype.signinProcess = function(event) {
+      event.preventDefault();
+      return $.alert('signin process');
+    };
+
+    return Signin;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.GuestView.Signin : void 0) || (this.Tracktime.GuestView.Signin = Tracktime.GuestView.Signin);
 
   Tracktime.AppView.Footer = (function(superClass) {
     extend(Footer, superClass);
