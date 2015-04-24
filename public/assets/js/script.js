@@ -34566,7 +34566,6 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       return this.trigger('userStatus', false);
     },
     changeUserStatus: function(status) {
-      console.log('router', this.router);
       if (this.router !== null) {
         this.router.view.close();
         delete this.router.view;
@@ -34576,14 +34575,13 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
           model: this.model
         });
         this.router.navigate('/user/rates', true);
-        this.trigger('isOnline', this.isOnline);
+        return this.trigger('isOnline', this.isOnline);
       } else {
         this.router = new Tracktime.GuestRouter({
           model: this.model
         });
-        this.router.navigate('/', true);
+        return this.router.navigate('/', true);
       }
-      return console.log('all views', this.router.view.views);
     }
   });
 
@@ -35776,14 +35774,12 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     Header.prototype.views = {};
 
     Header.prototype.initialize = function(options) {
-      console.log('init header');
       this.options = options;
       return this.render();
     };
 
     Header.prototype.render = function() {
       $(this.container).html(this.$el.html(this.template()));
-      console.log('header @views before set', this.views);
       return this.setSubView('actions', new Tracktime.ActionsView({
         collection: this.model.get('actions')
       }));

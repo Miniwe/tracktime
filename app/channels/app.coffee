@@ -109,7 +109,6 @@ _.extend Tracktime.AppChannel,
 
   changeUserStatus: (status) ->
     # @todo here get user session - if success status true else false
-    console.log 'router', @router
     if @router != null
       @router.view.close()
       delete @router.view
@@ -122,7 +121,6 @@ _.extend Tracktime.AppChannel,
       @router = new Tracktime.GuestRouter model: @model
       @router.navigate '/', true
 
-    console.log 'all views', @router.view.views
 
 
 

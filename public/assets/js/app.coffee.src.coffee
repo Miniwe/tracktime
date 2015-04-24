@@ -889,7 +889,6 @@ _.extend Tracktime.AppChannel,
 
   changeUserStatus: (status) ->
     # @todo here get user session - if success status true else false
-    console.log 'router', @router
     if @router != null
       @router.view.close()
       delete @router.view
@@ -902,7 +901,6 @@ _.extend Tracktime.AppChannel,
       @router = new Tracktime.GuestRouter model: @model
       @router.navigate '/', true
 
-    console.log 'all views', @router.view.views
 
 
 
@@ -1633,13 +1631,11 @@ class Tracktime.AppView.Header extends Backbone.View
   views: {}
 
   initialize: (options) ->
-    console.log 'init header'
     @options = options
     @render()
 
   render: () ->
     $(@container).html @$el.html @template()
-    console.log 'header @views before set', @views
     @setSubView 'actions', new Tracktime.ActionsView
       collection: @model.get('actions')
 
