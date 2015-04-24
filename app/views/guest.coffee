@@ -1,8 +1,10 @@
-class Tracktime.AppView extends Backbone.View
+class Tracktime.GuestView extends Backbone.View
   container: '#panel'
   className: ''
-  template: JST['global/app']
+  template: JST['global/guest']
   views: {}
+  events:
+    'click .btn-login': 'auth'
 
   initialize: ->
     @render()
@@ -12,6 +14,9 @@ class Tracktime.AppView extends Backbone.View
 
   initUI: ->
     $.material.init()
+
+  auth: ->
+    @model.changeUserStatus true
 
 
 (module?.exports = Tracktime.AppView) or @Tracktime.AppView = Tracktime.AppView

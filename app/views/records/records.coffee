@@ -3,9 +3,9 @@ class Tracktime.RecordsView extends Backbone.View
   template: JST['records/records']
   tagName: 'ul'
   className: 'list-group'
+  views: {}
 
   initialize: () ->
-    @views = {}
     @render()
     @listenTo @collection, "reset", @resetRecordsList
     @listenTo @collection, "add", @addRecord

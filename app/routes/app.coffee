@@ -11,7 +11,7 @@ class Tracktime.AppRouter extends Backbone.Router
     _.extend @, options
     @on 'route', (route, params) =>
       @removeActionsExcept(route) unless route.substr(0,6) == 'invoke'
-    @initAuthInterface()
+    @initInterface()
 
   addListener: (subroute, scope) ->
     @listenTo subroute, 'route', (route, params) =>
@@ -37,7 +37,7 @@ class Tracktime.AppRouter extends Backbone.Router
       @adminRouter = new Tracktime.AdminRouter 'admin', parent: @
       @addListener @adminRouter, 'admin'
 
-  initAuthInterface: () ->
+  initInterface: () ->
     @view = new Tracktime.AppView model: @model
     @view.setSubView 'header', new Tracktime.AppView.Header model: @model
     @view.setSubView 'footer', new Tracktime.AppView.Footer()
@@ -52,8 +52,9 @@ class Tracktime.AppRouter extends Backbone.Router
     @navigate '', true
 
   removeActionsExcept: (route) ->
-    _.each @model.get('actions').models, (action) ->
-      action.destroy() if action && action.has('scope') and action.get('scope') isnt route
+    if @model.get('actions')
+      _.each @model.get('actions').models, (action) ->
+        action.destroy() if action && action.has('scope') and action.get('scope') isnt route
 
 
 (module?.exports = Tracktime.AppRouter) or @Tracktime.AppRouter = Tracktime.AppRouter

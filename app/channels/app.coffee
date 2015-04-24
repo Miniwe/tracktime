@@ -2,14 +2,18 @@ Tracktime.AppChannel = Backbone.Radio.channel 'app'
 
 _.extend Tracktime.AppChannel,
   isOnline: null
+  userStatus: null
+  router: null
 
   init: ->
-    @listenTo @, 'isOnline', (status) => @isOnline = status
+    @on 'isOnline', (status) => @isOnline = status
+    @on 'userStatus', (status) => @changeUserStatus status
     @checkOnline()
     @setWindowListeners()
     @model = new Tracktime()
     @bindComply()
     @bindRequest()
+    @model.changeUserStatus false
     return @
 
   checkOnline: ->
@@ -63,16 +67,18 @@ _.extend Tracktime.AppChannel,
       'serverOnline':    @serverOnline
       'serverOffline':   @serverOffline
       'checkOnline':     @checkOnline
+      'userAuth':        @userAuth
+      'userGuest':       @userGuest
 
   bindRequest: ->
     @reply 'isOnline', => @isOnline
+    @reply 'userStatus', => @userStatus
     @reply 'projects', => @model.get 'projects'
     @reply 'users', => @model.get 'users'
     @reply 'projectsList', => []
     @reply 'usersList', => []
 
   startApp: ->
-    @router = new Tracktime.AppRouter model: @model
     Backbone.history.start
       pushState: false
 
@@ -94,6 +100,32 @@ _.extend Tracktime.AppChannel,
 
   serverOffline: ->
     @trigger 'isOnline', false
+
+  userAuth: ->
+    @trigger 'userStatus', true
+
+  userGuest: ->
+    @trigger 'userStatus', false
+
+  changeUserStatus: (status) ->
+    # @todo here get user session - if success status true else false
+    console.log 'router', @router
+    if @router != null
+      @router.view.close()
+      delete @router.view
+
+    if status == true
+      @router = new Tracktime.AppRouter model: @model
+      @router.navigate '/user/rates', true
+      @trigger 'isOnline', @isOnline
+    else
+      @router = new Tracktime.GuestRouter model: @model
+      @router.navigate '/', true
+
+    console.log 'all views', @router.view.views
+
+
+
 
 
 (module?.exports = Tracktime.AppChannel) or @Tracktime.AppChannel = Tracktime.AppChannel

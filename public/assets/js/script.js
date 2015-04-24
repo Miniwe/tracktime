@@ -32945,6 +32945,13 @@ this["JST"]["global/app"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
   return "<header id=\"header\">\n</header>\n<div class=\"scrollWrapper\">\n  <div class=\"container\" style=\"padding: 0\">\n    <div id=\"main\"></div>\n  </div>\n  <footer id=\"footer\">\n  </footer>\n</div>\n";
   },"useData":true});
 
+this["JST"]["global/guest"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+  return "<div class=\"scrollWrapper\">\n  <div class=\"container\" style=\"padding: 0\">\n    <div id=\"main\">\n<div class=\"well\" style=\"width: 40em; margin: 0 auto;\">\n      <h1>"
+    + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
+    + "</h1>\n<ul class=\"nav nav-tabs\" style=\"margin-bottom: 15px;\">\n    <li class=\"active\"><a href=\"#home\" data-toggle=\"tab\">Home</a></li>\n    <li><a href=\"#profile\" data-toggle=\"tab\">Profile</a></li>\n    <li class=\"disabled\"><a>Disabled</a></li>\n    <li class=\"dropdown\">\n        <a class=\"dropdown-toggle\" data-toggle=\"dropdown\" href=\"bootstrap-elements.html\" data-target=\"#\">\n            Dropdown <span class=\"caret\"></span>\n        </a>\n        <ul class=\"dropdown-menu\">\n            <li><a href=\"#dropdown1\" data-toggle=\"tab\">Action</a></li>\n            <li class=\"divider\"></li>\n            <li><a href=\"#dropdown2\" data-toggle=\"tab\">Another action</a></li>\n        </ul>\n    </li>\n</ul>\n<div id=\"myTabContent\" class=\"tab-content\">\n    <div class=\"tab-pane fade active in\" id=\"home\">\n        <p>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui.</p>\n        <p>\n\n            <button class=\"btn btn-lg btn-block btn-login btn-inverse\">AUTH</button>\n        </p>\n    </div>\n    <div class=\"tab-pane fade\" id=\"profile\">\n        <p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui photo booth letterpress, commodo enim craft beer mlkshk aliquip jean shorts ullamco ad vinyl cillum PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus mollit.</p>\n    </div>\n    <div class=\"tab-pane fade\" id=\"dropdown1\">\n        <p>Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo retro fanny pack lo-fi farm-to-table readymade. Messenger bag gentrify pitchfork tattooed craft beer, iphone skateboard locavore carles etsy salvia banksy hoodie helvetica. DIY synth PBR banksy irony. Leggings gentrify squid 8-bit cred pitchfork.</p>\n    </div>\n    <div class=\"tab-pane fade\" id=\"dropdown2\">\n        <p>Trust fund seitan letterpress, keytar raw denim keffiyeh etsy art party before they sold out master cleanse gluten-free squid scenester freegan cosby sweater. Fanny pack portland seitan DIY, art party locavore wolf cliche high life echo park Austin. Cred vinyl keffiyeh DIY salvia PBR, banh mi before they sold out farm-to-table VHS viral locavore cosby sweater.</p>\n    </div>\n</div>\n    </div>\n\n</div>\n  </div>\n  <footer id=\"footer\">\n  </footer>\n</div>\n";
+},"useData":true});
+
 this["JST"]["layout/footer"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
   return "<div class=\"container\">\n  <div class=\"well\" style=\"margin: 0;\">\n\n\n    <p class=\"hidden\">I'am footer partial</p>\n\n    <p class=\"hidden\">"
@@ -32970,7 +32977,7 @@ this["JST"]["layout/menu"] = Handlebars.template({"1":function(depth0,helpers,pa
   var stack1, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, buffer = "<div class=\"well\">\n    <h5>Sync apps over internet only</h5>\n    <div class=\"checkbox\">\n        <label>\n            <input type=\"checkbox\" id=\"isOnline\" ";
   stack1 = helpers['if'].call(depth0, (depth0 != null ? depth0.isOnline : depth0), {"name":"if","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});
   if (stack1 != null) { buffer += stack1; }
-  return buffer + "> Sync\n        </label>\n    </div>\n</div>\n\n<div class=\"panel-group\" id=\"accordion\" role=\"tablist\" aria-multiselectable=\"true\">\n    <div class=\"panel panel-default\">\n        <a class=\"btn btn-info btn-block\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#user-section\" aria-expanded=\"true\" aria-controls=\"user-section\" role=\"tab\" id=\"headingUser\">\n      User\n    </a>\n        <div id=\"user-section\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingUser\">\n            <div class=\"list-style-group\">\n                "
+  return buffer + "> Sync\n        </label>\n    </div>\n</div>\n\n<div class=\"panel-group\" id=\"accordion\" role=\"tablist\" aria-multiselectable=\"true\">\n    <div class=\"panel panel-default\">\n        <a class=\"btn btn-info btn-block\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#user-section\" aria-expanded=\"true\" aria-controls=\"user-section\" role=\"tab\" id=\"headingUser\">\n      User\n    </a>\n        <div id=\"user-section\" class=\"panel-collapse collapse in\" role=\"tabpanel\" aria-labelledby=\"headingUser\">\n            <div class=\"list-style-group\">\n                "
     + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
     'body': ("Settings"),
     'href': ("#user"),
@@ -32988,7 +32995,7 @@ this["JST"]["layout/menu"] = Handlebars.template({"1":function(depth0,helpers,pa
     'href': ("#user/logout"),
     'class': ("list-group-item")
   },"data":data})))
-    + "\n            </div>\n        </div>\n    </div>\n    <div class=\"panel panel-default\">\n        <a class=\"btn btn-primary btn-block\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#projects-section\" aria-expanded=\"true\" aria-controls=\"projects-section\" role=\"tab\" id=\"headingProjects\">\n      Projects\n    </a>\n        <div id=\"projects-section\" class=\"panel-collapse collapse in\" role=\"tabpanel\" aria-labelledby=\"headingProjects\">\n            <div class=\"list-style-group\">\n                "
+    + "\n            </div>\n        </div>\n    </div>\n    <div class=\"panel panel-default\">\n        <a class=\"btn btn-primary btn-block\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#projects-section\" aria-expanded=\"true\" aria-controls=\"projects-section\" role=\"tab\" id=\"headingProjects\">\n      Projects\n    </a>\n        <div id=\"projects-section\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingProjects\">\n            <div class=\"list-style-group\">\n                "
     + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
     'body': ("All Records"),
     'href': ("#projects"),
@@ -33229,12 +33236,22 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       title: "TrackTime App"
     };
 
-    Tracktime.prototype.initialize = function() {
+    Tracktime.prototype.initialize = function() {};
+
+    Tracktime.prototype.initCollections = function() {
       this.set('users', new Tracktime.UsersCollection());
-      this.set('actions', new Tracktime.ActionsCollection());
       this.set('records', new Tracktime.RecordsCollection());
       this.set('projects', new Tracktime.ProjectsCollection());
+      this.set('actions', new Tracktime.ActionsCollection());
       return this.listenTo(Tracktime.AppChannel, "isOnline", this.updateApp);
+    };
+
+    Tracktime.prototype.uninitCollections = function() {
+      this.unset('users');
+      this.unset('actions');
+      this.unset('records');
+      this.unset('projects');
+      return this.stopListening(Tracktime.AppChannel, "isOnline");
     };
 
     Tracktime.prototype.updateApp = function() {
@@ -33247,6 +33264,18 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       return this.get('projects').fetch({
         ajaxSync: Tracktime.AppChannel.request('isOnline')
       });
+    };
+
+    Tracktime.prototype.callAuth = function() {};
+
+    Tracktime.prototype.changeUserStatus = function(status) {
+      if (status === true) {
+        this.initCollections();
+        return Tracktime.AppChannel.command('userAuth');
+      } else {
+        this.uninitCollections();
+        return Tracktime.AppChannel.command('userGuest');
+      }
     };
 
     return Tracktime;
@@ -33326,18 +33355,19 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       for (key in ref1) {
         if (!hasProp.call(ref1, key)) continue;
         view = ref1[key];
-        results.push(view.close(key));
+        view.close(key);
+        results.push(delete this.views[key]);
       }
       return results;
     },
     setSubView: function(key, view) {
-      if (this.views[key] != null) {
+      if (key in this.views) {
         this.views[key].close();
       }
       return this.views[key] = view;
     },
     getSubView: function(key) {
-      if (this.views[key]) {
+      if (key in this.views) {
         return this.views[key];
       }
     }
@@ -34383,10 +34413,17 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
   _.extend(Tracktime.AppChannel, {
     isOnline: null,
+    userStatus: null,
+    router: null,
     init: function() {
-      this.listenTo(this, 'isOnline', (function(_this) {
+      this.on('isOnline', (function(_this) {
         return function(status) {
           return _this.isOnline = status;
+        };
+      })(this));
+      this.on('userStatus', (function(_this) {
+        return function(status) {
+          return _this.changeUserStatus(status);
         };
       })(this));
       this.checkOnline();
@@ -34394,6 +34431,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       this.model = new Tracktime();
       this.bindComply();
       this.bindRequest();
+      this.model.changeUserStatus(false);
       return this;
     },
     checkOnline: function() {
@@ -34459,13 +34497,20 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
         'addAction': this.addAction,
         'serverOnline': this.serverOnline,
         'serverOffline': this.serverOffline,
-        'checkOnline': this.checkOnline
+        'checkOnline': this.checkOnline,
+        'userAuth': this.userAuth,
+        'userGuest': this.userGuest
       });
     },
     bindRequest: function() {
       this.reply('isOnline', (function(_this) {
         return function() {
           return _this.isOnline;
+        };
+      })(this));
+      this.reply('userStatus', (function(_this) {
+        return function() {
+          return _this.userStatus;
         };
       })(this));
       this.reply('projects', (function(_this) {
@@ -34490,9 +34535,6 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       })(this));
     },
     startApp: function() {
-      this.router = new Tracktime.AppRouter({
-        model: this.model
-      });
       return Backbone.history.start({
         pushState: false
       });
@@ -34516,6 +34558,32 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     },
     serverOffline: function() {
       return this.trigger('isOnline', false);
+    },
+    userAuth: function() {
+      return this.trigger('userStatus', true);
+    },
+    userGuest: function() {
+      return this.trigger('userStatus', false);
+    },
+    changeUserStatus: function(status) {
+      console.log('router', this.router);
+      if (this.router !== null) {
+        this.router.view.close();
+        delete this.router.view;
+      }
+      if (status === true) {
+        this.router = new Tracktime.AppRouter({
+          model: this.model
+        });
+        this.router.navigate('/user/rates', true);
+        this.trigger('isOnline', this.isOnline);
+      } else {
+        this.router = new Tracktime.GuestRouter({
+          model: this.model
+        });
+        this.router.navigate('/', true);
+      }
+      return console.log('all views', this.router.view.views);
     }
   });
 
@@ -35084,8 +35152,9 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
     ProjectsView.prototype.className = 'list-group';
 
+    ProjectsView.prototype.views = {};
+
     ProjectsView.prototype.initialize = function() {
-      this.views = {};
       this.render();
       this.listenTo(this.collection, "reset", this.resetProjectsList);
       this.listenTo(this.collection, "add", this.addProject);
@@ -35154,8 +35223,9 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
     UsersView.prototype.className = 'list-group';
 
+    UsersView.prototype.views = {};
+
     UsersView.prototype.initialize = function() {
-      this.views = {};
       this.render();
       this.listenTo(this.collection, "reset", this.resetUsersList);
       this.listenTo(this.collection, "add", this.addUser);
@@ -35216,7 +35286,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       return AppView.__super__.constructor.apply(this, arguments);
     }
 
-    AppView.prototype.el = '#panel';
+    AppView.prototype.container = '#panel';
 
     AppView.prototype.className = '';
 
@@ -35229,7 +35299,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     };
 
     AppView.prototype.render = function() {
-      return this.$el.html(this.template(this.model.toJSON()));
+      return $(this.container).html(this.$el.html(this.template(this.model.toJSON())));
     };
 
     AppView.prototype.initUI = function() {
@@ -35609,6 +35679,47 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.Element.Textarea : void 0) || (this.Tracktime.Element.Textarea = Tracktime.Element.Textarea);
 
+  Tracktime.GuestView = (function(superClass) {
+    extend(GuestView, superClass);
+
+    function GuestView() {
+      return GuestView.__super__.constructor.apply(this, arguments);
+    }
+
+    GuestView.prototype.container = '#panel';
+
+    GuestView.prototype.className = '';
+
+    GuestView.prototype.template = JST['global/guest'];
+
+    GuestView.prototype.views = {};
+
+    GuestView.prototype.events = {
+      'click .btn-login': 'auth'
+    };
+
+    GuestView.prototype.initialize = function() {
+      return this.render();
+    };
+
+    GuestView.prototype.render = function() {
+      return $(this.container).html(this.$el.html(this.template(this.model.toJSON())));
+    };
+
+    GuestView.prototype.initUI = function() {
+      return $.material.init();
+    };
+
+    GuestView.prototype.auth = function() {
+      return this.model.changeUserStatus(true);
+    };
+
+    return GuestView;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AppView : void 0) || (this.Tracktime.AppView = Tracktime.AppView);
+
   Tracktime.AppView.Footer = (function(superClass) {
     extend(Footer, superClass);
 
@@ -35665,16 +35776,17 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     Header.prototype.views = {};
 
     Header.prototype.initialize = function(options) {
+      console.log('init header');
       this.options = options;
       return this.render();
     };
 
     Header.prototype.render = function() {
-      var ref1;
-      $(this.container).html(this.$el.html(this.template((ref1 = this.model) != null ? ref1.toJSON() : void 0)));
-      return this.views['actions'] = new Tracktime.ActionsView({
+      $(this.container).html(this.$el.html(this.template()));
+      console.log('header @views before set', this.views);
+      return this.setSubView('actions', new Tracktime.ActionsView({
         collection: this.model.get('actions')
-      });
+      }));
     };
 
     return Header;
@@ -35746,19 +35858,20 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     };
 
     Menu.prototype.bindEvents = function() {
-      var slideout;
       this.listenTo(Tracktime.AppChannel, "isOnline", function(status) {
         return $('#isOnline').prop('checked', status);
       });
-      slideout = new Slideout({
+      this.slideout = new Slideout({
         'panel': $('#panel')[0],
         'menu': $('#menu')[0],
         'padding': 256,
         'tolerance': 70
       });
-      return $("#menuToggler").on('click', function() {
-        return slideout.toggle();
-      });
+      return $("#menuToggler").on('click', (function(_this) {
+        return function() {
+          return _this.slideout.toggle();
+        };
+      })(this));
     };
 
     Menu.prototype.updateOnlineStatus = function(event) {
@@ -35782,6 +35895,11 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
           return projectLink.appendTo("#projects-section .list-style-group");
         };
       })(this));
+    };
+
+    Menu.prototype.close = function() {
+      this.slideout.close();
+      return Menu.__super__.close.apply(this, arguments);
     };
 
     return Menu;
@@ -36140,8 +36258,9 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
     RecordsView.prototype.className = 'list-group';
 
+    RecordsView.prototype.views = {};
+
     RecordsView.prototype.initialize = function() {
-      this.views = {};
       this.render();
       this.listenTo(this.collection, "reset", this.resetRecordsList);
       this.listenTo(this.collection, "add", this.addRecord);
@@ -36544,7 +36663,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
           }
         };
       })(this));
-      return this.initAuthInterface();
+      return this.initInterface();
     };
 
     AppRouter.prototype.addListener = function(subroute, scope) {
@@ -36591,7 +36710,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       }
     };
 
-    AppRouter.prototype.initAuthInterface = function() {
+    AppRouter.prototype.initInterface = function() {
       this.view = new Tracktime.AppView({
         model: this.model
       });
@@ -36618,11 +36737,13 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     };
 
     AppRouter.prototype.removeActionsExcept = function(route) {
-      return _.each(this.model.get('actions').models, function(action) {
-        if (action && action.has('scope') && action.get('scope') !== route) {
-          return action.destroy();
-        }
-      });
+      if (this.model.get('actions')) {
+        return _.each(this.model.get('actions').models, function(action) {
+          if (action && action.has('scope') && action.get('scope') !== route) {
+            return action.destroy();
+          }
+        });
+      }
     };
 
     return AppRouter;
@@ -36630,6 +36751,43 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
   })(Backbone.Router);
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AppRouter : void 0) || (this.Tracktime.AppRouter = Tracktime.AppRouter);
+
+  Tracktime.GuestRouter = (function(superClass) {
+    extend(GuestRouter, superClass);
+
+    function GuestRouter() {
+      return GuestRouter.__super__.constructor.apply(this, arguments);
+    }
+
+    GuestRouter.prototype.routes = {
+      '': 'index',
+      '*actions': 'default'
+    };
+
+    GuestRouter.prototype.initialize = function(options) {
+      _.extend(this, options);
+      return this.initInterface();
+    };
+
+    GuestRouter.prototype.initInterface = function() {
+      this.view = new Tracktime.GuestView({
+        model: this.model
+      });
+      this.view.setSubView('footer', new Tracktime.AppView.Footer());
+      return this.view.initUI();
+    };
+
+    GuestRouter.prototype.index = function() {};
+
+    GuestRouter.prototype["default"] = function(actions) {
+      return this.navigate('', true);
+    };
+
+    return GuestRouter;
+
+  })(Backbone.Router);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.GuestRouter : void 0) || (this.Tracktime.GuestRouter = Tracktime.GuestRouter);
 
   Tracktime.ProjectsRouter = (function(superClass) {
     extend(ProjectsRouter, superClass);
@@ -36813,7 +36971,8 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     };
 
     UserRouter.prototype.logout = function() {
-      return $.alert("user logout process");
+      $.alert("user logout process");
+      return this.parent.model.changeUserStatus(false);
     };
 
     return UserRouter;

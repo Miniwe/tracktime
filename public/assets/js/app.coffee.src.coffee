@@ -41,17 +41,36 @@ class Tracktime extends Backbone.Model
     title: "TrackTime App"
 
   initialize: () ->
+
+  initCollections: ->
     @set 'users', new Tracktime.UsersCollection()
-    @set 'actions', new Tracktime.ActionsCollection()
     @set 'records', new Tracktime.RecordsCollection()
     @set 'projects', new Tracktime.ProjectsCollection()
-
+    @set 'actions', new Tracktime.ActionsCollection()
     @listenTo Tracktime.AppChannel, "isOnline", @updateApp
+
+  uninitCollections: ->
+    @unset 'users'
+    @unset 'actions'
+    @unset 'records'
+    @unset 'projects'
+    @stopListening Tracktime.AppChannel, "isOnline"
 
   updateApp: ->
     @get('users').fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
     @get('records').fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
     @get('projects').fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
+
+  callAuth: ->
+
+  changeUserStatus: (status) ->
+    if status == true
+      @initCollections()
+      Tracktime.AppChannel.command 'userAuth'
+    else
+      @uninitCollections()
+      Tracktime.AppChannel.command 'userGuest'
+
 
 
 (module?.exports = Tracktime) or @Tracktime = Tracktime
@@ -104,20 +123,21 @@ Backbone.ViewMixin =
 
     @undelegateEvents()
     @$el.removeData().unbind()
-    @remove();
+    @remove()
     Backbone.View.prototype.remove.call @
     return
 
   onClose: ->
     for own key, view of @views
       view.close(key)
+      delete @views[key]
 
   setSubView: (key, view) ->
-    @views[key].close() if @views[key]?
+    @views[key].close() if key of @views
     @views[key] = view
 
   getSubView: (key) ->
-    @views[key] if @views[key]
+    @views[key] if key of @views
 
 Backbone.View.prototype extends Backbone.ViewMixin
 
@@ -762,14 +782,18 @@ Tracktime.AppChannel = Backbone.Radio.channel 'app'
 
 _.extend Tracktime.AppChannel,
   isOnline: null
+  userStatus: null
+  router: null
 
   init: ->
-    @listenTo @, 'isOnline', (status) => @isOnline = status
+    @on 'isOnline', (status) => @isOnline = status
+    @on 'userStatus', (status) => @changeUserStatus status
     @checkOnline()
     @setWindowListeners()
     @model = new Tracktime()
     @bindComply()
     @bindRequest()
+    @model.changeUserStatus false
     return @
 
   checkOnline: ->
@@ -823,16 +847,18 @@ _.extend Tracktime.AppChannel,
       'serverOnline':    @serverOnline
       'serverOffline':   @serverOffline
       'checkOnline':     @checkOnline
+      'userAuth':        @userAuth
+      'userGuest':       @userGuest
 
   bindRequest: ->
     @reply 'isOnline', => @isOnline
+    @reply 'userStatus', => @userStatus
     @reply 'projects', => @model.get 'projects'
     @reply 'users', => @model.get 'users'
     @reply 'projectsList', => []
     @reply 'usersList', => []
 
   startApp: ->
-    @router = new Tracktime.AppRouter model: @model
     Backbone.history.start
       pushState: false
 
@@ -854,6 +880,32 @@ _.extend Tracktime.AppChannel,
 
   serverOffline: ->
     @trigger 'isOnline', false
+
+  userAuth: ->
+    @trigger 'userStatus', true
+
+  userGuest: ->
+    @trigger 'userStatus', false
+
+  changeUserStatus: (status) ->
+    # @todo here get user session - if success status true else false
+    console.log 'router', @router
+    if @router != null
+      @router.view.close()
+      delete @router.view
+
+    if status == true
+      @router = new Tracktime.AppRouter model: @model
+      @router.navigate '/user/rates', true
+      @trigger 'isOnline', @isOnline
+    else
+      @router = new Tracktime.GuestRouter model: @model
+      @router.navigate '/', true
+
+    console.log 'all views', @router.view.views
+
+
+
 
 
 (module?.exports = Tracktime.AppChannel) or @Tracktime.AppChannel = Tracktime.AppChannel
@@ -1211,9 +1263,9 @@ class Tracktime.AdminView.ProjectsView extends Backbone.View
   template: JST['admin/projects']
   tagName: 'ul'
   className: 'list-group'
+  views: {}
 
   initialize: () ->
-    @views = {}
     @render()
     @listenTo @collection, "reset", @resetProjectsList
     @listenTo @collection, "add", @addProject
@@ -1248,9 +1300,9 @@ class Tracktime.AdminView.UsersView extends Backbone.View
   template: JST['admin/users']
   tagName: 'ul'
   className: 'list-group'
+  views: {}
 
   initialize: () ->
-    @views = {}
     @render()
     @listenTo @collection, "reset", @resetUsersList
     @listenTo @collection, "add", @addUser
@@ -1281,7 +1333,7 @@ class Tracktime.AdminView.UsersView extends Backbone.View
 
 
 class Tracktime.AppView extends Backbone.View
-  el: '#panel'
+  container: '#panel'
   className: ''
   template: JST['global/app']
   views: {}
@@ -1290,8 +1342,7 @@ class Tracktime.AppView extends Backbone.View
     @render()
 
   render: ->
-    # $(document).title @model.get 'title'
-    @$el.html @template @model.toJSON()
+    $(@container).html @$el.html @template @model.toJSON()
 
   initUI: ->
     $.material.init()
@@ -1526,6 +1577,30 @@ class Tracktime.Element.Textarea extends Tracktime.Element
 (module?.exports = Tracktime.Element.Textarea) or @Tracktime.Element.Textarea = Tracktime.Element.Textarea
 
 
+class Tracktime.GuestView extends Backbone.View
+  container: '#panel'
+  className: ''
+  template: JST['global/guest']
+  views: {}
+  events:
+    'click .btn-login': 'auth'
+
+  initialize: ->
+    @render()
+
+  render: ->
+    $(@container).html @$el.html @template @model.toJSON()
+
+  initUI: ->
+    $.material.init()
+
+  auth: ->
+    @model.changeUserStatus true
+
+
+(module?.exports = Tracktime.AppView) or @Tracktime.AppView = Tracktime.AppView
+
+
 class Tracktime.AppView.Footer extends Backbone.View
   container: '#footer'
   template: JST['layout/footer']
@@ -1558,12 +1633,14 @@ class Tracktime.AppView.Header extends Backbone.View
   views: {}
 
   initialize: (options) ->
+    console.log 'init header'
     @options = options
     @render()
 
   render: () ->
-    $(@container).html @$el.html @template @model?.toJSON()
-    @views['actions'] = new Tracktime.ActionsView
+    $(@container).html @$el.html @template()
+    console.log 'header @views before set', @views
+    @setSubView 'actions', new Tracktime.ActionsView
       collection: @model.get('actions')
 
 (module?.exports = Tracktime.AppView.Header) or @Tracktime.AppView.Header = Tracktime.AppView.Header
@@ -1600,19 +1677,19 @@ class Tracktime.AppView.Menu extends Backbone.View
   events:
     'change #isOnline': 'updateOnlineStatus'
 
-  initialize: () ->
+  initialize: ->
     @render()
     @bindEvents()
 
   bindEvents: ->
     @listenTo Tracktime.AppChannel, "isOnline", (status) ->
       $('#isOnline').prop 'checked', status
-    slideout = new Slideout
+    @slideout = new Slideout
       'panel': $('#panel')[0]
       'menu': $('#menu')[0]
       'padding': 256
       'tolerance': 70
-    $("#menuToggler").on 'click', () -> slideout.toggle()
+    $("#menuToggler").on 'click', => @slideout.toggle()
 
   updateOnlineStatus: (event) ->
     if $(event.target).is(":checked")
@@ -1620,11 +1697,15 @@ class Tracktime.AppView.Menu extends Backbone.View
     else
       Tracktime.AppChannel.command 'serverOffline'
 
-  render: () ->
+  render: ->
     $(@container).html @$el.html @template @model?.toJSON()
     _.each @model.get('projects').models, (model) =>
       projectLink = $('<a />', {class: 'list-group-item', href:"#projects/#{model.get('_id')}"}).html model.get('name')
       projectLink.appendTo "#projects-section .list-style-group"
+
+  close: ->
+    @slideout.close()
+    super
 
 (module?.exports = Tracktime.AppView.Menu) or @Tracktime.AppView.Menu = Tracktime.AppView.Menu
 
@@ -1871,9 +1952,9 @@ class Tracktime.RecordsView extends Backbone.View
   template: JST['records/records']
   tagName: 'ul'
   className: 'list-group'
+  views: {}
 
   initialize: () ->
-    @views = {}
     @render()
     @listenTo @collection, "reset", @resetRecordsList
     @listenTo @collection, "add", @addRecord
@@ -2111,7 +2192,7 @@ class Tracktime.AppRouter extends Backbone.Router
     _.extend @, options
     @on 'route', (route, params) =>
       @removeActionsExcept(route) unless route.substr(0,6) == 'invoke'
-    @initAuthInterface()
+    @initInterface()
 
   addListener: (subroute, scope) ->
     @listenTo subroute, 'route', (route, params) =>
@@ -2137,7 +2218,7 @@ class Tracktime.AppRouter extends Backbone.Router
       @adminRouter = new Tracktime.AdminRouter 'admin', parent: @
       @addListener @adminRouter, 'admin'
 
-  initAuthInterface: () ->
+  initInterface: () ->
     @view = new Tracktime.AppView model: @model
     @view.setSubView 'header', new Tracktime.AppView.Header model: @model
     @view.setSubView 'footer', new Tracktime.AppView.Footer()
@@ -2152,11 +2233,40 @@ class Tracktime.AppRouter extends Backbone.Router
     @navigate '', true
 
   removeActionsExcept: (route) ->
-    _.each @model.get('actions').models, (action) ->
-      action.destroy() if action && action.has('scope') and action.get('scope') isnt route
+    if @model.get('actions')
+      _.each @model.get('actions').models, (action) ->
+        action.destroy() if action && action.has('scope') and action.get('scope') isnt route
 
 
 (module?.exports = Tracktime.AppRouter) or @Tracktime.AppRouter = Tracktime.AppRouter
+
+
+class Tracktime.GuestRouter extends Backbone.Router
+  routes:
+    '':                  'index'                #index
+    '*actions':          'default'              #???
+
+  initialize: (options) ->
+    _.extend @, options
+
+    @initInterface()
+
+  initInterface: () ->
+    @view = new Tracktime.GuestView model: @model
+    # @view.setSubView 'header', new Tracktime.GuestView.Header model: @model
+    @view.setSubView 'footer', new Tracktime.AppView.Footer()
+    # @view.setSubView 'menu', new Tracktime.AppView.Menu model: @model
+    @view.initUI()
+
+  index: ->
+    # $.alert 'Guest index page'
+
+  default: (actions) ->
+    # $.alert 'Unknown guest page'
+    @navigate '', true
+
+
+(module?.exports = Tracktime.GuestRouter) or @Tracktime.GuestRouter = Tracktime.GuestRouter
 
 
 class Tracktime.ProjectsRouter extends Backbone.SubRoute
@@ -2276,7 +2386,7 @@ class Tracktime.UserRouter extends Backbone.SubRoute
 
   logout: () ->
     $.alert "user logout process"
-
+    @parent.model.changeUserStatus false
 
 
 (module?.exports = Tracktime.UserRouter) or @Tracktime.UserRouter = Tracktime.UserRouter

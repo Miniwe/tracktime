@@ -3,9 +3,9 @@ class Tracktime.AdminView.UsersView extends Backbone.View
   template: JST['admin/users']
   tagName: 'ul'
   className: 'list-group'
+  views: {}
 
   initialize: () ->
-    @views = {}
     @render()
     @listenTo @collection, "reset", @resetUsersList
     @listenTo @collection, "add", @addUser

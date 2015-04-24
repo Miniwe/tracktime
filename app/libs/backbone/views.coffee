@@ -4,19 +4,20 @@ Backbone.ViewMixin =
 
     @undelegateEvents()
     @$el.removeData().unbind()
-    @remove();
+    @remove()
     Backbone.View.prototype.remove.call @
     return
 
   onClose: ->
     for own key, view of @views
       view.close(key)
+      delete @views[key]
 
   setSubView: (key, view) ->
-    @views[key].close() if @views[key]?
+    @views[key].close() if key of @views
     @views[key] = view
 
   getSubView: (key) ->
-    @views[key] if @views[key]
+    @views[key] if key of @views
 
 Backbone.View.prototype extends Backbone.ViewMixin

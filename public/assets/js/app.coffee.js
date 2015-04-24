@@ -63,12 +63,22 @@
       title: "TrackTime App"
     };
 
-    Tracktime.prototype.initialize = function() {
+    Tracktime.prototype.initialize = function() {};
+
+    Tracktime.prototype.initCollections = function() {
       this.set('users', new Tracktime.UsersCollection());
-      this.set('actions', new Tracktime.ActionsCollection());
       this.set('records', new Tracktime.RecordsCollection());
       this.set('projects', new Tracktime.ProjectsCollection());
+      this.set('actions', new Tracktime.ActionsCollection());
       return this.listenTo(Tracktime.AppChannel, "isOnline", this.updateApp);
+    };
+
+    Tracktime.prototype.uninitCollections = function() {
+      this.unset('users');
+      this.unset('actions');
+      this.unset('records');
+      this.unset('projects');
+      return this.stopListening(Tracktime.AppChannel, "isOnline");
     };
 
     Tracktime.prototype.updateApp = function() {
@@ -81,6 +91,18 @@
       return this.get('projects').fetch({
         ajaxSync: Tracktime.AppChannel.request('isOnline')
       });
+    };
+
+    Tracktime.prototype.callAuth = function() {};
+
+    Tracktime.prototype.changeUserStatus = function(status) {
+      if (status === true) {
+        this.initCollections();
+        return Tracktime.AppChannel.command('userAuth');
+      } else {
+        this.uninitCollections();
+        return Tracktime.AppChannel.command('userGuest');
+      }
     };
 
     return Tracktime;
@@ -160,18 +182,19 @@
       for (key in ref1) {
         if (!hasProp.call(ref1, key)) continue;
         view = ref1[key];
-        results.push(view.close(key));
+        view.close(key);
+        results.push(delete this.views[key]);
       }
       return results;
     },
     setSubView: function(key, view) {
-      if (this.views[key] != null) {
+      if (key in this.views) {
         this.views[key].close();
       }
       return this.views[key] = view;
     },
     getSubView: function(key) {
-      if (this.views[key]) {
+      if (key in this.views) {
         return this.views[key];
       }
     }
@@ -1217,10 +1240,17 @@
 
   _.extend(Tracktime.AppChannel, {
     isOnline: null,
+    userStatus: null,
+    router: null,
     init: function() {
-      this.listenTo(this, 'isOnline', (function(_this) {
+      this.on('isOnline', (function(_this) {
         return function(status) {
           return _this.isOnline = status;
+        };
+      })(this));
+      this.on('userStatus', (function(_this) {
+        return function(status) {
+          return _this.changeUserStatus(status);
         };
       })(this));
       this.checkOnline();
@@ -1228,6 +1258,7 @@
       this.model = new Tracktime();
       this.bindComply();
       this.bindRequest();
+      this.model.changeUserStatus(false);
       return this;
     },
     checkOnline: function() {
@@ -1293,13 +1324,20 @@
         'addAction': this.addAction,
         'serverOnline': this.serverOnline,
         'serverOffline': this.serverOffline,
-        'checkOnline': this.checkOnline
+        'checkOnline': this.checkOnline,
+        'userAuth': this.userAuth,
+        'userGuest': this.userGuest
       });
     },
     bindRequest: function() {
       this.reply('isOnline', (function(_this) {
         return function() {
           return _this.isOnline;
+        };
+      })(this));
+      this.reply('userStatus', (function(_this) {
+        return function() {
+          return _this.userStatus;
         };
       })(this));
       this.reply('projects', (function(_this) {
@@ -1324,9 +1362,6 @@
       })(this));
     },
     startApp: function() {
-      this.router = new Tracktime.AppRouter({
-        model: this.model
-      });
       return Backbone.history.start({
         pushState: false
       });
@@ -1350,6 +1385,32 @@
     },
     serverOffline: function() {
       return this.trigger('isOnline', false);
+    },
+    userAuth: function() {
+      return this.trigger('userStatus', true);
+    },
+    userGuest: function() {
+      return this.trigger('userStatus', false);
+    },
+    changeUserStatus: function(status) {
+      console.log('router', this.router);
+      if (this.router !== null) {
+        this.router.view.close();
+        delete this.router.view;
+      }
+      if (status === true) {
+        this.router = new Tracktime.AppRouter({
+          model: this.model
+        });
+        this.router.navigate('/user/rates', true);
+        this.trigger('isOnline', this.isOnline);
+      } else {
+        this.router = new Tracktime.GuestRouter({
+          model: this.model
+        });
+        this.router.navigate('/', true);
+      }
+      return console.log('all views', this.router.view.views);
     }
   });
 
@@ -1918,8 +1979,9 @@
 
     ProjectsView.prototype.className = 'list-group';
 
+    ProjectsView.prototype.views = {};
+
     ProjectsView.prototype.initialize = function() {
-      this.views = {};
       this.render();
       this.listenTo(this.collection, "reset", this.resetProjectsList);
       this.listenTo(this.collection, "add", this.addProject);
@@ -1988,8 +2050,9 @@
 
     UsersView.prototype.className = 'list-group';
 
+    UsersView.prototype.views = {};
+
     UsersView.prototype.initialize = function() {
-      this.views = {};
       this.render();
       this.listenTo(this.collection, "reset", this.resetUsersList);
       this.listenTo(this.collection, "add", this.addUser);
@@ -2050,7 +2113,7 @@
       return AppView.__super__.constructor.apply(this, arguments);
     }
 
-    AppView.prototype.el = '#panel';
+    AppView.prototype.container = '#panel';
 
     AppView.prototype.className = '';
 
@@ -2063,7 +2126,7 @@
     };
 
     AppView.prototype.render = function() {
-      return this.$el.html(this.template(this.model.toJSON()));
+      return $(this.container).html(this.$el.html(this.template(this.model.toJSON())));
     };
 
     AppView.prototype.initUI = function() {
@@ -2443,6 +2506,47 @@
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.Element.Textarea : void 0) || (this.Tracktime.Element.Textarea = Tracktime.Element.Textarea);
 
+  Tracktime.GuestView = (function(superClass) {
+    extend(GuestView, superClass);
+
+    function GuestView() {
+      return GuestView.__super__.constructor.apply(this, arguments);
+    }
+
+    GuestView.prototype.container = '#panel';
+
+    GuestView.prototype.className = '';
+
+    GuestView.prototype.template = JST['global/guest'];
+
+    GuestView.prototype.views = {};
+
+    GuestView.prototype.events = {
+      'click .btn-login': 'auth'
+    };
+
+    GuestView.prototype.initialize = function() {
+      return this.render();
+    };
+
+    GuestView.prototype.render = function() {
+      return $(this.container).html(this.$el.html(this.template(this.model.toJSON())));
+    };
+
+    GuestView.prototype.initUI = function() {
+      return $.material.init();
+    };
+
+    GuestView.prototype.auth = function() {
+      return this.model.changeUserStatus(true);
+    };
+
+    return GuestView;
+
+  })(Backbone.View);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AppView : void 0) || (this.Tracktime.AppView = Tracktime.AppView);
+
   Tracktime.AppView.Footer = (function(superClass) {
     extend(Footer, superClass);
 
@@ -2499,16 +2603,17 @@
     Header.prototype.views = {};
 
     Header.prototype.initialize = function(options) {
+      console.log('init header');
       this.options = options;
       return this.render();
     };
 
     Header.prototype.render = function() {
-      var ref1;
-      $(this.container).html(this.$el.html(this.template((ref1 = this.model) != null ? ref1.toJSON() : void 0)));
-      return this.views['actions'] = new Tracktime.ActionsView({
+      $(this.container).html(this.$el.html(this.template()));
+      console.log('header @views before set', this.views);
+      return this.setSubView('actions', new Tracktime.ActionsView({
         collection: this.model.get('actions')
-      });
+      }));
     };
 
     return Header;
@@ -2580,19 +2685,20 @@
     };
 
     Menu.prototype.bindEvents = function() {
-      var slideout;
       this.listenTo(Tracktime.AppChannel, "isOnline", function(status) {
         return $('#isOnline').prop('checked', status);
       });
-      slideout = new Slideout({
+      this.slideout = new Slideout({
         'panel': $('#panel')[0],
         'menu': $('#menu')[0],
         'padding': 256,
         'tolerance': 70
       });
-      return $("#menuToggler").on('click', function() {
-        return slideout.toggle();
-      });
+      return $("#menuToggler").on('click', (function(_this) {
+        return function() {
+          return _this.slideout.toggle();
+        };
+      })(this));
     };
 
     Menu.prototype.updateOnlineStatus = function(event) {
@@ -2616,6 +2722,11 @@
           return projectLink.appendTo("#projects-section .list-style-group");
         };
       })(this));
+    };
+
+    Menu.prototype.close = function() {
+      this.slideout.close();
+      return Menu.__super__.close.apply(this, arguments);
     };
 
     return Menu;
@@ -2974,8 +3085,9 @@
 
     RecordsView.prototype.className = 'list-group';
 
+    RecordsView.prototype.views = {};
+
     RecordsView.prototype.initialize = function() {
-      this.views = {};
       this.render();
       this.listenTo(this.collection, "reset", this.resetRecordsList);
       this.listenTo(this.collection, "add", this.addRecord);
@@ -3378,7 +3490,7 @@
           }
         };
       })(this));
-      return this.initAuthInterface();
+      return this.initInterface();
     };
 
     AppRouter.prototype.addListener = function(subroute, scope) {
@@ -3425,7 +3537,7 @@
       }
     };
 
-    AppRouter.prototype.initAuthInterface = function() {
+    AppRouter.prototype.initInterface = function() {
       this.view = new Tracktime.AppView({
         model: this.model
       });
@@ -3452,11 +3564,13 @@
     };
 
     AppRouter.prototype.removeActionsExcept = function(route) {
-      return _.each(this.model.get('actions').models, function(action) {
-        if (action && action.has('scope') && action.get('scope') !== route) {
-          return action.destroy();
-        }
-      });
+      if (this.model.get('actions')) {
+        return _.each(this.model.get('actions').models, function(action) {
+          if (action && action.has('scope') && action.get('scope') !== route) {
+            return action.destroy();
+          }
+        });
+      }
     };
 
     return AppRouter;
@@ -3464,6 +3578,43 @@
   })(Backbone.Router);
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.AppRouter : void 0) || (this.Tracktime.AppRouter = Tracktime.AppRouter);
+
+  Tracktime.GuestRouter = (function(superClass) {
+    extend(GuestRouter, superClass);
+
+    function GuestRouter() {
+      return GuestRouter.__super__.constructor.apply(this, arguments);
+    }
+
+    GuestRouter.prototype.routes = {
+      '': 'index',
+      '*actions': 'default'
+    };
+
+    GuestRouter.prototype.initialize = function(options) {
+      _.extend(this, options);
+      return this.initInterface();
+    };
+
+    GuestRouter.prototype.initInterface = function() {
+      this.view = new Tracktime.GuestView({
+        model: this.model
+      });
+      this.view.setSubView('footer', new Tracktime.AppView.Footer());
+      return this.view.initUI();
+    };
+
+    GuestRouter.prototype.index = function() {};
+
+    GuestRouter.prototype["default"] = function(actions) {
+      return this.navigate('', true);
+    };
+
+    return GuestRouter;
+
+  })(Backbone.Router);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.GuestRouter : void 0) || (this.Tracktime.GuestRouter = Tracktime.GuestRouter);
 
   Tracktime.ProjectsRouter = (function(superClass) {
     extend(ProjectsRouter, superClass);
@@ -3647,7 +3798,8 @@
     };
 
     UserRouter.prototype.logout = function() {
-      return $.alert("user logout process");
+      $.alert("user logout process");
+      return this.parent.model.changeUserStatus(false);
     };
 
     return UserRouter;

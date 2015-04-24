@@ -4,19 +4,19 @@ class Tracktime.AppView.Menu extends Backbone.View
   events:
     'change #isOnline': 'updateOnlineStatus'
 
-  initialize: () ->
+  initialize: ->
     @render()
     @bindEvents()
 
   bindEvents: ->
     @listenTo Tracktime.AppChannel, "isOnline", (status) ->
       $('#isOnline').prop 'checked', status
-    slideout = new Slideout
+    @slideout = new Slideout
       'panel': $('#panel')[0]
       'menu': $('#menu')[0]
       'padding': 256
       'tolerance': 70
-    $("#menuToggler").on 'click', () -> slideout.toggle()
+    $("#menuToggler").on 'click', => @slideout.toggle()
 
   updateOnlineStatus: (event) ->
     if $(event.target).is(":checked")
@@ -24,11 +24,15 @@ class Tracktime.AppView.Menu extends Backbone.View
     else
       Tracktime.AppChannel.command 'serverOffline'
 
-  render: () ->
+  render: ->
     $(@container).html @$el.html @template @model?.toJSON()
     _.each @model.get('projects').models, (model) =>
       projectLink = $('<a />', {class: 'list-group-item', href:"#projects/#{model.get('_id')}"}).html model.get('name')
       projectLink.appendTo "#projects-section .list-style-group"
+
+  close: ->
+    @slideout.close()
+    super
 
 (module?.exports = Tracktime.AppView.Menu) or @Tracktime.AppView.Menu = Tracktime.AppView.Menu
 
