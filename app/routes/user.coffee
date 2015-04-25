@@ -16,8 +16,7 @@ class Tracktime.UserRouter extends Backbone.SubRoute
     @parent.view.setSubView 'main', new Tracktime.UserView.Rates()
 
   logout: () ->
-    $.alert "user logout process"
-    @parent.model.changeUserStatus false
+    @parent.model.get('authUser').logout()
 
 
 (module?.exports = Tracktime.UserRouter) or @Tracktime.UserRouter = Tracktime.UserRouter

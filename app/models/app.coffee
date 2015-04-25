@@ -3,8 +3,11 @@ class Tracktime extends Backbone.Model
 
   defaults:
     title: "TrackTime App"
+    authUser: null
 
   initialize: () ->
+    @set 'authUser', new Tracktime.User.Auth()
+    @listenTo @get('authUser'), 'change:authorized', @changeUserStatus
 
   initCollections: ->
     @set 'users', new Tracktime.UsersCollection()
@@ -25,9 +28,10 @@ class Tracktime extends Backbone.Model
     # @get('records').fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
     # @get('projects').fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
 
-  callAuth: ->
+  changeUserStatus: ->
+    @setUsetStatus @get('authUser').get('authorized')
 
-  changeUserStatus: (status) ->
+  setUsetStatus: (status) ->
     if status == true
       @initCollections()
       Tracktime.AppChannel.command 'userAuth'

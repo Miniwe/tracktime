@@ -14981,7 +14981,7 @@ hr.on-light {
   min-height: 100%;
 }
 
-/* line 22, ../../app/assets/sass/vendor/_slideout.scss */
+/* line 20, ../../app/assets/sass/vendor/_slideout.scss */
 body,
 .slideout-open,
 .slideout-open body {
@@ -15033,7 +15033,7 @@ h1, h2, h3, h4, h5, h6 {
   height: 100%;
   padding-top: 78px;
   color: #000;
-  background: #fff;
+  background: #eee;
 }
 /* line 8, ../../app/assets/sass/layout/_panel.scss */
 #panel .scrollWrapper {
@@ -15382,6 +15382,7 @@ h1, h2, h3, h4, h5, h6 {
 /* line 11, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item {
   position: relative;
+  background: #fff;
   display: block;
   width: 100%;
   min-height: 1em;
@@ -15394,29 +15395,29 @@ h1, h2, h3, h4, h5, h6 {
   -webkit-transition: all 0.4s;
   transition: all 0.4s;
 }
-/* line 27, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 28, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item:hover .actions {
   display: table;
   filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
   opacity: 1;
 }
-/* line 35, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 36, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item:hover .col-icon .btn {
   position: absolute;
 }
-/* line 38, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 39, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item:hover .col-icon .btn.type {
   z-index: 9;
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
   opacity: 0;
 }
-/* line 44, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 45, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item:hover .col-icon .btn.edit {
   z-index: 10;
   filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
   opacity: 1;
 }
-/* line 53, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 54, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item.editmode {
   pointer-events: none;
   background-color: #ddd;
@@ -15424,7 +15425,7 @@ h1, h2, h3, h4, h5, h6 {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=30);
   opacity: 0.3;
 }
-/* line 62, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 63, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item.on-show {
   overflow: hidden;
   box-sizing: border-box;
@@ -15435,12 +15436,12 @@ h1, h2, h3, h4, h5, h6 {
   padding: 0;
   border-color: #f00;
 }
-/* line 74, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 75, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item.on-show * {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
   opacity: 0;
 }
-/* line 79, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 80, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item * {
   filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
   opacity: 1;
@@ -15450,13 +15451,13 @@ h1, h2, h3, h4, h5, h6 {
   -webkit-transition-delay: 0.4s;
   transition: opacity 0.2s 0.4s;
 }
-/* line 84, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 85, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item .subject_edit {
   width: 100%;
   padding: 0;
   border: none;
 }
-/* line 91, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 92, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item ul.actions {
   position: absolute;
   right: 1em;
@@ -15474,37 +15475,37 @@ h1, h2, h3, h4, h5, h6 {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
   opacity: 0;
 }
-/* line 107, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 108, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item ul.actions li {
   display: table-cell;
   margin: 1em;
 }
-/* line 116, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 117, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item .record-info i {
   font-size: 1.3em;
   position: relative;
   top: .1em;
   margin-right: .2em;
 }
-/* line 126, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 127, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item .last-update {
   margin-top: .6em;
 }
-/* line 129, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 130, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item .last-update .text-muted {
   font-size: .85em;
   color: #b4b4b4;
 }
-/* line 134, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 135, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item .last-update .text-muted:before {
   content: 'Last Update: ';
   color: #c4c4c4;
 }
-/* line 144, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 145, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item .col-icon .btn {
   position: absolute;
 }
-/* line 147, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 148, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item .col-icon .btn.type {
   z-index: 10;
   -moz-transition: opacity 0.8s 0.4s;
@@ -15515,7 +15516,7 @@ h1, h2, h3, h4, h5, h6 {
   filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
   opacity: 1;
 }
-/* line 154, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 155, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item .col-icon .btn.edit {
   z-index: 9;
   -moz-transition: opacity 0.8s 0.4s;

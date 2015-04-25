@@ -32947,9 +32947,9 @@ this["JST"]["global/app"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
 this["JST"]["global/guest"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-  return "<div class=\"scrollWrapper\">\n    <div class=\"container\" style=\"padding: 0\">\n        <div id=\"main\">\n            <div class=\"well\" style=\"width: 50%; margin: 0 auto;\">\n                <h1>"
+  return "<div class=\"scrollWrapper\">\n    <div class=\"container\" style=\"padding: 0\">\n        <div id=\"main\">\n            <div class=\"panel panel-info\" style=\"width: 50%; margin: 0 auto;\">\n                <div class=\"panel-heading\">\n                    <h2>"
     + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
-    + "</h1>\n                <ul class=\"nav nav-tabs\" style=\"margin-bottom: 1em\">\n                    <li class=\"active\"><a href=\"#login\" data-toggle=\"tab\">Log In</a></li>\n                    <li><a href=\"#signin\" data-toggle=\"tab\">Sign In</a></li>\n                    <li class=\"hidden\"><a href=\"#forgotpassword\" data-toggle=\"tab\">Forgot Password</a></li>\n                </ul>\n                <div id=\"myTabContent\" class=\"tab-content\">\n                    <div class=\"tab-pane fade active in\" id=\"login\">\n                        <form class=\"form-horizontal\">\n                            <fieldset>\n                                <legend>Log In</legend>\n                                <div class=\"form-group\">\n                                    <label for=\"inputEmail\" class=\"col-lg-2 control-label\">Email</label>\n                                    <div class=\"col-lg-10\">\n                                        <input type=\"email\" class=\"form-control\" id=\"inputEmail\" placeholder=\"Email\">\n                                    </div>\n                                </div>\n                                <div class=\"form-group\">\n                                    <label for=\"inputPassword\" class=\"col-lg-2 control-label\">Password</label>\n                                    <div class=\"col-lg-10\">\n                                        <input type=\"password\" class=\"form-control\" id=\"inputPassword\" placeholder=\"Password\">\n                                    </div>\n                                </div>\n                                <div class=\"form-group hidden\">\n                                    <label class=\"col-lg-2 control-label\"></label>\n                                    <div class=\"col-lg-10\">\n                                        <div class=\"togglebutton\">\n                                            <label>\n                                                <input type=\"checkbox\" checked=\"\"> Toggle button\n                                            </label>\n                                        </div>\n                                    </div>\n                                </div>\n                                <div class=\"form-group\">\n                                    <div class=\"col-lg-10 col-lg-offset-2\">\n                                        <button class=\"btn btn-lg btn-block btn-login btn-inverse\">Log In</button>\n                                    </div>\n                                </div>\n                            </fieldset>\n                        </form>\n                    </div>\n                    <div class=\"tab-pane fade\" id=\"signin\">\n                        <form class=\"form-horizontal\">\n                            <fieldset>\n                                <legend>Sign In</legend>\n                                <div class=\"form-group\">\n                                    <label for=\"inputEmail\" class=\"col-lg-2 control-label\">Email</label>\n                                    <div class=\"col-lg-10\">\n                                        <input type=\"email\" class=\"form-control\" id=\"inputEmail\" placeholder=\"Email\">\n                                    </div>\n                                </div>\n                                <div class=\"form-group\">\n                                    <label for=\"inputPassword\" class=\"col-lg-2 control-label\">Password</label>\n                                    <div class=\"col-lg-10\">\n                                        <input type=\"password\" class=\"form-control\" id=\"inputPassword\" placeholder=\"Password\">\n                                    </div>\n                                </div>\n                                <div class=\"form-group\">\n                                    <label for=\"repeatPassword\" class=\"col-lg-2 control-label\">Repeat Password</label>\n                                    <div class=\"col-lg-10\">\n                                        <input type=\"password\" class=\"form-control\" id=\"repeatPassword\" placeholder=\"Repeat Password\">\n                                    </div>\n                                </div>\n                                <div class=\"form-group\">\n                                    <div class=\"col-lg-10 col-lg-offset-2\">\n                                        <button class=\"btn btn-lg btn-block btn-signin btn-inverse\">Sign In</button>\n                                    </div>\n                                </div>\n                            </fieldset>\n                        </form>\n                    </div>\n                    <div class=\"tab-pane fade\" id=\"forgotpassword\">\n                        <form class=\"form-horizontal\">\n                            <fieldset>\n                                <legend>Forgot Password</legend>\n                                <div class=\"form-group\">\n                                    <label for=\"inputEmail\" class=\"col-lg-2 control-label\">Email</label>\n                                    <div class=\"col-lg-10\">\n                                        <input type=\"email\" class=\"form-control\" id=\"inputEmail\" placeholder=\"Email\">\n                                    </div>\n                                </div>\n                                <div class=\"form-group\">\n                                    <div class=\"col-lg-10 col-lg-offset-2\">\n                                        <button class=\"btn btn-lg btn-block btn-forgotpassword btn-inverse\">Send</button>\n                                    </div>\n                                </div>\n                            </fieldset>\n                        </form>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n    <footer id=\"footer\">\n    </footer>\n</div>";
+    + "</h2>\n                    <ul class=\"nav nav-tabs navbar navbar-info\" style=\"margin-bottom: 1em\">\n                        <li class=\"active\"><a href=\"#login\" data-toggle=\"tab\">Log In</a></li>\n                        <li><a href=\"#signin\" data-toggle=\"tab\">Sign In</a></li>\n                        <li class=\"hidden\"><a href=\"#forgotpassword\" data-toggle=\"tab\">Forgot Password</a></li>\n                    </ul>\n                </div>\n                <div class='panel-body'>\n                    <div id=\"myTabContent\" class=\"tab-content\">\n                        <div class=\"tab-pane fade active in\" id=\"login\">\n                            <form class=\"form-horizontal\" method=\"post\">\n                                <fieldset>\n                                    <legend>Log In</legend>\n                                    <div class=\"form-group\">\n                                        <div class=\"col-lg-12\">\n                                            <input type=\"email\" name=\"email\" id=\"loginEmail\" class=\"form-control input-lg floating-label\" data-hint=\"Test email: bob@example.com\" placeholder=\"Email\" value=\"irina@webperfectionist.net\">\n\n                                        </div>\n                                    </div>\n                                    <br>\n                                    <div class=\"form-group\">\n                                        <div class=\"col-lg-12\">\n                                            <input type=\"password\" class=\"form-control input-lg floating-label\" name=\"password\" id=\"loginPassword\" placeholder=\"Password\" data-hint=\"Test password: secret\" value=\"******\">\n                                        </div>\n                                    </div>\n                                    <div class=\"form-group hidden\">\n                                        <label class=\"col-lg-2 control-label\"></label>\n                                        <div class=\"col-lg-10\">\n                                            <div class=\"togglebutton\">\n                                                <label>\n                                                    <input type=\"checkbox\" checked=\"\"> Toggle button\n                                                </label>\n                                            </div>\n                                        </div>\n                                    </div>\n                                    <div class=\"form-group\">\n                                        <div class=\"col-lg-12\">\n                                            <button type=\"submit\" class=\"btn btn-lg btn-block btn-login btn-info\">Log In</button>\n                                        </div>\n                                    </div>\n                                </fieldset>\n                            </form>\n                        </div>\n                        <div class=\"tab-pane fade\" id=\"signin\">\n                            <form class=\"form-horizontal\">\n                                <fieldset>\n                                    <legend>Sign In</legend>\n                                    <div class=\"form-group\">\n                                        <label for=\"inputEmail\" class=\"col-lg-2 control-label\">Email</label>\n                                        <div class=\"col-lg-10\">\n                                            <input type=\"email\" class=\"form-control\" id=\"inputEmail\" placeholder=\"Email\">\n                                        </div>\n                                    </div>\n                                    <div class=\"form-group\">\n                                        <label for=\"inputPassword\" class=\"col-lg-2 control-label\">Password</label>\n                                        <div class=\"col-lg-10\">\n                                            <input type=\"password\" class=\"form-control\" id=\"inputPassword\" placeholder=\"Password\">\n                                        </div>\n                                    </div>\n                                    <div class=\"form-group\">\n                                        <label for=\"repeatPassword\" class=\"col-lg-2 control-label\">Repeat Password</label>\n                                        <div class=\"col-lg-10\">\n                                            <input type=\"password\" class=\"form-control\" id=\"repeatPassword\" placeholder=\"Repeat Password\">\n                                        </div>\n                                    </div>\n                                    <div class=\"form-group\">\n                                        <div class=\"col-lg-12\">\n                                            <button class=\"btn btn-lg btn-block btn-signin btn-info\">Sign In</button>\n                                        </div>\n                                    </div>\n                                </fieldset>\n                            </form>\n                        </div>\n                        <div class=\"tab-pane fade\" id=\"forgotpassword\">\n                            <form class=\"form-horizontal\">\n                                <fieldset>\n                                    <legend>Forgot Password</legend>\n                                    <div class=\"form-group\">\n                                        <label for=\"inputEmail\" class=\"col-lg-2 control-label\">Email</label>\n                                        <div class=\"col-lg-10\">\n                                            <input type=\"email\" class=\"form-control\" id=\"inputEmail\" placeholder=\"Email\">\n                                        </div>\n                                    </div>\n                                    <div class=\"form-group\">\n                                        <div class=\"col-lg-12\">\n                                            <button class=\"btn btn-lg btn-block btn-forgotpassword btn-info\">Send</button>\n                                        </div>\n                                    </div>\n                                </fieldset>\n                            </form>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n    <footer id=\"footer\">\n    </footer>\n</div>";
 },"useData":true});
 
 this["JST"]["layout/footer"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
@@ -33233,10 +33233,14 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     Tracktime.prototype.urlRoot = config.SERVER;
 
     Tracktime.prototype.defaults = {
-      title: "TrackTime App"
+      title: "TrackTime App",
+      authUser: null
     };
 
-    Tracktime.prototype.initialize = function() {};
+    Tracktime.prototype.initialize = function() {
+      this.set('authUser', new Tracktime.User.Auth());
+      return this.listenTo(this.get('authUser'), 'change:authorized', this.changeUserStatus);
+    };
 
     Tracktime.prototype.initCollections = function() {
       this.set('users', new Tracktime.UsersCollection());
@@ -33260,9 +33264,11 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       });
     };
 
-    Tracktime.prototype.callAuth = function() {};
+    Tracktime.prototype.changeUserStatus = function() {
+      return this.setUsetStatus(this.get('authUser').get('authorized'));
+    };
 
-    Tracktime.prototype.changeUserStatus = function(status) {
+    Tracktime.prototype.setUsetStatus = function(status) {
       if (status === true) {
         this.initCollections();
         return Tracktime.AppChannel.command('userAuth');
@@ -34143,6 +34149,70 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.User : void 0) || (this.Tracktime.User = Tracktime.User);
 
+  Tracktime.User.Auth = (function(superClass) {
+    extend(Auth, superClass);
+
+    function Auth() {
+      return Auth.__super__.constructor.apply(this, arguments);
+    }
+
+    Auth.prototype.urlRoot = config.SERVER + '/' + '';
+
+    Auth.prototype.defaults = {
+      authorized: false
+    };
+
+    Auth.prototype.login = function(params) {
+      return this.save(params, {
+        ajaxSync: true,
+        url: config.SERVER + '/login',
+        success: (function(_this) {
+          return function(model, response, options) {
+            _this.set(response);
+            _this.set('authorized', true);
+            return $.alert("Welcome back, " + response.first_name + " " + response.last_name + "!");
+          };
+        })(this),
+        error: (function(_this) {
+          return function(model, response, options) {
+            return _this.trigger('flash', response.responseJSON.error);
+          };
+        })(this)
+      });
+    };
+
+    Auth.prototype.signin = function(params) {
+      return this.save(params, {
+        ajaxSync: true,
+        url: config.SERVER + '/signin',
+        success: (function(_this) {
+          return function(model, response, options) {
+            _this.set(response);
+            _this.set('authorized', true);
+            return $.alert("Welcome, " + response.name + " !");
+          };
+        })(this),
+        error: (function(_this) {
+          return function(model, response, options) {
+            return _this.trigger('flash', response.responseJSON.error);
+          };
+        })(this)
+      });
+    };
+
+    Auth.prototype.forgotpasswrod = function() {};
+
+    Auth.prototype.logout = function() {
+      $.alert("Goodbay, " + (this.get('first_name')) + " " + (this.get('last_name')) + "!");
+      return this.clear();
+    };
+
+    return Auth;
+
+  })(Backbone.Model);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.User.Auth : void 0) || (this.Tracktime.User.Auth = Tracktime.User.Auth);
+
   Tracktime.ActionsCollection = (function(superClass) {
     extend(ActionsCollection, superClass);
 
@@ -34425,7 +34495,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       this.model = new Tracktime();
       this.bindComply();
       this.bindRequest();
-      this.model.changeUserStatus(false);
+      this.model.setUsetStatus(false);
       return this;
     },
     checkOnline: function() {
@@ -35746,22 +35816,26 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       return Login.__super__.constructor.apply(this, arguments);
     }
 
-    Login.prototype.el = '#login';
+    Login.prototype.el = '#login > form';
 
     Login.prototype.events = {
-      'click .btn-login': 'loginProcess'
+      'submit': 'loginProcess'
     };
 
-    Login.prototype.initialize = function() {};
+    Login.prototype.initialize = function() {
+      return this.listenTo(this.model.get('authUser'), 'flash', this.showFlash);
+    };
 
     Login.prototype.loginProcess = function(event) {
       event.preventDefault();
-      $.alert('login process');
-      return this.auth();
+      return this.model.get('authUser').login({
+        email: $('[name=email]', this.$el).val(),
+        password: $('[name=password]', this.$el).val()
+      });
     };
 
-    Login.prototype.auth = function() {
-      return this.model.changeUserStatus(true);
+    Login.prototype.showFlash = function(message) {
+      return $.alert(message.scope.capitalizeFirstLetter() + (" Error: " + message.msg));
     };
 
     return Login;
@@ -36847,7 +36921,6 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       this.view = new Tracktime.GuestView({
         model: this.model
       });
-      this.view.setSubView('footer', new Tracktime.AppView.Footer());
       return this.view.initUI();
     };
 
@@ -37045,8 +37118,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     };
 
     UserRouter.prototype.logout = function() {
-      $.alert("user logout process");
-      return this.parent.model.changeUserStatus(false);
+      return this.parent.model.get('authUser').logout();
     };
 
     return UserRouter;

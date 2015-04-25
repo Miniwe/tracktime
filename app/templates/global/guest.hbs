@@ -1,95 +1,99 @@
 <div class="scrollWrapper">
     <div class="container" style="padding: 0">
         <div id="main">
-            <div class="well" style="width: 50%; margin: 0 auto;">
-                <h1>{{title}}</h1>
-                <ul class="nav nav-tabs" style="margin-bottom: 1em">
-                    <li class="active"><a href="#login" data-toggle="tab">Log In</a></li>
-                    <li><a href="#signin" data-toggle="tab">Sign In</a></li>
-                    <li class="hidden"><a href="#forgotpassword" data-toggle="tab">Forgot Password</a></li>
-                </ul>
-                <div id="myTabContent" class="tab-content">
-                    <div class="tab-pane fade active in" id="login">
-                        <form class="form-horizontal">
-                            <fieldset>
-                                <legend>Log In</legend>
-                                <div class="form-group">
-                                    <label for="inputEmail" class="col-lg-2 control-label">Email</label>
-                                    <div class="col-lg-10">
-                                        <input type="email" class="form-control" id="inputEmail" placeholder="Email">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="inputPassword" class="col-lg-2 control-label">Password</label>
-                                    <div class="col-lg-10">
-                                        <input type="password" class="form-control" id="inputPassword" placeholder="Password">
-                                    </div>
-                                </div>
-                                <div class="form-group hidden">
-                                    <label class="col-lg-2 control-label"></label>
-                                    <div class="col-lg-10">
-                                        <div class="togglebutton">
-                                            <label>
-                                                <input type="checkbox" checked=""> Toggle button
-                                            </label>
+            <div class="panel panel-info" style="width: 50%; margin: 0 auto;">
+                <div class="panel-heading">
+                    <h2>{{title}}</h2>
+                    <ul class="nav nav-tabs navbar navbar-info" style="margin-bottom: 1em">
+                        <li class="active"><a href="#login" data-toggle="tab">Log In</a></li>
+                        <li><a href="#signin" data-toggle="tab">Sign In</a></li>
+                        <li class="hidden"><a href="#forgotpassword" data-toggle="tab">Forgot Password</a></li>
+                    </ul>
+                </div>
+                <div class='panel-body'>
+                    <div id="myTabContent" class="tab-content">
+                        <div class="tab-pane fade active in" id="login">
+                            <form class="form-horizontal" method="post">
+                                <fieldset>
+                                    <legend>Log In</legend>
+                                    <div class="form-group">
+                                        <div class="col-lg-12">
+                                            <input type="email" name="email" id="loginEmail" class="form-control input-lg floating-label" data-hint="Test email: bob@example.com" placeholder="Email" value="irina@webperfectionist.net">
+
                                         </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-lg-10 col-lg-offset-2">
-                                        <button class="btn btn-lg btn-block btn-login btn-inverse">Log In</button>
+                                    <br>
+                                    <div class="form-group">
+                                        <div class="col-lg-12">
+                                            <input type="password" class="form-control input-lg floating-label" name="password" id="loginPassword" placeholder="Password" data-hint="Test password: secret" value="******">
+                                        </div>
                                     </div>
-                                </div>
-                            </fieldset>
-                        </form>
-                    </div>
-                    <div class="tab-pane fade" id="signin">
-                        <form class="form-horizontal">
-                            <fieldset>
-                                <legend>Sign In</legend>
-                                <div class="form-group">
-                                    <label for="inputEmail" class="col-lg-2 control-label">Email</label>
-                                    <div class="col-lg-10">
-                                        <input type="email" class="form-control" id="inputEmail" placeholder="Email">
+                                    <div class="form-group hidden">
+                                        <label class="col-lg-2 control-label"></label>
+                                        <div class="col-lg-10">
+                                            <div class="togglebutton">
+                                                <label>
+                                                    <input type="checkbox" checked=""> Toggle button
+                                                </label>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="inputPassword" class="col-lg-2 control-label">Password</label>
-                                    <div class="col-lg-10">
-                                        <input type="password" class="form-control" id="inputPassword" placeholder="Password">
+                                    <div class="form-group">
+                                        <div class="col-lg-12">
+                                            <button type="submit" class="btn btn-lg btn-block btn-login btn-info">Log In</button>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="repeatPassword" class="col-lg-2 control-label">Repeat Password</label>
-                                    <div class="col-lg-10">
-                                        <input type="password" class="form-control" id="repeatPassword" placeholder="Repeat Password">
+                                </fieldset>
+                            </form>
+                        </div>
+                        <div class="tab-pane fade" id="signin">
+                            <form class="form-horizontal">
+                                <fieldset>
+                                    <legend>Sign In</legend>
+                                    <div class="form-group">
+                                        <label for="inputEmail" class="col-lg-2 control-label">Email</label>
+                                        <div class="col-lg-10">
+                                            <input type="email" class="form-control" id="inputEmail" placeholder="Email">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-lg-10 col-lg-offset-2">
-                                        <button class="btn btn-lg btn-block btn-signin btn-inverse">Sign In</button>
+                                    <div class="form-group">
+                                        <label for="inputPassword" class="col-lg-2 control-label">Password</label>
+                                        <div class="col-lg-10">
+                                            <input type="password" class="form-control" id="inputPassword" placeholder="Password">
+                                        </div>
                                     </div>
-                                </div>
-                            </fieldset>
-                        </form>
-                    </div>
-                    <div class="tab-pane fade" id="forgotpassword">
-                        <form class="form-horizontal">
-                            <fieldset>
-                                <legend>Forgot Password</legend>
-                                <div class="form-group">
-                                    <label for="inputEmail" class="col-lg-2 control-label">Email</label>
-                                    <div class="col-lg-10">
-                                        <input type="email" class="form-control" id="inputEmail" placeholder="Email">
+                                    <div class="form-group">
+                                        <label for="repeatPassword" class="col-lg-2 control-label">Repeat Password</label>
+                                        <div class="col-lg-10">
+                                            <input type="password" class="form-control" id="repeatPassword" placeholder="Repeat Password">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-lg-10 col-lg-offset-2">
-                                        <button class="btn btn-lg btn-block btn-forgotpassword btn-inverse">Send</button>
+                                    <div class="form-group">
+                                        <div class="col-lg-12">
+                                            <button class="btn btn-lg btn-block btn-signin btn-info">Sign In</button>
+                                        </div>
                                     </div>
-                                </div>
-                            </fieldset>
-                        </form>
+                                </fieldset>
+                            </form>
+                        </div>
+                        <div class="tab-pane fade" id="forgotpassword">
+                            <form class="form-horizontal">
+                                <fieldset>
+                                    <legend>Forgot Password</legend>
+                                    <div class="form-group">
+                                        <label for="inputEmail" class="col-lg-2 control-label">Email</label>
+                                        <div class="col-lg-10">
+                                            <input type="email" class="form-control" id="inputEmail" placeholder="Email">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-lg-12">
+                                            <button class="btn btn-lg btn-block btn-forgotpassword btn-info">Send</button>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>

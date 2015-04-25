@@ -11,7 +11,7 @@ class Tracktime.GuestRouter extends Backbone.Router
   initInterface: () ->
     @view = new Tracktime.GuestView model: @model
     # @view.setSubView 'header', new Tracktime.GuestView.Header model: @model
-    @view.setSubView 'footer', new Tracktime.AppView.Footer()
+    # @view.setSubView 'footer', new Tracktime.AppView.Footer()
     # @view.setSubView 'menu', new Tracktime.AppView.Menu model: @model
     @view.initUI()
 

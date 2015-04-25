@@ -39,8 +39,11 @@ class Tracktime extends Backbone.Model
 
   defaults:
     title: "TrackTime App"
+    authUser: null
 
   initialize: () ->
+    @set 'authUser', new Tracktime.User.Auth()
+    @listenTo @get('authUser'), 'change:authorized', @changeUserStatus
 
   initCollections: ->
     @set 'users', new Tracktime.UsersCollection()
@@ -61,9 +64,10 @@ class Tracktime extends Backbone.Model
     # @get('records').fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
     # @get('projects').fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
 
-  callAuth: ->
+  changeUserStatus: ->
+    @setUsetStatus @get('authUser').get('authorized')
 
-  changeUserStatus: (status) ->
+  setUsetStatus: (status) ->
     if status == true
       @initCollections()
       Tracktime.AppChannel.command 'userAuth'
@@ -646,6 +650,41 @@ class Tracktime.User extends Tracktime.Model
 
 (module?.exports = Tracktime.User) or @Tracktime.User = Tracktime.User
 
+class Tracktime.User.Auth extends Backbone.Model
+  urlRoot: config.SERVER + '/' + ''
+  defaults:
+    authorized: false
+
+  login: (params) ->
+    @save params,
+      ajaxSync: true
+      url: config.SERVER + '/login'
+      success: (model, response, options) =>
+        @set response
+        @set 'authorized', true
+        $.alert "Welcome back, #{response.first_name} #{response.last_name}!"
+      error: (model, response, options) =>
+        @trigger 'flash', response.responseJSON.error
+
+  signin: (params) ->
+    @save params,
+      ajaxSync: true
+      url: config.SERVER + '/signin'
+      success: (model, response, options) =>
+        @set response
+        @set 'authorized', true
+        $.alert "Welcome, #{response.name} !"
+      error: (model, response, options) =>
+        @trigger 'flash', response.responseJSON.error
+
+  forgotpasswrod: ->
+
+  logout: ->
+    $.alert "Goodbay, #{@get('first_name')} #{@get('last_name')}!"
+    @clear()
+
+(module?.exports = Tracktime.User.Auth) or @Tracktime.User.Auth = Tracktime.User.Auth
+
 class Tracktime.ActionsCollection extends Backbone.Collection
   model: Tracktime.Action
   collectionName: config.collection.actions
@@ -793,7 +832,7 @@ _.extend Tracktime.AppChannel,
     @model = new Tracktime()
     @bindComply()
     @bindRequest()
-    @model.changeUserStatus false
+    @model.setUsetStatus false
     return @
 
   checkOnline: ->
@@ -1613,19 +1652,21 @@ class Tracktime.GuestView.Fopass extends Backbone.View
 
 
 class Tracktime.GuestView.Login extends Backbone.View
-  el: '#login'
+  el: '#login > form'
   events:
-    'click .btn-login': 'loginProcess'
+    'submit': 'loginProcess'
 
   initialize: () ->
+    @listenTo @model.get('authUser'), 'flash', @showFlash
 
   loginProcess: (event) ->
     event.preventDefault()
-    $.alert 'login process'
-    @auth()
+    @model.get('authUser').login
+      email: $('[name=email]',@$el).val()
+      password: $('[name=password]',@$el).val()
 
-  auth: ->
-    @model.changeUserStatus true
+  showFlash: (message) ->
+    $.alert message.scope.capitalizeFirstLetter() + " Error: #{message.msg}"
 
 (module?.exports = Tracktime.GuestView.Login) or @Tracktime.GuestView.Login = Tracktime.GuestView.Login
 
@@ -2296,7 +2337,7 @@ class Tracktime.GuestRouter extends Backbone.Router
   initInterface: () ->
     @view = new Tracktime.GuestView model: @model
     # @view.setSubView 'header', new Tracktime.GuestView.Header model: @model
-    @view.setSubView 'footer', new Tracktime.AppView.Footer()
+    # @view.setSubView 'footer', new Tracktime.AppView.Footer()
     # @view.setSubView 'menu', new Tracktime.AppView.Menu model: @model
     @view.initUI()
 
@@ -2427,8 +2468,7 @@ class Tracktime.UserRouter extends Backbone.SubRoute
     @parent.view.setSubView 'main', new Tracktime.UserView.Rates()
 
   logout: () ->
-    $.alert "user logout process"
-    @parent.model.changeUserStatus false
+    @parent.model.get('authUser').logout()
 
 
 (module?.exports = Tracktime.UserRouter) or @Tracktime.UserRouter = Tracktime.UserRouter

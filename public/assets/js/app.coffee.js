@@ -60,10 +60,14 @@
     Tracktime.prototype.urlRoot = config.SERVER;
 
     Tracktime.prototype.defaults = {
-      title: "TrackTime App"
+      title: "TrackTime App",
+      authUser: null
     };
 
-    Tracktime.prototype.initialize = function() {};
+    Tracktime.prototype.initialize = function() {
+      this.set('authUser', new Tracktime.User.Auth());
+      return this.listenTo(this.get('authUser'), 'change:authorized', this.changeUserStatus);
+    };
 
     Tracktime.prototype.initCollections = function() {
       this.set('users', new Tracktime.UsersCollection());
@@ -87,9 +91,11 @@
       });
     };
 
-    Tracktime.prototype.callAuth = function() {};
+    Tracktime.prototype.changeUserStatus = function() {
+      return this.setUsetStatus(this.get('authUser').get('authorized'));
+    };
 
-    Tracktime.prototype.changeUserStatus = function(status) {
+    Tracktime.prototype.setUsetStatus = function(status) {
       if (status === true) {
         this.initCollections();
         return Tracktime.AppChannel.command('userAuth');
@@ -970,6 +976,70 @@
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.User : void 0) || (this.Tracktime.User = Tracktime.User);
 
+  Tracktime.User.Auth = (function(superClass) {
+    extend(Auth, superClass);
+
+    function Auth() {
+      return Auth.__super__.constructor.apply(this, arguments);
+    }
+
+    Auth.prototype.urlRoot = config.SERVER + '/' + '';
+
+    Auth.prototype.defaults = {
+      authorized: false
+    };
+
+    Auth.prototype.login = function(params) {
+      return this.save(params, {
+        ajaxSync: true,
+        url: config.SERVER + '/login',
+        success: (function(_this) {
+          return function(model, response, options) {
+            _this.set(response);
+            _this.set('authorized', true);
+            return $.alert("Welcome back, " + response.first_name + " " + response.last_name + "!");
+          };
+        })(this),
+        error: (function(_this) {
+          return function(model, response, options) {
+            return _this.trigger('flash', response.responseJSON.error);
+          };
+        })(this)
+      });
+    };
+
+    Auth.prototype.signin = function(params) {
+      return this.save(params, {
+        ajaxSync: true,
+        url: config.SERVER + '/signin',
+        success: (function(_this) {
+          return function(model, response, options) {
+            _this.set(response);
+            _this.set('authorized', true);
+            return $.alert("Welcome, " + response.name + " !");
+          };
+        })(this),
+        error: (function(_this) {
+          return function(model, response, options) {
+            return _this.trigger('flash', response.responseJSON.error);
+          };
+        })(this)
+      });
+    };
+
+    Auth.prototype.forgotpasswrod = function() {};
+
+    Auth.prototype.logout = function() {
+      $.alert("Goodbay, " + (this.get('first_name')) + " " + (this.get('last_name')) + "!");
+      return this.clear();
+    };
+
+    return Auth;
+
+  })(Backbone.Model);
+
+  (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.User.Auth : void 0) || (this.Tracktime.User.Auth = Tracktime.User.Auth);
+
   Tracktime.ActionsCollection = (function(superClass) {
     extend(ActionsCollection, superClass);
 
@@ -1252,7 +1322,7 @@
       this.model = new Tracktime();
       this.bindComply();
       this.bindRequest();
-      this.model.changeUserStatus(false);
+      this.model.setUsetStatus(false);
       return this;
     },
     checkOnline: function() {
@@ -2573,22 +2643,26 @@
       return Login.__super__.constructor.apply(this, arguments);
     }
 
-    Login.prototype.el = '#login';
+    Login.prototype.el = '#login > form';
 
     Login.prototype.events = {
-      'click .btn-login': 'loginProcess'
+      'submit': 'loginProcess'
     };
 
-    Login.prototype.initialize = function() {};
+    Login.prototype.initialize = function() {
+      return this.listenTo(this.model.get('authUser'), 'flash', this.showFlash);
+    };
 
     Login.prototype.loginProcess = function(event) {
       event.preventDefault();
-      $.alert('login process');
-      return this.auth();
+      return this.model.get('authUser').login({
+        email: $('[name=email]', this.$el).val(),
+        password: $('[name=password]', this.$el).val()
+      });
     };
 
-    Login.prototype.auth = function() {
-      return this.model.changeUserStatus(true);
+    Login.prototype.showFlash = function(message) {
+      return $.alert(message.scope.capitalizeFirstLetter() + (" Error: " + message.msg));
     };
 
     return Login;
@@ -3674,7 +3748,6 @@
       this.view = new Tracktime.GuestView({
         model: this.model
       });
-      this.view.setSubView('footer', new Tracktime.AppView.Footer());
       return this.view.initUI();
     };
 
@@ -3872,8 +3945,7 @@
     };
 
     UserRouter.prototype.logout = function() {
-      $.alert("user logout process");
-      return this.parent.model.changeUserStatus(false);
+      return this.parent.model.get('authUser').logout();
     };
 
     return UserRouter;
