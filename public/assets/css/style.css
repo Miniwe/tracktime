@@ -14981,7 +14981,7 @@ hr.on-light {
   min-height: 100%;
 }
 
-/* line 20, ../../app/assets/sass/vendor/_slideout.scss */
+/* line 22, ../../app/assets/sass/vendor/_slideout.scss */
 body,
 .slideout-open,
 .slideout-open body {
@@ -15071,11 +15071,6 @@ h1, h2, h3, h4, h5, h6 {
 /* line 27, ../../app/assets/sass/layout/_header.scss */
 #header #menuToggler {
   margin: .4em;
-}
-
-/* line 1, ../../app/assets/sass/layout/_footer.scss */
-#footer {
-  background-color: #fff;
 }
 
 /* line 1, ../../app/assets/sass/layout/_main.scss */

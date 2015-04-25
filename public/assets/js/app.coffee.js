@@ -82,13 +82,7 @@
     };
 
     Tracktime.prototype.updateApp = function() {
-      this.get('users').fetch({
-        ajaxSync: Tracktime.AppChannel.request('isOnline')
-      });
-      this.get('records').fetch({
-        ajaxSync: Tracktime.AppChannel.request('isOnline')
-      });
-      return this.get('projects').fetch({
+      return this.get('users').fetch({
         ajaxSync: Tracktime.AppChannel.request('isOnline')
       });
     };
@@ -2709,7 +2703,7 @@
       return Main.__super__.constructor.apply(this, arguments);
     }
 
-    Main.prototype.container = '#main';
+    Main.prototype.el = '#main';
 
     Main.prototype.template = JST['layout/main'];
 
@@ -2722,7 +2716,7 @@
 
     Main.prototype.render = function() {
       var ref1;
-      $(this.container).html(this.$el.html(this.template((ref1 = this.model) != null ? ref1.toJSON() : void 0)));
+      this.$el.html(this.template((ref1 = this.model) != null ? ref1.toJSON() : void 0));
       return this.renderRecords();
     };
 

@@ -58,8 +58,8 @@ class Tracktime extends Backbone.Model
 
   updateApp: ->
     @get('users').fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
-    @get('records').fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
-    @get('projects').fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
+    # @get('records').fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
+    # @get('projects').fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
 
   callAuth: ->
 
@@ -1688,7 +1688,7 @@ class Tracktime.AppView.Header extends Backbone.View
 (module?.exports = Tracktime.AppView.Header) or @Tracktime.AppView.Header = Tracktime.AppView.Header
 
 class Tracktime.AppView.Main extends Backbone.View
-  container: '#main'
+  el: '#main'
   template: JST['layout/main']
   views: {}
 
@@ -1697,7 +1697,7 @@ class Tracktime.AppView.Main extends Backbone.View
     @bindEvents()
 
   render: () ->
-    $(@container).html @$el.html @template @model?.toJSON()
+    @$el.html @template @model?.toJSON()
     @renderRecords()
 
   bindEvents: ->

@@ -1,5 +1,5 @@
 class Tracktime.AppView.Main extends Backbone.View
-  container: '#main'
+  el: '#main'
   template: JST['layout/main']
   views: {}
 
@@ -8,7 +8,7 @@ class Tracktime.AppView.Main extends Backbone.View
     @bindEvents()
 
   render: () ->
-    $(@container).html @$el.html @template @model?.toJSON()
+    @$el.html @template @model?.toJSON()
     @renderRecords()
 
   bindEvents: ->

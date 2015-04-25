@@ -22,8 +22,8 @@ class Tracktime extends Backbone.Model
 
   updateApp: ->
     @get('users').fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
-    @get('records').fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
-    @get('projects').fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
+    # @get('records').fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
+    # @get('projects').fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
 
   callAuth: ->
 
