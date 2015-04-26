@@ -12,7 +12,12 @@ class Tracktime.User.Auth extends Backbone.Model
         @set 'authorized', true
         $.alert "Welcome back, #{response.first_name} #{response.last_name}!"
       error: (model, response, options) =>
-        @trigger 'flash', response.responseJSON.error
+        if response.responseJSON?
+          @trigger 'flash', response.responseJSON.error
+        else
+          @trigger 'flash',
+            scope: "unknown"
+            msg: 'Send request error'
 
   signin: (params) ->
     @save params,

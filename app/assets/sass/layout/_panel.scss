@@ -5,10 +5,15 @@
 
     color: $c-main;
     background: $c-main-fon;
-    .scrollWrapper
-    {
-        overflow: auto;
+    > div {
+      overflow: auto;
 
-        height: 100%;
+      height: 100%;
+      > .scrollWrapper
+      {
+          overflow: auto;
+
+          height: 100%;
+      }
     }
 }

@@ -1002,7 +1002,14 @@
         })(this),
         error: (function(_this) {
           return function(model, response, options) {
-            return _this.trigger('flash', response.responseJSON.error);
+            if (response.responseJSON != null) {
+              return _this.trigger('flash', response.responseJSON.error);
+            } else {
+              return _this.trigger('flash', {
+                scope: "unknown",
+                msg: 'Send request error'
+              });
+            }
           };
         })(this)
       });

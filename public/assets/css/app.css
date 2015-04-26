@@ -34,7 +34,12 @@ h1, h2, h3, h4, h5, h6 {
   background: #eee;
 }
 /* line 8, ../../app/assets/sass/layout/_panel.scss */
-#panel .scrollWrapper {
+#panel > div {
+  overflow: auto;
+  height: 100%;
+}
+/* line 12, ../../app/assets/sass/layout/_panel.scss */
+#panel > div > .scrollWrapper {
   overflow: auto;
   height: 100%;
 }
