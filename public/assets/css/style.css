@@ -14981,7 +14981,7 @@ hr.on-light {
   min-height: 100%;
 }
 
-/* line 20, ../../app/assets/sass/vendor/_slideout.scss */
+/* line 22, ../../app/assets/sass/vendor/_slideout.scss */
 body,
 .slideout-open,
 .slideout-open body {
@@ -15021,32 +15021,32 @@ h1, h2, h3, h4, h5, h6 {
 
 /* line 1, ../../app/assets/sass/layout/_menu.scss */
 #menu {
-  background: #ddd;
+  background: #dddddd;
 }
 /* line 3, ../../app/assets/sass/layout/_menu.scss */
 #menu [role=tab] {
   margin-bottom: 0;
 }
 
-/* line 1, ../../app/assets/sass/layout/_panel.scss */
+/* line 2, ../../app/assets/sass/layout/_panel.scss */
 #panel {
   height: 100%;
-  padding-top: 78px;
-  color: #000;
-  background: #eee;
+  color: black;
+  background: #eeeeee;
 }
 /* line 8, ../../app/assets/sass/layout/_panel.scss */
 #panel > div {
   overflow: auto;
   height: 100%;
+  padding-top: 78px;
 }
-/* line 12, ../../app/assets/sass/layout/_panel.scss */
+/* line 14, ../../app/assets/sass/layout/_panel.scss */
 #panel > div > .scrollWrapper {
   overflow: auto;
   height: 100%;
 }
 
-/* line 4, ../../app/assets/sass/layout/_header.scss */
+/* line 5, ../../app/assets/sass/layout/_header.scss */
 #header {
   position: fixed;
   z-index: 100;
@@ -15054,67 +15054,67 @@ h1, h2, h3, h4, h5, h6 {
   left: 0;
   width: 100%;
 }
-/* line 12, ../../app/assets/sass/layout/_header.scss */
+/* line 13, ../../app/assets/sass/layout/_header.scss */
 #header .navbar {
   height: 78px;
   margin-bottom: 0;
+  -webkit-transition: background-color 0.5s;
   -moz-transition: background-color 0.5s;
   -o-transition: background-color 0.5s;
-  -webkit-transition: background-color 0.5s;
   transition: background-color 0.5s;
 }
-/* line 19, ../../app/assets/sass/layout/_header.scss */
+/* line 20, ../../app/assets/sass/layout/_header.scss */
 #header .btn {
   z-index: 100;
 }
-/* line 23, ../../app/assets/sass/layout/_header.scss */
+/* line 24, ../../app/assets/sass/layout/_header.scss */
 #header .btn-link {
-  -moz-box-shadow: none;
   -webkit-box-shadow: none;
+  -moz-box-shadow: none;
   box-shadow: none;
 }
-/* line 27, ../../app/assets/sass/layout/_header.scss */
+/* line 28, ../../app/assets/sass/layout/_header.scss */
 #header #menuToggler {
   margin: .4em;
 }
 
-/* line 1, ../../app/assets/sass/layout/_main.scss */
+/* line 2, ../../app/assets/sass/layout/_main.scss */
 #main {
   right: 10%;
   left: 10%;
   padding: 1em;
 }
 
-/* line 3, ../../app/assets/sass/blocks/_actions-form.scss */
+/* line 4, ../../app/assets/sass/blocks/_actions-form.scss */
 #actions-form {
   position: absolute;
   right: 10%;
   left: 10%;
   padding: .75em 1em;
   background: rgba(255, 255, 255, 0.7);
-  -moz-transition: box-shadow 1s 0.2s, background 1s 0.2s;
-  -o-transition: box-shadow 1s 0.2s, background 1s 0.2s;
   -webkit-transition: box-shadow 1s, background 1s;
   -webkit-transition-delay: 0.2s, 0.2s;
+  -moz-transition: box-shadow 1s 0.2s, background 1s 0.2s;
+  -o-transition: box-shadow 1s 0.2s, background 1s 0.2s;
   transition: box-shadow 1s 0.2s, background 1s 0.2s;
 }
-/* line 14, ../../app/assets/sass/blocks/_actions-form.scss */
+/* line 15, ../../app/assets/sass/blocks/_actions-form.scss */
 #actions-form.shadow-z-2 {
   background: rgba(255, 255, 255, 0.95);
 }
-/* line 18, ../../app/assets/sass/blocks/_actions-form.scss */
+/* line 19, ../../app/assets/sass/blocks/_actions-form.scss */
 #actions-form .btn-close-action {
   position: absolute;
   top: 1em;
   right: 2em;
 }
-/* line 24, ../../app/assets/sass/blocks/_actions-form.scss */
+/* line 25, ../../app/assets/sass/blocks/_actions-form.scss */
 #actions-form .action-wrapper {
   overflow: visible;
   margin-top: 1em;
   padding: 0 5em;
 }
-/* line 30, ../../app/assets/sass/blocks/_actions-form.scss */
+/* line 31, ../../app/assets/sass/blocks/_actions-form.scss */
 #actions-form .action-wrapper textarea {
   font-size: 18px;
   display: block;
@@ -15130,55 +15130,55 @@ h1, h2, h3, h4, h5, h6 {
   padding: .2em 0;
   line-height: 1.6;
 }
-/* line 46, ../../app/assets/sass/blocks/_actions-form.scss */
+/* line 47, ../../app/assets/sass/blocks/_actions-form.scss */
 #actions-form .action-wrapper .floating-label {
   color: rgba(0, 0, 0, 0.4);
 }
-/* line 50, ../../app/assets/sass/blocks/_actions-form.scss */
+/* line 52, ../../app/assets/sass/blocks/_actions-form.scss */
 #actions-form .action-wrapper .form-control:focus ~ .floating-label,
 #actions-form .action-wrapper .form-control:not(.empty) ~ .floating-label {
   color: #009688;
 }
-/* line 55, ../../app/assets/sass/blocks/_actions-form.scss */
+/* line 56, ../../app/assets/sass/blocks/_actions-form.scss */
 #actions-form .action-wrapper .details-container {
   height: 54px;
-  filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
   opacity: 1;
-  -moz-transition: all 0.2s 0.1s;
-  -o-transition: all 0.2s 0.1s;
   -webkit-transition: all 0.2s;
   -webkit-transition-delay: 0.1s;
+  -moz-transition: all 0.2s 0.1s;
+  -o-transition: all 0.2s 0.1s;
   transition: all 0.2s 0.1s;
 }
-/* line 62, ../../app/assets/sass/blocks/_actions-form.scss */
+/* line 63, ../../app/assets/sass/blocks/_actions-form.scss */
 #actions-form .action-wrapper .details-container.hidden {
   height: 0;
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
   opacity: 0;
 }
 
-/* line 7, ../../app/assets/sass/blocks/_select-action.scss */
+/* line 8, ../../app/assets/sass/blocks/_select-action.scss */
 .select-action .dropdown-menu {
   border: none;
   background: none;
   top: 0;
   left: 100%;
   min-width: 1000px;
-  -moz-box-shadow: none;
   -webkit-box-shadow: none;
+  -moz-box-shadow: none;
   box-shadow: none;
 }
-/* line 16, ../../app/assets/sass/blocks/_select-action.scss */
+/* line 17, ../../app/assets/sass/blocks/_select-action.scss */
 .select-action .dropdown-menu li {
   overflow: visible;
   margin-bottom: .6em;
   float: left;
 }
-/* line 22, ../../app/assets/sass/blocks/_select-action.scss */
+/* line 23, ../../app/assets/sass/blocks/_select-action.scss */
 .select-action .dropdown-menu li.active {
   display: none;
 }
-/* line 26, ../../app/assets/sass/blocks/_select-action.scss */
+/* line 27, ../../app/assets/sass/blocks/_select-action.scss */
 .select-action .dropdown-menu li .btn {
   font-size: 20px;
   width: 46px;
@@ -15186,20 +15186,21 @@ h1, h2, h3, h4, h5, h6 {
   margin: 0;
   margin-left: 5px;
   padding: 13px;
+  -webkit-transform: scale(0);
   -moz-transform: scale(0);
   -ms-transform: scale(0);
-  -webkit-transform: scale(0);
+  -o-transform: scale(0);
   transform: scale(0);
+  -webkit-transition-property: all;
   -moz-transition-property: all;
   -o-transition-property: all;
-  -webkit-transition-property: all;
   transition-property: all;
+  -webkit-transition-duration: 0.2s;
   -moz-transition-duration: 0.2s;
   -o-transition-duration: 0.2s;
-  -webkit-transition-duration: 0.2s;
   transition-duration: 0.2s;
 }
-/* line 39, ../../app/assets/sass/blocks/_select-action.scss */
+/* line 40, ../../app/assets/sass/blocks/_select-action.scss */
 .select-action .dropdown-menu li .btn i {
   font-size: 22px;
   margin-top: 2px;
@@ -15207,163 +15208,174 @@ h1, h2, h3, h4, h5, h6 {
 }
 /* line 54, ../../app/assets/sass/blocks/_select-action.scss */
 .select-action.open .dropdown-menu li:nth-child(1) .btn {
+  -webkit-transition-duration: 0.15s;
   -moz-transition-duration: 0.15s;
   -o-transition-duration: 0.15s;
-  -webkit-transition-duration: 0.15s;
   transition-duration: 0.15s;
+  -webkit-transition-delay: 0.05s;
   -moz-transition-delay: 0.05s;
   -o-transition-delay: 0.05s;
-  -webkit-transition-delay: 0.05s;
   transition-delay: 0.05s;
+  -webkit-transform: scale(1);
   -moz-transform: scale(1);
   -ms-transform: scale(1);
-  -webkit-transform: scale(1);
+  -o-transform: scale(1);
   transform: scale(1);
 }
 /* line 54, ../../app/assets/sass/blocks/_select-action.scss */
 .select-action.open .dropdown-menu li:nth-child(2) .btn {
+  -webkit-transition-duration: 0.3s;
   -moz-transition-duration: 0.3s;
   -o-transition-duration: 0.3s;
-  -webkit-transition-duration: 0.3s;
   transition-duration: 0.3s;
+  -webkit-transition-delay: 0.1s;
   -moz-transition-delay: 0.1s;
   -o-transition-delay: 0.1s;
-  -webkit-transition-delay: 0.1s;
   transition-delay: 0.1s;
+  -webkit-transform: scale(1);
   -moz-transform: scale(1);
   -ms-transform: scale(1);
-  -webkit-transform: scale(1);
+  -o-transform: scale(1);
   transform: scale(1);
 }
 /* line 54, ../../app/assets/sass/blocks/_select-action.scss */
 .select-action.open .dropdown-menu li:nth-child(3) .btn {
+  -webkit-transition-duration: 0.45s;
   -moz-transition-duration: 0.45s;
   -o-transition-duration: 0.45s;
-  -webkit-transition-duration: 0.45s;
   transition-duration: 0.45s;
+  -webkit-transition-delay: 0.15s;
   -moz-transition-delay: 0.15s;
   -o-transition-delay: 0.15s;
-  -webkit-transition-delay: 0.15s;
   transition-delay: 0.15s;
+  -webkit-transform: scale(1);
   -moz-transform: scale(1);
   -ms-transform: scale(1);
-  -webkit-transform: scale(1);
+  -o-transform: scale(1);
   transform: scale(1);
 }
 /* line 54, ../../app/assets/sass/blocks/_select-action.scss */
 .select-action.open .dropdown-menu li:nth-child(4) .btn {
+  -webkit-transition-duration: 0.6s;
   -moz-transition-duration: 0.6s;
   -o-transition-duration: 0.6s;
-  -webkit-transition-duration: 0.6s;
   transition-duration: 0.6s;
+  -webkit-transition-delay: 0.2s;
   -moz-transition-delay: 0.2s;
   -o-transition-delay: 0.2s;
-  -webkit-transition-delay: 0.2s;
   transition-delay: 0.2s;
+  -webkit-transform: scale(1);
   -moz-transform: scale(1);
   -ms-transform: scale(1);
-  -webkit-transform: scale(1);
+  -o-transform: scale(1);
   transform: scale(1);
 }
 /* line 54, ../../app/assets/sass/blocks/_select-action.scss */
 .select-action.open .dropdown-menu li:nth-child(5) .btn {
+  -webkit-transition-duration: 0.75s;
   -moz-transition-duration: 0.75s;
   -o-transition-duration: 0.75s;
-  -webkit-transition-duration: 0.75s;
   transition-duration: 0.75s;
+  -webkit-transition-delay: 0.25s;
   -moz-transition-delay: 0.25s;
   -o-transition-delay: 0.25s;
-  -webkit-transition-delay: 0.25s;
   transition-delay: 0.25s;
+  -webkit-transform: scale(1);
   -moz-transform: scale(1);
   -ms-transform: scale(1);
-  -webkit-transform: scale(1);
+  -o-transform: scale(1);
   transform: scale(1);
 }
 /* line 54, ../../app/assets/sass/blocks/_select-action.scss */
 .select-action.open .dropdown-menu li:nth-child(6) .btn {
+  -webkit-transition-duration: 0.9s;
   -moz-transition-duration: 0.9s;
   -o-transition-duration: 0.9s;
-  -webkit-transition-duration: 0.9s;
   transition-duration: 0.9s;
+  -webkit-transition-delay: 0.3s;
   -moz-transition-delay: 0.3s;
   -o-transition-delay: 0.3s;
-  -webkit-transition-delay: 0.3s;
   transition-delay: 0.3s;
+  -webkit-transform: scale(1);
   -moz-transform: scale(1);
   -ms-transform: scale(1);
-  -webkit-transform: scale(1);
+  -o-transform: scale(1);
   transform: scale(1);
 }
 /* line 54, ../../app/assets/sass/blocks/_select-action.scss */
 .select-action.open .dropdown-menu li:nth-child(7) .btn {
+  -webkit-transition-duration: 1.05s;
   -moz-transition-duration: 1.05s;
   -o-transition-duration: 1.05s;
-  -webkit-transition-duration: 1.05s;
   transition-duration: 1.05s;
+  -webkit-transition-delay: 0.35s;
   -moz-transition-delay: 0.35s;
   -o-transition-delay: 0.35s;
-  -webkit-transition-delay: 0.35s;
   transition-delay: 0.35s;
+  -webkit-transform: scale(1);
   -moz-transform: scale(1);
   -ms-transform: scale(1);
-  -webkit-transform: scale(1);
+  -o-transform: scale(1);
   transform: scale(1);
 }
 /* line 54, ../../app/assets/sass/blocks/_select-action.scss */
 .select-action.open .dropdown-menu li:nth-child(8) .btn {
+  -webkit-transition-duration: 1.2s;
   -moz-transition-duration: 1.2s;
   -o-transition-duration: 1.2s;
-  -webkit-transition-duration: 1.2s;
   transition-duration: 1.2s;
+  -webkit-transition-delay: 0.4s;
   -moz-transition-delay: 0.4s;
   -o-transition-delay: 0.4s;
-  -webkit-transition-delay: 0.4s;
   transition-delay: 0.4s;
+  -webkit-transform: scale(1);
   -moz-transform: scale(1);
   -ms-transform: scale(1);
-  -webkit-transform: scale(1);
+  -o-transform: scale(1);
   transform: scale(1);
 }
 /* line 54, ../../app/assets/sass/blocks/_select-action.scss */
 .select-action.open .dropdown-menu li:nth-child(9) .btn {
+  -webkit-transition-duration: 1.35s;
   -moz-transition-duration: 1.35s;
   -o-transition-duration: 1.35s;
-  -webkit-transition-duration: 1.35s;
   transition-duration: 1.35s;
+  -webkit-transition-delay: 0.45s;
   -moz-transition-delay: 0.45s;
   -o-transition-delay: 0.45s;
-  -webkit-transition-delay: 0.45s;
   transition-delay: 0.45s;
+  -webkit-transform: scale(1);
   -moz-transform: scale(1);
   -ms-transform: scale(1);
-  -webkit-transform: scale(1);
+  -o-transform: scale(1);
   transform: scale(1);
 }
 /* line 54, ../../app/assets/sass/blocks/_select-action.scss */
 .select-action.open .dropdown-menu li:nth-child(10) .btn {
+  -webkit-transition-duration: 1.5s;
   -moz-transition-duration: 1.5s;
   -o-transition-duration: 1.5s;
-  -webkit-transition-duration: 1.5s;
   transition-duration: 1.5s;
+  -webkit-transition-delay: 0.5s;
   -moz-transition-delay: 0.5s;
   -o-transition-delay: 0.5s;
-  -webkit-transition-delay: 0.5s;
   transition-delay: 0.5s;
+  -webkit-transform: scale(1);
   -moz-transform: scale(1);
   -ms-transform: scale(1);
-  -webkit-transform: scale(1);
+  -o-transform: scale(1);
   transform: scale(1);
 }
-/* line 64, ../../app/assets/sass/blocks/_select-action.scss */
+/* line 65, ../../app/assets/sass/blocks/_select-action.scss */
 .select-action.open .dropdown-menu li .btn:hover {
+  -webkit-transition: all 0.2s;
   -moz-transition: all 0.2s;
   -o-transition: all 0.2s;
-  -webkit-transition: all 0.2s;
   transition: all 0.2s;
+  -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
-  -webkit-transform: scale(1.1);
+  -o-transform: scale(1.1);
   transform: scale(1.1);
 }
 
@@ -15371,58 +15383,58 @@ h1, h2, h3, h4, h5, h6 {
 .page-title {
   padding: 0.5em .7em;
   background: #EEE;
-  -moz-box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.1), 0 2px 7px 0 rgba(0, 0, 0, 0.1);
   -webkit-box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.1), 0 2px 7px 0 rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.1), 0 2px 7px 0 rgba(0, 0, 0, 0.1);
   box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.1), 0 2px 7px 0 rgba(0, 0, 0, 0.1);
-  text-shadow: 2px 1px #FFF;
+  text-shadow: 2px 1px white;
 }
 
-/* line 4, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 5, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group {
   margin: 0;
   margin-bottom: 1em;
   padding: 0;
   list-style-type: none;
 }
-/* line 11, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 12, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item {
   position: relative;
-  background: #fff;
+  background: white;
   display: block;
   width: 100%;
   min-height: 1em;
   margin: .4em auto .8em;
   padding: 1em;
-  filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
   opacity: 1;
+  -webkit-transition: all 0.4s;
   -moz-transition: all 0.4s;
   -o-transition: all 0.4s;
-  -webkit-transition: all 0.4s;
   transition: all 0.4s;
 }
-/* line 28, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 29, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item:hover .actions {
   display: table;
-  filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
   opacity: 1;
 }
-/* line 36, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 37, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item:hover .col-icon .btn {
   position: absolute;
 }
-/* line 39, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 40, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item:hover .col-icon .btn.type {
   z-index: 9;
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
   opacity: 0;
 }
-/* line 45, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 46, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item:hover .col-icon .btn.edit {
   z-index: 10;
-  filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
   opacity: 1;
 }
-/* line 54, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 55, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item.editmode {
   pointer-events: none;
   background-color: #ddd;
@@ -15430,7 +15442,7 @@ h1, h2, h3, h4, h5, h6 {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=30);
   opacity: 0.3;
 }
-/* line 63, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 64, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item.on-show {
   overflow: hidden;
   box-sizing: border-box;
@@ -15441,28 +15453,28 @@ h1, h2, h3, h4, h5, h6 {
   padding: 0;
   border-color: #f00;
 }
-/* line 75, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 76, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item.on-show * {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
   opacity: 0;
 }
-/* line 80, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 81, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item * {
-  filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
   opacity: 1;
-  -moz-transition: opacity 0.2s 0.4s;
-  -o-transition: opacity 0.2s 0.4s;
   -webkit-transition: opacity 0.2s;
   -webkit-transition-delay: 0.4s;
+  -moz-transition: opacity 0.2s 0.4s;
+  -o-transition: opacity 0.2s 0.4s;
   transition: opacity 0.2s 0.4s;
 }
-/* line 85, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 86, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item .subject_edit {
   width: 100%;
   padding: 0;
   border: none;
 }
-/* line 92, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 93, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item ul.actions {
   position: absolute;
   right: 1em;
@@ -15472,62 +15484,62 @@ h1, h2, h3, h4, h5, h6 {
   margin: 0;
   padding: 0;
   list-style-type: none;
-  -moz-transition: opacity 0.8s 0.4s;
-  -o-transition: opacity 0.8s 0.4s;
   -webkit-transition: opacity 0.8s;
   -webkit-transition-delay: 0.4s;
+  -moz-transition: opacity 0.8s 0.4s;
+  -o-transition: opacity 0.8s 0.4s;
   transition: opacity 0.8s 0.4s;
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
   opacity: 0;
 }
-/* line 108, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 109, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item ul.actions li {
   display: table-cell;
   margin: 1em;
 }
-/* line 117, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 118, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item .record-info i {
   font-size: 1.3em;
   position: relative;
   top: .1em;
   margin-right: .2em;
 }
-/* line 127, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 128, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item .last-update {
   margin-top: .6em;
 }
-/* line 130, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 131, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item .last-update .text-muted {
   font-size: .85em;
   color: #b4b4b4;
 }
-/* line 135, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 136, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item .last-update .text-muted:before {
   content: 'Last Update: ';
   color: #c4c4c4;
 }
-/* line 145, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 146, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item .col-icon .btn {
   position: absolute;
 }
-/* line 148, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 149, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item .col-icon .btn.type {
   z-index: 10;
-  -moz-transition: opacity 0.8s 0.4s;
-  -o-transition: opacity 0.8s 0.4s;
   -webkit-transition: opacity 0.8s;
   -webkit-transition-delay: 0.4s;
+  -moz-transition: opacity 0.8s 0.4s;
+  -o-transition: opacity 0.8s 0.4s;
   transition: opacity 0.8s 0.4s;
-  filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
   opacity: 1;
 }
-/* line 155, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 156, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item .col-icon .btn.edit {
   z-index: 9;
-  -moz-transition: opacity 0.8s 0.4s;
-  -o-transition: opacity 0.8s 0.4s;
   -webkit-transition: opacity 0.8s;
   -webkit-transition-delay: 0.4s;
+  -moz-transition: opacity 0.8s 0.4s;
+  -o-transition: opacity 0.8s 0.4s;
   transition: opacity 0.8s 0.4s;
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
   opacity: 0;
@@ -15581,49 +15593,73 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @-webkit-keyframes AnimationName {
+  /* line 11, ../../app/assets/sass/blocks/_ani.scss */
   0% {
     background-position: 0% 2%;
   }
+
+  /* line 12, ../../app/assets/sass/blocks/_ani.scss */
   50% {
     background-position: 100% 99%;
   }
+
+  /* line 13, ../../app/assets/sass/blocks/_ani.scss */
   100% {
     background-position: 0% 2%;
   }
 }
+
 @-moz-keyframes AnimationName {
+  /* line 16, ../../app/assets/sass/blocks/_ani.scss */
   0% {
     background-position: 0% 2%;
   }
+
+  /* line 17, ../../app/assets/sass/blocks/_ani.scss */
   50% {
     background-position: 100% 99%;
   }
+
+  /* line 18, ../../app/assets/sass/blocks/_ani.scss */
   100% {
     background-position: 0% 2%;
   }
 }
+
 @-o-keyframes AnimationName {
+  /* line 21, ../../app/assets/sass/blocks/_ani.scss */
   0% {
     background-position: 0% 2%;
   }
+
+  /* line 22, ../../app/assets/sass/blocks/_ani.scss */
   50% {
     background-position: 100% 99%;
   }
+
+  /* line 23, ../../app/assets/sass/blocks/_ani.scss */
   100% {
     background-position: 0% 2%;
   }
 }
+
 @keyframes AnimationName {
+  /* line 26, ../../app/assets/sass/blocks/_ani.scss */
   0% {
     background-position: 0% 2%;
   }
+
+  /* line 27, ../../app/assets/sass/blocks/_ani.scss */
   50% {
     background-position: 100% 99%;
   }
+
+  /* line 28, ../../app/assets/sass/blocks/_ani.scss */
   100% {
     background-position: 0% 2%;
   }
 }
+
 /* line 3, ../../app/assets/sass/blocks/_btn.scss */
 .btn.btn-fab i.letter {
   font-weight: 700;
@@ -15669,9 +15705,10 @@ h1, h2, h3, h4, h5, h6 {
 }
 /* line 28, ../../app/assets/sass/structures/_slider.scss */
 .slider .noUi-origin .noUi-handle.noUi-active {
+  -webkit-transform: scale3d(1.2, 1.2, 1);
   -moz-transform: scale3d(1.2, 1.2, 1);
   -ms-transform: scale3d(1.2, 1.2, 1);
-  -webkit-transform: scale3d(1.2, 1.2, 1);
+  -o-transform: scale3d(1.2, 1.2, 1);
   transform: scale3d(1.2, 1.2, 1);
   cursor: ew-resize;
 }
@@ -15726,11 +15763,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 /* line 78, ../../app/assets/sass/structures/_slider.scss */
 .slider:hover .noUi-pips .noUi-value-horizontal {
-  filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
   opacity: 1;
 }
 
-/* line 21, ../../app/assets/sass/app.scss */
+/* line 23, ../../app/assets/sass/app.scss */
 html,
 body {
   overflow: hidden;

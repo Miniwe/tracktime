@@ -13,7 +13,7 @@
                 <div class='panel-body'>
                     <div id="myTabContent" class="tab-content">
                         <div class="tab-pane fade active in" id="login">
-                            <form class="form-horizontal" method="post">
+                            <form class="form-horizontal" method="post" method="post">
                                 <fieldset>
                                     <legend>Log In</legend>
                                     <div class="form-group">
@@ -47,37 +47,42 @@
                             </form>
                         </div>
                         <div class="tab-pane fade" id="signin">
-                            <form class="form-horizontal">
+                            <form class="form-horizontal" method="post">
                                 <fieldset>
                                     <legend>Sign In</legend>
                                     <div class="form-group">
-                                        <label for="inputEmail" class="col-lg-2 control-label">Email</label>
-                                        <div class="col-lg-10">
-                                            <input type="email" class="form-control" id="inputEmail" placeholder="Email">
+                                        <div class="col-lg-6">
+                                            <input type="text" name="first_name" id="signinFirstName" class="form-control input-lg floating-label" placeholder="First Name" value="">
                                         </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="inputPassword" class="col-lg-2 control-label">Password</label>
-                                        <div class="col-lg-10">
-                                            <input type="password" class="form-control" id="inputPassword" placeholder="Password">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="repeatPassword" class="col-lg-2 control-label">Repeat Password</label>
-                                        <div class="col-lg-10">
-                                            <input type="password" class="form-control" id="repeatPassword" placeholder="Repeat Password">
+                                        <div class="col-lg-6">
+                                            <input type="text" name="last_name" id="signinLastName" class="form-control input-lg floating-label" placeholder="Last Name" value="">
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <div class="col-lg-12">
-                                            <button class="btn btn-lg btn-block btn-signin btn-info">Sign In</button>
+                                            <input type="email" name="email" id="signinEmail" class="form-control input-lg floating-label" placeholder="Email" value="">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-lg-12">
+                                            <input type="password" class="form-control input-lg floating-label" name="password" id="signinPassword" placeholder="Password">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-lg-12">
+                                            <input type="password" class="form-control input-lg floating-label" name="repassword" id="signinRePassword" placeholder="Repeat Password">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-lg-12">
+                                            <button type="submit" class="btn btn-lg btn-block btn-signin btn-info">Sign In</button>
                                         </div>
                                     </div>
                                 </fieldset>
                             </form>
                         </div>
                         <div class="tab-pane fade" id="forgotpassword">
-                            <form class="form-horizontal">
+                            <form class="form-horizontal" method="post">
                                 <fieldset>
                                     <legend>Forgot Password</legend>
                                     <div class="form-group">

@@ -60,13 +60,17 @@
     Tracktime.prototype.urlRoot = config.SERVER;
 
     Tracktime.prototype.defaults = {
-      title: "TrackTime App",
+      title: 'TrackTime App',
       authUser: null
     };
 
     Tracktime.prototype.initialize = function() {
       this.set('authUser', new Tracktime.User.Auth());
-      return this.listenTo(this.get('authUser'), 'change:authorized', this.changeUserStatus);
+      this.listenTo(this.get('authUser'), 'change:authorized', this.changeUserStatus);
+      return this.listenTo(this.get('authUser'), 'destroy', function() {
+        this.set('authUser', new Tracktime.User.Auth());
+        return this.listenTo(this.get('authUser'), 'change:authorized', this.changeUserStatus);
+      });
     };
 
     Tracktime.prototype.initCollections = function() {
@@ -77,7 +81,7 @@
       return this.listenTo(Tracktime.AppChannel, "isOnline", this.updateApp);
     };
 
-    Tracktime.prototype.uninitCollections = function() {
+    Tracktime.prototype.unsetCollections = function() {
       this.unset('users');
       this.unset('actions');
       this.unset('records');
@@ -100,7 +104,7 @@
         this.initCollections();
         return Tracktime.AppChannel.command('userAuth');
       } else {
-        this.uninitCollections();
+        this.unsetCollections();
         return Tracktime.AppChannel.command('userGuest');
       }
     };
@@ -983,10 +987,29 @@
       return Auth.__super__.constructor.apply(this, arguments);
     }
 
+    Auth.prototype.idAttribute = "_id";
+
     Auth.prototype.urlRoot = config.SERVER + '/' + '';
 
     Auth.prototype.defaults = {
-      authorized: false
+      authorized: null
+    };
+
+    Auth.prototype.initialize = function() {
+      return this.fetch({
+        ajaxSync: true,
+        url: config.SERVER + '/auth_user',
+        success: (function(_this) {
+          return function(model, response, options) {
+            return _this.set('authorized', true);
+          };
+        })(this),
+        error: (function(_this) {
+          return function(model, response, options) {
+            return _this.set('authorized', false);
+          };
+        })(this)
+      });
     };
 
     Auth.prototype.login = function(params) {
@@ -1016,9 +1039,15 @@
     };
 
     Auth.prototype.signin = function(params) {
+      _.extend(params, {
+        status: 'active',
+        k_status: 'active',
+        lastAccess: (new Date()).toISOString(),
+        isDeleted: 'false'
+      });
       return this.save(params, {
         ajaxSync: true,
-        url: config.SERVER + '/signin',
+        url: config.SERVER + '/register',
         success: (function(_this) {
           return function(model, response, options) {
             _this.set(response);
@@ -1038,7 +1067,22 @@
 
     Auth.prototype.logout = function() {
       $.alert("Goodbay, " + (this.get('first_name')) + " " + (this.get('last_name')) + "!");
-      return this.clear();
+      this.set('authorized', false);
+      return this.destroy({
+        ajaxSync: true,
+        url: config.SERVER + '/logout/' + this.id,
+        success: (function(_this) {
+          return function(model, response, options) {
+            window.location.href = '#';
+            return window.location.reload();
+          };
+        })(this),
+        error: (function(_this) {
+          return function(model, response, options) {
+            return console.log('logout error');
+          };
+        })(this)
+      });
     };
 
     return Auth;
@@ -1329,7 +1373,6 @@
       this.model = new Tracktime();
       this.bindComply();
       this.bindRequest();
-      this.model.setUsetStatus(false);
       return this;
     },
     checkOnline: function() {
@@ -2685,17 +2728,74 @@
       return Signin.__super__.constructor.apply(this, arguments);
     }
 
-    Signin.prototype.el = '#signin';
+    Signin.prototype.el = '#signin > form';
 
     Signin.prototype.events = {
-      'click .btn-signin': 'signinProcess'
+      'submit': 'signinProcess'
     };
 
-    Signin.prototype.initialize = function() {};
+    Signin.prototype.initialize = function() {
+      return this.listenTo(this.model.get('authUser'), 'flash', this.showFlash);
+    };
 
     Signin.prototype.signinProcess = function(event) {
       event.preventDefault();
-      return $.alert('signin process');
+      if (this.checkInput()) {
+        return this.model.get('authUser').signin({
+          first_name: $('[name=first_name]', this.$el).val(),
+          last_name: $('[name=last_name]', this.$el).val(),
+          email: $('[name=email]', this.$el).val(),
+          password: $('[name=password]', this.$el).val()
+        });
+      }
+    };
+
+    Signin.prototype.checkInput = function() {
+      var result;
+      result = true;
+      if (_.isEmpty($('[name=first_name]', this.$el).val())) {
+        this.showFlash({
+          scope: "Signin",
+          msg: 'First Name empty'
+        });
+        result = false;
+      }
+      if (_.isEmpty($('[name=last_name]', this.$el).val())) {
+        this.showFlash({
+          scope: "Signin",
+          msg: 'Last Name empty'
+        });
+        result = false;
+      }
+      if (_.isEmpty($('[name=email]', this.$el).val())) {
+        this.showFlash({
+          scope: "Signin",
+          msg: 'Email empty'
+        });
+        result = false;
+      }
+      if (_.isEmpty($('[name=password]', this.$el).val())) {
+        this.showFlash({
+          scope: "Signin",
+          msg: 'Password empty'
+        });
+        result = false;
+      }
+      if ($('[name=password]', this.$el).val() !== $('[name=repassword]', this.$el).val()) {
+        this.showFlash({
+          scope: "Signin",
+          msg: 'Repassword incorrect'
+        });
+        result = false;
+      }
+      return result;
+    };
+
+    Signin.prototype.showFlash = function(message) {
+      return $.alert({
+        content: message.scope.capitalizeFirstLetter() + (" Error: " + message.msg),
+        style: "btn-danger"
+      });
     };
 
     return Signin;

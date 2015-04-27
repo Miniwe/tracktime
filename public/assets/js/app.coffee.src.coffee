@@ -38,12 +38,16 @@ class Tracktime extends Backbone.Model
   urlRoot: config.SERVER
 
   defaults:
-    title: "TrackTime App"
+    title: 'TrackTime App'
     authUser: null
 
   initialize: () ->
     @set 'authUser', new Tracktime.User.Auth()
     @listenTo @get('authUser'), 'change:authorized', @changeUserStatus
+
+    @listenTo @get('authUser'), 'destroy', ->
+      @set 'authUser', new Tracktime.User.Auth()
+      @listenTo @get('authUser'), 'change:authorized', @changeUserStatus
 
   initCollections: ->
     @set 'users', new Tracktime.UsersCollection()
@@ -52,7 +56,7 @@ class Tracktime extends Backbone.Model
     @set 'actions', new Tracktime.ActionsCollection()
     @listenTo Tracktime.AppChannel, "isOnline", @updateApp
 
-  uninitCollections: ->
+  unsetCollections: ->
     @unset 'users'
     @unset 'actions'
     @unset 'records'
@@ -72,7 +76,7 @@ class Tracktime extends Backbone.Model
       @initCollections()
       Tracktime.AppChannel.command 'userAuth'
     else
-      @uninitCollections()
+      @unsetCollections()
       Tracktime.AppChannel.command 'userGuest'
 
 
@@ -651,9 +655,19 @@ class Tracktime.User extends Tracktime.Model
 (module?.exports = Tracktime.User) or @Tracktime.User = Tracktime.User
 
 class Tracktime.User.Auth extends Backbone.Model
+  idAttribute: "_id"
   urlRoot: config.SERVER + '/' + ''
   defaults:
-    authorized: false
+    authorized: null
+
+  initialize: ->
+    @fetch
+      ajaxSync: true
+      url: config.SERVER + '/auth_user'
+      success: (model, response, options) =>
+        @set 'authorized', true
+      error: (model, response, options) =>
+        @set 'authorized', false
 
   login: (params) ->
     @save params,
@@ -672,9 +686,14 @@ class Tracktime.User.Auth extends Backbone.Model
             msg: 'Send request error'
 
   signin: (params) ->
+    _.extend params,
+      status: 'active'
+      k_status: 'active'
+      lastAccess: (new Date()).toISOString()
+      isDeleted: 'false'
     @save params,
       ajaxSync: true
-      url: config.SERVER + '/signin'
+      url: config.SERVER + '/register'
       success: (model, response, options) =>
         @set response
         @set 'authorized', true
@@ -686,7 +705,15 @@ class Tracktime.User.Auth extends Backbone.Model
 
   logout: ->
     $.alert "Goodbay, #{@get('first_name')} #{@get('last_name')}!"
-    @clear()
+    @set 'authorized', false
+    @destroy
+      ajaxSync: true
+      url: config.SERVER + '/logout/' + @id
+      success: (model, response, options) =>
+        window.location.href = '#'
+        window.location.reload()
+      error: (model, response, options) =>
+        console.log 'logout error'
 
 (module?.exports = Tracktime.User.Auth) or @Tracktime.User.Auth = Tracktime.User.Auth
 
@@ -837,7 +864,6 @@ _.extend Tracktime.AppChannel,
     @model = new Tracktime()
     @bindComply()
     @bindRequest()
-    @model.setUsetStatus false
     return @
 
   checkOnline: ->
@@ -1677,19 +1703,48 @@ class Tracktime.GuestView.Login extends Backbone.View
 
 
 class Tracktime.GuestView.Signin extends Backbone.View
-  el: '#signin'
+  el: '#signin > form'
   events:
-    'click .btn-signin': 'signinProcess'
+    'submit': 'signinProcess'
 
   initialize: () ->
+    @listenTo @model.get('authUser'), 'flash', @showFlash
 
   signinProcess: (event) ->
     event.preventDefault()
-    $.alert 'signin process'
+    if @checkInput()
+      @model.get('authUser').signin
+        first_name: $('[name=first_name]',@$el).val()
+        last_name: $('[name=last_name]',@$el).val()
+        email: $('[name=email]',@$el).val()
+        password: $('[name=password]',@$el).val()
+
+  checkInput: ->
+    result = true
+    if _.isEmpty $('[name=first_name]',@$el).val()
+      @showFlash scope: "Signin", msg: 'First Name empty'
+      result = false
+    if _.isEmpty $('[name=last_name]',@$el).val()
+      @showFlash scope: "Signin", msg: 'Last Name empty'
+      result = false
+    if _.isEmpty $('[name=email]',@$el).val()
+      @showFlash scope: "Signin", msg: 'Email empty'
+      result = false
+    if _.isEmpty $('[name=password]',@$el).val()
+      @showFlash scope: "Signin", msg: 'Password empty'
+      result = false
+    if $('[name=password]',@$el).val() != $('[name=repassword]',@$el).val()
+      @showFlash scope: "Signin", msg: 'Repassword incorrect'
+      result = false
+    result
+
+  showFlash: (message) ->
+    $.alert
+      content: message.scope.capitalizeFirstLetter() + " Error: #{message.msg}"
+      style: "btn-danger"
 
 
 (module?.exports = Tracktime.GuestView.Signin) or @Tracktime.GuestView.Signin = Tracktime.GuestView.Signin
-
 
 class Tracktime.AppView.Footer extends Backbone.View
   container: '#footer'

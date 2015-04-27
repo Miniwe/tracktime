@@ -2,12 +2,16 @@ class Tracktime extends Backbone.Model
   urlRoot: config.SERVER
 
   defaults:
-    title: "TrackTime App"
+    title: 'TrackTime App'
     authUser: null
 
   initialize: () ->
     @set 'authUser', new Tracktime.User.Auth()
     @listenTo @get('authUser'), 'change:authorized', @changeUserStatus
+
+    @listenTo @get('authUser'), 'destroy', ->
+      @set 'authUser', new Tracktime.User.Auth()
+      @listenTo @get('authUser'), 'change:authorized', @changeUserStatus
 
   initCollections: ->
     @set 'users', new Tracktime.UsersCollection()
@@ -16,7 +20,7 @@ class Tracktime extends Backbone.Model
     @set 'actions', new Tracktime.ActionsCollection()
     @listenTo Tracktime.AppChannel, "isOnline", @updateApp
 
-  uninitCollections: ->
+  unsetCollections: ->
     @unset 'users'
     @unset 'actions'
     @unset 'records'
@@ -36,7 +40,7 @@ class Tracktime extends Backbone.Model
       @initCollections()
       Tracktime.AppChannel.command 'userAuth'
     else
-      @uninitCollections()
+      @unsetCollections()
       Tracktime.AppChannel.command 'userGuest'
 
 

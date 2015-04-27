@@ -32949,7 +32949,7 @@ this["JST"]["global/guest"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
   return "<div class=\"scrollWrapper\">\n    <div class=\"container\" style=\"padding: 0\">\n        <div id=\"main\">\n            <div class=\"panel panel-info\" style=\"width: 50%; margin: 0 auto;\">\n                <div class=\"panel-heading\">\n                    <h2>"
     + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
-    + "</h2>\n                    <ul class=\"nav nav-tabs navbar navbar-info\" style=\"margin-bottom: 1em\">\n                        <li class=\"active\"><a href=\"#login\" data-toggle=\"tab\">Log In</a></li>\n                        <li><a href=\"#signin\" data-toggle=\"tab\">Sign In</a></li>\n                        <li class=\"hidden\"><a href=\"#forgotpassword\" data-toggle=\"tab\">Forgot Password</a></li>\n                    </ul>\n                </div>\n                <div class='panel-body'>\n                    <div id=\"myTabContent\" class=\"tab-content\">\n                        <div class=\"tab-pane fade active in\" id=\"login\">\n                            <form class=\"form-horizontal\" method=\"post\">\n                                <fieldset>\n                                    <legend>Log In</legend>\n                                    <div class=\"form-group\">\n                                        <div class=\"col-lg-12\">\n                                            <input type=\"email\" name=\"email\" id=\"loginEmail\" class=\"form-control input-lg floating-label\" data-hint=\"Test email: bob@example.com\" placeholder=\"Email\" value=\"irina@webperfectionist.net\">\n\n                                        </div>\n                                    </div>\n                                    <br>\n                                    <div class=\"form-group\">\n                                        <div class=\"col-lg-12\">\n                                            <input type=\"password\" class=\"form-control input-lg floating-label\" name=\"password\" id=\"loginPassword\" placeholder=\"Password\" data-hint=\"Test password: secret\" value=\"******\">\n                                        </div>\n                                    </div>\n                                    <div class=\"form-group hidden\">\n                                        <label class=\"col-lg-2 control-label\"></label>\n                                        <div class=\"col-lg-10\">\n                                            <div class=\"togglebutton\">\n                                                <label>\n                                                    <input type=\"checkbox\" checked=\"\"> Toggle button\n                                                </label>\n                                            </div>\n                                        </div>\n                                    </div>\n                                    <div class=\"form-group\">\n                                        <div class=\"col-lg-12\">\n                                            <button type=\"submit\" class=\"btn btn-lg btn-block btn-login btn-info\">Log In</button>\n                                        </div>\n                                    </div>\n                                </fieldset>\n                            </form>\n                        </div>\n                        <div class=\"tab-pane fade\" id=\"signin\">\n                            <form class=\"form-horizontal\">\n                                <fieldset>\n                                    <legend>Sign In</legend>\n                                    <div class=\"form-group\">\n                                        <label for=\"inputEmail\" class=\"col-lg-2 control-label\">Email</label>\n                                        <div class=\"col-lg-10\">\n                                            <input type=\"email\" class=\"form-control\" id=\"inputEmail\" placeholder=\"Email\">\n                                        </div>\n                                    </div>\n                                    <div class=\"form-group\">\n                                        <label for=\"inputPassword\" class=\"col-lg-2 control-label\">Password</label>\n                                        <div class=\"col-lg-10\">\n                                            <input type=\"password\" class=\"form-control\" id=\"inputPassword\" placeholder=\"Password\">\n                                        </div>\n                                    </div>\n                                    <div class=\"form-group\">\n                                        <label for=\"repeatPassword\" class=\"col-lg-2 control-label\">Repeat Password</label>\n                                        <div class=\"col-lg-10\">\n                                            <input type=\"password\" class=\"form-control\" id=\"repeatPassword\" placeholder=\"Repeat Password\">\n                                        </div>\n                                    </div>\n                                    <div class=\"form-group\">\n                                        <div class=\"col-lg-12\">\n                                            <button class=\"btn btn-lg btn-block btn-signin btn-info\">Sign In</button>\n                                        </div>\n                                    </div>\n                                </fieldset>\n                            </form>\n                        </div>\n                        <div class=\"tab-pane fade\" id=\"forgotpassword\">\n                            <form class=\"form-horizontal\">\n                                <fieldset>\n                                    <legend>Forgot Password</legend>\n                                    <div class=\"form-group\">\n                                        <label for=\"inputEmail\" class=\"col-lg-2 control-label\">Email</label>\n                                        <div class=\"col-lg-10\">\n                                            <input type=\"email\" class=\"form-control\" id=\"inputEmail\" placeholder=\"Email\">\n                                        </div>\n                                    </div>\n                                    <div class=\"form-group\">\n                                        <div class=\"col-lg-12\">\n                                            <button class=\"btn btn-lg btn-block btn-forgotpassword btn-info\">Send</button>\n                                        </div>\n                                    </div>\n                                </fieldset>\n                            </form>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n    <footer id=\"footer\">\n    </footer>\n</div>";
+    + "</h2>\n                    <ul class=\"nav nav-tabs navbar navbar-info\" style=\"margin-bottom: 1em\">\n                        <li class=\"active\"><a href=\"#login\" data-toggle=\"tab\">Log In</a></li>\n                        <li><a href=\"#signin\" data-toggle=\"tab\">Sign In</a></li>\n                        <li class=\"hidden\"><a href=\"#forgotpassword\" data-toggle=\"tab\">Forgot Password</a></li>\n                    </ul>\n                </div>\n                <div class='panel-body'>\n                    <div id=\"myTabContent\" class=\"tab-content\">\n                        <div class=\"tab-pane fade active in\" id=\"login\">\n                            <form class=\"form-horizontal\" method=\"post\" method=\"post\">\n                                <fieldset>\n                                    <legend>Log In</legend>\n                                    <div class=\"form-group\">\n                                        <div class=\"col-lg-12\">\n                                            <input type=\"email\" name=\"email\" id=\"loginEmail\" class=\"form-control input-lg floating-label\" data-hint=\"Test email: bob@example.com\" placeholder=\"Email\" value=\"irina@webperfectionist.net\">\n\n                                        </div>\n                                    </div>\n                                    <br>\n                                    <div class=\"form-group\">\n                                        <div class=\"col-lg-12\">\n                                            <input type=\"password\" class=\"form-control input-lg floating-label\" name=\"password\" id=\"loginPassword\" placeholder=\"Password\" data-hint=\"Test password: secret\" value=\"******\">\n                                        </div>\n                                    </div>\n                                    <div class=\"form-group hidden\">\n                                        <label class=\"col-lg-2 control-label\"></label>\n                                        <div class=\"col-lg-10\">\n                                            <div class=\"togglebutton\">\n                                                <label>\n                                                    <input type=\"checkbox\" checked=\"\"> Toggle button\n                                                </label>\n                                            </div>\n                                        </div>\n                                    </div>\n                                    <div class=\"form-group\">\n                                        <div class=\"col-lg-12\">\n                                            <button type=\"submit\" class=\"btn btn-lg btn-block btn-login btn-info\">Log In</button>\n                                        </div>\n                                    </div>\n                                </fieldset>\n                            </form>\n                        </div>\n                        <div class=\"tab-pane fade\" id=\"signin\">\n                            <form class=\"form-horizontal\" method=\"post\">\n                                <fieldset>\n                                    <legend>Sign In</legend>\n                                    <div class=\"form-group\">\n                                        <div class=\"col-lg-6\">\n                                            <input type=\"text\" name=\"first_name\" id=\"signinFirstName\" class=\"form-control input-lg floating-label\" placeholder=\"First Name\" value=\"\">\n                                        </div>\n                                        <div class=\"col-lg-6\">\n                                            <input type=\"text\" name=\"last_name\" id=\"signinLastName\" class=\"form-control input-lg floating-label\" placeholder=\"Last Name\" value=\"\">\n                                        </div>\n                                    </div>\n                                    <div class=\"form-group\">\n                                        <div class=\"col-lg-12\">\n                                            <input type=\"email\" name=\"email\" id=\"signinEmail\" class=\"form-control input-lg floating-label\" placeholder=\"Email\" value=\"\">\n                                        </div>\n                                    </div>\n                                    <div class=\"form-group\">\n                                        <div class=\"col-lg-12\">\n                                            <input type=\"password\" class=\"form-control input-lg floating-label\" name=\"password\" id=\"signinPassword\" placeholder=\"Password\">\n                                        </div>\n                                    </div>\n                                    <div class=\"form-group\">\n                                        <div class=\"col-lg-12\">\n                                            <input type=\"password\" class=\"form-control input-lg floating-label\" name=\"repassword\" id=\"signinRePassword\" placeholder=\"Repeat Password\">\n                                        </div>\n                                    </div>\n                                    <div class=\"form-group\">\n                                        <div class=\"col-lg-12\">\n                                            <button type=\"submit\" class=\"btn btn-lg btn-block btn-signin btn-info\">Sign In</button>\n                                        </div>\n                                    </div>\n                                </fieldset>\n                            </form>\n                        </div>\n                        <div class=\"tab-pane fade\" id=\"forgotpassword\">\n                            <form class=\"form-horizontal\" method=\"post\">\n                                <fieldset>\n                                    <legend>Forgot Password</legend>\n                                    <div class=\"form-group\">\n                                        <label for=\"inputEmail\" class=\"col-lg-2 control-label\">Email</label>\n                                        <div class=\"col-lg-10\">\n                                            <input type=\"email\" class=\"form-control\" id=\"inputEmail\" placeholder=\"Email\">\n                                        </div>\n                                    </div>\n                                    <div class=\"form-group\">\n                                        <div class=\"col-lg-12\">\n                                            <button class=\"btn btn-lg btn-block btn-forgotpassword btn-info\">Send</button>\n                                        </div>\n                                    </div>\n                                </fieldset>\n                            </form>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n    <footer id=\"footer\">\n    </footer>\n</div>";
 },"useData":true});
 
 this["JST"]["layout/footer"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
@@ -33233,13 +33233,17 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     Tracktime.prototype.urlRoot = config.SERVER;
 
     Tracktime.prototype.defaults = {
-      title: "TrackTime App",
+      title: 'TrackTime App',
       authUser: null
     };
 
     Tracktime.prototype.initialize = function() {
       this.set('authUser', new Tracktime.User.Auth());
-      return this.listenTo(this.get('authUser'), 'change:authorized', this.changeUserStatus);
+      this.listenTo(this.get('authUser'), 'change:authorized', this.changeUserStatus);
+      return this.listenTo(this.get('authUser'), 'destroy', function() {
+        this.set('authUser', new Tracktime.User.Auth());
+        return this.listenTo(this.get('authUser'), 'change:authorized', this.changeUserStatus);
+      });
     };
 
     Tracktime.prototype.initCollections = function() {
@@ -33250,7 +33254,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       return this.listenTo(Tracktime.AppChannel, "isOnline", this.updateApp);
     };
 
-    Tracktime.prototype.uninitCollections = function() {
+    Tracktime.prototype.unsetCollections = function() {
       this.unset('users');
       this.unset('actions');
       this.unset('records');
@@ -33273,7 +33277,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
         this.initCollections();
         return Tracktime.AppChannel.command('userAuth');
       } else {
-        this.uninitCollections();
+        this.unsetCollections();
         return Tracktime.AppChannel.command('userGuest');
       }
     };
@@ -34156,10 +34160,29 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       return Auth.__super__.constructor.apply(this, arguments);
     }
 
+    Auth.prototype.idAttribute = "_id";
+
     Auth.prototype.urlRoot = config.SERVER + '/' + '';
 
     Auth.prototype.defaults = {
-      authorized: false
+      authorized: null
+    };
+
+    Auth.prototype.initialize = function() {
+      return this.fetch({
+        ajaxSync: true,
+        url: config.SERVER + '/auth_user',
+        success: (function(_this) {
+          return function(model, response, options) {
+            return _this.set('authorized', true);
+          };
+        })(this),
+        error: (function(_this) {
+          return function(model, response, options) {
+            return _this.set('authorized', false);
+          };
+        })(this)
+      });
     };
 
     Auth.prototype.login = function(params) {
@@ -34189,9 +34212,15 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     };
 
     Auth.prototype.signin = function(params) {
+      _.extend(params, {
+        status: 'active',
+        k_status: 'active',
+        lastAccess: (new Date()).toISOString(),
+        isDeleted: 'false'
+      });
       return this.save(params, {
         ajaxSync: true,
-        url: config.SERVER + '/signin',
+        url: config.SERVER + '/register',
         success: (function(_this) {
           return function(model, response, options) {
             _this.set(response);
@@ -34211,7 +34240,22 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
     Auth.prototype.logout = function() {
       $.alert("Goodbay, " + (this.get('first_name')) + " " + (this.get('last_name')) + "!");
-      return this.clear();
+      this.set('authorized', false);
+      return this.destroy({
+        ajaxSync: true,
+        url: config.SERVER + '/logout/' + this.id,
+        success: (function(_this) {
+          return function(model, response, options) {
+            window.location.href = '#';
+            return window.location.reload();
+          };
+        })(this),
+        error: (function(_this) {
+          return function(model, response, options) {
+            return console.log('logout error');
+          };
+        })(this)
+      });
     };
 
     return Auth;
@@ -34502,7 +34546,6 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       this.model = new Tracktime();
       this.bindComply();
       this.bindRequest();
-      this.model.setUsetStatus(false);
       return this;
     },
     checkOnline: function() {
@@ -35858,17 +35901,74 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       return Signin.__super__.constructor.apply(this, arguments);
     }
 
-    Signin.prototype.el = '#signin';
+    Signin.prototype.el = '#signin > form';
 
     Signin.prototype.events = {
-      'click .btn-signin': 'signinProcess'
+      'submit': 'signinProcess'
     };
 
-    Signin.prototype.initialize = function() {};
+    Signin.prototype.initialize = function() {
+      return this.listenTo(this.model.get('authUser'), 'flash', this.showFlash);
+    };
 
     Signin.prototype.signinProcess = function(event) {
       event.preventDefault();
-      return $.alert('signin process');
+      if (this.checkInput()) {
+        return this.model.get('authUser').signin({
+          first_name: $('[name=first_name]', this.$el).val(),
+          last_name: $('[name=last_name]', this.$el).val(),
+          email: $('[name=email]', this.$el).val(),
+          password: $('[name=password]', this.$el).val()
+        });
+      }
+    };
+
+    Signin.prototype.checkInput = function() {
+      var result;
+      result = true;
+      if (_.isEmpty($('[name=first_name]', this.$el).val())) {
+        this.showFlash({
+          scope: "Signin",
+          msg: 'First Name empty'
+        });
+        result = false;
+      }
+      if (_.isEmpty($('[name=last_name]', this.$el).val())) {
+        this.showFlash({
+          scope: "Signin",
+          msg: 'Last Name empty'
+        });
+        result = false;
+      }
+      if (_.isEmpty($('[name=email]', this.$el).val())) {
+        this.showFlash({
+          scope: "Signin",
+          msg: 'Email empty'
+        });
+        result = false;
+      }
+      if (_.isEmpty($('[name=password]', this.$el).val())) {
+        this.showFlash({
+          scope: "Signin",
+          msg: 'Password empty'
+        });
+        result = false;
+      }
+      if ($('[name=password]', this.$el).val() !== $('[name=repassword]', this.$el).val()) {
+        this.showFlash({
+          scope: "Signin",
+          msg: 'Repassword incorrect'
+        });
+        result = false;
+      }
+      return result;
+    };
+
+    Signin.prototype.showFlash = function(message) {
+      return $.alert({
+        content: message.scope.capitalizeFirstLetter() + (" Error: " + message.msg),
+        style: "btn-danger"
+      });
     };
 
     return Signin;

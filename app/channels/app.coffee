@@ -13,7 +13,6 @@ _.extend Tracktime.AppChannel,
     @model = new Tracktime()
     @bindComply()
     @bindRequest()
-    @model.setUsetStatus false
     return @
 
   checkOnline: ->
