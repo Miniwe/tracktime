@@ -114,11 +114,9 @@ _.extend Tracktime.AppChannel,
 
     if status == true
       @router = new Tracktime.AppRouter model: @model
-      @router.navigate '/user/rates', true
       @trigger 'isOnline', @isOnline
     else
       @router = new Tracktime.GuestRouter model: @model
-      @router.navigate '/', true
 
 
 

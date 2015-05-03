@@ -12,6 +12,7 @@ class Tracktime.AppRouter extends Backbone.Router
     @on 'route', (route, params) =>
       @removeActionsExcept(route) unless route.substr(0,6) == 'invoke'
     @initInterface()
+    @navigate 'projects', trigger: true, replace: false
 
   addListener: (subroute, scope) ->
     @listenTo subroute, 'route', (route, params) =>
@@ -45,7 +46,7 @@ class Tracktime.AppRouter extends Backbone.Router
     @view.initUI()
 
   index: ->
-    @navigate 'projects', trigger: true, replace: false
+    # @navigate 'projects', trigger: true, replace: false
 
   default: (actions) ->
     $.alert 'Unknown page'

@@ -65,8 +65,8 @@ class Tracktime extends Backbone.Model
 
   updateApp: ->
     @get('users').fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
-    # @get('records').fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
-    # @get('projects').fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
+    @get('records').fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
+    @get('projects').fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
 
   changeUserStatus: ->
     @setUsetStatus @get('authUser').get('authorized')
@@ -965,11 +965,9 @@ _.extend Tracktime.AppChannel,
 
     if status == true
       @router = new Tracktime.AppRouter model: @model
-      @router.navigate '/user/rates', true
       @trigger 'isOnline', @isOnline
     else
       @router = new Tracktime.GuestRouter model: @model
-      @router.navigate '/', true
 
 
 
@@ -2336,6 +2334,7 @@ class Tracktime.AppRouter extends Backbone.Router
     @on 'route', (route, params) =>
       @removeActionsExcept(route) unless route.substr(0,6) == 'invoke'
     @initInterface()
+    @navigate 'projects', trigger: true, replace: false
 
   addListener: (subroute, scope) ->
     @listenTo subroute, 'route', (route, params) =>
@@ -2369,7 +2368,7 @@ class Tracktime.AppRouter extends Backbone.Router
     @view.initUI()
 
   index: ->
-    @navigate 'projects', trigger: true, replace: false
+    # @navigate 'projects', trigger: true, replace: false
 
   default: (actions) ->
     $.alert 'Unknown page'
@@ -2393,6 +2392,7 @@ class Tracktime.GuestRouter extends Backbone.Router
     _.extend @, options
 
     @initInterface()
+    @navigate '/', trigger: true, replace: false
 
   initInterface: () ->
     @view = new Tracktime.GuestView model: @model

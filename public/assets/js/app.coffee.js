@@ -90,7 +90,13 @@
     };
 
     Tracktime.prototype.updateApp = function() {
-      return this.get('users').fetch({
+      this.get('users').fetch({
+        ajaxSync: Tracktime.AppChannel.request('isOnline')
+      });
+      this.get('records').fetch({
+        ajaxSync: Tracktime.AppChannel.request('isOnline')
+      });
+      return this.get('projects').fetch({
         ajaxSync: Tracktime.AppChannel.request('isOnline')
       });
     };
@@ -1515,13 +1521,11 @@
         this.router = new Tracktime.AppRouter({
           model: this.model
         });
-        this.router.navigate('/user/rates', true);
         return this.trigger('isOnline', this.isOnline);
       } else {
-        this.router = new Tracktime.GuestRouter({
+        return this.router = new Tracktime.GuestRouter({
           model: this.model
         });
-        return this.router.navigate('/', true);
       }
     }
   });
@@ -3745,7 +3749,11 @@
           }
         };
       })(this));
-      return this.initInterface();
+      this.initInterface();
+      return this.navigate('projects', {
+        trigger: true,
+        replace: false
+      });
     };
 
     AppRouter.prototype.addListener = function(subroute, scope) {
@@ -3806,12 +3814,7 @@
       return this.view.initUI();
     };
 
-    AppRouter.prototype.index = function() {
-      return this.navigate('projects', {
-        trigger: true,
-        replace: false
-      });
-    };
+    AppRouter.prototype.index = function() {};
 
     AppRouter.prototype["default"] = function(actions) {
       $.alert('Unknown page');
@@ -3848,7 +3851,11 @@
 
     GuestRouter.prototype.initialize = function(options) {
       _.extend(this, options);
-      return this.initInterface();
+      this.initInterface();
+      return this.navigate('/', {
+        trigger: true,
+        replace: false
+      });
     };
 
     GuestRouter.prototype.initInterface = function() {

@@ -7,6 +7,7 @@ class Tracktime.GuestRouter extends Backbone.Router
     _.extend @, options
 
     @initInterface()
+    @navigate '/', trigger: true, replace: false
 
   initInterface: () ->
     @view = new Tracktime.GuestView model: @model
