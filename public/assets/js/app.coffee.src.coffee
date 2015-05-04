@@ -933,6 +933,7 @@ _.extend Tracktime.AppChannel,
       pushState: false
 
   newRecord: (options) ->
+    _.extend options, user: @model.get('authUser').id
     @model.get('records').addRecord(options)
 
   newProject: (options) ->

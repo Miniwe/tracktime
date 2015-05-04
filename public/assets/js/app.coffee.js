@@ -1487,6 +1487,9 @@
       });
     },
     newRecord: function(options) {
+      _.extend(options, {
+        user: this.model.get('authUser').id
+      });
       return this.model.get('records').addRecord(options);
     },
     newProject: function(options) {
