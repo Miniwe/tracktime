@@ -2,6 +2,7 @@ class Tracktime.AppRouter extends Backbone.Router
   routes:
     '':                  'index'                #index
     'projects*subroute': 'invokeProjectsRouter' #Projects
+    'records*subroute':  'invokeRecordsRouter' #Projects
     'reports*subroute':  'invokeReportsRouter'  #Reports
     'user*subroute':     'invokeUserRouter'     #User
     'admin*subroute':    'invokeAdminRouter'    #Admin
@@ -23,6 +24,11 @@ class Tracktime.AppRouter extends Backbone.Router
     unless @projectsRouter
       @projectsRouter = new Tracktime.ProjectsRouter 'projects', parent: @
       @addListener @projectsRouter, 'projects'
+
+  invokeRecordsRouter: (subroute) ->
+    unless @recordsRouter
+      @recordsRouter = new Tracktime.RecordsRouter 'records', parent: @
+      @addListener @recordsRouter, 'records'
 
   invokeReportsRouter: (subroute) ->
     unless @reportsRouter

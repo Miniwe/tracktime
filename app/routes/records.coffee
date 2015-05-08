@@ -1,20 +1,21 @@
-class Tracktime.RecordsRouter extends Backbone.Router
+class Tracktime.RecordsRouter extends Backbone.SubRoute
   routes:
     '':             'list'
-    ':id':         'details'
-    ':id/edit':    'edit'
-    ':id/delete':  'delete'
-    ':id/add':     'add'
-    ':id/save':    'save'
+    ':id':          'details'
+    ':id/edit':     'edit'
+    ':id/delete':   'delete'
+    ':id/add':      'add'
+    ':id/save':     'save'
 
   initialize: (options) ->
     _.extend @, options
 
   list: () ->
-    $.alert "records list"
+    $.alert "whole records list in records section"
+    @parent.view.setSubView 'main', new Tracktime.RecordsView collection: @parent.model.get 'records'
 
   details: (id) ->
-    $.alert "records detaids #{id}"
+    @parent.view.setSubView 'main', new Tracktime.RecordsView collection: @parent.model.get 'records'
 
   edit: (id) ->
     $.alert "records edit #{id}"

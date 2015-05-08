@@ -2325,6 +2325,7 @@ class Tracktime.AppRouter extends Backbone.Router
   routes:
     '':                  'index'                #index
     'projects*subroute': 'invokeProjectsRouter' #Projects
+    'records*subroute':  'invokeRecordsRouter' #Projects
     'reports*subroute':  'invokeReportsRouter'  #Reports
     'user*subroute':     'invokeUserRouter'     #User
     'admin*subroute':    'invokeAdminRouter'    #Admin
@@ -2346,6 +2347,11 @@ class Tracktime.AppRouter extends Backbone.Router
     unless @projectsRouter
       @projectsRouter = new Tracktime.ProjectsRouter 'projects', parent: @
       @addListener @projectsRouter, 'projects'
+
+  invokeRecordsRouter: (subroute) ->
+    unless @recordsRouter
+      @recordsRouter = new Tracktime.RecordsRouter 'records', parent: @
+      @addListener @recordsRouter, 'records'
 
   invokeReportsRouter: (subroute) ->
     unless @reportsRouter
@@ -2448,23 +2454,24 @@ class Tracktime.ProjectsRouter extends Backbone.SubRoute
 
 (module?.exports = Tracktime.ProjectsRouter) or @Tracktime.ProjectsRouter = Tracktime.ProjectsRouter
 
-class Tracktime.RecordsRouter extends Backbone.Router
+class Tracktime.RecordsRouter extends Backbone.SubRoute
   routes:
     '':             'list'
-    ':id':         'details'
-    ':id/edit':    'edit'
-    ':id/delete':  'delete'
-    ':id/add':     'add'
-    ':id/save':    'save'
+    ':id':          'details'
+    ':id/edit':     'edit'
+    ':id/delete':   'delete'
+    ':id/add':      'add'
+    ':id/save':     'save'
 
   initialize: (options) ->
     _.extend @, options
 
   list: () ->
-    $.alert "records list"
+    $.alert "whole records list in records section"
+    @parent.view.setSubView 'main', new Tracktime.RecordsView collection: @parent.model.get 'records'
 
   details: (id) ->
-    $.alert "records detaids #{id}"
+    @parent.view.setSubView 'main', new Tracktime.RecordsView collection: @parent.model.get 'records'
 
   edit: (id) ->
     $.alert "records edit #{id}"

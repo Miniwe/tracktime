@@ -3737,6 +3737,7 @@
     AppRouter.prototype.routes = {
       '': 'index',
       'projects*subroute': 'invokeProjectsRouter',
+      'records*subroute': 'invokeRecordsRouter',
       'reports*subroute': 'invokeReportsRouter',
       'user*subroute': 'invokeUserRouter',
       'admin*subroute': 'invokeAdminRouter',
@@ -3770,6 +3771,15 @@
           parent: this
         });
         return this.addListener(this.projectsRouter, 'projects');
+      }
+    };
+
+    AppRouter.prototype.invokeRecordsRouter = function(subroute) {
+      if (!this.recordsRouter) {
+        this.recordsRouter = new Tracktime.RecordsRouter('records', {
+          parent: this
+        });
+        return this.addListener(this.recordsRouter, 'records');
       }
     };
 
@@ -3950,11 +3960,16 @@
     };
 
     RecordsRouter.prototype.list = function() {
-      return $.alert("records list");
+      $.alert("whole records list in records section");
+      return this.parent.view.setSubView('main', new Tracktime.RecordsView({
+        collection: this.parent.model.get('records')
+      }));
     };
 
     RecordsRouter.prototype.details = function(id) {
-      return $.alert("records detaids " + id);
+      return this.parent.view.setSubView('main', new Tracktime.RecordsView({
+        collection: this.parent.model.get('records')
+      }));
     };
 
     RecordsRouter.prototype.edit = function(id) {
@@ -3975,7 +3990,7 @@
 
     return RecordsRouter;
 
-  })(Backbone.Router);
+  })(Backbone.SubRoute);
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.RecordsRouter : void 0) || (this.Tracktime.RecordsRouter = Tracktime.RecordsRouter);
 

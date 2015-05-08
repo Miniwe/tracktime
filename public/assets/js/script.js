@@ -32998,7 +32998,7 @@ this["JST"]["layout/menu"] = Handlebars.template({"1":function(depth0,helpers,pa
     + "\n            </div>\n        </div>\n    </div>\n    <div class=\"panel panel-default\">\n        <a class=\"btn btn-primary btn-block\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#projects-section\" aria-expanded=\"true\" aria-controls=\"projects-section\" role=\"tab\" id=\"headingProjects\">\n      Projects\n    </a>\n        <div id=\"projects-section\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingProjects\">\n            <div class=\"list-style-group\">\n                "
     + escapeExpression(((helpers.link_to || (depth0 && depth0.link_to) || helperMissing).call(depth0, {"name":"link_to","hash":{
     'body': ("All Records"),
-    'href': ("#projects"),
+    'href': ("#records"),
     'class': ("list-group-item")
   },"data":data})))
     + "\n\n            </div>\n        </div>\n    </div>\n    <div class=\"panel panel-default\">\n        <a class=\"btn btn-material-purple btn-block\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#reports-section\" aria-expanded=\"true\" aria-controls=\"reports-section\" role=\"tab\" id=\"headingReports\">\n      Reports\n    </a>\n        <div id=\"reports-section\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingReports\">\n            <div class=\"list-style-group\">\n                "
@@ -33090,11 +33090,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     + escapeExpression(((helper = (helper = helpers.recordDate || (depth0 != null ? depth0.recordDate : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"recordDate","hash":{},"data":data}) : helper)))
     + "</span>\n      &#0160;\n      <span title=\"Record Time\"><i class=\"mdi-action-schedule\"></i>"
     + escapeExpression(((helpers.minuteFormat || (depth0 && depth0.minuteFormat) || helperMissing).call(depth0, (depth0 != null ? depth0.recordTime : depth0), {"name":"minuteFormat","hash":{},"data":data})))
-    + "</span>\n      &#0160;\n      "
-    + escapeExpression(((helper = (helper = helpers.user || (depth0 != null ? depth0.user : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"user","hash":{},"data":data}) : helper)))
-    + " / "
-    + escapeExpression(((helper = (helper = helpers.project || (depth0 != null ? depth0.project : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"project","hash":{},"data":data}) : helper)))
-    + "\n    </p>\n    "
+    + "</span>\n    </p>\n    "
     + escapeExpression(((helpers.placeholder || (depth0 && depth0.placeholder) || helperMissing).call(depth0, "textarea", {"name":"placeholder","hash":{},"data":data})))
     + "\n    <div class=\"subject\" style=\"border: none;\">"
     + escapeExpression(((helpers.nl2br || (depth0 && depth0.nl2br) || helperMissing).call(depth0, (depth0 != null ? depth0.subject : depth0), {"name":"nl2br","hash":{},"data":data})))
@@ -36914,6 +36910,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     AppRouter.prototype.routes = {
       '': 'index',
       'projects*subroute': 'invokeProjectsRouter',
+      'records*subroute': 'invokeRecordsRouter',
       'reports*subroute': 'invokeReportsRouter',
       'user*subroute': 'invokeUserRouter',
       'admin*subroute': 'invokeAdminRouter',
@@ -36947,6 +36944,15 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
           parent: this
         });
         return this.addListener(this.projectsRouter, 'projects');
+      }
+    };
+
+    AppRouter.prototype.invokeRecordsRouter = function(subroute) {
+      if (!this.recordsRouter) {
+        this.recordsRouter = new Tracktime.RecordsRouter('records', {
+          parent: this
+        });
+        return this.addListener(this.recordsRouter, 'records');
       }
     };
 
@@ -37127,11 +37133,16 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     };
 
     RecordsRouter.prototype.list = function() {
-      return $.alert("records list");
+      $.alert("whole records list in records section");
+      return this.parent.view.setSubView('main', new Tracktime.RecordsView({
+        collection: this.parent.model.get('records')
+      }));
     };
 
     RecordsRouter.prototype.details = function(id) {
-      return $.alert("records detaids " + id);
+      return this.parent.view.setSubView('main', new Tracktime.RecordsView({
+        collection: this.parent.model.get('records')
+      }));
     };
 
     RecordsRouter.prototype.edit = function(id) {
@@ -37152,7 +37163,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
     return RecordsRouter;
 
-  })(Backbone.Router);
+  })(Backbone.SubRoute);
 
   (typeof module !== "undefined" && module !== null ? module.exports = Tracktime.RecordsRouter : void 0) || (this.Tracktime.RecordsRouter = Tracktime.RecordsRouter);
 
