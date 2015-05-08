@@ -2335,7 +2335,8 @@ class Tracktime.AppRouter extends Backbone.Router
     @on 'route', (route, params) =>
       @removeActionsExcept(route) unless route.substr(0,6) == 'invoke'
     @initInterface()
-    @navigate 'projects', trigger: true, replace: false
+    # @navigate 'projects', trigger: true, replace: false
+    Backbone.history.loadUrl(Backbone.history.fragment);
 
   addListener: (subroute, scope) ->
     @listenTo subroute, 'route', (route, params) =>
@@ -2393,7 +2394,8 @@ class Tracktime.GuestRouter extends Backbone.Router
     _.extend @, options
 
     @initInterface()
-    @navigate '/', trigger: true, replace: false
+    # @navigate '/', trigger: true, replace: false
+    Backbone.history.loadUrl(Backbone.history.fragment);
 
   initInterface: () ->
     @view = new Tracktime.GuestView model: @model

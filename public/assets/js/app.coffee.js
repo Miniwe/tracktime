@@ -3753,10 +3753,7 @@
         };
       })(this));
       this.initInterface();
-      return this.navigate('projects', {
-        trigger: true,
-        replace: false
-      });
+      return Backbone.history.loadUrl(Backbone.history.fragment);
     };
 
     AppRouter.prototype.addListener = function(subroute, scope) {
@@ -3855,10 +3852,7 @@
     GuestRouter.prototype.initialize = function(options) {
       _.extend(this, options);
       this.initInterface();
-      return this.navigate('/', {
-        trigger: true,
-        replace: false
-      });
+      return Backbone.history.loadUrl(Backbone.history.fragment);
     };
 
     GuestRouter.prototype.initInterface = function() {
