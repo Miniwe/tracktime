@@ -31,9 +31,11 @@ class Tracktime.Record extends Tracktime.Model
     # @todo add good validation
     true
 
+  isSatisfied: (filter) ->
+    _.isMatch @attributes, filter
+
   updateLastAccess: () ->
     @set 'lastAccess', (new Date()).toISOString()
-
 
   changeIsEdit: ->
     if @isEdit

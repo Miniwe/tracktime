@@ -129,6 +129,9 @@ Backbone.ViewMixin =
   close: () ->
     @onClose() if @onClose
 
+    if @container?
+      $(@container).unbind()
+
     @undelegateEvents()
     @$el.removeData().unbind()
     @remove()
@@ -137,8 +140,11 @@ Backbone.ViewMixin =
 
   onClose: ->
     for own key, view of @views
-      view.close(key)
+      view.close()
       delete @views[key]
+
+  clear: ->
+    @onClose()
 
   setSubView: (key, view) ->
     @views[key].close() if key of @views
@@ -189,6 +195,18 @@ Handlebars.registerHelper 'minuteFormat', (val) ->
 Handlebars.registerHelper 'placeholder', (name) ->
   placeholder = "<placeholder id='#{name}'></placeholder>"
   new Handlebars.SafeString placeholder
+
+Handlebars.registerHelper 'filteredHref', (options) ->
+  parsedFilter = {}
+  _.extend(parsedFilter, options.hash.filter) if 'filter' of options.hash
+  _.extend(parsedFilter, {user: options.hash.user}) if 'user' of options.hash
+  _.extend(parsedFilter, {project: options.hash.project}) if 'project' of options.hash
+  delete parsedFilter[options.hash.exclude] if 'exclude' of options.hash and options.hash.exclude of parsedFilter
+  if _.keys(parsedFilter).length > 0
+    '/' + _.map(parsedFilter, (value,key) -> "#{key}/#{value}").join '/'
+  else
+    ''
+
 (($) ->
   snackbarOptions =
     content: ''
@@ -593,9 +611,11 @@ class Tracktime.Record extends Tracktime.Model
     # @todo add good validation
     true
 
+  isSatisfied: (filter) ->
+    _.isMatch @attributes, filter
+
   updateLastAccess: () ->
     @set 'lastAccess', (new Date()).toISOString()
-
 
   changeIsEdit: ->
     if @isEdit
@@ -795,10 +815,39 @@ class Tracktime.RecordsCollection extends Tracktime.Collection
   localStorage: new Backbone.LocalStorage @collectionName
 
   initialize: () ->
+    @filter = {}
+    @defaultFilter = isDeleted: false
     # @fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
 
   comparator: (model) ->
     - (new Date(model.get('date'))).getTime()
+
+  setFilter: (filter) ->
+    @resetFilter()
+    unless filter == null
+      pairs = filter.match(/((user|project)\/[a-z0-9A-Z]{24})+/g)
+      if pairs
+        _.each pairs, (pair, index) ->
+          _p = pair.split '/'
+          @filter[_p[0]] = _p[1]
+        , @
+    @filter
+
+  resetFilter: ->
+    @filter = _.clone @defaultFilter
+
+  removeFilter: (key) ->
+    if key of @filter
+      delete @filter[key]
+
+  getFilter: (removeDefault = true) ->
+    result = {}
+    if removeDefault
+      keys = _.keys @defaultFilter
+      result = _.omit @filter, keys
+    else
+      result = @filter
+    result
 
   addRecord: (options) ->
     _.extend options, {date: (new Date()).toISOString()}
@@ -813,6 +862,13 @@ class Tracktime.RecordsCollection extends Tracktime.Collection
       success: success,
       error: error
 
+  getModels: ->
+    if @length > 0
+      fmodels = _.filter @models, (model) =>
+        model.isSatisfied @filter
+      return fmodels
+    else
+      return @models
 
 (module?.exports = Tracktime.RecordsCollection) or @Tracktime.RecordsCollection = Tracktime.RecordsCollection
 
@@ -1478,10 +1534,9 @@ class Tracktime.Element.ProjectDefinition extends Tracktime.Element
     menu.children().remove()
 
     @updateTitle()
-    sublist = @projectsList
-    if @projectsList.length > 20
-      sublist = _.first(@projectsList, 20)
 
+    sublist = @projectsList
+    console.log 'sublist', _.size(sublist), sublist
     for own key, value of sublist
       menu.append $("<li><a class='btn btn-white' data-project='#{key}' href='##{key}'>#{value}</a></li>")
 
@@ -1985,18 +2040,16 @@ class Tracktime.RecordView extends Backbone.View
     @listenTo @model, "sync", @syncModel
 
     @projects = Tracktime.AppChannel.request 'projects'
-    @projectsList = Tracktime.AppChannel.request 'projectsList'
     @projects.on 'sync', @renderProjectInfo
 
     @users = Tracktime.AppChannel.request 'users'
-    @usersList = Tracktime.AppChannel.request 'usersList'
     @users.on 'sync', @renderUserInfo
 
   attributes: ->
     id: @model.cid
 
   render: ->
-    @$el.html @template @model.toJSON()
+    @$el.html @template _.extend {filter: @model.collection.getFilter()}, @model.toJSON()
     $('.subject_edit', @$el)
       .on('keydown', @fixEnter)
       .textareaAutoSize()
@@ -2094,30 +2147,68 @@ class Tracktime.RecordsView extends Backbone.View
   template: JST['records/records']
   tagName: 'ul'
   className: 'list-group'
-  views: {}
 
   initialize: () ->
+    @views = {}
     @render()
-    @listenTo @collection, "reset", @resetRecordsList
+    # @listenTo @collection, "reset", @resetRecordsList
     @listenTo @collection, "add", @addRecord
     @listenTo @collection, "remove", @removeRecord
+    $('.removeFilter', @container).on 'click', @removeFilter
+
+    @projects = Tracktime.AppChannel.request 'projects'
+    @projects.on 'sync', @updateProjectInfo
+
+    @users = Tracktime.AppChannel.request 'users'
+    @users.on 'sync', @updateUserInfo
 
   render: () ->
     $(@container).html @$el.html ''
-    @$el.before @template {title: 'Records'}
+    @$el.before @template {title: 'Records', filter: @collection.getFilter()}
     @resetRecordsList()
+    @updateProjectInfo()
+    @updateUserInfo()
 
   resetRecordsList: () ->
-    _.each @collection.where(isDeleted: false), (record) =>
-      recordView =  new Tracktime.RecordView { model: record }
-      @$el.append recordView.el
-      @setSubView "record-#{record.cid}", recordView
+    # @clear()
+    frag = document.createDocumentFragment()
+    models = @collection.getModels()
+    _.each models, (record) ->
+      recordView = @setSubView "record-#{record.cid}", new Tracktime.RecordView model: record
+      frag.appendChild recordView.el
     , @
+    @$el.append frag
+
+  updateProjectInfo: ->
+    @projectsList = Tracktime.AppChannel.request 'projectsList'
+    key = $('.removeFilter[data-exclude=project]', @container).data('value')
+    if key of @projectsList
+      $('.removeFilter[data-exclude=project] .caption', @container).text @projectsList[key]
+
+  updateUserInfo: ->
+    @usersList = Tracktime.AppChannel.request 'usersList'
+    key = $('.removeFilter[data-exclude=user]', @container).data('value')
+    if key of @usersList
+      $('.removeFilter[data-exclude=user] .caption', @container).text @usersList[key]
 
   addRecord: (record, collection, params) ->
-    recordView = new Tracktime.RecordView { model: record }
-    $(recordView.el).prependTo @$el
-    @setSubView "record-#{record.cid}", recordView
+    if record.isSatisfied @collection.filter
+      recordView = new Tracktime.RecordView { model: record }
+      $(recordView.el).prependTo @$el
+      @setSubView "record-#{record.cid}", recordView
+
+  removeFilter: (event) =>
+    key = $(event.currentTarget).data('exclude')
+    # remove key from collection filter
+    @collection.removeFilter key
+    # remove all records from list
+    @$el.find('.list-group > li').remove()
+    # refresh filter list in header
+    $(event.currentTarget).remove()
+    # add records by filter from collection
+    @resetRecordsList()
+
+
 
   removeRecord: (record, args...) ->
     recordView = @getSubView "record-#{record.cid}"
@@ -2457,6 +2548,7 @@ class Tracktime.ProjectsRouter extends Backbone.SubRoute
 class Tracktime.RecordsRouter extends Backbone.SubRoute
   routes:
     '':             'list'
+    '*filter':      'listFilter'
     ':id':          'details'
     ':id/edit':     'edit'
     ':id/delete':   'delete'
@@ -2468,9 +2560,18 @@ class Tracktime.RecordsRouter extends Backbone.SubRoute
 
   list: () ->
     $.alert "whole records list in records section"
-    @parent.view.setSubView 'main', new Tracktime.RecordsView collection: @parent.model.get 'records'
+    collection = @parent.model.get 'records'
+    collection.resetFilter()
+    @parent.view.setSubView 'main', new Tracktime.RecordsView collection: collection
+
+  listFilter: (filter) ->
+    $.alert "filtered list - yet disabled"
+    collection = @parent.model.get 'records'
+    collection.setFilter filter
+    @parent.view.setSubView 'main', new Tracktime.RecordsView collection: collection
 
   details: (id) ->
+    $.alert "details"
     @parent.view.setSubView 'main', new Tracktime.RecordsView collection: @parent.model.get 'records'
 
   edit: (id) ->

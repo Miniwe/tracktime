@@ -1,3 +1,17 @@
-<header>
-  <h2 class="page-title">{{title}}</h2>
+<header class="page-title clearfix">
+  <ul class="nav nav-pills pull-left">
+    <li>
+      <h2>
+        {{title}}
+      </h2>
+    </li>
+    {{#each filter}}
+    <li>
+      <a class="removeFilter" href="#records{{filteredHref filter=@root.filter exclude=@key}}" data-exclude="{{@key}}" data-value="{{this}}" title="Remove filter {{@key}}">
+        <i class="mdi-content-remove-circle"></i>
+        <span class='caption'>{{this}}</span>
+      </a>
+    </li>
+    {{/each}}
+  </ul>
 </header>

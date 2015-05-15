@@ -18,18 +18,16 @@ class Tracktime.RecordView extends Backbone.View
     @listenTo @model, "sync", @syncModel
 
     @projects = Tracktime.AppChannel.request 'projects'
-    @projectsList = Tracktime.AppChannel.request 'projectsList'
     @projects.on 'sync', @renderProjectInfo
 
     @users = Tracktime.AppChannel.request 'users'
-    @usersList = Tracktime.AppChannel.request 'usersList'
     @users.on 'sync', @renderUserInfo
 
   attributes: ->
     id: @model.cid
 
   render: ->
-    @$el.html @template @model.toJSON()
+    @$el.html @template _.extend {filter: @model.collection.getFilter()}, @model.toJSON()
     $('.subject_edit', @$el)
       .on('keydown', @fixEnter)
       .textareaAutoSize()

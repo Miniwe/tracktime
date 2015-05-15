@@ -180,6 +180,9 @@
       if (this.onClose) {
         this.onClose();
       }
+      if (this.container != null) {
+        $(this.container).unbind();
+      }
       this.undelegateEvents();
       this.$el.removeData().unbind();
       this.remove();
@@ -192,10 +195,13 @@
       for (key in ref1) {
         if (!hasProp.call(ref1, key)) continue;
         view = ref1[key];
-        view.close(key);
+        view.close();
         results.push(delete this.views[key]);
       }
       return results;
+    },
+    clear: function() {
+      return this.onClose();
     },
     setSubView: function(key, view) {
       if (key in this.views) {
@@ -260,6 +266,34 @@
     var placeholder;
     placeholder = "<placeholder id='" + name + "'></placeholder>";
     return new Handlebars.SafeString(placeholder);
+  });
+
+  Handlebars.registerHelper('filteredHref', function(options) {
+    var parsedFilter;
+    parsedFilter = {};
+    if ('filter' in options.hash) {
+      _.extend(parsedFilter, options.hash.filter);
+    }
+    if ('user' in options.hash) {
+      _.extend(parsedFilter, {
+        user: options.hash.user
+      });
+    }
+    if ('project' in options.hash) {
+      _.extend(parsedFilter, {
+        project: options.hash.project
+      });
+    }
+    if ('exclude' in options.hash && options.hash.exclude in parsedFilter) {
+      delete parsedFilter[options.hash.exclude];
+    }
+    if (_.keys(parsedFilter).length > 0) {
+      return '/' + _.map(parsedFilter, function(value, key) {
+        return key + "/" + value;
+      }).join('/');
+    } else {
+      return '';
+    }
   });
 
   (function($) {
@@ -891,6 +925,10 @@
       return true;
     };
 
+    Record.prototype.isSatisfied = function(filter) {
+      return _.isMatch(this.attributes, filter);
+    };
+
     Record.prototype.updateLastAccess = function() {
       return this.set('lastAccess', (new Date()).toISOString());
     };
@@ -1257,10 +1295,56 @@
 
     RecordsCollection.prototype.localStorage = new Backbone.LocalStorage(RecordsCollection.collectionName);
 
-    RecordsCollection.prototype.initialize = function() {};
+    RecordsCollection.prototype.initialize = function() {
+      this.filter = {};
+      return this.defaultFilter = {
+        isDeleted: false
+      };
+    };
 
     RecordsCollection.prototype.comparator = function(model) {
       return -(new Date(model.get('date'))).getTime();
+    };
+
+    RecordsCollection.prototype.setFilter = function(filter) {
+      var pairs;
+      this.resetFilter();
+      if (filter !== null) {
+        pairs = filter.match(/((user|project)\/[a-z0-9A-Z]{24})+/g);
+        if (pairs) {
+          _.each(pairs, function(pair, index) {
+            var _p;
+            _p = pair.split('/');
+            return this.filter[_p[0]] = _p[1];
+          }, this);
+        }
+      }
+      return this.filter;
+    };
+
+    RecordsCollection.prototype.resetFilter = function() {
+      return this.filter = _.clone(this.defaultFilter);
+    };
+
+    RecordsCollection.prototype.removeFilter = function(key) {
+      if (key in this.filter) {
+        return delete this.filter[key];
+      }
+    };
+
+    RecordsCollection.prototype.getFilter = function(removeDefault) {
+      var keys, result;
+      if (removeDefault == null) {
+        removeDefault = true;
+      }
+      result = {};
+      if (removeDefault) {
+        keys = _.keys(this.defaultFilter);
+        result = _.omit(this.filter, keys);
+      } else {
+        result = this.filter;
+      }
+      return result;
     };
 
     RecordsCollection.prototype.addRecord = function(options) {
@@ -1286,6 +1370,20 @@
         success: success,
         error: error
       });
+    };
+
+    RecordsCollection.prototype.getModels = function() {
+      var fmodels;
+      if (this.length > 0) {
+        fmodels = _.filter(this.models, (function(_this) {
+          return function(model) {
+            return model.isSatisfied(_this.filter);
+          };
+        })(this));
+        return fmodels;
+      } else {
+        return this.models;
+      }
     };
 
     return RecordsCollection;
@@ -2365,9 +2463,7 @@
       menu.children().remove();
       this.updateTitle();
       sublist = this.projectsList;
-      if (this.projectsList.length > 20) {
-        sublist = _.first(this.projectsList, 20);
-      }
+      console.log('sublist', _.size(sublist), sublist);
       for (key in sublist) {
         if (!hasProp.call(sublist, key)) continue;
         value = sublist[key];
@@ -3202,10 +3298,8 @@
       this.listenTo(this.model, "change:isEdit", this.changeIsEdit);
       this.listenTo(this.model, "sync", this.syncModel);
       this.projects = Tracktime.AppChannel.request('projects');
-      this.projectsList = Tracktime.AppChannel.request('projectsList');
       this.projects.on('sync', this.renderProjectInfo);
       this.users = Tracktime.AppChannel.request('users');
-      this.usersList = Tracktime.AppChannel.request('usersList');
       return this.users.on('sync', this.renderUserInfo);
     };
 
@@ -3217,7 +3311,9 @@
 
     RecordView.prototype.render = function() {
       var textarea;
-      this.$el.html(this.template(this.model.toJSON()));
+      this.$el.html(this.template(_.extend({
+        filter: this.model.collection.getFilter()
+      }, this.model.toJSON())));
       $('.subject_edit', this.$el).on('keydown', this.fixEnter).textareaAutoSize();
       textarea = new Tracktime.Element.Textarea({
         model: this.model,
@@ -3336,6 +3432,7 @@
     extend(RecordsView, superClass);
 
     function RecordsView() {
+      this.removeFilter = bind(this.removeFilter, this);
       return RecordsView.__super__.constructor.apply(this, arguments);
     }
 
@@ -3347,45 +3444,79 @@
 
     RecordsView.prototype.className = 'list-group';
 
-    RecordsView.prototype.views = {};
-
     RecordsView.prototype.initialize = function() {
+      this.views = {};
       this.render();
-      this.listenTo(this.collection, "reset", this.resetRecordsList);
       this.listenTo(this.collection, "add", this.addRecord);
-      return this.listenTo(this.collection, "remove", this.removeRecord);
+      this.listenTo(this.collection, "remove", this.removeRecord);
+      $('.removeFilter', this.container).on('click', this.removeFilter);
+      this.projects = Tracktime.AppChannel.request('projects');
+      this.projects.on('sync', this.updateProjectInfo);
+      this.users = Tracktime.AppChannel.request('users');
+      return this.users.on('sync', this.updateUserInfo);
     };
 
     RecordsView.prototype.render = function() {
       $(this.container).html(this.$el.html(''));
       this.$el.before(this.template({
-        title: 'Records'
+        title: 'Records',
+        filter: this.collection.getFilter()
       }));
-      return this.resetRecordsList();
+      this.resetRecordsList();
+      this.updateProjectInfo();
+      return this.updateUserInfo();
     };
 
     RecordsView.prototype.resetRecordsList = function() {
-      return _.each(this.collection.where({
-        isDeleted: false
-      }), (function(_this) {
-        return function(record) {
-          var recordView;
-          recordView = new Tracktime.RecordView({
-            model: record
-          });
-          _this.$el.append(recordView.el);
-          return _this.setSubView("record-" + record.cid, recordView);
-        };
-      })(this), this);
+      var frag, models;
+      frag = document.createDocumentFragment();
+      models = this.collection.getModels();
+      _.each(models, function(record) {
+        var recordView;
+        recordView = this.setSubView("record-" + record.cid, new Tracktime.RecordView({
+          model: record
+        }));
+        return frag.appendChild(recordView.el);
+      }, this);
+      return this.$el.append(frag);
+    };
+
+    RecordsView.prototype.updateProjectInfo = function() {
+      var key;
+      this.projectsList = Tracktime.AppChannel.request('projectsList');
+      key = $('.removeFilter[data-exclude=project]', this.container).data('value');
+      if (key in this.projectsList) {
+        return $('.removeFilter[data-exclude=project] .caption', this.container).text(this.projectsList[key]);
+      }
+    };
+
+    RecordsView.prototype.updateUserInfo = function() {
+      var key;
+      this.usersList = Tracktime.AppChannel.request('usersList');
+      key = $('.removeFilter[data-exclude=user]', this.container).data('value');
+      if (key in this.usersList) {
+        return $('.removeFilter[data-exclude=user] .caption', this.container).text(this.usersList[key]);
+      }
     };
 
     RecordsView.prototype.addRecord = function(record, collection, params) {
       var recordView;
-      recordView = new Tracktime.RecordView({
-        model: record
-      });
-      $(recordView.el).prependTo(this.$el);
-      return this.setSubView("record-" + record.cid, recordView);
+      if (record.isSatisfied(this.collection.filter)) {
+        recordView = new Tracktime.RecordView({
+          model: record
+        });
+        $(recordView.el).prependTo(this.$el);
+        return this.setSubView("record-" + record.cid, recordView);
+      }
+    };
+
+    RecordsView.prototype.removeFilter = function(event) {
+      var key;
+      key = $(event.currentTarget).data('exclude');
+      this.collection.removeFilter(key);
+      this.$el.find('.list-group > li').remove();
+      $(event.currentTarget).remove();
+      return this.resetRecordsList();
     };
 
     RecordsView.prototype.removeRecord = function() {
@@ -3948,6 +4079,7 @@
 
     RecordsRouter.prototype.routes = {
       '': 'list',
+      '*filter': 'listFilter',
       ':id': 'details',
       ':id/edit': 'edit',
       ':id/delete': 'delete',
@@ -3960,13 +4092,27 @@
     };
 
     RecordsRouter.prototype.list = function() {
+      var collection;
       $.alert("whole records list in records section");
+      collection = this.parent.model.get('records');
+      collection.resetFilter();
       return this.parent.view.setSubView('main', new Tracktime.RecordsView({
-        collection: this.parent.model.get('records')
+        collection: collection
+      }));
+    };
+
+    RecordsRouter.prototype.listFilter = function(filter) {
+      var collection;
+      $.alert("filtered list - yet disabled");
+      collection = this.parent.model.get('records');
+      collection.setFilter(filter);
+      return this.parent.view.setSubView('main', new Tracktime.RecordsView({
+        collection: collection
       }));
     };
 
     RecordsRouter.prototype.details = function(id) {
+      $.alert("details");
       return this.parent.view.setSubView('main', new Tracktime.RecordsView({
         collection: this.parent.model.get('records')
       }));

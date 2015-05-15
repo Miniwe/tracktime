@@ -4,7 +4,8 @@
     "coffee_jshint",
     "coffee",
     "bower_concat",
-    "handlebars"
+    "handlebars",
+    "notify:scripts_complete"
   ],
   "client": [
     "tmp:create",

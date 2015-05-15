@@ -290,15 +290,29 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
   return "<div class=\"row\" id=\""
     + escapeExpression(((helper = (helper = helpers._id || (depth0 != null ? depth0._id : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"_id","hash":{},"data":data}) : helper)))
-    + "\">\n\n  <div class=\"col-icon col-md-1 col-sm-2\">\n    <a  class=\"type btn btn-fab btn-fab-mini btn-material-lime\" role=\"menuitem\" tabindex=\"-1\" href=\"#fat\"  data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\"Project not defined\">\n      <i class=\"mdi-action-bookmark-outline\"></i>\n    </a>\n    <a class=\"edit btn btn-fab btn-fab-mini btn-flat pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Edit action\">\n      <i class=\"mdi-editor-mode-edit\"></i>\n    </a>\n  </div>\n\n  <div class=\"col-subject col-md-10 col-sm-9\">\n    <p class=\"record-info text-info\">\n      <span class='record-info-user' title=\"User\"><i class=\"mdi-action-face-unlock\"></i><span>"
+    + "\">\n\n  <div class=\"col-icon col-md-1 col-sm-2\">\n    <a  class=\"type btn btn-fab btn-fab-mini btn-material-lime\" role=\"menuitem\" tabindex=\"-1\" href=\"#fat\"  data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\"Project not defined\">\n      <i class=\"mdi-action-bookmark-outline\"></i>\n    </a>\n    <a class=\"edit btn btn-fab btn-fab-mini btn-flat pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Edit action\">\n      <i class=\"mdi-editor-mode-edit\"></i>\n    </a>\n  </div>\n\n  <div class=\"col-subject col-md-10 col-sm-9\">\n    <p class=\"record-info text-info\">\n      <a href=\"#records"
+    + escapeExpression(((helpers.filteredHref || (depth0 && depth0.filteredHref) || helperMissing).call(depth0, {"name":"filteredHref","hash":{
+    'user': ((depth0 != null ? depth0.user : depth0)),
+    'filter': ((depth0 != null ? depth0.filter : depth0))
+  },"data":data})))
+    + "\" class='record-info-user' title=\"User\"><i class=\"mdi-action-face-unlock\"></i><span>"
     + escapeExpression(((helper = (helper = helpers.user || (depth0 != null ? depth0.user : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"user","hash":{},"data":data}) : helper)))
-    + "</span>&#0160;</span>\n      <span class='record-info-project' title=\"Project\"><i class=\"mdi-content-add-circle\"></i><span>"
+    + "</span>&#0160;</a>\n      <a href=\"#records"
+    + escapeExpression(((helpers.filteredHref || (depth0 && depth0.filteredHref) || helperMissing).call(depth0, {"name":"filteredHref","hash":{
+    'project': ((depth0 != null ? depth0.project : depth0)),
+    'filter': ((depth0 != null ? depth0.filter : depth0))
+  },"data":data})))
+    + "\" class='record-info-project' title=\"Project\"><i class=\"mdi-content-add-circle\"></i><span>"
     + escapeExpression(((helper = (helper = helpers.project || (depth0 != null ? depth0.project : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"project","hash":{},"data":data}) : helper)))
-    + "</span>&#0160;</span>\n      <span title=\"Record Date\"><i class=\"mdi-action-event\"></i>"
+    + "</span>&#0160;</a>\n      <span title=\"Record Date\"><i class=\"mdi-action-event\"></i>"
     + escapeExpression(((helper = (helper = helpers.recordDate || (depth0 != null ? depth0.recordDate : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"recordDate","hash":{},"data":data}) : helper)))
     + "</span>\n      &#0160;\n      <span title=\"Record Time\"><i class=\"mdi-action-schedule\"></i>"
     + escapeExpression(((helpers.minuteFormat || (depth0 && depth0.minuteFormat) || helperMissing).call(depth0, (depth0 != null ? depth0.recordTime : depth0), {"name":"minuteFormat","hash":{},"data":data})))
-    + "</span>\n    </p>\n    "
+    + "</span>\n\n      <!-- &#0160;\n      "
+    + escapeExpression(((helper = (helper = helpers.user || (depth0 != null ? depth0.user : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"user","hash":{},"data":data}) : helper)))
+    + " / "
+    + escapeExpression(((helper = (helper = helpers.project || (depth0 != null ? depth0.project : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"project","hash":{},"data":data}) : helper)))
+    + " -->\n    </p>\n    "
     + escapeExpression(((helpers.placeholder || (depth0 && depth0.placeholder) || helperMissing).call(depth0, "textarea", {"name":"placeholder","hash":{},"data":data})))
     + "\n    <div class=\"subject\" style=\"border: none;\">"
     + escapeExpression(((helpers.nl2br || (depth0 && depth0.nl2br) || helperMissing).call(depth0, (depth0 != null ? depth0.subject : depth0), {"name":"nl2br","hash":{},"data":data})))
@@ -309,11 +323,29 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     + "</time>\n    </p>\n\n  </div>\n\n  <div class=\"col-menu col-md-1 col-sm-1\">\n    <ul class=\"actions\">\n      <li><a class=\"delete btn btn-fab btn-danger btn-fab-mini pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Delete action\">\n        <i class=\"mdi-navigation-cancel\"></i>\n      </a></li>\n    </ul>\n  </div>\n</div>";
 },"useData":true});
 
-this["JST"]["records/records"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-  return "<header>\n  <h2 class=\"page-title\">"
+this["JST"]["records/records"] = Handlebars.template({"1":function(depth0,helpers,partials,data) {
+  var stack1, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, lambda=this.lambda;
+  return "    <li>\n      <a class=\"removeFilter\" href=\"#records"
+    + escapeExpression(((helpers.filteredHref || (depth0 && depth0.filteredHref) || helperMissing).call(depth0, {"name":"filteredHref","hash":{
+    'exclude': ((data && data.key)),
+    'filter': (((stack1 = (data && data.root)) && stack1.filter))
+  },"data":data})))
+    + "\" data-exclude=\""
+    + escapeExpression(lambda((data && data.key), depth0))
+    + "\" data-value=\""
+    + escapeExpression(lambda(depth0, depth0))
+    + "\" title=\"Remove filter "
+    + escapeExpression(lambda((data && data.key), depth0))
+    + "\">\n        <i class=\"mdi-content-remove-circle\"></i>\n        <span class='caption'>"
+    + escapeExpression(lambda(depth0, depth0))
+    + "</span>\n      </a>\n    </li>\n";
+},"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var stack1, helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, buffer = "<header class=\"page-title clearfix\">\n  <ul class=\"nav nav-pills pull-left\">\n    <li>\n      <h2>\n        "
     + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
-    + "</h2>\n</header>";
+    + "\n      </h2>\n    </li>\n";
+  stack1 = helpers.each.call(depth0, (depth0 != null ? depth0.filter : depth0), {"name":"each","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});
+  if (stack1 != null) { buffer += stack1; }
+  return buffer + "  </ul>\n</header>";
 },"useData":true});
 
 this["JST"]["reports/report"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {

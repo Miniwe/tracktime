@@ -30,6 +30,7 @@
     "nouislider": "~7.0.10",
     "backbone.subroute": "~0.4.5",
     "moment": "~2.10.2",
-    "js-md5": "~1.1.0"
+    "js-md5": "~1.1.0",
+    "underscore": "~1.8.3"
   }
 }

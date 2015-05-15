@@ -4,5 +4,23 @@
       "title": "Timetrack",
       "message": "Client is ready!"
     }
+  },
+  "styles_complete": {
+    "options": {
+      "title": "Timetrack",
+      "message": "Styles is ready!"
+    }
+  },
+  "scripts_complete": {
+    "options": {
+      "title": "Timetrack",
+      "message": "Scripts is ready!"
+    }
+  },
+  "templates_complete": {
+    "options": {
+      "title": "Timetrack",
+      "message": "Templates is ready!"
+    }
   }
 }

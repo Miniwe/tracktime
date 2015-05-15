@@ -15376,6 +15376,14 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.1), 0 2px 7px 0 rgba(0, 0, 0, 0.1);
   text-shadow: 2px 1px #FFF;
 }
+/* line 10, ../../app/assets/sass/blocks/_page-title.scss */
+.page-title .nav h2 {
+  margin: 0;
+}
+/* line 13, ../../app/assets/sass/blocks/_page-title.scss */
+.page-title .nav [class^="mdi-"], .page-title .nav [class*="mdi-"] {
+  font-size: 1em;
+}
 
 /* line 4, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group {

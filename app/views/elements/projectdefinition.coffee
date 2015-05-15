@@ -23,10 +23,9 @@ class Tracktime.Element.ProjectDefinition extends Tracktime.Element
     menu.children().remove()
 
     @updateTitle()
-    sublist = @projectsList
-    if @projectsList.length > 20
-      sublist = _.first(@projectsList, 20)
 
+    sublist = @projectsList
+    console.log 'sublist', _.size(sublist), sublist
     for own key, value of sublist
       menu.append $("<li><a class='btn btn-white' data-project='#{key}' href='##{key}'>#{value}</a></li>")
 

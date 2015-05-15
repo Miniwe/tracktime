@@ -38,3 +38,14 @@ Handlebars.registerHelper 'minuteFormat', (val) ->
 Handlebars.registerHelper 'placeholder', (name) ->
   placeholder = "<placeholder id='#{name}'></placeholder>"
   new Handlebars.SafeString placeholder
+
+Handlebars.registerHelper 'filteredHref', (options) ->
+  parsedFilter = {}
+  _.extend(parsedFilter, options.hash.filter) if 'filter' of options.hash
+  _.extend(parsedFilter, {user: options.hash.user}) if 'user' of options.hash
+  _.extend(parsedFilter, {project: options.hash.project}) if 'project' of options.hash
+  delete parsedFilter[options.hash.exclude] if 'exclude' of options.hash and options.hash.exclude of parsedFilter
+  if _.keys(parsedFilter).length > 0
+    '/' + _.map(parsedFilter, (value,key) -> "#{key}/#{value}").join '/'
+  else
+    ''

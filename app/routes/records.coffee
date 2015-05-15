@@ -1,6 +1,7 @@
 class Tracktime.RecordsRouter extends Backbone.SubRoute
   routes:
     '':             'list'
+    '*filter':      'listFilter'
     ':id':          'details'
     ':id/edit':     'edit'
     ':id/delete':   'delete'
@@ -12,9 +13,18 @@ class Tracktime.RecordsRouter extends Backbone.SubRoute
 
   list: () ->
     $.alert "whole records list in records section"
-    @parent.view.setSubView 'main', new Tracktime.RecordsView collection: @parent.model.get 'records'
+    collection = @parent.model.get 'records'
+    collection.resetFilter()
+    @parent.view.setSubView 'main', new Tracktime.RecordsView collection: collection
+
+  listFilter: (filter) ->
+    $.alert "filtered list - yet disabled"
+    collection = @parent.model.get 'records'
+    collection.setFilter filter
+    @parent.view.setSubView 'main', new Tracktime.RecordsView collection: collection
 
   details: (id) ->
+    $.alert "details"
     @parent.view.setSubView 'main', new Tracktime.RecordsView collection: @parent.model.get 'records'
 
   edit: (id) ->
