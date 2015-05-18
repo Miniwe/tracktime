@@ -8,7 +8,6 @@ class Tracktime.RecordsCollection extends Tracktime.Collection
   initialize: () ->
     @filter = {}
     @defaultFilter = isDeleted: false
-    # @fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
 
   comparator: (model) ->
     - (new Date(model.get('date'))).getTime()
@@ -54,11 +53,13 @@ class Tracktime.RecordsCollection extends Tracktime.Collection
       error: error
 
   getModels: ->
+    models = {}
     if @length > 0
       fmodels = _.filter @models, (model) =>
         model.isSatisfied @filter
-      return fmodels
+      models = fmodels
     else
-      return @models
+      models = @models
+    _.first models, 10
 
 (module?.exports = Tracktime.RecordsCollection) or @Tracktime.RecordsCollection = Tracktime.RecordsCollection

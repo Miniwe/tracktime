@@ -126,9 +126,7 @@ this["JST"]["elements/project_definition"] = Handlebars.template({"compiler":[6,
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
   return "<div class=\"project_definition\">\n  <a href=\"#define_project\" class=\"project_definition-toggler dropdown-toggle\" data-toggle=\"dropdown\" aria-expanded=\"false\"><span class=\"caption\">"
     + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
-    + "</span></a>\n  <ul class=\"dropdown-menu\" role=\"menu\">\n    <li><a class=\"btn btn-white\" href=\"#\">Action</a></li>\n    <li><a class=\"btn btn-white\" href=\"#\">Another action</a></li>\n    <li><a class=\"btn btn-white\" href=\"#\">Something else here</a></li>\n    <li><a class=\"btn btn-white\" href=\"#\">Separated link</a></li>\n    <li class=\"divider\"></li>\n    <li><a class=\"btn btn-white\" href=\"#\">"
-    + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
-    + "</a></li>\n  </ul>\n</div>";
+    + "</span></a>\n  <ul class=\"dropdown-menu list\" role=\"menu\">\n    <li class=\"input-cont\">\n      <input type=\"search\" class=\"form-control\" placeholder=\"Start typing...\"/>\n    </li>\n\n  </ul>\n</div>";
 },"useData":true});
 
 this["JST"]["elements/selectday"] = Handlebars.template({"1":function(depth0,helpers,partials,data) {

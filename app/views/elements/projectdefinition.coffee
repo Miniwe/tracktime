@@ -2,6 +2,7 @@ class Tracktime.Element.ProjectDefinition extends Tracktime.Element
   className: 'project_definition'
   template: JST['elements/project_definition']
   defaultTitle: 'Select project'
+  searchStr: ''
   events:
     'click .btn-white': 'selectProject'
 
@@ -10,26 +11,49 @@ class Tracktime.Element.ProjectDefinition extends Tracktime.Element
     @render()
     @projects = Tracktime.AppChannel.request 'projects'
     @projectsList = Tracktime.AppChannel.request 'projectsList'
-    @projects.on 'sync', @renderProjectsList
+    @projects.on 'sync', @renderList
+
 
   render: ->
     @$el.html @template
       title: @defaultTitle
-    @renderProjectsList()
+    @renderList()
 
-  renderProjectsList: =>
+    $('.input-cont', @$el)
+      .on 'click', (event) -> event.stopPropagation()
+    $('.input-cont input', @$el)
+      .on 'keyup', @setSearch
+
+  setSearch: (event) =>
+    @searchStr = $(event.currentTarget).val().toLowerCase()
+    @renderList()
+
+  getList: (limit = 5) ->
     @projectsList = Tracktime.AppChannel.request 'projectsList'
+    keys = _.keys @projectsList
+    unless _.isEmpty @searchStr
+      keys = _.filter keys, (key) => @projectsList[key].toLowerCase().indexOf(@searchStr) > -1
+
+    sublist = {}
+    i = 0
+    limit = Math.min(limit, keys.length)
+    while i < limit
+      sublist[ keys[i] ] = @projectsList[ keys[i] ]
+      i++
+
+    sublist
+
+  renderList: =>
+    list = @getList()
     menu = $('.dropdown-menu', @$el)
-    menu.children().remove()
+    menu.children('.item').remove()
 
     @updateTitle()
 
-    sublist = @projectsList
-    console.log 'sublist', _.size(sublist), sublist
-    for own key, value of sublist
-      menu.append $("<li><a class='btn btn-white' data-project='#{key}' href='##{key}'>#{value}</a></li>")
+    for own key, value of list
+      menu.append $("<li class='item'><a class='btn btn-white' data-project='#{key}' href='##{key}'>#{value}</a></li>")
 
-    menu.append $("<li><a class='btn btn-white' data-project='0' href='#0'><span class='text-muted'>No project</span></a></li>")
+    menu.append $("<li class='item'><a class='btn btn-white' data-project='0' href='#0'><span class='text-muted'>No project</span></a></li>")
 
   getTitle: ->
     project_id = @model.get @field

@@ -22,7 +22,6 @@ Handlebars.registerHelper 'dateFormat', (date) ->
   localeData = moment.localeData('ru')
   moment(date).format("MMM Do YYYY")
 
-
   # timestamp = Date.parse date
   # unless _.isNaN(timestamp)
   #   (new Date(timestamp)).toLocalString()

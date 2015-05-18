@@ -6,7 +6,6 @@ class Tracktime.UsersCollection extends Tracktime.Collection
   localStorage: new Backbone.LocalStorage @collectionName
 
   initialize: () ->
-    # @fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
     @on 'sync', @makeList
 
   addUser: (options) ->
@@ -23,7 +22,7 @@ class Tracktime.UsersCollection extends Tracktime.Collection
       error: error
 
   makeList: (collection, models) ->
-    list = []
+    list = {}
     _.each collection.models, (model, index) ->
       list[model.get('_id')] = "#{model.get('first_name')} #{model.get('last_name')}"
     Tracktime.AppChannel.reply 'usersList', () -> list

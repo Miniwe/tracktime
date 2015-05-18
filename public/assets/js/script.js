@@ -33748,9 +33748,7 @@ this["JST"]["elements/project_definition"] = Handlebars.template({"compiler":[6,
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
   return "<div class=\"project_definition\">\n  <a href=\"#define_project\" class=\"project_definition-toggler dropdown-toggle\" data-toggle=\"dropdown\" aria-expanded=\"false\"><span class=\"caption\">"
     + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
-    + "</span></a>\n  <ul class=\"dropdown-menu\" role=\"menu\">\n    <li><a class=\"btn btn-white\" href=\"#\">Action</a></li>\n    <li><a class=\"btn btn-white\" href=\"#\">Another action</a></li>\n    <li><a class=\"btn btn-white\" href=\"#\">Something else here</a></li>\n    <li><a class=\"btn btn-white\" href=\"#\">Separated link</a></li>\n    <li class=\"divider\"></li>\n    <li><a class=\"btn btn-white\" href=\"#\">"
-    + escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"title","hash":{},"data":data}) : helper)))
-    + "</a></li>\n  </ul>\n</div>";
+    + "</span></a>\n  <ul class=\"dropdown-menu list\" role=\"menu\">\n    <li class=\"input-cont\">\n      <input type=\"search\" class=\"form-control\" placeholder=\"Start typing...\"/>\n    </li>\n\n  </ul>\n</div>";
 },"useData":true});
 
 this["JST"]["elements/selectday"] = Handlebars.template({"1":function(depth0,helpers,partials,data) {
@@ -35298,7 +35296,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
     ProjectsCollection.prototype.makeList = function(collection, models) {
       var list;
-      list = [];
+      list = {};
       _.each(collection.models, function(model, index) {
         return list[model.get('_id')] = model.get('name');
       });
@@ -35408,17 +35406,19 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     };
 
     RecordsCollection.prototype.getModels = function() {
-      var fmodels;
+      var fmodels, models;
+      models = {};
       if (this.length > 0) {
         fmodels = _.filter(this.models, (function(_this) {
           return function(model) {
             return model.isSatisfied(_this.filter);
           };
         })(this));
-        return fmodels;
+        models = fmodels;
       } else {
-        return this.models;
+        models = this.models;
       }
+      return _.first(models, 10);
     };
 
     return RecordsCollection;
@@ -35475,7 +35475,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
     UsersCollection.prototype.makeList = function(collection, models) {
       var list;
-      list = [];
+      list = {};
       _.each(collection.models, function(model, index) {
         return list[model.get('_id')] = (model.get('first_name')) + " " + (model.get('last_name'));
       });
@@ -35605,12 +35605,12 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       })(this));
       this.reply('projectsList', (function(_this) {
         return function() {
-          return [];
+          return {};
         };
       })(this));
       return this.reply('usersList', (function(_this) {
         return function() {
-          return [];
+          return {};
         };
       })(this));
     },
@@ -36459,7 +36459,8 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
     function ProjectDefinition() {
       this.selectProject = bind(this.selectProject, this);
-      this.renderProjectsList = bind(this.renderProjectsList, this);
+      this.renderList = bind(this.renderList, this);
+      this.setSearch = bind(this.setSearch, this);
       return ProjectDefinition.__super__.constructor.apply(this, arguments);
     }
 
@@ -36468,6 +36469,8 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     ProjectDefinition.prototype.template = JST['elements/project_definition'];
 
     ProjectDefinition.prototype.defaultTitle = 'Select project';
+
+    ProjectDefinition.prototype.searchStr = '';
 
     ProjectDefinition.prototype.events = {
       'click .btn-white': 'selectProject'
@@ -36481,30 +36484,61 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       this.render();
       this.projects = Tracktime.AppChannel.request('projects');
       this.projectsList = Tracktime.AppChannel.request('projectsList');
-      return this.projects.on('sync', this.renderProjectsList);
+      return this.projects.on('sync', this.renderList);
     };
 
     ProjectDefinition.prototype.render = function() {
       this.$el.html(this.template({
         title: this.defaultTitle
       }));
-      return this.renderProjectsList();
+      this.renderList();
+      $('.input-cont', this.$el).on('click', function(event) {
+        return event.stopPropagation();
+      });
+      return $('.input-cont input', this.$el).on('keyup', this.setSearch);
     };
 
-    ProjectDefinition.prototype.renderProjectsList = function() {
-      var key, menu, sublist, value;
-      this.projectsList = Tracktime.AppChannel.request('projectsList');
-      menu = $('.dropdown-menu', this.$el);
-      menu.children().remove();
-      this.updateTitle();
-      sublist = this.projectsList;
-      console.log('sublist', _.size(sublist), sublist);
-      for (key in sublist) {
-        if (!hasProp.call(sublist, key)) continue;
-        value = sublist[key];
-        menu.append($("<li><a class='btn btn-white' data-project='" + key + "' href='#" + key + "'>" + value + "</a></li>"));
+    ProjectDefinition.prototype.setSearch = function(event) {
+      this.searchStr = $(event.currentTarget).val().toLowerCase();
+      return this.renderList();
+    };
+
+    ProjectDefinition.prototype.getList = function(limit) {
+      var i, keys, sublist;
+      if (limit == null) {
+        limit = 5;
       }
-      return menu.append($("<li><a class='btn btn-white' data-project='0' href='#0'><span class='text-muted'>No project</span></a></li>"));
+      this.projectsList = Tracktime.AppChannel.request('projectsList');
+      keys = _.keys(this.projectsList);
+      if (!_.isEmpty(this.searchStr)) {
+        keys = _.filter(keys, (function(_this) {
+          return function(key) {
+            return _this.projectsList[key].toLowerCase().indexOf(_this.searchStr) > -1;
+          };
+        })(this));
+      }
+      sublist = {};
+      i = 0;
+      limit = Math.min(limit, keys.length);
+      while (i < limit) {
+        sublist[keys[i]] = this.projectsList[keys[i]];
+        i++;
+      }
+      return sublist;
+    };
+
+    ProjectDefinition.prototype.renderList = function() {
+      var key, list, menu, value;
+      list = this.getList();
+      menu = $('.dropdown-menu', this.$el);
+      menu.children('.item').remove();
+      this.updateTitle();
+      for (key in list) {
+        if (!hasProp.call(list, key)) continue;
+        value = list[key];
+        menu.append($("<li class='item'><a class='btn btn-white' data-project='" + key + "' href='#" + key + "'>" + value + "</a></li>"));
+      }
+      return menu.append($("<li class='item'><a class='btn btn-white' data-project='0' href='#0'><span class='text-muted'>No project</span></a></li>"));
     };
 
     ProjectDefinition.prototype.getTitle = function() {
@@ -37482,7 +37516,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     RecordsView.prototype.initialize = function() {
       this.views = {};
       this.render();
-      this.listenTo(this.collection, "add", this.addRecord);
+      this.listenTo(this.collection, "sync", this.resetRecordsList);
       this.listenTo(this.collection, "remove", this.removeRecord);
       $('.removeFilter', this.container).on('click', this.removeFilter);
       this.projects = Tracktime.AppChannel.request('projects');

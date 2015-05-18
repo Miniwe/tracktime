@@ -7,8 +7,8 @@ class Tracktime.RecordsView extends Backbone.View
   initialize: () ->
     @views = {}
     @render()
-    # @listenTo @collection, "reset", @resetRecordsList
-    @listenTo @collection, "add", @addRecord
+    @listenTo @collection, "sync", @resetRecordsList
+    # @listenTo @collection, "add", @addRecord
     @listenTo @collection, "remove", @removeRecord
     $('.removeFilter', @container).on 'click', @removeFilter
 

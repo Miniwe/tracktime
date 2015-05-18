@@ -179,7 +179,6 @@ Handlebars.registerHelper 'dateFormat', (date) ->
   localeData = moment.localeData('ru')
   moment(date).format("MMM Do YYYY")
 
-
   # timestamp = Date.parse date
   # unless _.isNaN(timestamp)
   #   (new Date(timestamp)).toLocalString()
@@ -779,7 +778,6 @@ class Tracktime.ProjectsCollection extends Tracktime.Collection
   localStorage: new Backbone.LocalStorage @collectionName
 
   initialize: () ->
-    # @fetch ajaxSync: Tracktime.AppChannel.reply 'isOnline'
     @on 'sync', @makeList
 
   comparator: (model) ->
@@ -799,7 +797,7 @@ class Tracktime.ProjectsCollection extends Tracktime.Collection
       error: error
 
   makeList: (collection, models) ->
-    list = []
+    list = {}
     _.each collection.models, (model, index) ->
       list[model.get('_id')] = model.get('name')
     Tracktime.AppChannel.reply 'projectsList', () -> list
@@ -817,7 +815,6 @@ class Tracktime.RecordsCollection extends Tracktime.Collection
   initialize: () ->
     @filter = {}
     @defaultFilter = isDeleted: false
-    # @fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
 
   comparator: (model) ->
     - (new Date(model.get('date'))).getTime()
@@ -863,12 +860,14 @@ class Tracktime.RecordsCollection extends Tracktime.Collection
       error: error
 
   getModels: ->
+    models = {}
     if @length > 0
       fmodels = _.filter @models, (model) =>
         model.isSatisfied @filter
-      return fmodels
+      models = fmodels
     else
-      return @models
+      models = @models
+    _.first models, 10
 
 (module?.exports = Tracktime.RecordsCollection) or @Tracktime.RecordsCollection = Tracktime.RecordsCollection
 
@@ -880,7 +879,6 @@ class Tracktime.UsersCollection extends Tracktime.Collection
   localStorage: new Backbone.LocalStorage @collectionName
 
   initialize: () ->
-    # @fetch ajaxSync: Tracktime.AppChannel.request 'isOnline'
     @on 'sync', @makeList
 
   addUser: (options) ->
@@ -897,7 +895,7 @@ class Tracktime.UsersCollection extends Tracktime.Collection
       error: error
 
   makeList: (collection, models) ->
-    list = []
+    list = {}
     _.each collection.models, (model, index) ->
       list[model.get('_id')] = "#{model.get('first_name')} #{model.get('last_name')}"
     Tracktime.AppChannel.reply 'usersList', () -> list
@@ -981,8 +979,8 @@ _.extend Tracktime.AppChannel,
     @reply 'userStatus', => @userStatus
     @reply 'projects', => @model.get 'projects'
     @reply 'users', => @model.get 'users'
-    @reply 'projectsList', => []
-    @reply 'usersList', => []
+    @reply 'projectsList', => {}
+    @reply 'usersList', => {}
 
   startApp: ->
     Backbone.history.start
@@ -1513,6 +1511,7 @@ class Tracktime.Element.ProjectDefinition extends Tracktime.Element
   className: 'project_definition'
   template: JST['elements/project_definition']
   defaultTitle: 'Select project'
+  searchStr: ''
   events:
     'click .btn-white': 'selectProject'
 
@@ -1521,26 +1520,49 @@ class Tracktime.Element.ProjectDefinition extends Tracktime.Element
     @render()
     @projects = Tracktime.AppChannel.request 'projects'
     @projectsList = Tracktime.AppChannel.request 'projectsList'
-    @projects.on 'sync', @renderProjectsList
+    @projects.on 'sync', @renderList
+
 
   render: ->
     @$el.html @template
       title: @defaultTitle
-    @renderProjectsList()
+    @renderList()
 
-  renderProjectsList: =>
+    $('.input-cont', @$el)
+      .on 'click', (event) -> event.stopPropagation()
+    $('.input-cont input', @$el)
+      .on 'keyup', @setSearch
+
+  setSearch: (event) =>
+    @searchStr = $(event.currentTarget).val().toLowerCase()
+    @renderList()
+
+  getList: (limit = 5) ->
     @projectsList = Tracktime.AppChannel.request 'projectsList'
+    keys = _.keys @projectsList
+    unless _.isEmpty @searchStr
+      keys = _.filter keys, (key) => @projectsList[key].toLowerCase().indexOf(@searchStr) > -1
+
+    sublist = {}
+    i = 0
+    limit = Math.min(limit, keys.length)
+    while i < limit
+      sublist[ keys[i] ] = @projectsList[ keys[i] ]
+      i++
+
+    sublist
+
+  renderList: =>
+    list = @getList()
     menu = $('.dropdown-menu', @$el)
-    menu.children().remove()
+    menu.children('.item').remove()
 
     @updateTitle()
 
-    sublist = @projectsList
-    console.log 'sublist', _.size(sublist), sublist
-    for own key, value of sublist
-      menu.append $("<li><a class='btn btn-white' data-project='#{key}' href='##{key}'>#{value}</a></li>")
+    for own key, value of list
+      menu.append $("<li class='item'><a class='btn btn-white' data-project='#{key}' href='##{key}'>#{value}</a></li>")
 
-    menu.append $("<li><a class='btn btn-white' data-project='0' href='#0'><span class='text-muted'>No project</span></a></li>")
+    menu.append $("<li class='item'><a class='btn btn-white' data-project='0' href='#0'><span class='text-muted'>No project</span></a></li>")
 
   getTitle: ->
     project_id = @model.get @field
@@ -2151,8 +2173,8 @@ class Tracktime.RecordsView extends Backbone.View
   initialize: () ->
     @views = {}
     @render()
-    # @listenTo @collection, "reset", @resetRecordsList
-    @listenTo @collection, "add", @addRecord
+    @listenTo @collection, "sync", @resetRecordsList
+    # @listenTo @collection, "add", @addRecord
     @listenTo @collection, "remove", @removeRecord
     $('.removeFilter', @container).on 'click', @removeFilter
 

@@ -6,7 +6,6 @@ class Tracktime.ProjectsCollection extends Tracktime.Collection
   localStorage: new Backbone.LocalStorage @collectionName
 
   initialize: () ->
-    # @fetch ajaxSync: Tracktime.AppChannel.reply 'isOnline'
     @on 'sync', @makeList
 
   comparator: (model) ->
@@ -26,7 +25,7 @@ class Tracktime.ProjectsCollection extends Tracktime.Collection
       error: error
 
   makeList: (collection, models) ->
-    list = []
+    list = {}
     _.each collection.models, (model, index) ->
       list[model.get('_id')] = model.get('name')
     Tracktime.AppChannel.reply 'projectsList', () -> list

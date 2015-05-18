@@ -74,8 +74,8 @@ _.extend Tracktime.AppChannel,
     @reply 'userStatus', => @userStatus
     @reply 'projects', => @model.get 'projects'
     @reply 'users', => @model.get 'users'
-    @reply 'projectsList', => []
-    @reply 'usersList', => []
+    @reply 'projectsList', => {}
+    @reply 'usersList', => {}
 
   startApp: ->
     Backbone.history.start
