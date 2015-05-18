@@ -644,6 +644,10 @@ h1, h2, h3, h4, h5, h6 {
   top: -9px;
   left: 2px;
 }
+/* line 15, ../../app/assets/sass/blocks/_btn.scss */
+.btn.btn-loadmore {
+  visibility: hidden;
+}
 
 /* line 3, ../../app/assets/sass/structures/_slider.scss */
 .slider {

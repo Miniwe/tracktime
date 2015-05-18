@@ -11,6 +11,8 @@ class Tracktime.RecordsView extends Backbone.View
     # @listenTo @collection, "add", @addRecord
     @listenTo @collection, "remove", @removeRecord
     $('.removeFilter', @container).on 'click', @removeFilter
+    $('.btn-loadmore', @container).on 'click', @loadMoreRecords
+    $('.scrollWrapper').on 'scroll', @autoLoadMoreRecords
 
     @projects = Tracktime.AppChannel.request 'projects'
     @projects.on 'sync', @updateProjectInfo
@@ -24,16 +26,34 @@ class Tracktime.RecordsView extends Backbone.View
     @resetRecordsList()
     @updateProjectInfo()
     @updateUserInfo()
+    $('.btn-loadmore', @container).appendTo @container
 
-  resetRecordsList: () ->
-    # @clear()
+  autoLoadMoreRecords: (event) =>
+    delta = $(window).height() - $('.btn-loadmore').offset().top - $('.btn-loadmore').height()
+    $('.btn-loadmore', @container).click() if delta > 0
+
+
+  loadMoreRecords: (event) =>
+    event.preventDefault()
+    modelsNewCount = @resetRecordsList()
+    if modelsNewCount > 0
+     $('.btn-loadmore', @container).show().appendTo @container
+    else
+     $('.btn-loadmore', @container).hide()
+
+  resetRecordsList: ->
     frag = document.createDocumentFragment()
-    models = @collection.getModels()
+    models = @collection.getModels @exceptRecords()
     _.each models, (record) ->
       recordView = @setSubView "record-#{record.cid}", new Tracktime.RecordView model: record
       frag.appendChild recordView.el
     , @
     @$el.append frag
+    models.length
+
+
+  exceptRecords: () ->
+    _.pluck $('.list-group-item > div', @container), 'id'
 
   updateProjectInfo: ->
     @projectsList = Tracktime.AppChannel.request 'projectsList'

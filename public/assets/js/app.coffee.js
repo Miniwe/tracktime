@@ -1372,9 +1372,13 @@
       });
     };
 
-    RecordsCollection.prototype.getModels = function() {
-      var fmodels, models;
+    RecordsCollection.prototype.getModels = function(except) {
+      var fmodels, limit, models, outmodels;
+      if (except == null) {
+        except = [];
+      }
       models = {};
+      limit = 6;
       if (this.length > 0) {
         fmodels = _.filter(this.models, (function(_this) {
           return function(model) {
@@ -1385,7 +1389,10 @@
       } else {
         models = this.models;
       }
-      return _.first(models, 10);
+      outmodels = _.filter(models, function(model) {
+        return _.indexOf(except, model.id) === -1;
+      });
+      return _.first(outmodels, limit);
     };
 
     return RecordsCollection;
@@ -3469,6 +3476,8 @@
 
     function RecordsView() {
       this.removeFilter = bind(this.removeFilter, this);
+      this.loadMoreRecords = bind(this.loadMoreRecords, this);
+      this.autoLoadMoreRecords = bind(this.autoLoadMoreRecords, this);
       return RecordsView.__super__.constructor.apply(this, arguments);
     }
 
@@ -3486,6 +3495,8 @@
       this.listenTo(this.collection, "sync", this.resetRecordsList);
       this.listenTo(this.collection, "remove", this.removeRecord);
       $('.removeFilter', this.container).on('click', this.removeFilter);
+      $('.btn-loadmore', this.container).on('click', this.loadMoreRecords);
+      $('.scrollWrapper').on('scroll', this.autoLoadMoreRecords);
       this.projects = Tracktime.AppChannel.request('projects');
       this.projects.on('sync', this.updateProjectInfo);
       this.users = Tracktime.AppChannel.request('users');
@@ -3500,13 +3511,33 @@
       }));
       this.resetRecordsList();
       this.updateProjectInfo();
-      return this.updateUserInfo();
+      this.updateUserInfo();
+      return $('.btn-loadmore', this.container).appendTo(this.container);
+    };
+
+    RecordsView.prototype.autoLoadMoreRecords = function(event) {
+      var delta;
+      delta = $(window).height() - $('.btn-loadmore').offset().top - $('.btn-loadmore').height();
+      if (delta > 0) {
+        return $('.btn-loadmore', this.container).click();
+      }
+    };
+
+    RecordsView.prototype.loadMoreRecords = function(event) {
+      var modelsNewCount;
+      event.preventDefault();
+      modelsNewCount = this.resetRecordsList();
+      if (modelsNewCount > 0) {
+        return $('.btn-loadmore', this.container).show().appendTo(this.container);
+      } else {
+        return $('.btn-loadmore', this.container).hide();
+      }
     };
 
     RecordsView.prototype.resetRecordsList = function() {
       var frag, models;
       frag = document.createDocumentFragment();
-      models = this.collection.getModels();
+      models = this.collection.getModels(this.exceptRecords());
       _.each(models, function(record) {
         var recordView;
         recordView = this.setSubView("record-" + record.cid, new Tracktime.RecordView({
@@ -3514,7 +3545,12 @@
         }));
         return frag.appendChild(recordView.el);
       }, this);
-      return this.$el.append(frag);
+      this.$el.append(frag);
+      return models.length;
+    };
+
+    RecordsView.prototype.exceptRecords = function() {
+      return _.pluck($('.list-group-item > div', this.container), 'id');
     };
 
     RecordsView.prototype.updateProjectInfo = function() {
