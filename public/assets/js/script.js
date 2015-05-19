@@ -33758,7 +33758,7 @@ this["JST"]["elements/project_definition"] = Handlebars.template({"compiler":[6,
 
   return "<div class=\"project_definition\">\n  <a href=\"#define_project\" class=\"project_definition-toggler dropdown-toggle\" data-toggle=\"dropdown\" aria-expanded=\"false\"><span class=\"caption\">"
     + this.escapeExpression(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0,{"name":"title","hash":{},"data":data}) : helper)))
-    + "</span></a>\n  <ul class=\"dropdown-menu list\" role=\"menu\">\n    <li class=\"input-cont\">\n      <input type=\"search\" class=\"form-control\" placeholder=\"Start typing...\"/>\n    </li>\n\n  </ul>\n</div>";
+    + "</span></a>\n  <ul class=\"dropdown-menu list\" role=\"menu\">\n    <li class=\"input-cont\">\n      <input type=\"search\" class=\"form-control\" placeholder=\"Find Project...\"/>\n    </li>\n\n  </ul>\n</div>";
 },"useData":true});
 
 this["JST"]["elements/selectday"] = Handlebars.template({"1":function(depth0,helpers,partials,data) {
@@ -33814,15 +33814,15 @@ this["JST"]["layout/menu"] = Handlebars.template({"1":function(depth0,helpers,pa
 
   return "<div class=\"well\">\n    <h5>Sync apps over internet only</h5>\n    <div class=\"checkbox\">\n        <label>\n            <input type=\"checkbox\" id=\"isOnline\" "
     + ((stack1 = helpers['if'].call(depth0,(depth0 != null ? depth0.isOnline : depth0),{"name":"if","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-    + "> Sync\n        </label>\n    </div>\n</div>\n\n<div class=\"panel-group\" id=\"accordion\" role=\"tablist\" aria-multiselectable=\"true\">\n    <div class=\"panel panel-default\">\n        <a class=\"btn btn-info btn-block\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#user-section\" aria-expanded=\"true\" aria-controls=\"user-section\" role=\"tab\" id=\"headingUser\">\n      User\n    </a>\n        <div id=\"user-section\" class=\"panel-collapse collapse in\" role=\"tabpanel\" aria-labelledby=\"headingUser\">\n            <div class=\"list-style-group\">\n                "
+    + "> Sync\n        </label>\n    </div>\n</div>\n\n<div class=\"panel-group\" id=\"accordion\" role=\"tablist\" aria-multiselectable=\"true\">\n    <div class=\"panel panel-default\">\n        <a class=\"btn btn-info btn-block\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#user-section\" aria-expanded=\"true\" aria-controls=\"user-section\" role=\"tab\" id=\"headingUser\">\n      User\n    </a>\n        <div id=\"user-section\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingUser\">\n            <div class=\"list-style-group\">\n                "
     + alias2((helpers.link_to || (depth0 && depth0.link_to) || alias1).call(depth0,{"name":"link_to","hash":{"body":"Settings","href":"#user","class":"list-group-item"},"data":data}))
     + "\n                "
     + alias2((helpers.link_to || (depth0 && depth0.link_to) || alias1).call(depth0,{"name":"link_to","hash":{"body":"Rates","href":"#user/rates","class":"list-group-item"},"data":data}))
     + "\n                "
     + alias2((helpers.link_to || (depth0 && depth0.link_to) || alias1).call(depth0,{"name":"link_to","hash":{"body":"Logout","href":"#user/logout","class":"list-group-item"},"data":data}))
-    + "\n            </div>\n        </div>\n    </div>\n    <div class=\"panel panel-default\">\n        <a class=\"btn btn-primary btn-block\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#projects-section\" aria-expanded=\"true\" aria-controls=\"projects-section\" role=\"tab\" id=\"headingProjects\">\n      Projects\n    </a>\n        <div id=\"projects-section\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingProjects\">\n            <div class=\"list-style-group\">\n                "
+    + "\n            </div>\n        </div>\n    </div>\n    <div class=\"panel panel-default\">\n        <a class=\"btn btn-primary btn-block\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#projects-section\" aria-expanded=\"true\" aria-controls=\"projects-section\" role=\"tab\" id=\"headingProjects\">\n      Projects\n    </a>\n        <div id=\"projects-section\" class=\"panel-collapse collapse in\" role=\"tabpanel\" aria-labelledby=\"headingProjects\">\n            <div class=\"list-style-group\">\n                "
     + alias2((helpers.link_to || (depth0 && depth0.link_to) || alias1).call(depth0,{"name":"link_to","hash":{"body":"All Records","href":"#records","class":"list-group-item"},"data":data}))
-    + "\n\n            </div>\n        </div>\n    </div>\n    <div class=\"panel panel-default\">\n        <a class=\"btn btn-material-purple btn-block\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#reports-section\" aria-expanded=\"true\" aria-controls=\"reports-section\" role=\"tab\" id=\"headingReports\">\n      Reports\n    </a>\n        <div id=\"reports-section\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingReports\">\n            <div class=\"list-style-group\">\n                "
+    + "\n                <div class=\"list-group-item\">\n                    <input type=\"search\" class=\"form-control input-search\" placeholder=\"Find Project\" />\n                    <div class=\"btn-group btn-block\">\n                      <ul class=\"dropdown-menu menu-projects\" role=\"menu\" style=\"width: 100%;\">\n                      </ul>\n                    </div>\n                </div>\n\n            </div>\n        </div>\n    </div>\n    <div class=\"panel panel-default\">\n        <a class=\"btn btn-material-purple btn-block\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#reports-section\" aria-expanded=\"true\" aria-controls=\"reports-section\" role=\"tab\" id=\"headingReports\">\n      Reports\n    </a>\n        <div id=\"reports-section\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingReports\">\n            <div class=\"list-style-group\">\n                "
     + alias2((helpers.link_to || (depth0 && depth0.link_to) || alias1).call(depth0,{"name":"link_to","hash":{"body":"Reports list","href":"#reports","class":"list-group-item"},"data":data}))
     + "\n                "
     + alias2((helpers.link_to || (depth0 && depth0.link_to) || alias1).call(depth0,{"name":"link_to","hash":{"body":"Report 1","href":"#reports/1","class":"list-group-item"},"data":data}))
@@ -37067,6 +37067,8 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     extend(Menu, superClass);
 
     function Menu() {
+      this.renderList = bind(this.renderList, this);
+      this.setSearch = bind(this.setSearch, this);
       return Menu.__super__.constructor.apply(this, arguments);
     }
 
@@ -37074,13 +37076,17 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
     Menu.prototype.template = JST['layout/menu'];
 
+    Menu.prototype.searchStr = '';
+
     Menu.prototype.events = {
       'change #isOnline': 'updateOnlineStatus'
     };
 
     Menu.prototype.initialize = function() {
       this.render();
-      return this.bindEvents();
+      this.bindEvents();
+      this.projects = Tracktime.AppChannel.request('projects');
+      return this.projectsList = Tracktime.AppChannel.request('projectsList');
     };
 
     Menu.prototype.bindEvents = function() {
@@ -37093,11 +37099,71 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
         'padding': 256,
         'tolerance': 70
       });
-      return $("#menuToggler").on('click', (function(_this) {
+      $("#menuToggler").on('click', (function(_this) {
         return function() {
           return _this.slideout.toggle();
         };
       })(this));
+      return $(".input-search", this.container).on('keyup', this.setSearch);
+    };
+
+    Menu.prototype.setSearch = function(event) {
+      this.searchStr = $(event.currentTarget).val().toLowerCase();
+      return this.searchProject();
+    };
+
+    Menu.prototype.searchProject = function(event) {
+      return this.renderList();
+    };
+
+    Menu.prototype.getList = function(limit) {
+      var i, keys, sublist;
+      if (limit == null) {
+        limit = 5;
+      }
+      this.projectsList = Tracktime.AppChannel.request('projectsList');
+      keys = _.keys(this.projectsList);
+      if (!_.isEmpty(this.searchStr)) {
+        keys = _.filter(keys, (function(_this) {
+          return function(key) {
+            return _this.projectsList[key].toLowerCase().indexOf(_this.searchStr) > -1;
+          };
+        })(this));
+      }
+      sublist = {};
+      i = 0;
+      limit = Math.min(limit, keys.length);
+      while (i < limit) {
+        sublist[keys[i]] = this.projectsList[keys[i]];
+        i++;
+      }
+      return sublist;
+    };
+
+    Menu.prototype.renderList = function() {
+      var key, list, menu, value;
+      list = this.getList();
+      menu = $('.menu-projects', this.container);
+      menu.children().remove();
+      for (key in list) {
+        if (!hasProp.call(list, key)) continue;
+        value = list[key];
+        menu.append($("<li><a href='#records/project/" + key + "'>" + value + "</a></li>").on('click', 'a', this.navTo));
+      }
+      if (_.size(list) > 0) {
+        if (_.isEmpty(this.searchStr)) {
+          return menu.dropdown().hide();
+        } else {
+          return menu.dropdown().show();
+        }
+      } else {
+        return menu.dropdown().hide();
+      }
+    };
+
+    Menu.prototype.navTo = function(event) {
+      window.location.hash = $(event.currentTarget).attr('href');
+      return $('.menu-projects', this.container).dropdown().hide();
     };
 
     Menu.prototype.updateOnlineStatus = function(event) {

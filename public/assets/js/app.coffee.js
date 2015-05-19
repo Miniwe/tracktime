@@ -3069,6 +3069,8 @@
     extend(Menu, superClass);
 
     function Menu() {
+      this.renderList = bind(this.renderList, this);
+      this.setSearch = bind(this.setSearch, this);
       return Menu.__super__.constructor.apply(this, arguments);
     }
 
@@ -3076,13 +3078,17 @@
 
     Menu.prototype.template = JST['layout/menu'];
 
+    Menu.prototype.searchStr = '';
+
     Menu.prototype.events = {
       'change #isOnline': 'updateOnlineStatus'
     };
 
     Menu.prototype.initialize = function() {
       this.render();
-      return this.bindEvents();
+      this.bindEvents();
+      this.projects = Tracktime.AppChannel.request('projects');
+      return this.projectsList = Tracktime.AppChannel.request('projectsList');
     };
 
     Menu.prototype.bindEvents = function() {
@@ -3095,11 +3101,71 @@
         'padding': 256,
         'tolerance': 70
       });
-      return $("#menuToggler").on('click', (function(_this) {
+      $("#menuToggler").on('click', (function(_this) {
         return function() {
           return _this.slideout.toggle();
         };
       })(this));
+      return $(".input-search", this.container).on('keyup', this.setSearch);
+    };
+
+    Menu.prototype.setSearch = function(event) {
+      this.searchStr = $(event.currentTarget).val().toLowerCase();
+      return this.searchProject();
+    };
+
+    Menu.prototype.searchProject = function(event) {
+      return this.renderList();
+    };
+
+    Menu.prototype.getList = function(limit) {
+      var i, keys, sublist;
+      if (limit == null) {
+        limit = 5;
+      }
+      this.projectsList = Tracktime.AppChannel.request('projectsList');
+      keys = _.keys(this.projectsList);
+      if (!_.isEmpty(this.searchStr)) {
+        keys = _.filter(keys, (function(_this) {
+          return function(key) {
+            return _this.projectsList[key].toLowerCase().indexOf(_this.searchStr) > -1;
+          };
+        })(this));
+      }
+      sublist = {};
+      i = 0;
+      limit = Math.min(limit, keys.length);
+      while (i < limit) {
+        sublist[keys[i]] = this.projectsList[keys[i]];
+        i++;
+      }
+      return sublist;
+    };
+
+    Menu.prototype.renderList = function() {
+      var key, list, menu, value;
+      list = this.getList();
+      menu = $('.menu-projects', this.container);
+      menu.children().remove();
+      for (key in list) {
+        if (!hasProp.call(list, key)) continue;
+        value = list[key];
+        menu.append($("<li><a href='#records/project/" + key + "'>" + value + "</a></li>").on('click', 'a', this.navTo));
+      }
+      if (_.size(list) > 0) {
+        if (_.isEmpty(this.searchStr)) {
+          return menu.dropdown().hide();
+        } else {
+          return menu.dropdown().show();
+        }
+      } else {
+        return menu.dropdown().hide();
+      }
+    };
+
+    Menu.prototype.navTo = function(event) {
+      window.location.hash = $(event.currentTarget).attr('href');
+      return $('.menu-projects', this.container).dropdown().hide();
     };
 
     Menu.prototype.updateOnlineStatus = function(event) {
