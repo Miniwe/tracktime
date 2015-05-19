@@ -11,6 +11,7 @@ class Tracktime.AppView.Menu extends Backbone.View
 
     @projects = Tracktime.AppChannel.request 'projects'
     @projectsList = Tracktime.AppChannel.request 'projectsList'
+    @projects.on 'all', @renderMenuList
 
   bindEvents: ->
     @listenTo Tracktime.AppChannel, "isOnline", (status) ->
@@ -28,9 +29,9 @@ class Tracktime.AppView.Menu extends Backbone.View
     @searchProject()
 
   searchProject: (event) ->
-    @renderList()
+    @renderSearchList()
 
-  getList: (limit = 5) ->
+  getSearchList: (limit = 5) ->
     @projectsList = Tracktime.AppChannel.request 'projectsList'
     keys = _.keys @projectsList
     unless _.isEmpty @searchStr
@@ -43,8 +44,27 @@ class Tracktime.AppView.Menu extends Backbone.View
       i++
     sublist
 
-  renderList: =>
-    list = @getList()
+  renderMenuList: =>
+    menu = $('#projects-section .list-style-group', @container)
+    menu.children('.project-link').remove()
+
+    limit = 5
+    @projectsList = Tracktime.AppChannel.request 'projectsList'
+    keys = _.keys @projectsList
+    if keys.length > 0
+      keys = _.sortBy keys, (key) =>
+       count = @projects.get(key).get('useCount')
+       count = unless count == undefined then count else 0
+       - count
+
+      i = 0
+      while i < limit
+        project = @projects.get keys[i]
+        menu.append $("<a class='list-group-item project-link' href='#records/project/#{project.id}'>#{project.get('name')}</a>").on 'click', 'a', @navTo
+        i++
+
+  renderSearchList: =>
+    list = @getSearchList()
     menu = $('.menu-projects', @container)
     menu.children().remove()
 
@@ -60,7 +80,10 @@ class Tracktime.AppView.Menu extends Backbone.View
       menu.dropdown().hide()
 
   navTo: (event) ->
-    window.location.hash = $(event.currentTarget).attr('href')
+    href = $(event.currentTarget).attr('href')
+    projectId = href.substr(-24)
+    Tracktime.AppChannel.command 'useProject', projectId
+    window.location.hash = href
     $('.menu-projects', @container).dropdown().hide()
 
   updateOnlineStatus: (event) ->

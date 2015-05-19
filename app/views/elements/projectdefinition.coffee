@@ -13,7 +13,6 @@ class Tracktime.Element.ProjectDefinition extends Tracktime.Element
     @projectsList = Tracktime.AppChannel.request 'projectsList'
     @projects.on 'sync', @renderList
 
-
   render: ->
     @$el.html @template
       title: @defaultTitle
@@ -33,14 +32,12 @@ class Tracktime.Element.ProjectDefinition extends Tracktime.Element
     keys = _.keys @projectsList
     unless _.isEmpty @searchStr
       keys = _.filter keys, (key) => @projectsList[key].toLowerCase().indexOf(@searchStr) > -1
-
     sublist = {}
     i = 0
     limit = Math.min(limit, keys.length)
     while i < limit
       sublist[ keys[i] ] = @projectsList[ keys[i] ]
       i++
-
     sublist
 
   renderList: =>
@@ -56,16 +53,17 @@ class Tracktime.Element.ProjectDefinition extends Tracktime.Element
     menu.append $("<li class='item'><a class='btn btn-white' data-project='0' href='#0'><span class='text-muted'>No project</span></a></li>")
 
   getTitle: ->
-    project_id = @model.get @field
-    if project_id of @projectsList
-      "to " + @projectsList[project_id]
+    projectId = @model.get @field
+    if projectId of @projectsList
+      "to " + @projectsList[projectId]
     else
       @defaultTitle
 
   selectProject: (event) =>
     event.preventDefault()
-    project_id = $(event.currentTarget).data 'project'
-    @model.set @field, project_id
+    projectId = $(event.currentTarget).data 'project'
+    @model.set @field, projectId
+    Tracktime.AppChannel.command 'useProject', projectId
     @updateTitle()
     @$el.parents('.form-control-wrapper').find('textarea').focus()
 

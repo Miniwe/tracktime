@@ -24,11 +24,19 @@ class Tracktime.ProjectsCollection extends Tracktime.Collection
       success: success,
       error: error
 
-  makeList: (collection, models) ->
+  makeList: ->
     list = {}
-    _.each collection.models, (model, index) ->
+    _.each @models, (model, index) ->
       list[model.get('_id')] = model.get('name')
     Tracktime.AppChannel.reply 'projectsList', () -> list
+
+  useProject: (id) ->
+    project = @get(id)
+    if project.has('useCount')
+      useCount = project.get('useCount') + 1
+    else
+      useCount = 1
+    project.save {'useCount': useCount}, {ajaxSync: false}
 
 
 (module?.exports = Tracktime.ProjectsCollection) or @Tracktime.ProjectsCollection = Tracktime.ProjectsCollection

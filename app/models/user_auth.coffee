@@ -21,6 +21,7 @@ class Tracktime.User.Auth extends Backbone.Model
         @set response
         @set 'authorized', true
         $.alert "Welcome back, #{response.first_name} #{response.last_name}!"
+        window.location.hash = '#records'
       error: (model, response, options) =>
         if response.responseJSON?
           @trigger 'flash', response.responseJSON.error

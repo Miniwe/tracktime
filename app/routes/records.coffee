@@ -12,13 +12,11 @@ class Tracktime.RecordsRouter extends Backbone.SubRoute
     _.extend @, options
 
   list: () ->
-    $.alert "whole records list in records section"
     collection = @parent.model.get 'records'
     collection.resetFilter()
     @parent.view.setSubView 'main', new Tracktime.RecordsView collection: collection
 
   listFilter: (filter) ->
-    $.alert "filtered list - yet disabled"
     collection = @parent.model.get 'records'
     collection.setFilter filter
     @parent.view.setSubView 'main', new Tracktime.RecordsView collection: collection

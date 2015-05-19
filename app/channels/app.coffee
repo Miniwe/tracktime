@@ -62,6 +62,7 @@ _.extend Tracktime.AppChannel,
       'newRecord':       @newRecord
       'newProject':      @newProject
       'newUser':         @newUser
+      'useProject':      @useProject
       'addAction':       @addAction
       'serverOnline':    @serverOnline
       'serverOffline':   @serverOffline
@@ -97,6 +98,9 @@ _.extend Tracktime.AppChannel,
 
   serverOnline: ->
     @trigger 'isOnline', true
+
+  useProject: (id) ->
+    @model.get('projects').useProject id
 
   serverOffline: ->
     @trigger 'isOnline', false

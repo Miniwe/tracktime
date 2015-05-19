@@ -696,6 +696,7 @@ class Tracktime.User.Auth extends Backbone.Model
         @set response
         @set 'authorized', true
         $.alert "Welcome back, #{response.first_name} #{response.last_name}!"
+        window.location.hash = '#records'
       error: (model, response, options) =>
         if response.responseJSON?
           @trigger 'flash', response.responseJSON.error
@@ -796,11 +797,19 @@ class Tracktime.ProjectsCollection extends Tracktime.Collection
       success: success,
       error: error
 
-  makeList: (collection, models) ->
+  makeList: ->
     list = {}
-    _.each collection.models, (model, index) ->
+    _.each @models, (model, index) ->
       list[model.get('_id')] = model.get('name')
     Tracktime.AppChannel.reply 'projectsList', () -> list
+
+  useProject: (id) ->
+    project = @get(id)
+    if project.has('useCount')
+      useCount = project.get('useCount') + 1
+    else
+      useCount = 1
+    project.save {'useCount': useCount}, {ajaxSync: false}
 
 
 (module?.exports = Tracktime.ProjectsCollection) or @Tracktime.ProjectsCollection = Tracktime.ProjectsCollection
@@ -970,6 +979,7 @@ _.extend Tracktime.AppChannel,
       'newRecord':       @newRecord
       'newProject':      @newProject
       'newUser':         @newUser
+      'useProject':      @useProject
       'addAction':       @addAction
       'serverOnline':    @serverOnline
       'serverOffline':   @serverOffline
@@ -1005,6 +1015,9 @@ _.extend Tracktime.AppChannel,
 
   serverOnline: ->
     @trigger 'isOnline', true
+
+  useProject: (id) ->
+    @model.get('projects').useProject id
 
   serverOffline: ->
     @trigger 'isOnline', false
@@ -1525,7 +1538,6 @@ class Tracktime.Element.ProjectDefinition extends Tracktime.Element
     @projectsList = Tracktime.AppChannel.request 'projectsList'
     @projects.on 'sync', @renderList
 
-
   render: ->
     @$el.html @template
       title: @defaultTitle
@@ -1545,14 +1557,12 @@ class Tracktime.Element.ProjectDefinition extends Tracktime.Element
     keys = _.keys @projectsList
     unless _.isEmpty @searchStr
       keys = _.filter keys, (key) => @projectsList[key].toLowerCase().indexOf(@searchStr) > -1
-
     sublist = {}
     i = 0
     limit = Math.min(limit, keys.length)
     while i < limit
       sublist[ keys[i] ] = @projectsList[ keys[i] ]
       i++
-
     sublist
 
   renderList: =>
@@ -1568,16 +1578,17 @@ class Tracktime.Element.ProjectDefinition extends Tracktime.Element
     menu.append $("<li class='item'><a class='btn btn-white' data-project='0' href='#0'><span class='text-muted'>No project</span></a></li>")
 
   getTitle: ->
-    project_id = @model.get @field
-    if project_id of @projectsList
-      "to " + @projectsList[project_id]
+    projectId = @model.get @field
+    if projectId of @projectsList
+      "to " + @projectsList[projectId]
     else
       @defaultTitle
 
   selectProject: (event) =>
     event.preventDefault()
-    project_id = $(event.currentTarget).data 'project'
-    @model.set @field, project_id
+    projectId = $(event.currentTarget).data 'project'
+    @model.set @field, projectId
+    Tracktime.AppChannel.command 'useProject', projectId
     @updateTitle()
     @$el.parents('.form-control-wrapper').find('textarea').focus()
 
@@ -1906,6 +1917,7 @@ class Tracktime.AppView.Menu extends Backbone.View
 
     @projects = Tracktime.AppChannel.request 'projects'
     @projectsList = Tracktime.AppChannel.request 'projectsList'
+    @projects.on 'all', @renderMenuList
 
   bindEvents: ->
     @listenTo Tracktime.AppChannel, "isOnline", (status) ->
@@ -1923,9 +1935,9 @@ class Tracktime.AppView.Menu extends Backbone.View
     @searchProject()
 
   searchProject: (event) ->
-    @renderList()
+    @renderSearchList()
 
-  getList: (limit = 5) ->
+  getSearchList: (limit = 5) ->
     @projectsList = Tracktime.AppChannel.request 'projectsList'
     keys = _.keys @projectsList
     unless _.isEmpty @searchStr
@@ -1938,8 +1950,27 @@ class Tracktime.AppView.Menu extends Backbone.View
       i++
     sublist
 
-  renderList: =>
-    list = @getList()
+  renderMenuList: =>
+    menu = $('#projects-section .list-style-group', @container)
+    menu.children('.project-link').remove()
+
+    limit = 5
+    @projectsList = Tracktime.AppChannel.request 'projectsList'
+    keys = _.keys @projectsList
+    if keys.length > 0
+      keys = _.sortBy keys, (key) =>
+       count = @projects.get(key).get('useCount')
+       count = unless count == undefined then count else 0
+       - count
+
+      i = 0
+      while i < limit
+        project = @projects.get keys[i]
+        menu.append $("<a class='list-group-item project-link' href='#records/project/#{project.id}'>#{project.get('name')}</a>").on 'click', 'a', @navTo
+        i++
+
+  renderSearchList: =>
+    list = @getSearchList()
     menu = $('.menu-projects', @container)
     menu.children().remove()
 
@@ -1955,7 +1986,10 @@ class Tracktime.AppView.Menu extends Backbone.View
       menu.dropdown().hide()
 
   navTo: (event) ->
-    window.location.hash = $(event.currentTarget).attr('href')
+    href = $(event.currentTarget).attr('href')
+    projectId = href.substr(-24)
+    Tracktime.AppChannel.command 'useProject', projectId
+    window.location.hash = href
     $('.menu-projects', @container).dropdown().hide()
 
   updateOnlineStatus: (event) ->
@@ -2222,7 +2256,6 @@ class Tracktime.RecordsView extends Backbone.View
     @views = {}
     @render()
     @listenTo @collection, "sync", @resetRecordsList
-    # @listenTo @collection, "add", @addRecord
     @listenTo @collection, "remove", @removeRecord
     $('.removeFilter', @container).on 'click', @removeFilter
     $('.btn-loadmore', @container).on 'click', @loadMoreRecords
@@ -2649,13 +2682,11 @@ class Tracktime.RecordsRouter extends Backbone.SubRoute
     _.extend @, options
 
   list: () ->
-    $.alert "whole records list in records section"
     collection = @parent.model.get 'records'
     collection.resetFilter()
     @parent.view.setSubView 'main', new Tracktime.RecordsView collection: collection
 
   listFilter: (filter) ->
-    $.alert "filtered list - yet disabled"
     collection = @parent.model.get 'records'
     collection.setFilter filter
     @parent.view.setSubView 'main', new Tracktime.RecordsView collection: collection

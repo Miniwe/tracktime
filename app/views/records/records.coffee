@@ -8,7 +8,6 @@ class Tracktime.RecordsView extends Backbone.View
     @views = {}
     @render()
     @listenTo @collection, "sync", @resetRecordsList
-    # @listenTo @collection, "add", @addRecord
     @listenTo @collection, "remove", @removeRecord
     $('.removeFilter', @container).on 'click', @removeFilter
     $('.btn-loadmore', @container).on 'click', @loadMoreRecords

@@ -1064,7 +1064,8 @@
           return function(model, response, options) {
             _this.set(response);
             _this.set('authorized', true);
-            return $.alert("Welcome back, " + response.first_name + " " + response.last_name + "!");
+            $.alert("Welcome back, " + response.first_name + " " + response.last_name + "!");
+            return window.location.hash = '#records';
           };
         })(this),
         error: (function(_this) {
@@ -1261,14 +1262,29 @@
       });
     };
 
-    ProjectsCollection.prototype.makeList = function(collection, models) {
+    ProjectsCollection.prototype.makeList = function() {
       var list;
       list = {};
-      _.each(collection.models, function(model, index) {
+      _.each(this.models, function(model, index) {
         return list[model.get('_id')] = model.get('name');
       });
       return Tracktime.AppChannel.reply('projectsList', function() {
         return list;
+      });
+    };
+
+    ProjectsCollection.prototype.useProject = function(id) {
+      var project, useCount;
+      project = this.get(id);
+      if (project.has('useCount')) {
+        useCount = project.get('useCount') + 1;
+      } else {
+        useCount = 1;
+      }
+      return project.save({
+        'useCount': useCount
+      }, {
+        ajaxSync: false
       });
     };
 
@@ -1548,6 +1564,7 @@
         'newRecord': this.newRecord,
         'newProject': this.newProject,
         'newUser': this.newUser,
+        'useProject': this.useProject,
         'addAction': this.addAction,
         'serverOnline': this.serverOnline,
         'serverOffline': this.serverOffline,
@@ -1612,6 +1629,9 @@
     },
     serverOnline: function() {
       return this.trigger('isOnline', true);
+    },
+    useProject: function(id) {
+      return this.model.get('projects').useProject(id);
     },
     serverOffline: function() {
       return this.trigger('isOnline', false);
@@ -2516,20 +2536,21 @@
     };
 
     ProjectDefinition.prototype.getTitle = function() {
-      var project_id;
-      project_id = this.model.get(this.field);
-      if (project_id in this.projectsList) {
-        return "to " + this.projectsList[project_id];
+      var projectId;
+      projectId = this.model.get(this.field);
+      if (projectId in this.projectsList) {
+        return "to " + this.projectsList[projectId];
       } else {
         return this.defaultTitle;
       }
     };
 
     ProjectDefinition.prototype.selectProject = function(event) {
-      var project_id;
+      var projectId;
       event.preventDefault();
-      project_id = $(event.currentTarget).data('project');
-      this.model.set(this.field, project_id);
+      projectId = $(event.currentTarget).data('project');
+      this.model.set(this.field, projectId);
+      Tracktime.AppChannel.command('useProject', projectId);
       this.updateTitle();
       return this.$el.parents('.form-control-wrapper').find('textarea').focus();
     };
@@ -3069,7 +3090,8 @@
     extend(Menu, superClass);
 
     function Menu() {
-      this.renderList = bind(this.renderList, this);
+      this.renderSearchList = bind(this.renderSearchList, this);
+      this.renderMenuList = bind(this.renderMenuList, this);
       this.setSearch = bind(this.setSearch, this);
       return Menu.__super__.constructor.apply(this, arguments);
     }
@@ -3088,7 +3110,8 @@
       this.render();
       this.bindEvents();
       this.projects = Tracktime.AppChannel.request('projects');
-      return this.projectsList = Tracktime.AppChannel.request('projectsList');
+      this.projectsList = Tracktime.AppChannel.request('projectsList');
+      return this.projects.on('all', this.renderMenuList);
     };
 
     Menu.prototype.bindEvents = function() {
@@ -3115,10 +3138,10 @@
     };
 
     Menu.prototype.searchProject = function(event) {
-      return this.renderList();
+      return this.renderSearchList();
     };
 
-    Menu.prototype.getList = function(limit) {
+    Menu.prototype.getSearchList = function(limit) {
       var i, keys, sublist;
       if (limit == null) {
         limit = 5;
@@ -3142,9 +3165,36 @@
       return sublist;
     };
 
-    Menu.prototype.renderList = function() {
+    Menu.prototype.renderMenuList = function() {
+      var i, keys, limit, menu, project, results;
+      menu = $('#projects-section .list-style-group', this.container);
+      menu.children('.project-link').remove();
+      limit = 5;
+      this.projectsList = Tracktime.AppChannel.request('projectsList');
+      keys = _.keys(this.projectsList);
+      if (keys.length > 0) {
+        keys = _.sortBy(keys, (function(_this) {
+          return function(key) {
+            var count;
+            count = _this.projects.get(key).get('useCount');
+            count = count !== void 0 ? count : 0;
+            return -count;
+          };
+        })(this));
+        i = 0;
+        results = [];
+        while (i < limit) {
+          project = this.projects.get(keys[i]);
+          menu.append($("<a class='list-group-item project-link' href='#records/project/" + project.id + "'>" + (project.get('name')) + "</a>").on('click', 'a', this.navTo));
+          results.push(i++);
+        }
+        return results;
+      }
+    };
+
+    Menu.prototype.renderSearchList = function() {
       var key, list, menu, value;
-      list = this.getList();
+      list = this.getSearchList();
       menu = $('.menu-projects', this.container);
       menu.children().remove();
       for (key in list) {
@@ -3164,7 +3214,11 @@
     };
 
     Menu.prototype.navTo = function(event) {
-      window.location.hash = $(event.currentTarget).attr('href');
+      var href, projectId;
+      href = $(event.currentTarget).attr('href');
+      projectId = href.substr(-24);
+      Tracktime.AppChannel.command('useProject', projectId);
+      window.location.hash = href;
       return $('.menu-projects', this.container).dropdown().hide();
     };
 
@@ -4231,7 +4285,6 @@
 
     RecordsRouter.prototype.list = function() {
       var collection;
-      $.alert("whole records list in records section");
       collection = this.parent.model.get('records');
       collection.resetFilter();
       return this.parent.view.setSubView('main', new Tracktime.RecordsView({
@@ -4241,7 +4294,6 @@
 
     RecordsRouter.prototype.listFilter = function(filter) {
       var collection;
-      $.alert("filtered list - yet disabled");
       collection = this.parent.model.get('records');
       collection.setFilter(filter);
       return this.parent.view.setSubView('main', new Tracktime.RecordsView({
