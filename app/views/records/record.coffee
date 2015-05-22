@@ -6,6 +6,7 @@ class Tracktime.RecordView extends Backbone.View
     'click .btn.delete': "deleteRecord"
     'click .subject': "toggleInlineEdit"
     'click .edit.btn': "editRecord"
+    'click': "doActive"
 
 
   initialize: ->
@@ -42,6 +43,10 @@ class Tracktime.RecordView extends Backbone.View
 
     @renderProjectInfo()
     @renderUserInfo()
+
+  doActive: ->
+    @$el.siblings().removeClass 'current'
+    @$el.addClass 'current'
 
   changeIsEdit: ->
     @$el.toggleClass 'editmode', @model.isEdit == true

@@ -15454,7 +15454,13 @@ h1, h2, h3, h4, h5, h6 {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
   opacity: 0;
 }
-/* line 80, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 81, ../../app/assets/sass/blocks/_list-group.scss */
+.list-group .list-group-item.current .record-info {
+  background-color: #EDEDED;
+  padding: 1em 1em 0.7em;
+  margin: -1em -1em 0em;
+}
+/* line 87, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item * {
   filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
   opacity: 1;
@@ -15464,13 +15470,13 @@ h1, h2, h3, h4, h5, h6 {
   -webkit-transition-delay: 0.4s;
   transition: opacity 0.2s 0.4s;
 }
-/* line 85, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 92, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item .subject_edit {
   width: 100%;
   padding: 0;
   border: none;
 }
-/* line 92, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 99, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item ul.actions {
   position: absolute;
   right: 1em;
@@ -15488,37 +15494,37 @@ h1, h2, h3, h4, h5, h6 {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
   opacity: 0;
 }
-/* line 108, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 115, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item ul.actions li {
   display: table-cell;
   margin: 1em;
 }
-/* line 117, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 124, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item .record-info i {
   font-size: 1.3em;
   position: relative;
   top: .1em;
   margin-right: .2em;
 }
-/* line 127, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 134, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item .last-update {
   margin-top: .6em;
 }
-/* line 130, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 137, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item .last-update .text-muted {
   font-size: .85em;
   color: #b4b4b4;
 }
-/* line 135, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 142, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item .last-update .text-muted:before {
   content: 'Last Update: ';
   color: #c4c4c4;
 }
-/* line 145, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 152, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item .col-icon .btn {
   position: absolute;
 }
-/* line 148, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 155, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item .col-icon .btn.type {
   z-index: 10;
   -moz-transition: opacity 0.8s 0.4s;
@@ -15529,7 +15535,7 @@ h1, h2, h3, h4, h5, h6 {
   filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
   opacity: 1;
 }
-/* line 155, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 162, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-item .col-icon .btn.edit {
   z-index: 9;
   -moz-transition: opacity 0.8s 0.4s;

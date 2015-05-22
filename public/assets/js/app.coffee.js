@@ -1368,13 +1368,17 @@
       _.extend(options, {
         date: (new Date()).toISOString()
       });
+      if (_.isEmpty(options.recordDate)) {
+        options.recordDate = moment().format("MMM Do YYYY");
+      }
       success = (function(_this) {
         return function(result) {
-          return $.alert({
+          $.alert({
             content: 'Record: save success',
             timeout: 2000,
             style: 'btn-success'
           });
+          return _this.trigger('newRecord');
         };
       })(this);
       error = (function(_this) {
@@ -3448,7 +3452,8 @@
     RecordView.prototype.events = {
       'click .btn.delete': "deleteRecord",
       'click .subject': "toggleInlineEdit",
-      'click .edit.btn': "editRecord"
+      'click .edit.btn': "editRecord",
+      'click': "doActive"
     };
 
     RecordView.prototype.initialize = function() {
@@ -3487,6 +3492,11 @@
       textarea.on('tSubmit', this.sendForm);
       this.renderProjectInfo();
       return this.renderUserInfo();
+    };
+
+    RecordView.prototype.doActive = function() {
+      this.$el.siblings().removeClass('current');
+      return this.$el.addClass('current');
     };
 
     RecordView.prototype.changeIsEdit = function() {
@@ -3614,6 +3624,8 @@
       this.render();
       this.listenTo(this.collection, "sync", this.resetRecordsList);
       this.listenTo(this.collection, "remove", this.removeRecord);
+      this.listenTo(this.collection, "add", this.addRecord);
+      this.listenTo(this.collection, "newRecord", this.newRecord);
       $('.removeFilter', this.container).on('click', this.removeFilter);
       $('.btn-loadmore', this.container).on('click', this.loadMoreRecords);
       $('.scrollWrapper').on('scroll', this.autoLoadMoreRecords);
@@ -3645,13 +3657,31 @@
 
     RecordsView.prototype.loadMoreRecords = function(event) {
       var modelsNewCount;
-      event.preventDefault();
       modelsNewCount = this.resetRecordsList();
       if (modelsNewCount > 0) {
         return $('.btn-loadmore', this.container).show().appendTo(this.container);
       } else {
         return $('.btn-loadmore', this.container).hide();
       }
+    };
+
+    RecordsView.prototype.newRecord = function() {
+      this.loadMoreRecords();
+      return this.sortRecords();
+    };
+
+    RecordsView.prototype.sortRecords = function() {
+      var parentCont, sortedList;
+      parentCont = '#main .list-group';
+      sortedList = $('.list-group-item', parentCont).sort(function(a, b) {
+        var timeA, timeB;
+        timeA = new Date($('.last-update time', a).attr('datetime')).getTime();
+        timeB = new Date($('.last-update time', b).attr('datetime')).getTime();
+        return timeB - timeA;
+      });
+      return _.each(sortedList, function(item) {
+        return $(parentCont).append(item);
+      });
     };
 
     RecordsView.prototype.resetRecordsList = function() {
@@ -3692,14 +3722,7 @@
     };
 
     RecordsView.prototype.addRecord = function(record, collection, params) {
-      var recordView;
-      if (record.isSatisfied(this.collection.filter)) {
-        recordView = new Tracktime.RecordView({
-          model: record
-        });
-        $(recordView.el).prependTo(this.$el);
-        return this.setSubView("record-" + record.cid, recordView);
-      }
+      return console.log('add record - depricated');
     };
 
     RecordsView.prototype.removeFilter = function(event) {

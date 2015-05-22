@@ -77,6 +77,13 @@
                 @include opacity(0);
             }
         }
+        &.current {
+            .record-info {
+              background-color: #EDEDED;
+              padding: 1em 1em 0.7em;
+              margin: -1em -1em 0em;
+          }
+        }
         *
         {
             @include opacity(1);

@@ -33810,32 +33810,34 @@ this["JST"]["layout/main"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1
 this["JST"]["layout/menu"] = Handlebars.template({"1":function(depth0,helpers,partials,data) {
     return " checked=\"checked\" ";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-    var stack1, alias1=helpers.helperMissing, alias2=this.escapeExpression;
+    var stack1, alias1=this.escapeExpression, alias2=helpers.helperMissing;
 
   return "<div class=\"well\">\n    <h5>Sync apps over internet only</h5>\n    <div class=\"checkbox\">\n        <label>\n            <input type=\"checkbox\" id=\"isOnline\" "
     + ((stack1 = helpers['if'].call(depth0,(depth0 != null ? depth0.isOnline : depth0),{"name":"if","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-    + "> Sync\n        </label>\n    </div>\n</div>\n\n<div class=\"panel-group\" id=\"accordion\" role=\"tablist\" aria-multiselectable=\"true\">\n    <div class=\"panel panel-default\">\n        <a class=\"btn btn-info btn-block\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#user-section\" aria-expanded=\"true\" aria-controls=\"user-section\" role=\"tab\" id=\"headingUser\">\n      User\n    </a>\n        <div id=\"user-section\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingUser\">\n            <div class=\"list-style-group\">\n                "
-    + alias2((helpers.link_to || (depth0 && depth0.link_to) || alias1).call(depth0,{"name":"link_to","hash":{"body":"Settings","href":"#user","class":"list-group-item"},"data":data}))
+    + "> Sync\n        </label>\n    </div>\n</div>\n\n<div class=\"panel-group\" id=\"accordion\" role=\"tablist\" aria-multiselectable=\"true\">\n    <div class=\"panel panel-default\">\n        <a class=\"btn btn-info btn-block\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#user-section\" aria-expanded=\"true\" aria-controls=\"user-section\" role=\"tab\" id=\"headingUser\">\n      User\n    </a>\n        <div id=\"user-section\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingUser\">\n            <div class=\"list-style-group\">\n                <a class=\"list-group-item\" href=\"#records/user/"
+    + alias1(this.lambda(((stack1 = (depth0 != null ? depth0.authUser : depth0)) != null ? stack1.id : stack1), depth0))
+    + "\">My records</a>\n                "
+    + alias1((helpers.link_to || (depth0 && depth0.link_to) || alias2).call(depth0,{"name":"link_to","hash":{"body":"Settings","href":"#user","class":"list-group-item"},"data":data}))
     + "\n                "
-    + alias2((helpers.link_to || (depth0 && depth0.link_to) || alias1).call(depth0,{"name":"link_to","hash":{"body":"Rates","href":"#user/rates","class":"list-group-item"},"data":data}))
+    + alias1((helpers.link_to || (depth0 && depth0.link_to) || alias2).call(depth0,{"name":"link_to","hash":{"body":"Rates","href":"#user/rates","class":"list-group-item"},"data":data}))
     + "\n                "
-    + alias2((helpers.link_to || (depth0 && depth0.link_to) || alias1).call(depth0,{"name":"link_to","hash":{"body":"Logout","href":"#user/logout","class":"list-group-item"},"data":data}))
+    + alias1((helpers.link_to || (depth0 && depth0.link_to) || alias2).call(depth0,{"name":"link_to","hash":{"body":"Logout","href":"#user/logout","class":"list-group-item"},"data":data}))
     + "\n            </div>\n        </div>\n    </div>\n    <div class=\"panel panel-default\">\n        <a class=\"btn btn-primary btn-block\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#projects-section\" aria-expanded=\"true\" aria-controls=\"projects-section\" role=\"tab\" id=\"headingProjects\">\n      Projects\n    </a>\n        <div id=\"projects-section\" class=\"panel-collapse collapse in\" role=\"tabpanel\" aria-labelledby=\"headingProjects\">\n            <div class=\"list-style-group\">\n                "
-    + alias2((helpers.link_to || (depth0 && depth0.link_to) || alias1).call(depth0,{"name":"link_to","hash":{"body":"All Records","href":"#records","class":"list-group-item"},"data":data}))
+    + alias1((helpers.link_to || (depth0 && depth0.link_to) || alias2).call(depth0,{"name":"link_to","hash":{"body":"All Records","href":"#records","class":"list-group-item"},"data":data}))
     + "\n                <div class=\"list-group-item\" style=\"padding: 0\">\n                    <input type=\"search\" class=\"form-control input-search\" placeholder=\"Find Project\" style=\"padding: 10px 15px; height: 38px; margin-bottom: 0;\" />\n                    <ul class=\"dropdown-menu menu-projects\" role=\"menu\" style=\"width: 100%;\">\n                    </ul>\n\n                </div>\n\n            </div>\n        </div>\n    </div>\n    <div class=\"panel panel-default\">\n        <a class=\"btn btn-material-purple btn-block\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#reports-section\" aria-expanded=\"true\" aria-controls=\"reports-section\" role=\"tab\" id=\"headingReports\">\n      Reports\n    </a>\n        <div id=\"reports-section\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingReports\">\n            <div class=\"list-style-group\">\n                "
-    + alias2((helpers.link_to || (depth0 && depth0.link_to) || alias1).call(depth0,{"name":"link_to","hash":{"body":"Reports list","href":"#reports","class":"list-group-item"},"data":data}))
+    + alias1((helpers.link_to || (depth0 && depth0.link_to) || alias2).call(depth0,{"name":"link_to","hash":{"body":"Reports list","href":"#reports","class":"list-group-item"},"data":data}))
     + "\n                "
-    + alias2((helpers.link_to || (depth0 && depth0.link_to) || alias1).call(depth0,{"name":"link_to","hash":{"body":"Report 1","href":"#reports/1","class":"list-group-item"},"data":data}))
+    + alias1((helpers.link_to || (depth0 && depth0.link_to) || alias2).call(depth0,{"name":"link_to","hash":{"body":"Report 1","href":"#reports/1","class":"list-group-item"},"data":data}))
     + "\n                "
-    + alias2((helpers.link_to || (depth0 && depth0.link_to) || alias1).call(depth0,{"name":"link_to","hash":{"body":"Report 2","href":"#reports/2","class":"list-group-item"},"data":data}))
+    + alias1((helpers.link_to || (depth0 && depth0.link_to) || alias2).call(depth0,{"name":"link_to","hash":{"body":"Report 2","href":"#reports/2","class":"list-group-item"},"data":data}))
     + "\n            </div>\n        </div>\n    </div>\n    <div class=\"panel panel-default\">\n        <a class=\"btn btn-warning btn-block\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#admin-section\" aria-expanded=\"true\" aria-controls=\"admin-section\" role=\"tab\" id=\"headingAdmin\">\n      Admin\n    </a>\n        <div id=\"admin-section\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingAdmin\">\n            <div class=\"list-style-group\">\n                "
-    + alias2((helpers.link_to || (depth0 && depth0.link_to) || alias1).call(depth0,{"name":"link_to","hash":{"body":"Dashboard","href":"#admin/dashboard","class":"list-group-item"},"data":data}))
+    + alias1((helpers.link_to || (depth0 && depth0.link_to) || alias2).call(depth0,{"name":"link_to","hash":{"body":"Dashboard","href":"#admin/dashboard","class":"list-group-item"},"data":data}))
     + "\n                "
-    + alias2((helpers.link_to || (depth0 && depth0.link_to) || alias1).call(depth0,{"name":"link_to","hash":{"body":"Users list","href":"#admin/users","class":"list-group-item"},"data":data}))
+    + alias1((helpers.link_to || (depth0 && depth0.link_to) || alias2).call(depth0,{"name":"link_to","hash":{"body":"Users list","href":"#admin/users","class":"list-group-item"},"data":data}))
     + "\n                "
-    + alias2((helpers.link_to || (depth0 && depth0.link_to) || alias1).call(depth0,{"name":"link_to","hash":{"body":"Projects list","href":"#admin/projects","class":"list-group-item"},"data":data}))
+    + alias1((helpers.link_to || (depth0 && depth0.link_to) || alias2).call(depth0,{"name":"link_to","hash":{"body":"Projects list","href":"#admin/projects","class":"list-group-item"},"data":data}))
     + "\n                "
-    + alias2((helpers.link_to || (depth0 && depth0.link_to) || alias1).call(depth0,{"name":"link_to","hash":{"body":"Actions list","href":"#admin/actions","class":"list-group-item"},"data":data}))
+    + alias1((helpers.link_to || (depth0 && depth0.link_to) || alias2).call(depth0,{"name":"link_to","hash":{"body":"Actions list","href":"#admin/actions","class":"list-group-item"},"data":data}))
     + "\n            </div>\n        </div>\n    </div>\n    <div class=\"panel panel-default\">\n        <a class=\"btn btn-material-yellow btn-block\" data-parent=\"#accordion\" href=\"#user/rates\" aria-expanded=\"true\" aria-controls=\"stats-section\" role=\"tab\" id=\"headingStats\">\n      Stats\n    </a>\n        <div id=\"stats-section\" role=\"tabpanel\" aria-labelledby=\"headingStats\">\n            <table class=\"table table-condensed\">\n                <tbody>\n                    <tr class=\"active\">\n                        <td class=\"when\">Today:</td>\n                        <td class=\"time\">0:00</td>\n                        <td class=\"pounds\">£0.0</td>\n                    </tr>\n                    <tr class=\"nonactual\">\n                        <td class=\"when\">Yesterday:</td>\n                        <td class=\"time\">8:00</td>\n                        <td class=\"pounds\">£8.0</td>\n                    </tr>\n                    <tr class=\"active\">\n                        <td class=\"when\">This week:</td>\n                        <td class=\"time\">16:00</td>\n                        <td class=\"pounds\">£16.0</td>\n                    </tr>\n                    <tr class=\"nonactual\">\n                        <td class=\"when\">Previous week:</td>\n                        <td class=\"time\">32:00</td>\n                        <td class=\"pounds\">£32.0</td>\n                    </tr>\n                    <tr class=\"active\">\n                        <td class=\"when\">This month:</td>\n                        <td class=\"time\">48:00</td>\n                        <td class=\"pounds\">£48.0</td>\n                    </tr>\n                    <tr class=\"nonactual\">\n                        <td class=\"when\">Previous month:</td>\n                        <td class=\"time\">0:00</td>\n                        <td class=\"pounds\">£0.0</td>\n                    </tr>\n                </tbody>\n            </table>\n        </div>\n    </div>\n</div>";
 },"useData":true});
 
@@ -33902,6 +33904,8 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     + alias3(((helper = (helper = helpers.date || (depth0 != null ? depth0.date : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"date","hash":{},"data":data}) : helper)))
     + "\">"
     + alias3((helpers.dateFormat || (depth0 && depth0.dateFormat) || alias1).call(depth0,(depth0 != null ? depth0.lastAccess : depth0),{"name":"dateFormat","hash":{},"data":data}))
+    + " / "
+    + alias3(((helper = (helper = helpers.date || (depth0 != null ? depth0.date : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"date","hash":{},"data":data}) : helper)))
     + "</time>\n    </p>\n\n  </div>\n\n  <div class=\"col-menu col-md-1 col-sm-1\">\n    <ul class=\"actions\">\n      <li><a class=\"delete btn btn-fab btn-danger btn-fab-mini pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Delete action\">\n        <i class=\"mdi-navigation-cancel\"></i>\n      </a></li>\n    </ul>\n  </div>\n</div>";
 },"useData":true});
 
@@ -35366,13 +35370,17 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       _.extend(options, {
         date: (new Date()).toISOString()
       });
+      if (_.isEmpty(options.recordDate)) {
+        options.recordDate = moment().format("MMM Do YYYY");
+      }
       success = (function(_this) {
         return function(result) {
-          return $.alert({
+          $.alert({
             content: 'Record: save success',
             timeout: 2000,
             style: 'btn-success'
           });
+          return _this.trigger('newRecord');
         };
       })(this);
       error = (function(_this) {
@@ -37446,7 +37454,8 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     RecordView.prototype.events = {
       'click .btn.delete': "deleteRecord",
       'click .subject': "toggleInlineEdit",
-      'click .edit.btn': "editRecord"
+      'click .edit.btn': "editRecord",
+      'click': "doActive"
     };
 
     RecordView.prototype.initialize = function() {
@@ -37485,6 +37494,11 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       textarea.on('tSubmit', this.sendForm);
       this.renderProjectInfo();
       return this.renderUserInfo();
+    };
+
+    RecordView.prototype.doActive = function() {
+      this.$el.siblings().removeClass('current');
+      return this.$el.addClass('current');
     };
 
     RecordView.prototype.changeIsEdit = function() {
@@ -37612,6 +37626,8 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       this.render();
       this.listenTo(this.collection, "sync", this.resetRecordsList);
       this.listenTo(this.collection, "remove", this.removeRecord);
+      this.listenTo(this.collection, "add", this.addRecord);
+      this.listenTo(this.collection, "newRecord", this.newRecord);
       $('.removeFilter', this.container).on('click', this.removeFilter);
       $('.btn-loadmore', this.container).on('click', this.loadMoreRecords);
       $('.scrollWrapper').on('scroll', this.autoLoadMoreRecords);
@@ -37643,13 +37659,31 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
     RecordsView.prototype.loadMoreRecords = function(event) {
       var modelsNewCount;
-      event.preventDefault();
       modelsNewCount = this.resetRecordsList();
       if (modelsNewCount > 0) {
         return $('.btn-loadmore', this.container).show().appendTo(this.container);
       } else {
         return $('.btn-loadmore', this.container).hide();
       }
+    };
+
+    RecordsView.prototype.newRecord = function() {
+      this.loadMoreRecords();
+      return this.sortRecords();
+    };
+
+    RecordsView.prototype.sortRecords = function() {
+      var parentCont, sortedList;
+      parentCont = '#main .list-group';
+      sortedList = $('.list-group-item', parentCont).sort(function(a, b) {
+        var timeA, timeB;
+        timeA = new Date($('.last-update time', a).attr('datetime')).getTime();
+        timeB = new Date($('.last-update time', b).attr('datetime')).getTime();
+        return timeB - timeA;
+      });
+      return _.each(sortedList, function(item) {
+        return $(parentCont).append(item);
+      });
     };
 
     RecordsView.prototype.resetRecordsList = function() {
@@ -37690,14 +37724,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     };
 
     RecordsView.prototype.addRecord = function(record, collection, params) {
-      var recordView;
-      if (record.isSatisfied(this.collection.filter)) {
-        recordView = new Tracktime.RecordView({
-          model: record
-        });
-        $(recordView.el).prependTo(this.$el);
-        return this.setSubView("record-" + record.cid, recordView);
-      }
+      return console.log('add record - depricated');
     };
 
     RecordsView.prototype.removeFilter = function(event) {

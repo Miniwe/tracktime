@@ -857,11 +857,13 @@ class Tracktime.RecordsCollection extends Tracktime.Collection
 
   addRecord: (options) ->
     _.extend options, {date: (new Date()).toISOString()}
+    options.recordDate = moment().format("MMM Do YYYY") if _.isEmpty(options.recordDate)
     success = (result) =>
       $.alert
         content: 'Record: save success'
         timeout: 2000
         style: 'btn-success'
+      @trigger 'newRecord'
     error = () =>
       $.alert 'Record: save error'
     @addModel options,
@@ -2132,6 +2134,7 @@ class Tracktime.RecordView extends Backbone.View
     'click .btn.delete': "deleteRecord"
     'click .subject': "toggleInlineEdit"
     'click .edit.btn': "editRecord"
+    'click': "doActive"
 
 
   initialize: ->
@@ -2168,6 +2171,10 @@ class Tracktime.RecordView extends Backbone.View
 
     @renderProjectInfo()
     @renderUserInfo()
+
+  doActive: ->
+    @$el.siblings().removeClass 'current'
+    @$el.addClass 'current'
 
   changeIsEdit: ->
     @$el.toggleClass 'editmode', @model.isEdit == true
@@ -2257,6 +2264,8 @@ class Tracktime.RecordsView extends Backbone.View
     @render()
     @listenTo @collection, "sync", @resetRecordsList
     @listenTo @collection, "remove", @removeRecord
+    @listenTo @collection, "add", @addRecord
+    @listenTo @collection, "newRecord", @newRecord
     $('.removeFilter', @container).on 'click', @removeFilter
     $('.btn-loadmore', @container).on 'click', @loadMoreRecords
     $('.scrollWrapper').on 'scroll', @autoLoadMoreRecords
@@ -2279,14 +2288,25 @@ class Tracktime.RecordsView extends Backbone.View
     delta = $(window).height() - $('.btn-loadmore').offset().top - $('.btn-loadmore').height()
     $('.btn-loadmore', @container).click() if delta > 0
 
-
   loadMoreRecords: (event) =>
-    event.preventDefault()
     modelsNewCount = @resetRecordsList()
     if modelsNewCount > 0
      $('.btn-loadmore', @container).show().appendTo @container
     else
      $('.btn-loadmore', @container).hide()
+
+  newRecord: ->
+    @loadMoreRecords()
+    @sortRecords()
+
+  sortRecords: ->
+    parentCont = '#main .list-group'
+    sortedList = $('.list-group-item', parentCont).sort (a, b) ->
+      timeA = new Date($('.last-update time', a).attr('datetime')).getTime()
+      timeB = new Date($('.last-update time', b).attr('datetime')).getTime()
+      timeB - timeA
+    _.each sortedList, (item) -> $(parentCont).append item
+
 
   resetRecordsList: ->
     frag = document.createDocumentFragment()
@@ -2297,7 +2317,6 @@ class Tracktime.RecordsView extends Backbone.View
     , @
     @$el.append frag
     models.length
-
 
   exceptRecords: () ->
     _.pluck $('.list-group-item > div', @container), 'id'
@@ -2315,10 +2334,11 @@ class Tracktime.RecordsView extends Backbone.View
       $('.removeFilter[data-exclude=user] .caption', @container).text @usersList[key]
 
   addRecord: (record, collection, params) ->
-    if record.isSatisfied @collection.filter
-      recordView = new Tracktime.RecordView { model: record }
-      $(recordView.el).prependTo @$el
-      @setSubView "record-#{record.cid}", recordView
+    console.log 'add record - depricated'
+    # if record.isSatisfied @collection.filter
+    #   recordView = new Tracktime.RecordView { model: record }
+    #   $(recordView.el).prependTo @$el
+    #   @setSubView "record-#{record.cid}", recordView
 
   removeFilter: (event) =>
     key = $(event.currentTarget).data('exclude')
@@ -2330,8 +2350,6 @@ class Tracktime.RecordsView extends Backbone.View
     $(event.currentTarget).remove()
     # add records by filter from collection
     @resetRecordsList()
-
-
 
   removeRecord: (record, args...) ->
     recordView = @getSubView "record-#{record.cid}"
