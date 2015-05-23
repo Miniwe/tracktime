@@ -2607,18 +2607,22 @@
       return {
         current: {
           name: localeData.weekdays(moment()),
-          day: moment().format("MMM Do YYYY")
+          day: moment().format("MMM Do YYYY"),
+          value: moment().toISOString()
         },
         days: [
           {
             name: localeData.weekdays(moment().subtract(2, 'days')),
-            day: moment().subtract(2, 'day').format("MMM Do YYYY")
+            day: moment().subtract(2, 'day').format("MMM Do YYYY"),
+            value: moment().subtract(2, 'day').toISOString()
           }, {
             name: localeData.weekdays(moment().subtract(1, 'day')),
-            day: moment().subtract(1, 'day').format("MMM Do YYYY")
+            day: moment().subtract(1, 'day').format("MMM Do YYYY"),
+            value: moment().subtract(1, 'day').toISOString()
           }, {
             name: localeData.weekdays(moment()),
-            day: moment().format("MMM Do YYYY")
+            day: moment().format("MMM Do YYYY"),
+            value: moment().toISOString()
           }
         ]
       };
@@ -2635,7 +2639,7 @@
     SelectDay.prototype.setDay = function(event) {
       event.preventDefault();
       $(".dropdown-toggle ruby", this.$el).html($('ruby', event.currentTarget).html());
-      return this.changeInput($(".dropdown-toggle ruby rt", this.$el).html());
+      return this.changeInput($(event.currentTarget).data('value'));
     };
 
     return SelectDay;
@@ -3675,8 +3679,8 @@
       parentCont = '#main .list-group';
       sortedList = $('.list-group-item', parentCont).sort(function(a, b) {
         var timeA, timeB;
-        timeA = new Date($('.last-update time', a).attr('datetime')).getTime();
-        timeB = new Date($('.last-update time', b).attr('datetime')).getTime();
+        timeA = new Date($('.record-info time', a).attr('datetime')).getTime();
+        timeB = new Date($('.record-info time', b).attr('datetime')).getTime();
         return timeB - timeA;
       });
       return _.each(sortedList, function(item) {

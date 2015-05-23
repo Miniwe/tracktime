@@ -21,15 +21,19 @@ class Tracktime.Element.SelectDay extends Tracktime.Element
     current:
       name: localeData.weekdays(moment())
       day: moment().format("MMM Do YYYY")
+      value: moment().toISOString()
     days: [
       name: localeData.weekdays(moment().subtract(2, 'days'))
       day: moment().subtract(2, 'day').format("MMM Do YYYY")
+      value: moment().subtract(2, 'day').toISOString()
     ,
       name: localeData.weekdays(moment().subtract(1, 'day'))
       day: moment().subtract(1, 'day').format("MMM Do YYYY")
+      value: moment().subtract(1, 'day').toISOString()
     ,
       name: localeData.weekdays(moment())
       day: moment().format("MMM Do YYYY")
+      value: moment().toISOString()
     ]
 
   changeField: =>
@@ -42,7 +46,8 @@ class Tracktime.Element.SelectDay extends Tracktime.Element
   setDay: (event) ->
     event.preventDefault()
     $(".dropdown-toggle ruby", @$el).html $('ruby', event.currentTarget).html()
-    @changeInput $(".dropdown-toggle ruby rt", @$el).html()
+    @changeInput $(event.currentTarget).data('value')
+    # $(".dropdown-toggle ruby rt", @$el).html()
 
 
 (module?.exports = Tracktime.Element.SelectDay) or @Tracktime.Element.SelectDay = Tracktime.Element.SelectDay

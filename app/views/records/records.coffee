@@ -47,8 +47,8 @@ class Tracktime.RecordsView extends Backbone.View
   sortRecords: ->
     parentCont = '#main .list-group'
     sortedList = $('.list-group-item', parentCont).sort (a, b) ->
-      timeA = new Date($('.last-update time', a).attr('datetime')).getTime()
-      timeB = new Date($('.last-update time', b).attr('datetime')).getTime()
+      timeA = new Date($('.record-info time', a).attr('datetime')).getTime()
+      timeB = new Date($('.record-info time', b).attr('datetime')).getTime()
       timeB - timeA
     _.each sortedList, (item) -> $(parentCont).append item
 

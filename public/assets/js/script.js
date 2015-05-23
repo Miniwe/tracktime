@@ -33764,7 +33764,9 @@ this["JST"]["elements/project_definition"] = Handlebars.template({"compiler":[6,
 this["JST"]["elements/selectday"] = Handlebars.template({"1":function(depth0,helpers,partials,data) {
     var helper, alias1=helpers.helperMissing, alias2="function", alias3=this.escapeExpression;
 
-  return "\n        <li>\n            <button class=\"btn btn-default btn-block\">\n                <ruby>"
+  return "\n        <li>\n            <button class=\"btn btn-default btn-block\" data-value=\""
+    + alias3(((helper = (helper = helpers.value || (depth0 != null ? depth0.value : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"value","hash":{},"data":data}) : helper)))
+    + "\">\n                <ruby>"
     + alias3(((helper = (helper = helpers.name || (depth0 != null ? depth0.name : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"name","hash":{},"data":data}) : helper)))
     + "\n                    <rt>"
     + alias3(((helper = (helper = helpers.day || (depth0 != null ? depth0.day : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"day","hash":{},"data":data}) : helper)))
@@ -33888,9 +33890,11 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     + alias3((helpers.filteredHref || (depth0 && depth0.filteredHref) || alias1).call(depth0,{"name":"filteredHref","hash":{"project":(depth0 != null ? depth0.project : depth0),"filter":(depth0 != null ? depth0.filter : depth0)},"data":data}))
     + "\" class='record-info-project' title=\"Project\"><i class=\"mdi-content-add-circle\"></i><span>"
     + alias3(((helper = (helper = helpers.project || (depth0 != null ? depth0.project : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"project","hash":{},"data":data}) : helper)))
-    + "</span>&#0160;</a>\n      <span title=\"Record Date\"><i class=\"mdi-action-event\"></i>"
+    + "</span>&#0160;</a>\n      <time datetime=\""
     + alias3(((helper = (helper = helpers.recordDate || (depth0 != null ? depth0.recordDate : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"recordDate","hash":{},"data":data}) : helper)))
-    + "</span>\n      &#0160;\n      <span title=\"Record Time\"><i class=\"mdi-action-schedule\"></i>"
+    + "\" title=\"Record Date\"><i class=\"mdi-action-event\"></i>"
+    + alias3((helpers.dateFormat || (depth0 && depth0.dateFormat) || alias1).call(depth0,(depth0 != null ? depth0.recordDate : depth0),{"name":"dateFormat","hash":{},"data":data}))
+    + "</time>\n      &#0160;\n      <span title=\"Record Time\"><i class=\"mdi-action-schedule\"></i>"
     + alias3((helpers.minuteFormat || (depth0 && depth0.minuteFormat) || alias1).call(depth0,(depth0 != null ? depth0.recordTime : depth0),{"name":"minuteFormat","hash":{},"data":data}))
     + "</span>\n\n      <!-- &#0160;\n      "
     + alias3(((helper = (helper = helpers.user || (depth0 != null ? depth0.user : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"user","hash":{},"data":data}) : helper)))
@@ -36609,18 +36613,22 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       return {
         current: {
           name: localeData.weekdays(moment()),
-          day: moment().format("MMM Do YYYY")
+          day: moment().format("MMM Do YYYY"),
+          value: moment().toISOString()
         },
         days: [
           {
             name: localeData.weekdays(moment().subtract(2, 'days')),
-            day: moment().subtract(2, 'day').format("MMM Do YYYY")
+            day: moment().subtract(2, 'day').format("MMM Do YYYY"),
+            value: moment().subtract(2, 'day').toISOString()
           }, {
             name: localeData.weekdays(moment().subtract(1, 'day')),
-            day: moment().subtract(1, 'day').format("MMM Do YYYY")
+            day: moment().subtract(1, 'day').format("MMM Do YYYY"),
+            value: moment().subtract(1, 'day').toISOString()
           }, {
             name: localeData.weekdays(moment()),
-            day: moment().format("MMM Do YYYY")
+            day: moment().format("MMM Do YYYY"),
+            value: moment().toISOString()
           }
         ]
       };
@@ -36637,7 +36645,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     SelectDay.prototype.setDay = function(event) {
       event.preventDefault();
       $(".dropdown-toggle ruby", this.$el).html($('ruby', event.currentTarget).html());
-      return this.changeInput($(".dropdown-toggle ruby rt", this.$el).html());
+      return this.changeInput($(event.currentTarget).data('value'));
     };
 
     return SelectDay;
@@ -37677,8 +37685,8 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       parentCont = '#main .list-group';
       sortedList = $('.list-group-item', parentCont).sort(function(a, b) {
         var timeA, timeB;
-        timeA = new Date($('.last-update time', a).attr('datetime')).getTime();
-        timeB = new Date($('.last-update time', b).attr('datetime')).getTime();
+        timeA = new Date($('.record-info time', a).attr('datetime')).getTime();
+        timeB = new Date($('.record-info time', b).attr('datetime')).getTime();
         return timeB - timeA;
       });
       return _.each(sortedList, function(item) {
