@@ -33894,6 +33894,8 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     + alias3(((helper = (helper = helpers.recordDate || (depth0 != null ? depth0.recordDate : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"recordDate","hash":{},"data":data}) : helper)))
     + "\" title=\"Record Date\"><i class=\"mdi-action-event\"></i>"
     + alias3((helpers.dateFormat || (depth0 && depth0.dateFormat) || alias1).call(depth0,(depth0 != null ? depth0.recordDate : depth0),{"name":"dateFormat","hash":{},"data":data}))
+    + " / "
+    + alias3(((helper = (helper = helpers.recordDate || (depth0 != null ? depth0.recordDate : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"recordDate","hash":{},"data":data}) : helper)))
     + "</time>\n      &#0160;\n      <span title=\"Record Time\"><i class=\"mdi-action-schedule\"></i>"
     + alias3((helpers.minuteFormat || (depth0 && depth0.minuteFormat) || alias1).call(depth0,(depth0 != null ? depth0.recordTime : depth0),{"name":"minuteFormat","hash":{},"data":data}))
     + "</span>\n\n      <!-- &#0160;\n      "
@@ -35375,7 +35377,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
         date: (new Date()).toISOString()
       });
       if (_.isEmpty(options.recordDate)) {
-        options.recordDate = moment().format("MMM Do YYYY");
+        options.recordDate = moment().toISOString();
       }
       success = (function(_this) {
         return function(result) {
@@ -37681,7 +37683,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     };
 
     RecordsView.prototype.sortRecords = function() {
-      var parentCont, sortedList;
+      var dates, parentCont, sortedList;
       parentCont = '#main .list-group';
       sortedList = $('.list-group-item', parentCont).sort(function(a, b) {
         var timeA, timeB;
@@ -37689,8 +37691,26 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
         timeB = new Date($('.record-info time', b).attr('datetime')).getTime();
         return timeB - timeA;
       });
+      dates = $.unique($('.record-info time', parentCont).map(function(i, el) {
+        return $(el).attr('datetime').substr(0, 10);
+      })).sort(function(a, b) {
+        return b > a;
+      });
+      _.each(dates, function(el, b) {
+        var id;
+        id = el.replace(/\s/g, '_');
+        if ($("#" + id).length < 1) {
+          return $(parentCont).append($("<ul> /", {
+            id: id
+          }).append($("<li />", {
+            "class": 'list-group-items-group'
+          }).html(el)));
+        }
+      });
       return _.each(sortedList, function(item) {
-        return $(parentCont).append(item);
+        var id;
+        id = $('.record-info time', item).attr('datetime').substr(0, 10).replace(/\s/g, '_');
+        return $("#" + id, parentCont).append(item);
       });
     };
 
@@ -37706,6 +37726,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
         return frag.appendChild(recordView.el);
       }, this);
       this.$el.append(frag);
+      this.sortRecords();
       return models.length;
     };
 

@@ -857,7 +857,7 @@ class Tracktime.RecordsCollection extends Tracktime.Collection
 
   addRecord: (options) ->
     _.extend options, {date: (new Date()).toISOString()}
-    options.recordDate = moment().format("MMM Do YYYY") if _.isEmpty(options.recordDate)
+    options.recordDate = moment().toISOString() if _.isEmpty(options.recordDate)
     success = (result) =>
       $.alert
         content: 'Record: save success'
@@ -2310,7 +2310,16 @@ class Tracktime.RecordsView extends Backbone.View
       timeA = new Date($('.record-info time', a).attr('datetime')).getTime()
       timeB = new Date($('.record-info time', b).attr('datetime')).getTime()
       timeB - timeA
-    _.each sortedList, (item) -> $(parentCont).append item
+
+    dates = $.unique($('.record-info time', parentCont).map((i, el) -> $(el).attr('datetime').substr 0, 10 )).sort (a, b) -> b > a
+    _.each dates, (el, b) ->
+      id = el.replace /\s/g, '_'
+      if $("##{id}").length < 1
+        $(parentCont) .append $("<ul> /", {id: id}) .append $("<li />", {class: 'list-group-items-group'}).html(el)
+
+    _.each sortedList, (item) ->
+      id = $('.record-info time', item).attr('datetime').substr(0, 10).replace /\s/g, '_'
+      $("##{id}", parentCont).append item
 
 
   resetRecordsList: ->
@@ -2321,6 +2330,7 @@ class Tracktime.RecordsView extends Backbone.View
       frag.appendChild recordView.el
     , @
     @$el.append frag
+    @sortRecords()
     models.length
 
   exceptRecords: () ->
@@ -2340,7 +2350,7 @@ class Tracktime.RecordsView extends Backbone.View
 
   addRecord: (record, collection, params) ->
     console.log 'add record - depricated'
-    # if record.isSatisfied @collection.filter
+    # if record.isSatisfiedied @collection.filter
     #   recordView = new Tracktime.RecordView { model: record }
     #   $(recordView.el).prependTo @$el
     #   @setSubView "record-#{record.cid}", recordView

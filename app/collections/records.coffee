@@ -41,7 +41,7 @@ class Tracktime.RecordsCollection extends Tracktime.Collection
 
   addRecord: (options) ->
     _.extend options, {date: (new Date()).toISOString()}
-    options.recordDate = moment().format("MMM Do YYYY") if _.isEmpty(options.recordDate)
+    options.recordDate = moment().toISOString() if _.isEmpty(options.recordDate)
     success = (result) =>
       $.alert
         content: 'Record: save success'

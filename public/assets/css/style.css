@@ -15546,6 +15546,27 @@ h1, h2, h3, h4, h5, h6 {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
   opacity: 0;
 }
+/* line 172, ../../app/assets/sass/blocks/_list-group.scss */
+.list-group .list-group-items-group {
+  color: #525252;
+  text-shadow: 1px 1px #FFF;
+  padding: 0.5em 1em;
+  -moz-box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.2);
+  font-weight: bold;
+}
+/* line 178, ../../app/assets/sass/blocks/_list-group.scss */
+.list-group .list-group-items-group + .list-group-item {
+  margin-top: 0;
+}
+/* line 182, ../../app/assets/sass/blocks/_list-group.scss */
+.list-group > ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  margin-top: 1em;
+}
 
 /* line 1, ../../app/assets/sass/blocks/_project-definition.scss */
 .project_definition {

@@ -1369,7 +1369,7 @@
         date: (new Date()).toISOString()
       });
       if (_.isEmpty(options.recordDate)) {
-        options.recordDate = moment().format("MMM Do YYYY");
+        options.recordDate = moment().toISOString();
       }
       success = (function(_this) {
         return function(result) {
@@ -3675,7 +3675,7 @@
     };
 
     RecordsView.prototype.sortRecords = function() {
-      var parentCont, sortedList;
+      var dates, parentCont, sortedList;
       parentCont = '#main .list-group';
       sortedList = $('.list-group-item', parentCont).sort(function(a, b) {
         var timeA, timeB;
@@ -3683,8 +3683,26 @@
         timeB = new Date($('.record-info time', b).attr('datetime')).getTime();
         return timeB - timeA;
       });
+      dates = $.unique($('.record-info time', parentCont).map(function(i, el) {
+        return $(el).attr('datetime').substr(0, 10);
+      })).sort(function(a, b) {
+        return b > a;
+      });
+      _.each(dates, function(el, b) {
+        var id;
+        id = el.replace(/\s/g, '_');
+        if ($("#" + id).length < 1) {
+          return $(parentCont).append($("<ul> /", {
+            id: id
+          }).append($("<li />", {
+            "class": 'list-group-items-group'
+          }).html(el)));
+        }
+      });
       return _.each(sortedList, function(item) {
-        return $(parentCont).append(item);
+        var id;
+        id = $('.record-info time', item).attr('datetime').substr(0, 10).replace(/\s/g, '_');
+        return $("#" + id, parentCont).append(item);
       });
     };
 
@@ -3700,6 +3718,7 @@
         return frag.appendChild(recordView.el);
       }, this);
       this.$el.append(frag);
+      this.sortRecords();
       return models.length;
     };
 

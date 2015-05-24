@@ -13,7 +13,7 @@
     <p class="record-info text-info">
       <a href="#records{{filteredHref filter=filter user=user}}" class='record-info-user' title="User"><i class="mdi-action-face-unlock"></i><span>{{user}}</span>&#0160;</a>
       <a href="#records{{filteredHref filter=filter project=project}}" class='record-info-project' title="Project"><i class="mdi-content-add-circle"></i><span>{{project}}</span>&#0160;</a>
-      <time datetime="{{recordDate}}" title="Record Date"><i class="mdi-action-event"></i>{{dateFormat recordDate}}</time>
+      <time datetime="{{recordDate}}" title="Record Date"><i class="mdi-action-event"></i>{{dateFormat recordDate}} / {{recordDate}}</time>
       &#0160;
       <span title="Record Time"><i class="mdi-action-schedule"></i>{{minuteFormat recordTime}}</span>
 
