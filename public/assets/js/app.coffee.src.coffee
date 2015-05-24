@@ -863,7 +863,7 @@ class Tracktime.RecordsCollection extends Tracktime.Collection
         content: 'Record: save success'
         timeout: 2000
         style: 'btn-success'
-      @trigger 'newRecord'
+      @trigger 'newRecord', result
     error = () =>
       $.alert 'Record: save error'
     @addModel options,
@@ -2300,9 +2300,14 @@ class Tracktime.RecordsView extends Backbone.View
     else
      $('.btn-loadmore', @container).hide()
 
-  newRecord: ->
+  newRecord: (record) ->
     @loadMoreRecords()
     @sortRecords()
+    dateEl = record.get('recordDate').substr(0, 10).replace(/\s/g, '_')
+    console.log 'dateEl', dateEl, $("##{dateEl}")
+    $('.scrollWrapper').animate
+      'scrollTop': $("##{dateEl}").offset().top - $('.scrollWrapper').offset().top + $('.scrollWrapper').scrollTop() + 20
+
 
   sortRecords: ->
     parentCont = '#main .list-group'

@@ -35386,7 +35386,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
             timeout: 2000,
             style: 'btn-success'
           });
-          return _this.trigger('newRecord');
+          return _this.trigger('newRecord', result);
         };
       })(this);
       error = (function(_this) {
@@ -37677,9 +37677,15 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       }
     };
 
-    RecordsView.prototype.newRecord = function() {
+    RecordsView.prototype.newRecord = function(record) {
+      var dateEl;
       this.loadMoreRecords();
-      return this.sortRecords();
+      this.sortRecords();
+      dateEl = record.get('recordDate').substr(0, 10).replace(/\s/g, '_');
+      console.log('dateEl', dateEl, $("#" + dateEl));
+      return $('.scrollWrapper').animate({
+        'scrollTop': $("#" + dateEl).offset().top - $('.scrollWrapper').offset().top + $('.scrollWrapper').scrollTop() + 20
+      });
     };
 
     RecordsView.prototype.sortRecords = function() {

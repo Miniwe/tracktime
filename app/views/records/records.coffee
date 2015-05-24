@@ -40,9 +40,13 @@ class Tracktime.RecordsView extends Backbone.View
     else
      $('.btn-loadmore', @container).hide()
 
-  newRecord: ->
+  newRecord: (record) ->
     @loadMoreRecords()
     @sortRecords()
+    dateEl = record.get('recordDate').substr(0, 10).replace(/\s/g, '_')
+    $('.scrollWrapper').animate
+      'scrollTop': $("##{dateEl}").offset().top - $('.scrollWrapper').offset().top + $('.scrollWrapper').scrollTop() + 20
+
 
   sortRecords: ->
     parentCont = '#main .list-group'

@@ -1378,7 +1378,7 @@
             timeout: 2000,
             style: 'btn-success'
           });
-          return _this.trigger('newRecord');
+          return _this.trigger('newRecord', result);
         };
       })(this);
       error = (function(_this) {
@@ -3669,9 +3669,15 @@
       }
     };
 
-    RecordsView.prototype.newRecord = function() {
+    RecordsView.prototype.newRecord = function(record) {
+      var dateEl;
       this.loadMoreRecords();
-      return this.sortRecords();
+      this.sortRecords();
+      dateEl = record.get('recordDate').substr(0, 10).replace(/\s/g, '_');
+      console.log('dateEl', dateEl, $("#" + dateEl));
+      return $('.scrollWrapper').animate({
+        'scrollTop': $("#" + dateEl).offset().top - $('.scrollWrapper').offset().top + $('.scrollWrapper').scrollTop() + 20
+      });
     };
 
     RecordsView.prototype.sortRecords = function() {
