@@ -37682,7 +37682,6 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       this.loadMoreRecords();
       this.sortRecords();
       dateEl = record.get('recordDate').substr(0, 10).replace(/\s/g, '_');
-      console.log('dateEl', dateEl, $("#" + dateEl));
       return $('.scrollWrapper').animate({
         'scrollTop': $("#" + dateEl).offset().top - $('.scrollWrapper').offset().top + $('.scrollWrapper').scrollTop() + 20
       });

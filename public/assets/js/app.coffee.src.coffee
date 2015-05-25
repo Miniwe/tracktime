@@ -2304,7 +2304,6 @@ class Tracktime.RecordsView extends Backbone.View
     @loadMoreRecords()
     @sortRecords()
     dateEl = record.get('recordDate').substr(0, 10).replace(/\s/g, '_')
-    console.log 'dateEl', dateEl, $("##{dateEl}")
     $('.scrollWrapper').animate
       'scrollTop': $("##{dateEl}").offset().top - $('.scrollWrapper').offset().top + $('.scrollWrapper').scrollTop() + 20
 
