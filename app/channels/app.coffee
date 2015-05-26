@@ -101,11 +101,10 @@ _.extend Tracktime.AppChannel,
   activeRecord: (record, status) ->
     @model.get('authUser').setActiveRecord record, status
 
-
   addTime: (record, start) ->
-    console.log 'add time to record', record, start
     # diff = moment(new Date()) - moment(new Date(start))
-    console.log 'difference', moment(new Date(start)).fromNow()
+    @model.get('records').get(record).addTime moment(new Date()).diff(new Date(start), 'second')
+
 
   serverOnline: ->
     @trigger 'isOnline', true

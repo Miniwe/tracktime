@@ -35,7 +35,7 @@ class Tracktime.Record extends Tracktime.Model
     _.isMatch @attributes, filter
 
   updateUpdatedAt: () ->
-    @set 'updatedAt', (new Date()).toISOString()
+    @set 'updatedAt', new Date()
 
   changeIsEdit: ->
     if @isEdit
@@ -44,8 +44,9 @@ class Tracktime.Record extends Tracktime.Model
         recordModel: @
         scope: 'edit:action'
 
-  addTime: (start) ->
-    console.log 'will add time', start
-
+  addTime: (diff) ->
+    time = parseInt @get('recordTime'), 10
+    @set 'recordTime', (time + diff)
+    @save {}, ajaxSync: true
 
 (module?.exports = Tracktime.Record) or @Tracktime.Record = Tracktime.Record

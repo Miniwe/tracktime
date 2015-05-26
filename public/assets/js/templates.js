@@ -274,8 +274,10 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     + alias3((helpers.dateFormat || (depth0 && depth0.dateFormat) || alias1).call(depth0,(depth0 != null ? depth0.recordDate : depth0),{"name":"dateFormat","hash":{},"data":data}))
     + "<!--  / "
     + alias3(((helper = (helper = helpers.recordDate || (depth0 != null ? depth0.recordDate : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"recordDate","hash":{},"data":data}) : helper)))
-    + " --></time>\n      &#0160;\n      <span title=\"Record Time\"><i class=\"mdi-action-schedule\"></i>"
+    + " --></time>\n      &#0160;\n      <span title=\"Record Time\" class=\"recordTime\"><i class=\"mdi-action-schedule\"></i><span class=\"value\">"
     + alias3((helpers.minuteFormat || (depth0 && depth0.minuteFormat) || alias1).call(depth0,(depth0 != null ? depth0.recordTime : depth0),{"name":"minuteFormat","hash":{},"data":data}))
+    + "</span> / "
+    + alias3(((helper = (helper = helpers.recordTime || (depth0 != null ? depth0.recordTime : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"recordTime","hash":{},"data":data}) : helper)))
     + "</span>\n\n      <!-- &#0160;\n      "
     + alias3(((helper = (helper = helpers.user || (depth0 != null ? depth0.user : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"user","hash":{},"data":data}) : helper)))
     + " / "

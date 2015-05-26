@@ -29,10 +29,12 @@ Handlebars.registerHelper 'dateFormat', (date) ->
   #   new Date()
 
 Handlebars.registerHelper 'minuteFormat', (val) ->
-  currentHour = val / 720 * 12
-  hour = Math.floor(currentHour)
-  minute = Math.round((currentHour - hour) * 60)
-  "#{hour}:#{minute}"
+  duration = moment.duration val,'minute'
+  duration.get('hours') + ':' + duration.get('minutes')
+  # currentHour = val / 720 * 12
+  # hour = Math.floor(currentHour)
+  # minute = Math.round((currentHour - hour) * 60)
+  # "hb: #{hour}:#{minute}"
 
 Handlebars.registerHelper 'placeholder', (name) ->
   placeholder = "<placeholder id='#{name}'></placeholder>"

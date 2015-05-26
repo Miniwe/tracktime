@@ -255,11 +255,9 @@
   });
 
   Handlebars.registerHelper('minuteFormat', function(val) {
-    var currentHour, hour, minute;
-    currentHour = val / 720 * 12;
-    hour = Math.floor(currentHour);
-    minute = Math.round((currentHour - hour) * 60);
-    return hour + ":" + minute;
+    var duration;
+    duration = moment.duration(val, 'minute');
+    return duration.get('hours') + ':' + duration.get('minutes');
   });
 
   Handlebars.registerHelper('placeholder', function(name) {
@@ -930,7 +928,7 @@
     };
 
     Record.prototype.updateUpdatedAt = function() {
-      return this.set('updatedAt', (new Date()).toISOString());
+      return this.set('updatedAt', new Date());
     };
 
     Record.prototype.changeIsEdit = function() {
@@ -947,8 +945,13 @@
       }
     };
 
-    Record.prototype.addTime = function(start) {
-      return console.log('will add time', start);
+    Record.prototype.addTime = function(diff) {
+      var time;
+      time = parseInt(this.get('recordTime'), 10);
+      this.set('recordTime', time + diff);
+      return this.save({}, {
+        ajaxSync: true
+      });
     };
 
     return Record;
@@ -1679,8 +1682,7 @@
       return this.model.get('authUser').setActiveRecord(record, status);
     },
     addTime: function(record, start) {
-      console.log('add time to record', record, start);
-      return console.log('difference', moment(new Date(start)).fromNow());
+      return this.model.get('records').get(record).addTime(moment(new Date()).diff(new Date(start), 'second'));
     },
     serverOnline: function() {
       return this.trigger('isOnline', true);
@@ -3521,6 +3523,7 @@
       this.listenTo(this.model, "change:isDeleted", this.changeIsDeleted);
       this.listenTo(this.model, "change:subject", this.changeSubject);
       this.listenTo(this.model, "change:project", this.changeProject);
+      this.listenTo(this.model, "change:recordTime", this.changeRecordTime);
       this.listenTo(this.model, "change:isEdit", this.changeIsEdit);
       this.listenTo(this.model, "sync", this.syncModel);
       this.listenTo(this.model, "isActive", this.setActiveState);
@@ -3552,6 +3555,7 @@
       if (Tracktime.AppChannel.checkActive(this.model.id)) {
         this.$el.addClass('current');
       }
+      this.changeRecordTime();
       this.renderProjectInfo();
       return this.renderUserInfo();
     };
@@ -3561,7 +3565,7 @@
     };
 
     RecordView.prototype.setActiveState = function(status) {
-      this.$el.siblings().removeClass('current');
+      $('.list-group-item').removeClass('current');
       return this.$el.toggleClass('current', status);
     };
 
@@ -3582,6 +3586,13 @@
     RecordView.prototype.changeSubject = function() {
       $('.subject', this.$el).html((this.model.get('subject') + '').nl2br());
       return $('.subject_edit', this.$el).val(this.model.get('subject'));
+    };
+
+    RecordView.prototype.changeRecordTime = function() {
+      var duration, durationStr;
+      duration = moment.duration(parseInt(this.model.get('recordTime'), 10), 'minute');
+      durationStr = duration.get('hours') + ':' + duration.get('minutes');
+      return $('.recordTime .value', this.$el).html(durationStr);
     };
 
     RecordView.prototype.changeProject = function() {

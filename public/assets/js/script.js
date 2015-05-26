@@ -33896,8 +33896,10 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     + alias3((helpers.dateFormat || (depth0 && depth0.dateFormat) || alias1).call(depth0,(depth0 != null ? depth0.recordDate : depth0),{"name":"dateFormat","hash":{},"data":data}))
     + "<!--  / "
     + alias3(((helper = (helper = helpers.recordDate || (depth0 != null ? depth0.recordDate : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"recordDate","hash":{},"data":data}) : helper)))
-    + " --></time>\n      &#0160;\n      <span title=\"Record Time\"><i class=\"mdi-action-schedule\"></i>"
+    + " --></time>\n      &#0160;\n      <span title=\"Record Time\" class=\"recordTime\"><i class=\"mdi-action-schedule\"></i><span class=\"value\">"
     + alias3((helpers.minuteFormat || (depth0 && depth0.minuteFormat) || alias1).call(depth0,(depth0 != null ? depth0.recordTime : depth0),{"name":"minuteFormat","hash":{},"data":data}))
+    + "</span> / "
+    + alias3(((helper = (helper = helpers.recordTime || (depth0 != null ? depth0.recordTime : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"recordTime","hash":{},"data":data}) : helper)))
     + "</span>\n\n      <!-- &#0160;\n      "
     + alias3(((helper = (helper = helpers.user || (depth0 != null ? depth0.user : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"user","hash":{},"data":data}) : helper)))
     + " / "
@@ -34263,11 +34265,9 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
   });
 
   Handlebars.registerHelper('minuteFormat', function(val) {
-    var currentHour, hour, minute;
-    currentHour = val / 720 * 12;
-    hour = Math.floor(currentHour);
-    minute = Math.round((currentHour - hour) * 60);
-    return hour + ":" + minute;
+    var duration;
+    duration = moment.duration(val, 'minute');
+    return duration.get('hours') + ':' + duration.get('minutes');
   });
 
   Handlebars.registerHelper('placeholder', function(name) {
@@ -34938,7 +34938,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     };
 
     Record.prototype.updateUpdatedAt = function() {
-      return this.set('updatedAt', (new Date()).toISOString());
+      return this.set('updatedAt', new Date());
     };
 
     Record.prototype.changeIsEdit = function() {
@@ -34955,8 +34955,13 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       }
     };
 
-    Record.prototype.addTime = function(start) {
-      return console.log('will add time', start);
+    Record.prototype.addTime = function(diff) {
+      var time;
+      time = parseInt(this.get('recordTime'), 10);
+      this.set('recordTime', time + diff);
+      return this.save({}, {
+        ajaxSync: true
+      });
     };
 
     return Record;
@@ -35687,8 +35692,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       return this.model.get('authUser').setActiveRecord(record, status);
     },
     addTime: function(record, start) {
-      console.log('add time to record', record, start);
-      return console.log('difference', moment(new Date(start)).fromNow());
+      return this.model.get('records').get(record).addTime(moment(new Date()).diff(new Date(start), 'second'));
     },
     serverOnline: function() {
       return this.trigger('isOnline', true);
@@ -37529,6 +37533,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       this.listenTo(this.model, "change:isDeleted", this.changeIsDeleted);
       this.listenTo(this.model, "change:subject", this.changeSubject);
       this.listenTo(this.model, "change:project", this.changeProject);
+      this.listenTo(this.model, "change:recordTime", this.changeRecordTime);
       this.listenTo(this.model, "change:isEdit", this.changeIsEdit);
       this.listenTo(this.model, "sync", this.syncModel);
       this.listenTo(this.model, "isActive", this.setActiveState);
@@ -37560,6 +37565,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       if (Tracktime.AppChannel.checkActive(this.model.id)) {
         this.$el.addClass('current');
       }
+      this.changeRecordTime();
       this.renderProjectInfo();
       return this.renderUserInfo();
     };
@@ -37569,7 +37575,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     };
 
     RecordView.prototype.setActiveState = function(status) {
-      this.$el.siblings().removeClass('current');
+      $('.list-group-item').removeClass('current');
       return this.$el.toggleClass('current', status);
     };
 
@@ -37590,6 +37596,13 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     RecordView.prototype.changeSubject = function() {
       $('.subject', this.$el).html((this.model.get('subject') + '').nl2br());
       return $('.subject_edit', this.$el).val(this.model.get('subject'));
+    };
+
+    RecordView.prototype.changeRecordTime = function() {
+      var duration, durationStr;
+      duration = moment.duration(parseInt(this.model.get('recordTime'), 10), 'minute');
+      durationStr = duration.get('hours') + ':' + duration.get('minutes');
+      return $('.recordTime .value', this.$el).html(durationStr);
     };
 
     RecordView.prototype.changeProject = function() {

@@ -15,6 +15,7 @@ class Tracktime.RecordView extends Backbone.View
     @listenTo @model, "change:isDeleted", @changeIsDeleted
     @listenTo @model, "change:subject", @changeSubject
     @listenTo @model, "change:project", @changeProject
+    @listenTo @model, "change:recordTime", @changeRecordTime
     @listenTo @model, "change:isEdit", @changeIsEdit
     @listenTo @model, "sync", @syncModel
     @listenTo @model, "isActive", @setActiveState
@@ -44,6 +45,7 @@ class Tracktime.RecordView extends Backbone.View
     textarea.on 'tSubmit', @sendForm
 
     @$el.addClass 'current' if Tracktime.AppChannel.checkActive @model.id
+    @changeRecordTime()
 
     @renderProjectInfo()
     @renderUserInfo()
@@ -52,8 +54,9 @@ class Tracktime.RecordView extends Backbone.View
     Tracktime.AppChannel.command 'activeRecord', @model, not(Tracktime.AppChannel.checkActive @model.id)
 
   setActiveState: (status) ->
-    @$el.siblings().removeClass 'current'
+    $('.list-group-item').removeClass 'current'
     @$el.toggleClass 'current', status
+
 
   changeIsEdit: ->
     @$el.toggleClass 'editmode', @model.isEdit == true
@@ -70,6 +73,11 @@ class Tracktime.RecordView extends Backbone.View
   changeSubject: ->
     $('.subject', @$el).html (@model.get('subject') + '').nl2br()
     $('.subject_edit', @$el).val @model.get 'subject'
+
+  changeRecordTime: ->
+    duration = moment.duration(parseInt(@model.get('recordTime'), 10),'minute')
+    durationStr = duration.get('hours') + ':' + duration.get('minutes')
+    $('.recordTime .value', @$el).html durationStr
 
   changeProject: ->
     @renderProjectInfo()

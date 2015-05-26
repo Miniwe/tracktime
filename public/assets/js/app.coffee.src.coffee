@@ -186,10 +186,12 @@ Handlebars.registerHelper 'dateFormat', (date) ->
   #   new Date()
 
 Handlebars.registerHelper 'minuteFormat', (val) ->
-  currentHour = val / 720 * 12
-  hour = Math.floor(currentHour)
-  minute = Math.round((currentHour - hour) * 60)
-  "#{hour}:#{minute}"
+  duration = moment.duration val,'minute'
+  duration.get('hours') + ':' + duration.get('minutes')
+  # currentHour = val / 720 * 12
+  # hour = Math.floor(currentHour)
+  # minute = Math.round((currentHour - hour) * 60)
+  # "hb: #{hour}:#{minute}"
 
 Handlebars.registerHelper 'placeholder', (name) ->
   placeholder = "<placeholder id='#{name}'></placeholder>"
@@ -614,7 +616,7 @@ class Tracktime.Record extends Tracktime.Model
     _.isMatch @attributes, filter
 
   updateUpdatedAt: () ->
-    @set 'updatedAt', (new Date()).toISOString()
+    @set 'updatedAt', new Date()
 
   changeIsEdit: ->
     if @isEdit
@@ -623,9 +625,10 @@ class Tracktime.Record extends Tracktime.Model
         recordModel: @
         scope: 'edit:action'
 
-  addTime: (start) ->
-    console.log 'will add time', start
-
+  addTime: (diff) ->
+    time = parseInt @get('recordTime'), 10
+    @set 'recordTime', (time + diff)
+    @save {}, ajaxSync: true
 
 (module?.exports = Tracktime.Record) or @Tracktime.Record = Tracktime.Record
 
@@ -1046,11 +1049,10 @@ _.extend Tracktime.AppChannel,
   activeRecord: (record, status) ->
     @model.get('authUser').setActiveRecord record, status
 
-
   addTime: (record, start) ->
-    console.log 'add time to record', record, start
     # diff = moment(new Date()) - moment(new Date(start))
-    console.log 'difference', moment(new Date(start)).fromNow()
+    @model.get('records').get(record).addTime moment(new Date()).diff(new Date(start), 'second')
+
 
   serverOnline: ->
     @trigger 'isOnline', true
@@ -2183,6 +2185,7 @@ class Tracktime.RecordView extends Backbone.View
     @listenTo @model, "change:isDeleted", @changeIsDeleted
     @listenTo @model, "change:subject", @changeSubject
     @listenTo @model, "change:project", @changeProject
+    @listenTo @model, "change:recordTime", @changeRecordTime
     @listenTo @model, "change:isEdit", @changeIsEdit
     @listenTo @model, "sync", @syncModel
     @listenTo @model, "isActive", @setActiveState
@@ -2212,6 +2215,7 @@ class Tracktime.RecordView extends Backbone.View
     textarea.on 'tSubmit', @sendForm
 
     @$el.addClass 'current' if Tracktime.AppChannel.checkActive @model.id
+    @changeRecordTime()
 
     @renderProjectInfo()
     @renderUserInfo()
@@ -2220,8 +2224,9 @@ class Tracktime.RecordView extends Backbone.View
     Tracktime.AppChannel.command 'activeRecord', @model, not(Tracktime.AppChannel.checkActive @model.id)
 
   setActiveState: (status) ->
-    @$el.siblings().removeClass 'current'
+    $('.list-group-item').removeClass 'current'
     @$el.toggleClass 'current', status
+
 
   changeIsEdit: ->
     @$el.toggleClass 'editmode', @model.isEdit == true
@@ -2238,6 +2243,11 @@ class Tracktime.RecordView extends Backbone.View
   changeSubject: ->
     $('.subject', @$el).html (@model.get('subject') + '').nl2br()
     $('.subject_edit', @$el).val @model.get 'subject'
+
+  changeRecordTime: ->
+    duration = moment.duration(parseInt(@model.get('recordTime'), 10),'minute')
+    durationStr = duration.get('hours') + ':' + duration.get('minutes')
+    $('.recordTime .value', @$el).html durationStr
 
   changeProject: ->
     @renderProjectInfo()
