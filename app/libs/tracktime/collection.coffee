@@ -29,15 +29,15 @@ class Tracktime.Collection extends Backbone.Collection
       # иначе
       else
         # если локальная старее то обновляем с новых данных (локально)
-        modelLastAccess = (new Date(model.lastAccess)).getTime()
-        localLastAccess = (new Date(localModel.lastAccess)).getTime()
+        modelUpdatetAt = (new Date(model.updatedAt)).getTime()
+        localUpdatetAt = (new Date(localModel.updatedAt)).getTime()
         if localModel.isDeleted
           # do nothing
           curModel.set {'isDeleted': true},  {trigger: false}
-        else if localLastAccess < modelLastAccess
+        else if localUpdatetAt < modelUpdatetAt
           curModel.save model, ajaxSync: false
         # иначе есть если локальная новее то
-        else if localLastAccess > modelLastAccess
+        else if localUpdatetAt > modelUpdatetAt
           # обновляем модель пришедшую в коллекции
           # сохраняем ее удаленно
           curModel.save localModel, ajaxSync: true
@@ -52,8 +52,8 @@ class Tracktime.Collection extends Backbone.Collection
           destroedModel = new @model {_id: model._id, subject: 'model to delete'}
           destroedModel.destroy ajaxSync: false
         else
-          modelLastAccess = (new Date(model.lastAccess)).getTime()
-          if collectionModel? and modelLastAccess > (new Date(collectionModel.get('lastAccess'))).getTime()
+          modelUpdatetAt = (new Date(model.updatedAt)).getTime()
+          if collectionModel? and modelUpdatetAt > (new Date(collectionModel.get('updatedAt'))).getTime()
             destroedModel = collectionModel
           else
             destroedModel = new @model (model)

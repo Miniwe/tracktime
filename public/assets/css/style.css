@@ -15385,52 +15385,52 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 1em;
 }
 
-/* line 4, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 1, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group {
   margin: 0;
   margin-bottom: 1em;
   padding: 0;
   list-style-type: none;
 }
-/* line 11, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 4, ../../app/assets/sass/blocks/_list-group-item.scss */
 .list-group .list-group-item {
   position: relative;
-  background: #fff;
   display: block;
   width: 100%;
   min-height: 1em;
   margin: .4em auto .8em;
   padding: 1em;
+  background: #fff;
   filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
   opacity: 1;
-  -moz-transition: all 0.4s;
-  -o-transition: all 0.4s;
-  -webkit-transition: all 0.4s;
+  transition: all 0.4s;
+  transition: all 0.4s;
+  transition: all 0.4s;
   transition: all 0.4s;
 }
-/* line 28, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 22, ../../app/assets/sass/blocks/_list-group-item.scss */
 .list-group .list-group-item:hover .actions {
   display: table;
   filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
   opacity: 1;
 }
-/* line 36, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 30, ../../app/assets/sass/blocks/_list-group-item.scss */
 .list-group .list-group-item:hover .col-icon .btn {
   position: absolute;
 }
-/* line 39, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 33, ../../app/assets/sass/blocks/_list-group-item.scss */
 .list-group .list-group-item:hover .col-icon .btn.type {
   z-index: 9;
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
   opacity: 0;
 }
-/* line 45, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 39, ../../app/assets/sass/blocks/_list-group-item.scss */
 .list-group .list-group-item:hover .col-icon .btn.edit {
   z-index: 10;
   filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
   opacity: 1;
 }
-/* line 54, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 48, ../../app/assets/sass/blocks/_list-group-item.scss */
 .list-group .list-group-item.editmode {
   pointer-events: none;
   background-color: #ddd;
@@ -15438,7 +15438,7 @@ h1, h2, h3, h4, h5, h6 {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=30);
   opacity: 0.3;
 }
-/* line 63, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 57, ../../app/assets/sass/blocks/_list-group-item.scss */
 .list-group .list-group-item.on-show {
   overflow: hidden;
   box-sizing: border-box;
@@ -15449,34 +15449,37 @@ h1, h2, h3, h4, h5, h6 {
   padding: 0;
   border-color: #f00;
 }
-/* line 75, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 69, ../../app/assets/sass/blocks/_list-group-item.scss */
 .list-group .list-group-item.on-show * {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
   opacity: 0;
 }
-/* line 81, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 76, ../../app/assets/sass/blocks/_list-group-item.scss */
 .list-group .list-group-item.current .record-info {
-  background-color: #EDEDED;
-  padding: 1em 1em 0.7em;
-  margin: -1em -1em 0em;
+  margin: -1em -1em 0;
+  padding: 1em 1em .7em;
+  background-color: #ededed;
 }
-/* line 87, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 85, ../../app/assets/sass/blocks/_list-group-item.scss */
+.list-group .list-group-item.current .btn[role=do-active]:after {
+  content: attr(status-stop);
+}
+/* line 92, ../../app/assets/sass/blocks/_list-group-item.scss */
 .list-group .list-group-item * {
   filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
   opacity: 1;
-  -moz-transition: opacity 0.2s 0.4s;
-  -o-transition: opacity 0.2s 0.4s;
-  -webkit-transition: opacity 0.2s;
-  -webkit-transition-delay: 0.4s;
+  transition: opacity 0.2s 0.4s;
+  transition: opacity 0.2s 0.4s;
+  transition: opacity 0.2s 0.4s;
   transition: opacity 0.2s 0.4s;
 }
-/* line 92, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 97, ../../app/assets/sass/blocks/_list-group-item.scss */
 .list-group .list-group-item .subject_edit {
   width: 100%;
   padding: 0;
   border: none;
 }
-/* line 99, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 104, ../../app/assets/sass/blocks/_list-group-item.scss */
 .list-group .list-group-item ul.actions {
   position: absolute;
   right: 1em;
@@ -15486,81 +15489,78 @@ h1, h2, h3, h4, h5, h6 {
   margin: 0;
   padding: 0;
   list-style-type: none;
-  -moz-transition: opacity 0.8s 0.4s;
-  -o-transition: opacity 0.8s 0.4s;
-  -webkit-transition: opacity 0.8s;
-  -webkit-transition-delay: 0.4s;
+  transition: opacity 0.8s 0.4s;
+  transition: opacity 0.8s 0.4s;
+  transition: opacity 0.8s 0.4s;
   transition: opacity 0.8s 0.4s;
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
   opacity: 0;
 }
-/* line 115, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 120, ../../app/assets/sass/blocks/_list-group-item.scss */
 .list-group .list-group-item ul.actions li {
   display: table-cell;
   margin: 1em;
 }
-/* line 124, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 129, ../../app/assets/sass/blocks/_list-group-item.scss */
 .list-group .list-group-item .record-info i {
   font-size: 1.3em;
   position: relative;
   top: .1em;
   margin-right: .2em;
 }
-/* line 134, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 139, ../../app/assets/sass/blocks/_list-group-item.scss */
 .list-group .list-group-item .last-update {
   margin-top: .6em;
 }
-/* line 137, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 142, ../../app/assets/sass/blocks/_list-group-item.scss */
 .list-group .list-group-item .last-update .text-muted {
   font-size: .85em;
   color: #b4b4b4;
 }
-/* line 142, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 147, ../../app/assets/sass/blocks/_list-group-item.scss */
 .list-group .list-group-item .last-update .text-muted:before {
   content: 'Last Update: ';
   color: #c4c4c4;
 }
-/* line 152, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 157, ../../app/assets/sass/blocks/_list-group-item.scss */
 .list-group .list-group-item .col-icon .btn {
   position: absolute;
 }
-/* line 155, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 160, ../../app/assets/sass/blocks/_list-group-item.scss */
 .list-group .list-group-item .col-icon .btn.type {
   z-index: 10;
-  -moz-transition: opacity 0.8s 0.4s;
-  -o-transition: opacity 0.8s 0.4s;
-  -webkit-transition: opacity 0.8s;
-  -webkit-transition-delay: 0.4s;
+  transition: opacity 0.8s 0.4s;
+  transition: opacity 0.8s 0.4s;
+  transition: opacity 0.8s 0.4s;
   transition: opacity 0.8s 0.4s;
   filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
   opacity: 1;
 }
-/* line 162, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 167, ../../app/assets/sass/blocks/_list-group-item.scss */
 .list-group .list-group-item .col-icon .btn.edit {
   z-index: 9;
-  -moz-transition: opacity 0.8s 0.4s;
-  -o-transition: opacity 0.8s 0.4s;
-  -webkit-transition: opacity 0.8s;
-  -webkit-transition-delay: 0.4s;
+  transition: opacity 0.8s 0.4s;
+  transition: opacity 0.8s 0.4s;
+  transition: opacity 0.8s 0.4s;
   transition: opacity 0.8s 0.4s;
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
   opacity: 0;
 }
-/* line 172, ../../app/assets/sass/blocks/_list-group.scss */
-.list-group .list-group-items-group {
-  color: #525252;
-  text-shadow: 1px 1px #FFF;
-  padding: 0.5em 1em;
-  -moz-box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.2);
-  -webkit-box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.2);
-  box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.2);
-  font-weight: bold;
+/* line 178, ../../app/assets/sass/blocks/_list-group-item.scss */
+.list-group .list-group-item .btn[role=do-active]:after {
+  content: attr(status-start);
 }
-/* line 178, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 9, ../../app/assets/sass/blocks/_list-group.scss */
+.list-group .list-group-items-group {
+  padding: 0.5em 1em;
+  margin-bottom: 0;
+  min-height: initial;
+}
+/* line 13, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group .list-group-items-group + .list-group-item {
   margin-top: 0;
 }
-/* line 182, ../../app/assets/sass/blocks/_list-group.scss */
+/* line 17, ../../app/assets/sass/blocks/_list-group.scss */
 .list-group > ul {
   list-style: none;
   margin: 0;

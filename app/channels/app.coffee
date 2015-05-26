@@ -69,6 +69,7 @@ _.extend Tracktime.AppChannel,
       'checkOnline':     @checkOnline
       'userAuth':        @userAuth
       'userGuest':       @userGuest
+      'activeRecord':       @activeRecord
 
   bindRequest: ->
     @reply 'isOnline', => @isOnline
@@ -96,6 +97,9 @@ _.extend Tracktime.AppChannel,
     action = @model.get('actions').addAction(options, params)
     action.setActive()
 
+  activeRecord: (record) ->
+    @model.get('authUser').setActiveRecord record
+
   serverOnline: ->
     @trigger 'isOnline', true
 
@@ -122,10 +126,6 @@ _.extend Tracktime.AppChannel,
       @trigger 'isOnline', @isOnline
     else
       @router = new Tracktime.GuestRouter model: @model
-
-
-
-
 
 
 (module?.exports = Tracktime.AppChannel) or @Tracktime.AppChannel = Tracktime.AppChannel

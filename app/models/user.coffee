@@ -12,7 +12,9 @@ class Tracktime.User extends Tracktime.Model
     password: ''
     description: ''
     default_pay_rate: ''
-    lastAccess: (new Date()).toISOString()
+    updatedAt: (new Date()).toISOString()
+    activeRecord: ''
+    startedAt: null
     isDeleted: false
 
   validation:
@@ -23,17 +25,17 @@ class Tracktime.User extends Tracktime.Model
 
   initialize: ->
     @isEdit = false
-    @on 'change:first_name', @updateLastAccess
-    @on 'change:last_name', @updateLastAccess
-    @on 'change:description', @updateLastAccess
+    @on 'change:first_name', @updateUpdatedAt
+    @on 'change:last_name', @updateUpdatedAt
+    @on 'change:description', @updateUpdatedAt
     @on 'change:isEdit', @changeIsEdit
 
   isValid: () ->
     # @todo add good validation
     true
 
-  updateLastAccess: () ->
-    @set 'lastAccess', (new Date()).toISOString()
+  updateUpdatedAt: () ->
+    @set 'updatedAt', (new Date()).toISOString()
 
   changeIsEdit: ->
     if @isEdit
@@ -41,6 +43,5 @@ class Tracktime.User extends Tracktime.Model
         title: 'Edit user: ' + @get('first_name').substr(0, 40)
         userModel: @
         scope: 'edit:action'
-
 
 (module?.exports = Tracktime.User) or @Tracktime.User = Tracktime.User

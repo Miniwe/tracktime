@@ -370,7 +370,7 @@
       var localModels;
       _.each(models, (function(_this) {
         return function(model) {
-          var curModel, localLastAccess, localModel, modelLastAccess;
+          var curModel, localModel, localUpdatetAt, modelUpdatetAt;
           curModel = _this.get(model._id);
           localModel = _this.localStorage.find(curModel);
           if (!localModel) {
@@ -378,19 +378,19 @@
               ajaxSync: false
             });
           } else {
-            modelLastAccess = (new Date(model.lastAccess)).getTime();
-            localLastAccess = (new Date(localModel.lastAccess)).getTime();
+            modelUpdatetAt = (new Date(model.updatedAt)).getTime();
+            localUpdatetAt = (new Date(localModel.updatedAt)).getTime();
             if (localModel.isDeleted) {
               return curModel.set({
                 'isDeleted': true
               }, {
                 trigger: false
               });
-            } else if (localLastAccess < modelLastAccess) {
+            } else if (localUpdatetAt < modelUpdatetAt) {
               return curModel.save(model, {
                 ajaxSync: false
               });
-            } else if (localLastAccess > modelLastAccess) {
+            } else if (localUpdatetAt > modelUpdatetAt) {
               return curModel.save(localModel, {
                 ajaxSync: true
               });
@@ -401,7 +401,7 @@
       localModels = this.localStorage.findAll();
       return _.each(_.clone(localModels), (function(_this) {
         return function(model) {
-          var collectionModel, destroedModel, modelLastAccess, newModel, replacedModel;
+          var collectionModel, destroedModel, modelUpdatetAt, newModel, replacedModel;
           collectionModel = _this.get(model._id);
           if (model.isDeleted) {
             if (model._id.length > 24) {
@@ -413,8 +413,8 @@
                 ajaxSync: false
               });
             } else {
-              modelLastAccess = (new Date(model.lastAccess)).getTime();
-              if ((collectionModel != null) && modelLastAccess > (new Date(collectionModel.get('lastAccess'))).getTime()) {
+              modelUpdatetAt = (new Date(model.updatedAt)).getTime();
+              if ((collectionModel != null) && modelUpdatetAt > (new Date(collectionModel.get('updatedAt'))).getTime()) {
                 destroedModel = collectionModel;
               } else {
                 destroedModel = new _this.model(model);
@@ -831,7 +831,7 @@
       _id: null,
       name: '',
       description: '',
-      lastAccess: (new Date()).toISOString(),
+      updatedAt: (new Date()).toISOString(),
       isDeleted: false
     };
 
@@ -845,7 +845,7 @@
 
     Project.prototype.initialize = function() {
       this.isEdit = false;
-      this.on('change:name', this.updateLastAccess);
+      this.on('change:name', this.updateUpdatedAt);
       return this.on('change:isEdit', this.changeIsEdit);
     };
 
@@ -853,8 +853,8 @@
       return true;
     };
 
-    Project.prototype.updateLastAccess = function() {
-      return this.set('lastAccess', (new Date()).toISOString());
+    Project.prototype.updateUpdatedAt = function() {
+      return this.set('updatedAt', (new Date()).toISOString());
     };
 
     Project.prototype.changeIsEdit = function() {
@@ -899,7 +899,7 @@
       date: function() {
         return (new Date()).toISOString();
       },
-      lastAccess: (new Date()).toISOString(),
+      updatedAt: (new Date()).toISOString(),
       recordDate: '',
       recordTime: 0,
       project: 0,
@@ -917,7 +917,7 @@
 
     Record.prototype.initialize = function() {
       this.isEdit = false;
-      this.on('change:subject change:recordTime change:recordDate change:project', this.updateLastAccess);
+      this.on('change:subject change:recordTime change:recordDate change:project', this.updateUpdatedAt);
       return this.on('change:isEdit', this.changeIsEdit);
     };
 
@@ -929,8 +929,8 @@
       return _.isMatch(this.attributes, filter);
     };
 
-    Record.prototype.updateLastAccess = function() {
-      return this.set('lastAccess', (new Date()).toISOString());
+    Record.prototype.updateUpdatedAt = function() {
+      return this.set('updatedAt', (new Date()).toISOString());
     };
 
     Record.prototype.changeIsEdit = function() {
@@ -945,6 +945,10 @@
           scope: 'edit:action'
         });
       }
+    };
+
+    Record.prototype.setActive = function() {
+      return this.collection.trigger('activeRecord', this.id);
     };
 
     return Record;
@@ -976,7 +980,9 @@
       password: '',
       description: '',
       default_pay_rate: '',
-      lastAccess: (new Date()).toISOString(),
+      updatedAt: (new Date()).toISOString(),
+      activeRecord: '',
+      startedAt: null,
       isDeleted: false
     };
 
@@ -990,9 +996,9 @@
 
     User.prototype.initialize = function() {
       this.isEdit = false;
-      this.on('change:first_name', this.updateLastAccess);
-      this.on('change:last_name', this.updateLastAccess);
-      this.on('change:description', this.updateLastAccess);
+      this.on('change:first_name', this.updateUpdatedAt);
+      this.on('change:last_name', this.updateUpdatedAt);
+      this.on('change:description', this.updateUpdatedAt);
       return this.on('change:isEdit', this.changeIsEdit);
     };
 
@@ -1000,8 +1006,8 @@
       return true;
     };
 
-    User.prototype.updateLastAccess = function() {
-      return this.set('lastAccess', (new Date()).toISOString());
+    User.prototype.updateUpdatedAt = function() {
+      return this.set('updatedAt', (new Date()).toISOString());
     };
 
     User.prototype.changeIsEdit = function() {
@@ -1087,7 +1093,7 @@
       _.extend(params, {
         status: 'active',
         k_status: 'active',
-        lastAccess: (new Date()).toISOString(),
+        updatedAt: (new Date()).toISOString(),
         isDeleted: 'false'
       });
       return this.save(params, {
@@ -1125,6 +1131,28 @@
         error: (function(_this) {
           return function(model, response, options) {
             return console.log('logout error');
+          };
+        })(this)
+      });
+    };
+
+    Auth.prototype.setActiveRecord = function(record) {
+      var params;
+      params = {
+        activeRecord: record.id,
+        startedAt: (new Date()).toISOString()
+      };
+      return this.save(params, {
+        ajaxSync: true,
+        url: config.SERVER + '/users/' + this.id,
+        success: (function(_this) {
+          return function(model, response, options) {
+            return record.setActive();
+          };
+        })(this),
+        error: (function(_this) {
+          return function(model, response, options) {
+            return _this.trigger('flash', response.responseJSON.error);
           };
         })(this)
       });
@@ -1574,7 +1602,8 @@
         'serverOffline': this.serverOffline,
         'checkOnline': this.checkOnline,
         'userAuth': this.userAuth,
-        'userGuest': this.userGuest
+        'userGuest': this.userGuest,
+        'activeRecord': this.activeRecord
       });
     },
     bindRequest: function() {
@@ -1630,6 +1659,9 @@
       var action;
       action = this.model.get('actions').addAction(options, params);
       return action.setActive();
+    },
+    activeRecord: function(record) {
+      return this.model.get('authUser').setActiveRecord(record);
     },
     serverOnline: function() {
       return this.trigger('isOnline', true);
@@ -3457,7 +3489,7 @@
       'click .btn.delete': "deleteRecord",
       'click .subject': "toggleInlineEdit",
       'click .edit.btn': "editRecord",
-      'click': "doActive"
+      'click .btn[role=do-active]': "doActive"
     };
 
     RecordView.prototype.initialize = function() {
@@ -3499,8 +3531,7 @@
     };
 
     RecordView.prototype.doActive = function() {
-      this.$el.siblings().removeClass('current');
-      return this.$el.addClass('current');
+      return Tracktime.AppChannel.command('activeRecord', this.model);
     };
 
     RecordView.prototype.changeIsEdit = function() {
@@ -3630,6 +3661,7 @@
       this.listenTo(this.collection, "remove", this.removeRecord);
       this.listenTo(this.collection, "add", this.addRecord);
       this.listenTo(this.collection, "newRecord", this.newRecord);
+      this.listenTo(this.collection, "activeRecord", this.activeRecord);
       $('.removeFilter', this.container).on('click', this.removeFilter);
       $('.btn-loadmore', this.container).on('click', this.loadMoreRecords);
       $('.scrollWrapper').on('scroll', this.autoLoadMoreRecords);
@@ -3672,11 +3704,8 @@
     RecordsView.prototype.newRecord = function(record) {
       var dateEl;
       this.loadMoreRecords();
-      this.sortRecords();
       dateEl = record.get('recordDate').substr(0, 10).replace(/\s/g, '_');
-      return $('.scrollWrapper').animate({
-        'scrollTop': $("#" + dateEl).offset().top - $('.scrollWrapper').offset().top + $('.scrollWrapper').scrollTop() + 20
-      });
+      return $('.scrollWrapper').scrollTop($("#" + dateEl).offset().top + $(".scrollWrapper").scrollTop() - 78);
     };
 
     RecordsView.prototype.sortRecords = function() {
@@ -3700,7 +3729,7 @@
           return $(parentCont).append($("<ul> /", {
             id: id
           }).append($("<li />", {
-            "class": 'list-group-items-group'
+            "class": 'list-group-items-group navbar navbar-primary'
           }).html(el)));
         }
       });
@@ -3722,7 +3751,7 @@
         }));
         return frag.appendChild(recordView.el);
       }, this);
-      this.$el.append(frag);
+      this.$el.prepend(frag);
       this.sortRecords();
       return models.length;
     };
@@ -3749,9 +3778,7 @@
       }
     };
 
-    RecordsView.prototype.addRecord = function(record, collection, params) {
-      return console.log('add record - depricated');
-    };
+    RecordsView.prototype.addRecord = function(record, collection, params) {};
 
     RecordsView.prototype.removeFilter = function(event) {
       var key;
@@ -3769,6 +3796,11 @@
       if (recordView) {
         return recordView.close();
       }
+    };
+
+    RecordsView.prototype.activeRecord = function(id) {
+      $('.list-group-item', this.container).removeClass('current');
+      return $("#" + id).parent().addClass('current');
     };
 
     return RecordsView;

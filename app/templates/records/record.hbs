@@ -11,9 +11,10 @@
 
   <div class="col-subject col-md-10 col-sm-9">
     <p class="record-info text-info">
+      <button class="btn btn-xs btn-info" role='do-active' title="Make active" status-start="Start" status-stop="Stop"></button>
       <a href="#records{{filteredHref filter=filter user=user}}" class='record-info-user' title="User"><i class="mdi-action-face-unlock"></i><span>{{user}}</span>&#0160;</a>
       <a href="#records{{filteredHref filter=filter project=project}}" class='record-info-project' title="Project"><i class="mdi-content-add-circle"></i><span>{{project}}</span>&#0160;</a>
-      <time datetime="{{recordDate}}" title="Record Date"><i class="mdi-action-event"></i>{{dateFormat recordDate}} / {{recordDate}}</time>
+      <time datetime="{{recordDate}}" title="Record Date"><i class="mdi-action-event"></i>{{dateFormat recordDate}}<!--  / {{recordDate}} --></time>
       &#0160;
       <span title="Record Time"><i class="mdi-action-schedule"></i>{{minuteFormat recordTime}}</span>
 
@@ -24,7 +25,7 @@
     <div class="subject" style="border: none;">{{nl2br subject}}</div>
 
     <p class="last-update">
-        <time class="text-muted" datetime="{{date}}">{{dateFormat lastAccess}} / {{date}}</time>
+        <time class="text-muted" datetime="{{date}}">{{dateFormat updatedAt}} / {{date}}</time>
     </p>
 
   </div>

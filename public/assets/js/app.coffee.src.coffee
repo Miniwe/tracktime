@@ -262,15 +262,15 @@ class Tracktime.Collection extends Backbone.Collection
       # иначе
       else
         # если локальная старее то обновляем с новых данных (локально)
-        modelLastAccess = (new Date(model.lastAccess)).getTime()
-        localLastAccess = (new Date(localModel.lastAccess)).getTime()
+        modelUpdatetAt = (new Date(model.updatedAt)).getTime()
+        localUpdatetAt = (new Date(localModel.updatedAt)).getTime()
         if localModel.isDeleted
           # do nothing
           curModel.set {'isDeleted': true},  {trigger: false}
-        else if localLastAccess < modelLastAccess
+        else if localUpdatetAt < modelUpdatetAt
           curModel.save model, ajaxSync: false
         # иначе есть если локальная новее то
-        else if localLastAccess > modelLastAccess
+        else if localUpdatetAt > modelUpdatetAt
           # обновляем модель пришедшую в коллекции
           # сохраняем ее удаленно
           curModel.save localModel, ajaxSync: true
@@ -285,8 +285,8 @@ class Tracktime.Collection extends Backbone.Collection
           destroedModel = new @model {_id: model._id, subject: 'model to delete'}
           destroedModel.destroy ajaxSync: false
         else
-          modelLastAccess = (new Date(model.lastAccess)).getTime()
-          if collectionModel? and modelLastAccess > (new Date(collectionModel.get('lastAccess'))).getTime()
+          modelUpdatetAt = (new Date(model.updatedAt)).getTime()
+          if collectionModel? and modelUpdatetAt > (new Date(collectionModel.get('updatedAt'))).getTime()
             destroedModel = collectionModel
           else
             destroedModel = new @model (model)
@@ -546,7 +546,7 @@ class Tracktime.Project extends Tracktime.Model
     _id: null
     name: ''
     description: ''
-    lastAccess: (new Date()).toISOString()
+    updatedAt: (new Date()).toISOString()
     isDeleted: false
 
   validation:
@@ -557,15 +557,15 @@ class Tracktime.Project extends Tracktime.Model
 
   initialize: ->
     @isEdit = false
-    @on 'change:name', @updateLastAccess
+    @on 'change:name', @updateUpdatedAt
     @on 'change:isEdit', @changeIsEdit
 
   isValid: () ->
     # @todo add good validation
     true
 
-  updateLastAccess: () ->
-    @set 'lastAccess', (new Date()).toISOString()
+  updateUpdatedAt: () ->
+    @set 'updatedAt', (new Date()).toISOString()
 
   changeIsEdit: ->
     if @isEdit
@@ -588,7 +588,7 @@ class Tracktime.Record extends Tracktime.Model
     subject: ''
     description: ''
     date: () -> (new Date()).toISOString()
-    lastAccess: (new Date()).toISOString()
+    updatedAt: (new Date()).toISOString()
     recordDate: ''
     recordTime: 0
     project: 0
@@ -603,7 +603,7 @@ class Tracktime.Record extends Tracktime.Model
 
   initialize: ->
     @isEdit = false
-    @on 'change:subject change:recordTime change:recordDate change:project', @updateLastAccess
+    @on 'change:subject change:recordTime change:recordDate change:project', @updateUpdatedAt
     @on 'change:isEdit', @changeIsEdit
 
   isValid: ->
@@ -613,8 +613,8 @@ class Tracktime.Record extends Tracktime.Model
   isSatisfied: (filter) ->
     _.isMatch @attributes, filter
 
-  updateLastAccess: () ->
-    @set 'lastAccess', (new Date()).toISOString()
+  updateUpdatedAt: () ->
+    @set 'updatedAt', (new Date()).toISOString()
 
   changeIsEdit: ->
     if @isEdit
@@ -622,6 +622,9 @@ class Tracktime.Record extends Tracktime.Model
         title: 'Edit record: ' + @get('subject').substr(0, 40)
         recordModel: @
         scope: 'edit:action'
+
+  setActive: ->
+    @collection.trigger 'activeRecord', @id
 
 
 (module?.exports = Tracktime.Record) or @Tracktime.Record = Tracktime.Record
@@ -640,7 +643,9 @@ class Tracktime.User extends Tracktime.Model
     password: ''
     description: ''
     default_pay_rate: ''
-    lastAccess: (new Date()).toISOString()
+    updatedAt: (new Date()).toISOString()
+    activeRecord: ''
+    startedAt: null
     isDeleted: false
 
   validation:
@@ -651,17 +656,17 @@ class Tracktime.User extends Tracktime.Model
 
   initialize: ->
     @isEdit = false
-    @on 'change:first_name', @updateLastAccess
-    @on 'change:last_name', @updateLastAccess
-    @on 'change:description', @updateLastAccess
+    @on 'change:first_name', @updateUpdatedAt
+    @on 'change:last_name', @updateUpdatedAt
+    @on 'change:description', @updateUpdatedAt
     @on 'change:isEdit', @changeIsEdit
 
   isValid: () ->
     # @todo add good validation
     true
 
-  updateLastAccess: () ->
-    @set 'lastAccess', (new Date()).toISOString()
+  updateUpdatedAt: () ->
+    @set 'updatedAt', (new Date()).toISOString()
 
   changeIsEdit: ->
     if @isEdit
@@ -669,7 +674,6 @@ class Tracktime.User extends Tracktime.Model
         title: 'Edit user: ' + @get('first_name').substr(0, 40)
         userModel: @
         scope: 'edit:action'
-
 
 (module?.exports = Tracktime.User) or @Tracktime.User = Tracktime.User
 
@@ -709,7 +713,7 @@ class Tracktime.User.Auth extends Backbone.Model
     _.extend params,
       status: 'active'
       k_status: 'active'
-      lastAccess: (new Date()).toISOString()
+      updatedAt: (new Date()).toISOString()
       isDeleted: 'false'
     @save params,
       ajaxSync: true
@@ -734,6 +738,18 @@ class Tracktime.User.Auth extends Backbone.Model
         window.location.reload()
       error: (model, response, options) =>
         console.log 'logout error'
+
+  setActiveRecord: (record) ->
+    params =
+      activeRecord: record.id
+      startedAt: (new Date()).toISOString()
+    @save params,
+      ajaxSync: true
+      url: config.SERVER + '/users/' + @id
+      success: (model, response, options) =>
+        record.setActive()
+      error: (model, response, options) =>
+        @trigger 'flash', response.responseJSON.error
 
 (module?.exports = Tracktime.User.Auth) or @Tracktime.User.Auth = Tracktime.User.Auth
 
@@ -988,6 +1004,7 @@ _.extend Tracktime.AppChannel,
       'checkOnline':     @checkOnline
       'userAuth':        @userAuth
       'userGuest':       @userGuest
+      'activeRecord':       @activeRecord
 
   bindRequest: ->
     @reply 'isOnline', => @isOnline
@@ -1015,6 +1032,9 @@ _.extend Tracktime.AppChannel,
     action = @model.get('actions').addAction(options, params)
     action.setActive()
 
+  activeRecord: (record) ->
+    @model.get('authUser').setActiveRecord record
+
   serverOnline: ->
     @trigger 'isOnline', true
 
@@ -1041,10 +1061,6 @@ _.extend Tracktime.AppChannel,
       @trigger 'isOnline', @isOnline
     else
       @router = new Tracktime.GuestRouter model: @model
-
-
-
-
 
 
 (module?.exports = Tracktime.AppChannel) or @Tracktime.AppChannel = Tracktime.AppChannel
@@ -2139,7 +2155,7 @@ class Tracktime.RecordView extends Backbone.View
     'click .btn.delete': "deleteRecord"
     'click .subject': "toggleInlineEdit"
     'click .edit.btn': "editRecord"
-    'click': "doActive"
+    'click .btn[role=do-active]': "doActive"
 
 
   initialize: ->
@@ -2178,8 +2194,7 @@ class Tracktime.RecordView extends Backbone.View
     @renderUserInfo()
 
   doActive: ->
-    @$el.siblings().removeClass 'current'
-    @$el.addClass 'current'
+    Tracktime.AppChannel.command 'activeRecord', @model
 
   changeIsEdit: ->
     @$el.toggleClass 'editmode', @model.isEdit == true
@@ -2271,6 +2286,7 @@ class Tracktime.RecordsView extends Backbone.View
     @listenTo @collection, "remove", @removeRecord
     @listenTo @collection, "add", @addRecord
     @listenTo @collection, "newRecord", @newRecord
+    @listenTo @collection, "activeRecord", @activeRecord
     $('.removeFilter', @container).on 'click', @removeFilter
     $('.btn-loadmore', @container).on 'click', @loadMoreRecords
     $('.scrollWrapper').on 'scroll', @autoLoadMoreRecords
@@ -2302,11 +2318,11 @@ class Tracktime.RecordsView extends Backbone.View
 
   newRecord: (record) ->
     @loadMoreRecords()
-    @sortRecords()
+    # @sortRecords()
     dateEl = record.get('recordDate').substr(0, 10).replace(/\s/g, '_')
-    $('.scrollWrapper').animate
-      'scrollTop': $("##{dateEl}").offset().top - $('.scrollWrapper').offset().top + $('.scrollWrapper').scrollTop() + 20
-
+    # $('.scrollWrapper').animate
+    #   'scrollTop': .offset().top - $('.scrollWrapper').offset().top + $('.scrollWrapper').scrollTop() + 20
+    $('.scrollWrapper').scrollTop($("##{dateEl}").offset().top + $(".scrollWrapper").scrollTop() - 78)
 
   sortRecords: ->
     parentCont = '#main .list-group'
@@ -2319,7 +2335,7 @@ class Tracktime.RecordsView extends Backbone.View
     _.each dates, (el, b) ->
       id = el.replace /\s/g, '_'
       if $("##{id}").length < 1
-        $(parentCont) .append $("<ul> /", {id: id}) .append $("<li />", {class: 'list-group-items-group'}).html(el)
+        $(parentCont) .append $("<ul> /", {id: id}) .append $("<li />", {class: 'list-group-items-group navbar navbar-primary'}).html(el)
 
     _.each sortedList, (item) ->
       id = $('.record-info time', item).attr('datetime').substr(0, 10).replace /\s/g, '_'
@@ -2333,7 +2349,7 @@ class Tracktime.RecordsView extends Backbone.View
       recordView = @setSubView "record-#{record.cid}", new Tracktime.RecordView model: record
       frag.appendChild recordView.el
     , @
-    @$el.append frag
+    @$el.prepend frag
     @sortRecords()
     models.length
 
@@ -2353,7 +2369,7 @@ class Tracktime.RecordsView extends Backbone.View
       $('.removeFilter[data-exclude=user] .caption', @container).text @usersList[key]
 
   addRecord: (record, collection, params) ->
-    console.log 'add record - depricated'
+    # console.log 'add record - depricated'
     # if record.isSatisfiedied @collection.filter
     #   recordView = new Tracktime.RecordView { model: record }
     #   $(recordView.el).prependTo @$el
@@ -2373,6 +2389,11 @@ class Tracktime.RecordsView extends Backbone.View
   removeRecord: (record, args...) ->
     recordView = @getSubView "record-#{record.cid}"
     recordView.close() if recordView
+
+  activeRecord: (id) ->
+    $('.list-group-item', @container).removeClass 'current'
+    $("##{id}").parent().addClass 'current'
+
 
 (module?.exports = Tracktime.RecordsView) or @Tracktime.RecordsView = Tracktime.RecordsView
 

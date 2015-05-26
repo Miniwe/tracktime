@@ -33857,7 +33857,7 @@ this["JST"]["projects/admin_project"] = Handlebars.template({"compiler":[6,">= 2
     + "</div>\n\n    <p class=\"last-update\">\n        <time class=\"text-muted\" datetime=\""
     + alias3(((helper = (helper = helpers.date || (depth0 != null ? depth0.date : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"date","hash":{},"data":data}) : helper)))
     + "\">"
-    + alias3((helpers.dateFormat || (depth0 && depth0.dateFormat) || alias1).call(depth0,(depth0 != null ? depth0.lastAccess : depth0),{"name":"dateFormat","hash":{},"data":data}))
+    + alias3((helpers.dateFormat || (depth0 && depth0.dateFormat) || alias1).call(depth0,(depth0 != null ? depth0.updatedAt : depth0),{"name":"dateFormat","hash":{},"data":data}))
     + "</time>\n    </p>\n\n  </div>\n\n  <div class=\"col-menu col-md-1 col-sm-1\">\n    <ul class=\"actions\">\n      <li><a class=\"delete btn btn-fab btn-danger btn-fab-mini pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Delete action\">\n        <i class=\"mdi-navigation-cancel\"></i>\n      </a></li>\n    </ul>\n  </div>\n</div>";
 },"useData":true});
 
@@ -33873,7 +33873,7 @@ this["JST"]["projects/project"] = Handlebars.template({"compiler":[6,">= 2.0.0-b
     + "</div>\n\n    <p class=\"last-update\">\n        <time class=\"text-muted\" datetime=\""
     + alias3(((helper = (helper = helpers.date || (depth0 != null ? depth0.date : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"date","hash":{},"data":data}) : helper)))
     + "\">"
-    + alias3((helpers.dateFormat || (depth0 && depth0.dateFormat) || alias1).call(depth0,(depth0 != null ? depth0.lastAccess : depth0),{"name":"dateFormat","hash":{},"data":data}))
+    + alias3((helpers.dateFormat || (depth0 && depth0.dateFormat) || alias1).call(depth0,(depth0 != null ? depth0.updatedAt : depth0),{"name":"dateFormat","hash":{},"data":data}))
     + "</time>\n    </p>\n\n  </div>\n\n  <div class=\"col-menu col-md-1 col-sm-1\">\n  </div>\n</div>";
 },"useData":true});
 
@@ -33882,7 +33882,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
 
   return "<div class=\"row\" id=\""
     + alias3(((helper = (helper = helpers._id || (depth0 != null ? depth0._id : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"_id","hash":{},"data":data}) : helper)))
-    + "\">\n\n  <div class=\"col-icon col-md-1 col-sm-2\">\n    <a  class=\"type btn btn-fab btn-fab-mini btn-material-lime\" role=\"menuitem\" tabindex=\"-1\" href=\"#fat\"  data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\"Project not defined\">\n      <i class=\"mdi-action-bookmark-outline\"></i>\n    </a>\n    <a class=\"edit btn btn-fab btn-fab-mini btn-flat pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Edit action\">\n      <i class=\"mdi-editor-mode-edit\"></i>\n    </a>\n  </div>\n\n  <div class=\"col-subject col-md-10 col-sm-9\">\n    <p class=\"record-info text-info\">\n      <a href=\"#records"
+    + "\">\n\n  <div class=\"col-icon col-md-1 col-sm-2\">\n    <a  class=\"type btn btn-fab btn-fab-mini btn-material-lime\" role=\"menuitem\" tabindex=\"-1\" href=\"#fat\"  data-toggle=\"tooltip\" data-placement=\"right\" title=\"\" data-original-title=\"Project not defined\">\n      <i class=\"mdi-action-bookmark-outline\"></i>\n    </a>\n    <a class=\"edit btn btn-fab btn-fab-mini btn-flat pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Edit action\">\n      <i class=\"mdi-editor-mode-edit\"></i>\n    </a>\n  </div>\n\n  <div class=\"col-subject col-md-10 col-sm-9\">\n    <p class=\"record-info text-info\">\n      <button class=\"btn btn-xs btn-info\" role='do-active' title=\"Make active\" status-start=\"Start\" status-stop=\"Stop\"></button>\n      <a href=\"#records"
     + alias3((helpers.filteredHref || (depth0 && depth0.filteredHref) || alias1).call(depth0,{"name":"filteredHref","hash":{"user":(depth0 != null ? depth0.user : depth0),"filter":(depth0 != null ? depth0.filter : depth0)},"data":data}))
     + "\" class='record-info-user' title=\"User\"><i class=\"mdi-action-face-unlock\"></i><span>"
     + alias3(((helper = (helper = helpers.user || (depth0 != null ? depth0.user : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"user","hash":{},"data":data}) : helper)))
@@ -33894,9 +33894,9 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     + alias3(((helper = (helper = helpers.recordDate || (depth0 != null ? depth0.recordDate : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"recordDate","hash":{},"data":data}) : helper)))
     + "\" title=\"Record Date\"><i class=\"mdi-action-event\"></i>"
     + alias3((helpers.dateFormat || (depth0 && depth0.dateFormat) || alias1).call(depth0,(depth0 != null ? depth0.recordDate : depth0),{"name":"dateFormat","hash":{},"data":data}))
-    + " / "
+    + "<!--  / "
     + alias3(((helper = (helper = helpers.recordDate || (depth0 != null ? depth0.recordDate : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"recordDate","hash":{},"data":data}) : helper)))
-    + "</time>\n      &#0160;\n      <span title=\"Record Time\"><i class=\"mdi-action-schedule\"></i>"
+    + " --></time>\n      &#0160;\n      <span title=\"Record Time\"><i class=\"mdi-action-schedule\"></i>"
     + alias3((helpers.minuteFormat || (depth0 && depth0.minuteFormat) || alias1).call(depth0,(depth0 != null ? depth0.recordTime : depth0),{"name":"minuteFormat","hash":{},"data":data}))
     + "</span>\n\n      <!-- &#0160;\n      "
     + alias3(((helper = (helper = helpers.user || (depth0 != null ? depth0.user : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"user","hash":{},"data":data}) : helper)))
@@ -33909,7 +33909,7 @@ this["JST"]["records/record"] = Handlebars.template({"compiler":[6,">= 2.0.0-bet
     + "</div>\n\n    <p class=\"last-update\">\n        <time class=\"text-muted\" datetime=\""
     + alias3(((helper = (helper = helpers.date || (depth0 != null ? depth0.date : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"date","hash":{},"data":data}) : helper)))
     + "\">"
-    + alias3((helpers.dateFormat || (depth0 && depth0.dateFormat) || alias1).call(depth0,(depth0 != null ? depth0.lastAccess : depth0),{"name":"dateFormat","hash":{},"data":data}))
+    + alias3((helpers.dateFormat || (depth0 && depth0.dateFormat) || alias1).call(depth0,(depth0 != null ? depth0.updatedAt : depth0),{"name":"dateFormat","hash":{},"data":data}))
     + " / "
     + alias3(((helper = (helper = helpers.date || (depth0 != null ? depth0.date : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"date","hash":{},"data":data}) : helper)))
     + "</time>\n    </p>\n\n  </div>\n\n  <div class=\"col-menu col-md-1 col-sm-1\">\n    <ul class=\"actions\">\n      <li><a class=\"delete btn btn-fab btn-danger btn-fab-mini pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Delete action\">\n        <i class=\"mdi-navigation-cancel\"></i>\n      </a></li>\n    </ul>\n  </div>\n</div>";
@@ -33979,7 +33979,7 @@ this["JST"]["users/admin_user"] = Handlebars.template({"compiler":[6,">= 2.0.0-b
     + "\n    </div>\n\n    <p class=\"last-update\">\n        <time class=\"text-muted\" datetime=\""
     + alias3(((helper = (helper = helpers.date || (depth0 != null ? depth0.date : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"date","hash":{},"data":data}) : helper)))
     + "\">"
-    + alias3((helpers.dateFormat || (depth0 && depth0.dateFormat) || alias1).call(depth0,(depth0 != null ? depth0.lastAccess : depth0),{"name":"dateFormat","hash":{},"data":data}))
+    + alias3((helpers.dateFormat || (depth0 && depth0.dateFormat) || alias1).call(depth0,(depth0 != null ? depth0.updatedAt : depth0),{"name":"dateFormat","hash":{},"data":data}))
     + "</time>\n    </p>\n\n  </div>\n\n  <div class=\"col-menu col-md-1 col-sm-1\">\n    <ul class=\"actions\">\n      <li><a class=\"delete btn btn-fab btn-danger btn-fab-mini pull-right\" href=\"javascript:void(0)\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"\" data-original-title=\"Delete action\">\n        <i class=\"mdi-navigation-cancel\"></i>\n      </a></li>\n    </ul>\n  </div>\n</div>";
 },"useData":true});
 
@@ -34003,7 +34003,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     + "</div>\n\n    <p class=\"last-update\">\n        <time class=\"text-muted\" datetime=\""
     + alias3(((helper = (helper = helpers.date || (depth0 != null ? depth0.date : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"date","hash":{},"data":data}) : helper)))
     + "\">"
-    + alias3((helpers.dateFormat || (depth0 && depth0.dateFormat) || alias1).call(depth0,(depth0 != null ? depth0.lastAccess : depth0),{"name":"dateFormat","hash":{},"data":data}))
+    + alias3((helpers.dateFormat || (depth0 && depth0.dateFormat) || alias1).call(depth0,(depth0 != null ? depth0.updatedAt : depth0),{"name":"dateFormat","hash":{},"data":data}))
     + "</time>\n    </p>\n\n  </div>\n\n  <div class=\"col-menu col-md-1 col-sm-1\">\n  </div>\n</div>";
 },"useData":true});
 (function() {
@@ -34378,7 +34378,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       var localModels;
       _.each(models, (function(_this) {
         return function(model) {
-          var curModel, localLastAccess, localModel, modelLastAccess;
+          var curModel, localModel, localUpdatetAt, modelUpdatetAt;
           curModel = _this.get(model._id);
           localModel = _this.localStorage.find(curModel);
           if (!localModel) {
@@ -34386,19 +34386,19 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
               ajaxSync: false
             });
           } else {
-            modelLastAccess = (new Date(model.lastAccess)).getTime();
-            localLastAccess = (new Date(localModel.lastAccess)).getTime();
+            modelUpdatetAt = (new Date(model.updatedAt)).getTime();
+            localUpdatetAt = (new Date(localModel.updatedAt)).getTime();
             if (localModel.isDeleted) {
               return curModel.set({
                 'isDeleted': true
               }, {
                 trigger: false
               });
-            } else if (localLastAccess < modelLastAccess) {
+            } else if (localUpdatetAt < modelUpdatetAt) {
               return curModel.save(model, {
                 ajaxSync: false
               });
-            } else if (localLastAccess > modelLastAccess) {
+            } else if (localUpdatetAt > modelUpdatetAt) {
               return curModel.save(localModel, {
                 ajaxSync: true
               });
@@ -34409,7 +34409,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       localModels = this.localStorage.findAll();
       return _.each(_.clone(localModels), (function(_this) {
         return function(model) {
-          var collectionModel, destroedModel, modelLastAccess, newModel, replacedModel;
+          var collectionModel, destroedModel, modelUpdatetAt, newModel, replacedModel;
           collectionModel = _this.get(model._id);
           if (model.isDeleted) {
             if (model._id.length > 24) {
@@ -34421,8 +34421,8 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
                 ajaxSync: false
               });
             } else {
-              modelLastAccess = (new Date(model.lastAccess)).getTime();
-              if ((collectionModel != null) && modelLastAccess > (new Date(collectionModel.get('lastAccess'))).getTime()) {
+              modelUpdatetAt = (new Date(model.updatedAt)).getTime();
+              if ((collectionModel != null) && modelUpdatetAt > (new Date(collectionModel.get('updatedAt'))).getTime()) {
                 destroedModel = collectionModel;
               } else {
                 destroedModel = new _this.model(model);
@@ -34839,7 +34839,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       _id: null,
       name: '',
       description: '',
-      lastAccess: (new Date()).toISOString(),
+      updatedAt: (new Date()).toISOString(),
       isDeleted: false
     };
 
@@ -34853,7 +34853,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
     Project.prototype.initialize = function() {
       this.isEdit = false;
-      this.on('change:name', this.updateLastAccess);
+      this.on('change:name', this.updateUpdatedAt);
       return this.on('change:isEdit', this.changeIsEdit);
     };
 
@@ -34861,8 +34861,8 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       return true;
     };
 
-    Project.prototype.updateLastAccess = function() {
-      return this.set('lastAccess', (new Date()).toISOString());
+    Project.prototype.updateUpdatedAt = function() {
+      return this.set('updatedAt', (new Date()).toISOString());
     };
 
     Project.prototype.changeIsEdit = function() {
@@ -34907,7 +34907,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       date: function() {
         return (new Date()).toISOString();
       },
-      lastAccess: (new Date()).toISOString(),
+      updatedAt: (new Date()).toISOString(),
       recordDate: '',
       recordTime: 0,
       project: 0,
@@ -34925,7 +34925,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
     Record.prototype.initialize = function() {
       this.isEdit = false;
-      this.on('change:subject change:recordTime change:recordDate change:project', this.updateLastAccess);
+      this.on('change:subject change:recordTime change:recordDate change:project', this.updateUpdatedAt);
       return this.on('change:isEdit', this.changeIsEdit);
     };
 
@@ -34937,8 +34937,8 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       return _.isMatch(this.attributes, filter);
     };
 
-    Record.prototype.updateLastAccess = function() {
-      return this.set('lastAccess', (new Date()).toISOString());
+    Record.prototype.updateUpdatedAt = function() {
+      return this.set('updatedAt', (new Date()).toISOString());
     };
 
     Record.prototype.changeIsEdit = function() {
@@ -34953,6 +34953,10 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
           scope: 'edit:action'
         });
       }
+    };
+
+    Record.prototype.setActive = function() {
+      return this.collection.trigger('activeRecord', this.id);
     };
 
     return Record;
@@ -34984,7 +34988,9 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       password: '',
       description: '',
       default_pay_rate: '',
-      lastAccess: (new Date()).toISOString(),
+      updatedAt: (new Date()).toISOString(),
+      activeRecord: '',
+      startedAt: null,
       isDeleted: false
     };
 
@@ -34998,9 +35004,9 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
 
     User.prototype.initialize = function() {
       this.isEdit = false;
-      this.on('change:first_name', this.updateLastAccess);
-      this.on('change:last_name', this.updateLastAccess);
-      this.on('change:description', this.updateLastAccess);
+      this.on('change:first_name', this.updateUpdatedAt);
+      this.on('change:last_name', this.updateUpdatedAt);
+      this.on('change:description', this.updateUpdatedAt);
       return this.on('change:isEdit', this.changeIsEdit);
     };
 
@@ -35008,8 +35014,8 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       return true;
     };
 
-    User.prototype.updateLastAccess = function() {
-      return this.set('lastAccess', (new Date()).toISOString());
+    User.prototype.updateUpdatedAt = function() {
+      return this.set('updatedAt', (new Date()).toISOString());
     };
 
     User.prototype.changeIsEdit = function() {
@@ -35095,7 +35101,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       _.extend(params, {
         status: 'active',
         k_status: 'active',
-        lastAccess: (new Date()).toISOString(),
+        updatedAt: (new Date()).toISOString(),
         isDeleted: 'false'
       });
       return this.save(params, {
@@ -35133,6 +35139,28 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
         error: (function(_this) {
           return function(model, response, options) {
             return console.log('logout error');
+          };
+        })(this)
+      });
+    };
+
+    Auth.prototype.setActiveRecord = function(record) {
+      var params;
+      params = {
+        activeRecord: record.id,
+        startedAt: (new Date()).toISOString()
+      };
+      return this.save(params, {
+        ajaxSync: true,
+        url: config.SERVER + '/users/' + this.id,
+        success: (function(_this) {
+          return function(model, response, options) {
+            return record.setActive();
+          };
+        })(this),
+        error: (function(_this) {
+          return function(model, response, options) {
+            return _this.trigger('flash', response.responseJSON.error);
           };
         })(this)
       });
@@ -35582,7 +35610,8 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
         'serverOffline': this.serverOffline,
         'checkOnline': this.checkOnline,
         'userAuth': this.userAuth,
-        'userGuest': this.userGuest
+        'userGuest': this.userGuest,
+        'activeRecord': this.activeRecord
       });
     },
     bindRequest: function() {
@@ -35638,6 +35667,9 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       var action;
       action = this.model.get('actions').addAction(options, params);
       return action.setActive();
+    },
+    activeRecord: function(record) {
+      return this.model.get('authUser').setActiveRecord(record);
     },
     serverOnline: function() {
       return this.trigger('isOnline', true);
@@ -37465,7 +37497,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       'click .btn.delete': "deleteRecord",
       'click .subject': "toggleInlineEdit",
       'click .edit.btn': "editRecord",
-      'click': "doActive"
+      'click .btn[role=do-active]': "doActive"
     };
 
     RecordView.prototype.initialize = function() {
@@ -37507,8 +37539,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     };
 
     RecordView.prototype.doActive = function() {
-      this.$el.siblings().removeClass('current');
-      return this.$el.addClass('current');
+      return Tracktime.AppChannel.command('activeRecord', this.model);
     };
 
     RecordView.prototype.changeIsEdit = function() {
@@ -37638,6 +37669,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       this.listenTo(this.collection, "remove", this.removeRecord);
       this.listenTo(this.collection, "add", this.addRecord);
       this.listenTo(this.collection, "newRecord", this.newRecord);
+      this.listenTo(this.collection, "activeRecord", this.activeRecord);
       $('.removeFilter', this.container).on('click', this.removeFilter);
       $('.btn-loadmore', this.container).on('click', this.loadMoreRecords);
       $('.scrollWrapper').on('scroll', this.autoLoadMoreRecords);
@@ -37680,11 +37712,8 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     RecordsView.prototype.newRecord = function(record) {
       var dateEl;
       this.loadMoreRecords();
-      this.sortRecords();
       dateEl = record.get('recordDate').substr(0, 10).replace(/\s/g, '_');
-      return $('.scrollWrapper').animate({
-        'scrollTop': $("#" + dateEl).offset().top - $('.scrollWrapper').offset().top + $('.scrollWrapper').scrollTop() + 20
-      });
+      return $('.scrollWrapper').scrollTop($("#" + dateEl).offset().top + $(".scrollWrapper").scrollTop() - 78);
     };
 
     RecordsView.prototype.sortRecords = function() {
@@ -37708,7 +37737,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
           return $(parentCont).append($("<ul> /", {
             id: id
           }).append($("<li />", {
-            "class": 'list-group-items-group'
+            "class": 'list-group-items-group navbar navbar-primary'
           }).html(el)));
         }
       });
@@ -37730,7 +37759,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
         }));
         return frag.appendChild(recordView.el);
       }, this);
-      this.$el.append(frag);
+      this.$el.prepend(frag);
       this.sortRecords();
       return models.length;
     };
@@ -37757,9 +37786,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       }
     };
 
-    RecordsView.prototype.addRecord = function(record, collection, params) {
-      return console.log('add record - depricated');
-    };
+    RecordsView.prototype.addRecord = function(record, collection, params) {};
 
     RecordsView.prototype.removeFilter = function(event) {
       var key;
@@ -37777,6 +37804,11 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       if (recordView) {
         return recordView.close();
       }
+    };
+
+    RecordsView.prototype.activeRecord = function(id) {
+      $('.list-group-item', this.container).removeClass('current');
+      return $("#" + id).parent().addClass('current');
     };
 
     return RecordsView;

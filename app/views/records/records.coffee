@@ -11,6 +11,7 @@ class Tracktime.RecordsView extends Backbone.View
     @listenTo @collection, "remove", @removeRecord
     @listenTo @collection, "add", @addRecord
     @listenTo @collection, "newRecord", @newRecord
+    @listenTo @collection, "activeRecord", @activeRecord
     $('.removeFilter', @container).on 'click', @removeFilter
     $('.btn-loadmore', @container).on 'click', @loadMoreRecords
     $('.scrollWrapper').on 'scroll', @autoLoadMoreRecords
@@ -42,11 +43,11 @@ class Tracktime.RecordsView extends Backbone.View
 
   newRecord: (record) ->
     @loadMoreRecords()
-    @sortRecords()
+    # @sortRecords()
     dateEl = record.get('recordDate').substr(0, 10).replace(/\s/g, '_')
-    $('.scrollWrapper').animate
-      'scrollTop': $("##{dateEl}").offset().top - $('.scrollWrapper').offset().top + $('.scrollWrapper').scrollTop() + 20
-
+    # $('.scrollWrapper').animate
+    #   'scrollTop': .offset().top - $('.scrollWrapper').offset().top + $('.scrollWrapper').scrollTop() + 20
+    $('.scrollWrapper').scrollTop($("##{dateEl}").offset().top + $(".scrollWrapper").scrollTop() - 78)
 
   sortRecords: ->
     parentCont = '#main .list-group'
@@ -59,7 +60,7 @@ class Tracktime.RecordsView extends Backbone.View
     _.each dates, (el, b) ->
       id = el.replace /\s/g, '_'
       if $("##{id}").length < 1
-        $(parentCont) .append $("<ul> /", {id: id}) .append $("<li />", {class: 'list-group-items-group'}).html(el)
+        $(parentCont) .append $("<ul> /", {id: id}) .append $("<li />", {class: 'list-group-items-group navbar navbar-primary'}).html(el)
 
     _.each sortedList, (item) ->
       id = $('.record-info time', item).attr('datetime').substr(0, 10).replace /\s/g, '_'
@@ -73,7 +74,7 @@ class Tracktime.RecordsView extends Backbone.View
       recordView = @setSubView "record-#{record.cid}", new Tracktime.RecordView model: record
       frag.appendChild recordView.el
     , @
-    @$el.append frag
+    @$el.prepend frag
     @sortRecords()
     models.length
 
@@ -93,7 +94,7 @@ class Tracktime.RecordsView extends Backbone.View
       $('.removeFilter[data-exclude=user] .caption', @container).text @usersList[key]
 
   addRecord: (record, collection, params) ->
-    console.log 'add record - depricated'
+    # console.log 'add record - depricated'
     # if record.isSatisfiedied @collection.filter
     #   recordView = new Tracktime.RecordView { model: record }
     #   $(recordView.el).prependTo @$el
@@ -113,6 +114,11 @@ class Tracktime.RecordsView extends Backbone.View
   removeRecord: (record, args...) ->
     recordView = @getSubView "record-#{record.cid}"
     recordView.close() if recordView
+
+  activeRecord: (id) ->
+    $('.list-group-item', @container).removeClass 'current'
+    $("##{id}").parent().addClass 'current'
+
 
 (module?.exports = Tracktime.RecordsView) or @Tracktime.RecordsView = Tracktime.RecordsView
 

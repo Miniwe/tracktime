@@ -34,7 +34,7 @@ class Tracktime.User.Auth extends Backbone.Model
     _.extend params,
       status: 'active'
       k_status: 'active'
-      lastAccess: (new Date()).toISOString()
+      updatedAt: (new Date()).toISOString()
       isDeleted: 'false'
     @save params,
       ajaxSync: true
@@ -59,5 +59,17 @@ class Tracktime.User.Auth extends Backbone.Model
         window.location.reload()
       error: (model, response, options) =>
         console.log 'logout error'
+
+  setActiveRecord: (record) ->
+    params =
+      activeRecord: record.id
+      startedAt: (new Date()).toISOString()
+    @save params,
+      ajaxSync: true
+      url: config.SERVER + '/users/' + @id
+      success: (model, response, options) =>
+        record.setActive()
+      error: (model, response, options) =>
+        @trigger 'flash', response.responseJSON.error
 
 (module?.exports = Tracktime.User.Auth) or @Tracktime.User.Auth = Tracktime.User.Auth

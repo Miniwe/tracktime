@@ -9,7 +9,7 @@ class Tracktime.Record extends Tracktime.Model
     subject: ''
     description: ''
     date: () -> (new Date()).toISOString()
-    lastAccess: (new Date()).toISOString()
+    updatedAt: (new Date()).toISOString()
     recordDate: ''
     recordTime: 0
     project: 0
@@ -24,7 +24,7 @@ class Tracktime.Record extends Tracktime.Model
 
   initialize: ->
     @isEdit = false
-    @on 'change:subject change:recordTime change:recordDate change:project', @updateLastAccess
+    @on 'change:subject change:recordTime change:recordDate change:project', @updateUpdatedAt
     @on 'change:isEdit', @changeIsEdit
 
   isValid: ->
@@ -34,8 +34,8 @@ class Tracktime.Record extends Tracktime.Model
   isSatisfied: (filter) ->
     _.isMatch @attributes, filter
 
-  updateLastAccess: () ->
-    @set 'lastAccess', (new Date()).toISOString()
+  updateUpdatedAt: () ->
+    @set 'updatedAt', (new Date()).toISOString()
 
   changeIsEdit: ->
     if @isEdit
@@ -43,6 +43,9 @@ class Tracktime.Record extends Tracktime.Model
         title: 'Edit record: ' + @get('subject').substr(0, 40)
         recordModel: @
         scope: 'edit:action'
+
+  setActive: ->
+    @collection.trigger 'activeRecord', @id
 
 
 (module?.exports = Tracktime.Record) or @Tracktime.Record = Tracktime.Record

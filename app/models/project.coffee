@@ -8,7 +8,7 @@ class Tracktime.Project extends Tracktime.Model
     _id: null
     name: ''
     description: ''
-    lastAccess: (new Date()).toISOString()
+    updatedAt: (new Date()).toISOString()
     isDeleted: false
 
   validation:
@@ -19,15 +19,15 @@ class Tracktime.Project extends Tracktime.Model
 
   initialize: ->
     @isEdit = false
-    @on 'change:name', @updateLastAccess
+    @on 'change:name', @updateUpdatedAt
     @on 'change:isEdit', @changeIsEdit
 
   isValid: () ->
     # @todo add good validation
     true
 
-  updateLastAccess: () ->
-    @set 'lastAccess', (new Date()).toISOString()
+  updateUpdatedAt: () ->
+    @set 'updatedAt', (new Date()).toISOString()
 
   changeIsEdit: ->
     if @isEdit
