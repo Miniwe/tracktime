@@ -44,8 +44,4 @@ class Tracktime.Record extends Tracktime.Model
         recordModel: @
         scope: 'edit:action'
 
-  setActive: ->
-    @collection.trigger 'activeRecord', @id
-
-
 (module?.exports = Tracktime.Record) or @Tracktime.Record = Tracktime.Record

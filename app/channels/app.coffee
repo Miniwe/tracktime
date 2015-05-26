@@ -127,5 +127,7 @@ _.extend Tracktime.AppChannel,
     else
       @router = new Tracktime.GuestRouter model: @model
 
+  checkActive: (id) ->
+    id == @model.get('authUser').get('activeRecord')
 
 (module?.exports = Tracktime.AppChannel) or @Tracktime.AppChannel = Tracktime.AppChannel

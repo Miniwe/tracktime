@@ -11,7 +11,6 @@ class Tracktime.RecordsView extends Backbone.View
     @listenTo @collection, "remove", @removeRecord
     @listenTo @collection, "add", @addRecord
     @listenTo @collection, "newRecord", @newRecord
-    @listenTo @collection, "activeRecord", @activeRecord
     $('.removeFilter', @container).on 'click', @removeFilter
     $('.btn-loadmore', @container).on 'click', @loadMoreRecords
     $('.scrollWrapper').on 'scroll', @autoLoadMoreRecords
@@ -94,7 +93,7 @@ class Tracktime.RecordsView extends Backbone.View
       $('.removeFilter[data-exclude=user] .caption', @container).text @usersList[key]
 
   addRecord: (record, collection, params) ->
-    # console.log 'add record - depricated'
+    # add record - depricated
     # if record.isSatisfiedied @collection.filter
     #   recordView = new Tracktime.RecordView { model: record }
     #   $(recordView.el).prependTo @$el
@@ -114,10 +113,6 @@ class Tracktime.RecordsView extends Backbone.View
   removeRecord: (record, args...) ->
     recordView = @getSubView "record-#{record.cid}"
     recordView.close() if recordView
-
-  activeRecord: (id) ->
-    $('.list-group-item', @container).removeClass 'current'
-    $("##{id}").parent().addClass 'current'
 
 
 (module?.exports = Tracktime.RecordsView) or @Tracktime.RecordsView = Tracktime.RecordsView

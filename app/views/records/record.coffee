@@ -17,6 +17,8 @@ class Tracktime.RecordView extends Backbone.View
     @listenTo @model, "change:project", @changeProject
     @listenTo @model, "change:isEdit", @changeIsEdit
     @listenTo @model, "sync", @syncModel
+    @listenTo @model, "isActive", @setActiveState
+
 
     @projects = Tracktime.AppChannel.request 'projects'
     @projects.on 'sync', @renderProjectInfo
@@ -41,11 +43,17 @@ class Tracktime.RecordView extends Backbone.View
     $('placeholder#textarea', @$el).replaceWith textarea.$el
     textarea.on 'tSubmit', @sendForm
 
+    @$el.addClass 'current' if Tracktime.AppChannel.checkActive @model.id
+
     @renderProjectInfo()
     @renderUserInfo()
 
   doActive: ->
     Tracktime.AppChannel.command 'activeRecord', @model
+
+  setActiveState: ->
+    @$el.siblings().removeClass 'current'
+    @$el.addClass 'current'
 
   changeIsEdit: ->
     @$el.toggleClass 'editmode', @model.isEdit == true

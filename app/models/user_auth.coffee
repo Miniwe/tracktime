@@ -68,7 +68,7 @@ class Tracktime.User.Auth extends Backbone.Model
       ajaxSync: true
       url: config.SERVER + '/users/' + @id
       success: (model, response, options) =>
-        record.setActive()
+        record.trigger 'isActive'
       error: (model, response, options) =>
         @trigger 'flash', response.responseJSON.error
 

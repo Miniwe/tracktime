@@ -34955,10 +34955,6 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       }
     };
 
-    Record.prototype.setActive = function() {
-      return this.collection.trigger('activeRecord', this.id);
-    };
-
     return Record;
 
   })(Tracktime.Model);
@@ -35155,7 +35151,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
         url: config.SERVER + '/users/' + this.id,
         success: (function(_this) {
           return function(model, response, options) {
-            return record.setActive();
+            return record.trigger('isActive');
           };
         })(this),
         error: (function(_this) {
@@ -35701,6 +35697,9 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
           model: this.model
         });
       }
+    },
+    checkActive: function(id) {
+      return id === this.model.get('authUser').get('activeRecord');
     }
   });
 
@@ -37509,6 +37508,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       this.listenTo(this.model, "change:project", this.changeProject);
       this.listenTo(this.model, "change:isEdit", this.changeIsEdit);
       this.listenTo(this.model, "sync", this.syncModel);
+      this.listenTo(this.model, "isActive", this.setActiveState);
       this.projects = Tracktime.AppChannel.request('projects');
       this.projects.on('sync', this.renderProjectInfo);
       this.users = Tracktime.AppChannel.request('users');
@@ -37534,12 +37534,20 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       });
       $('placeholder#textarea', this.$el).replaceWith(textarea.$el);
       textarea.on('tSubmit', this.sendForm);
+      if (Tracktime.AppChannel.checkActive(this.model.id)) {
+        this.$el.addClass('current');
+      }
       this.renderProjectInfo();
       return this.renderUserInfo();
     };
 
     RecordView.prototype.doActive = function() {
       return Tracktime.AppChannel.command('activeRecord', this.model);
+    };
+
+    RecordView.prototype.setActiveState = function() {
+      this.$el.siblings().removeClass('current');
+      return this.$el.addClass('current');
     };
 
     RecordView.prototype.changeIsEdit = function() {
@@ -37669,7 +37677,6 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       this.listenTo(this.collection, "remove", this.removeRecord);
       this.listenTo(this.collection, "add", this.addRecord);
       this.listenTo(this.collection, "newRecord", this.newRecord);
-      this.listenTo(this.collection, "activeRecord", this.activeRecord);
       $('.removeFilter', this.container).on('click', this.removeFilter);
       $('.btn-loadmore', this.container).on('click', this.loadMoreRecords);
       $('.scrollWrapper').on('scroll', this.autoLoadMoreRecords);
@@ -37804,11 +37811,6 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       if (recordView) {
         return recordView.close();
       }
-    };
-
-    RecordsView.prototype.activeRecord = function(id) {
-      $('.list-group-item', this.container).removeClass('current');
-      return $("#" + id).parent().addClass('current');
     };
 
     return RecordsView;

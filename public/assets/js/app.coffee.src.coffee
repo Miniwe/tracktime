@@ -623,10 +623,6 @@ class Tracktime.Record extends Tracktime.Model
         recordModel: @
         scope: 'edit:action'
 
-  setActive: ->
-    @collection.trigger 'activeRecord', @id
-
-
 (module?.exports = Tracktime.Record) or @Tracktime.Record = Tracktime.Record
 
 class Tracktime.User extends Tracktime.Model
@@ -747,7 +743,7 @@ class Tracktime.User.Auth extends Backbone.Model
       ajaxSync: true
       url: config.SERVER + '/users/' + @id
       success: (model, response, options) =>
-        record.setActive()
+        record.trigger 'isActive'
       error: (model, response, options) =>
         @trigger 'flash', response.responseJSON.error
 
@@ -1062,6 +1058,8 @@ _.extend Tracktime.AppChannel,
     else
       @router = new Tracktime.GuestRouter model: @model
 
+  checkActive: (id) ->
+    id == @model.get('authUser').get('activeRecord')
 
 (module?.exports = Tracktime.AppChannel) or @Tracktime.AppChannel = Tracktime.AppChannel
 
@@ -2166,6 +2164,8 @@ class Tracktime.RecordView extends Backbone.View
     @listenTo @model, "change:project", @changeProject
     @listenTo @model, "change:isEdit", @changeIsEdit
     @listenTo @model, "sync", @syncModel
+    @listenTo @model, "isActive", @setActiveState
+
 
     @projects = Tracktime.AppChannel.request 'projects'
     @projects.on 'sync', @renderProjectInfo
@@ -2190,11 +2190,17 @@ class Tracktime.RecordView extends Backbone.View
     $('placeholder#textarea', @$el).replaceWith textarea.$el
     textarea.on 'tSubmit', @sendForm
 
+    @$el.addClass 'current' if Tracktime.AppChannel.checkActive @model.id
+
     @renderProjectInfo()
     @renderUserInfo()
 
   doActive: ->
     Tracktime.AppChannel.command 'activeRecord', @model
+
+  setActiveState: ->
+    @$el.siblings().removeClass 'current'
+    @$el.addClass 'current'
 
   changeIsEdit: ->
     @$el.toggleClass 'editmode', @model.isEdit == true
@@ -2286,7 +2292,6 @@ class Tracktime.RecordsView extends Backbone.View
     @listenTo @collection, "remove", @removeRecord
     @listenTo @collection, "add", @addRecord
     @listenTo @collection, "newRecord", @newRecord
-    @listenTo @collection, "activeRecord", @activeRecord
     $('.removeFilter', @container).on 'click', @removeFilter
     $('.btn-loadmore', @container).on 'click', @loadMoreRecords
     $('.scrollWrapper').on 'scroll', @autoLoadMoreRecords
@@ -2369,7 +2374,7 @@ class Tracktime.RecordsView extends Backbone.View
       $('.removeFilter[data-exclude=user] .caption', @container).text @usersList[key]
 
   addRecord: (record, collection, params) ->
-    # console.log 'add record - depricated'
+    # add record - depricated
     # if record.isSatisfiedied @collection.filter
     #   recordView = new Tracktime.RecordView { model: record }
     #   $(recordView.el).prependTo @$el
@@ -2389,10 +2394,6 @@ class Tracktime.RecordsView extends Backbone.View
   removeRecord: (record, args...) ->
     recordView = @getSubView "record-#{record.cid}"
     recordView.close() if recordView
-
-  activeRecord: (id) ->
-    $('.list-group-item', @container).removeClass 'current'
-    $("##{id}").parent().addClass 'current'
 
 
 (module?.exports = Tracktime.RecordsView) or @Tracktime.RecordsView = Tracktime.RecordsView
