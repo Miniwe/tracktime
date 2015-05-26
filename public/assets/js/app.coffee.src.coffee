@@ -623,6 +623,10 @@ class Tracktime.Record extends Tracktime.Model
         recordModel: @
         scope: 'edit:action'
 
+  addTime: (start) ->
+    console.log 'will add time', start
+
+
 (module?.exports = Tracktime.Record) or @Tracktime.Record = Tracktime.Record
 
 class Tracktime.User extends Tracktime.Model
@@ -723,8 +727,11 @@ class Tracktime.User.Auth extends Backbone.Model
 
   forgotpasswrod: ->
 
+  fullName: ->
+    "#{@get('first_name')} #{@get('last_name')}"
+
   logout: ->
-    $.alert "Goodbay, #{@get('first_name')} #{@get('last_name')}!"
+    $.alert "Goodbay, #{@fullName()}!"
     @set 'authorized', false
     @destroy
       ajaxSync: true
@@ -735,15 +742,22 @@ class Tracktime.User.Auth extends Backbone.Model
       error: (model, response, options) =>
         console.log 'logout error'
 
-  setActiveRecord: (record) ->
-    params =
-      activeRecord: record.id
-      startedAt: (new Date()).toISOString()
+  setActiveRecord: (record, status) ->
+    if @get('activeRecord')
+      Tracktime.AppChannel.command 'addTime', @get('activeRecord'), @get('startedAt')
+    if status
+      params =
+        activeRecord: record.id
+        startedAt: (new Date()).toISOString()
+    else
+      params =
+        activeRecord: ''
+        startedAt: null
     @save params,
       ajaxSync: true
       url: config.SERVER + '/users/' + @id
       success: (model, response, options) =>
-        record.trigger 'isActive'
+        record.trigger 'isActive', status
       error: (model, response, options) =>
         @trigger 'flash', response.responseJSON.error
 
@@ -989,18 +1003,19 @@ _.extend Tracktime.AppChannel,
 
   bindComply: ->
     @comply
-      'start':           @startApp
-      'newRecord':       @newRecord
-      'newProject':      @newProject
-      'newUser':         @newUser
-      'useProject':      @useProject
-      'addAction':       @addAction
-      'serverOnline':    @serverOnline
-      'serverOffline':   @serverOffline
-      'checkOnline':     @checkOnline
-      'userAuth':        @userAuth
-      'userGuest':       @userGuest
-      'activeRecord':       @activeRecord
+      'start':         @startApp
+      'newRecord':     @newRecord
+      'newProject':    @newProject
+      'newUser':       @newUser
+      'useProject':    @useProject
+      'addAction':     @addAction
+      'serverOnline':  @serverOnline
+      'serverOffline': @serverOffline
+      'checkOnline':   @checkOnline
+      'userAuth':      @userAuth
+      'userGuest':     @userGuest
+      'activeRecord':  @activeRecord
+      'addTime':       @addTime
 
   bindRequest: ->
     @reply 'isOnline', => @isOnline
@@ -1028,8 +1043,14 @@ _.extend Tracktime.AppChannel,
     action = @model.get('actions').addAction(options, params)
     action.setActive()
 
-  activeRecord: (record) ->
-    @model.get('authUser').setActiveRecord record
+  activeRecord: (record, status) ->
+    @model.get('authUser').setActiveRecord record, status
+
+
+  addTime: (record, start) ->
+    console.log 'add time to record', record, start
+    # diff = moment(new Date()) - moment(new Date(start))
+    console.log 'difference', moment(new Date(start)).fromNow()
 
   serverOnline: ->
     @trigger 'isOnline', true
@@ -2153,7 +2174,7 @@ class Tracktime.RecordView extends Backbone.View
     'click .btn.delete': "deleteRecord"
     'click .subject': "toggleInlineEdit"
     'click .edit.btn': "editRecord"
-    'click .btn[role=do-active]': "doActive"
+    'click .btn[role=do-active]': "toggleActive"
 
 
   initialize: ->
@@ -2195,12 +2216,12 @@ class Tracktime.RecordView extends Backbone.View
     @renderProjectInfo()
     @renderUserInfo()
 
-  doActive: ->
-    Tracktime.AppChannel.command 'activeRecord', @model
+  toggleActive: ->
+    Tracktime.AppChannel.command 'activeRecord', @model, not(Tracktime.AppChannel.checkActive @model.id)
 
-  setActiveState: ->
+  setActiveState: (status) ->
     @$el.siblings().removeClass 'current'
-    @$el.addClass 'current'
+    @$el.toggleClass 'current', status
 
   changeIsEdit: ->
     @$el.toggleClass 'editmode', @model.isEdit == true

@@ -48,8 +48,11 @@ class Tracktime.User.Auth extends Backbone.Model
 
   forgotpasswrod: ->
 
+  fullName: ->
+    "#{@get('first_name')} #{@get('last_name')}"
+
   logout: ->
-    $.alert "Goodbay, #{@get('first_name')} #{@get('last_name')}!"
+    $.alert "Goodbay, #{@fullName()}!"
     @set 'authorized', false
     @destroy
       ajaxSync: true
@@ -60,15 +63,22 @@ class Tracktime.User.Auth extends Backbone.Model
       error: (model, response, options) =>
         console.log 'logout error'
 
-  setActiveRecord: (record) ->
-    params =
-      activeRecord: record.id
-      startedAt: (new Date()).toISOString()
+  setActiveRecord: (record, status) ->
+    if @get('activeRecord')
+      Tracktime.AppChannel.command 'addTime', @get('activeRecord'), @get('startedAt')
+    if status
+      params =
+        activeRecord: record.id
+        startedAt: (new Date()).toISOString()
+    else
+      params =
+        activeRecord: ''
+        startedAt: null
     @save params,
       ajaxSync: true
       url: config.SERVER + '/users/' + @id
       success: (model, response, options) =>
-        record.trigger 'isActive'
+        record.trigger 'isActive', status
       error: (model, response, options) =>
         @trigger 'flash', response.responseJSON.error
 

@@ -44,4 +44,8 @@ class Tracktime.Record extends Tracktime.Model
         recordModel: @
         scope: 'edit:action'
 
+  addTime: (start) ->
+    console.log 'will add time', start
+
+
 (module?.exports = Tracktime.Record) or @Tracktime.Record = Tracktime.Record

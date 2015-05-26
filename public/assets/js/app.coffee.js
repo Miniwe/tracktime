@@ -947,6 +947,10 @@
       }
     };
 
+    Record.prototype.addTime = function(start) {
+      return console.log('will add time', start);
+    };
+
     return Record;
 
   })(Tracktime.Model);
@@ -1112,8 +1116,12 @@
 
     Auth.prototype.forgotpasswrod = function() {};
 
+    Auth.prototype.fullName = function() {
+      return (this.get('first_name')) + " " + (this.get('last_name'));
+    };
+
     Auth.prototype.logout = function() {
-      $.alert("Goodbay, " + (this.get('first_name')) + " " + (this.get('last_name')) + "!");
+      $.alert("Goodbay, " + (this.fullName()) + "!");
       this.set('authorized', false);
       return this.destroy({
         ajaxSync: true,
@@ -1132,18 +1140,28 @@
       });
     };
 
-    Auth.prototype.setActiveRecord = function(record) {
+    Auth.prototype.setActiveRecord = function(record, status) {
       var params;
-      params = {
-        activeRecord: record.id,
-        startedAt: (new Date()).toISOString()
-      };
+      if (this.get('activeRecord')) {
+        Tracktime.AppChannel.command('addTime', this.get('activeRecord'), this.get('startedAt'));
+      }
+      if (status) {
+        params = {
+          activeRecord: record.id,
+          startedAt: (new Date()).toISOString()
+        };
+      } else {
+        params = {
+          activeRecord: '',
+          startedAt: null
+        };
+      }
       return this.save(params, {
         ajaxSync: true,
         url: config.SERVER + '/users/' + this.id,
         success: (function(_this) {
           return function(model, response, options) {
-            return record.trigger('isActive');
+            return record.trigger('isActive', status);
           };
         })(this),
         error: (function(_this) {
@@ -1599,7 +1617,8 @@
         'checkOnline': this.checkOnline,
         'userAuth': this.userAuth,
         'userGuest': this.userGuest,
-        'activeRecord': this.activeRecord
+        'activeRecord': this.activeRecord,
+        'addTime': this.addTime
       });
     },
     bindRequest: function() {
@@ -1656,8 +1675,12 @@
       action = this.model.get('actions').addAction(options, params);
       return action.setActive();
     },
-    activeRecord: function(record) {
-      return this.model.get('authUser').setActiveRecord(record);
+    activeRecord: function(record, status) {
+      return this.model.get('authUser').setActiveRecord(record, status);
+    },
+    addTime: function(record, start) {
+      console.log('add time to record', record, start);
+      return console.log('difference', moment(new Date(start)).fromNow());
     },
     serverOnline: function() {
       return this.trigger('isOnline', true);
@@ -3488,7 +3511,7 @@
       'click .btn.delete': "deleteRecord",
       'click .subject': "toggleInlineEdit",
       'click .edit.btn': "editRecord",
-      'click .btn[role=do-active]': "doActive"
+      'click .btn[role=do-active]': "toggleActive"
     };
 
     RecordView.prototype.initialize = function() {
@@ -3533,13 +3556,13 @@
       return this.renderUserInfo();
     };
 
-    RecordView.prototype.doActive = function() {
-      return Tracktime.AppChannel.command('activeRecord', this.model);
+    RecordView.prototype.toggleActive = function() {
+      return Tracktime.AppChannel.command('activeRecord', this.model, !(Tracktime.AppChannel.checkActive(this.model.id)));
     };
 
-    RecordView.prototype.setActiveState = function() {
+    RecordView.prototype.setActiveState = function(status) {
       this.$el.siblings().removeClass('current');
-      return this.$el.addClass('current');
+      return this.$el.toggleClass('current', status);
     };
 
     RecordView.prototype.changeIsEdit = function() {

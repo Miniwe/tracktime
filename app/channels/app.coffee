@@ -58,18 +58,19 @@ _.extend Tracktime.AppChannel,
 
   bindComply: ->
     @comply
-      'start':           @startApp
-      'newRecord':       @newRecord
-      'newProject':      @newProject
-      'newUser':         @newUser
-      'useProject':      @useProject
-      'addAction':       @addAction
-      'serverOnline':    @serverOnline
-      'serverOffline':   @serverOffline
-      'checkOnline':     @checkOnline
-      'userAuth':        @userAuth
-      'userGuest':       @userGuest
-      'activeRecord':       @activeRecord
+      'start':         @startApp
+      'newRecord':     @newRecord
+      'newProject':    @newProject
+      'newUser':       @newUser
+      'useProject':    @useProject
+      'addAction':     @addAction
+      'serverOnline':  @serverOnline
+      'serverOffline': @serverOffline
+      'checkOnline':   @checkOnline
+      'userAuth':      @userAuth
+      'userGuest':     @userGuest
+      'activeRecord':  @activeRecord
+      'addTime':       @addTime
 
   bindRequest: ->
     @reply 'isOnline', => @isOnline
@@ -97,8 +98,14 @@ _.extend Tracktime.AppChannel,
     action = @model.get('actions').addAction(options, params)
     action.setActive()
 
-  activeRecord: (record) ->
-    @model.get('authUser').setActiveRecord record
+  activeRecord: (record, status) ->
+    @model.get('authUser').setActiveRecord record, status
+
+
+  addTime: (record, start) ->
+    console.log 'add time to record', record, start
+    # diff = moment(new Date()) - moment(new Date(start))
+    console.log 'difference', moment(new Date(start)).fromNow()
 
   serverOnline: ->
     @trigger 'isOnline', true
