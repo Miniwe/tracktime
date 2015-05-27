@@ -55,14 +55,15 @@ class Tracktime.RecordsView extends Backbone.View
       timeB = new Date($('.record-info time', b).attr('datetime')).getTime()
       timeB - timeA
 
-    dates = $.unique($('.record-info time', parentCont).map((i, el) -> $(el).attr('datetime').substr 0, 10 )).sort (a, b) -> b > a
+    dates = $.unique($('.record-info time', parentCont).map((i, el) -> moment($(el).attr('datetime')).format("YYYY-MM-DD") )).sort (a, b) -> b > a
+
+    console.log 'dates', dates
     _.each dates, (el, b) ->
-      id = el.replace /\s/g, '_'
-      if $("##{id}").length < 1
-        $(parentCont) .append $("<ul> /", {id: id}) .append $("<li />", {class: 'list-group-items-group navbar navbar-primary'}).html(el)
+      if $("##{el}").length < 1
+        $(parentCont).append $("<ul> /", {id: el}).append $("<li />", {class: 'list-group-items-group navbar navbar-primary'}).html moment(el).format("Do MMMM YYYY")
 
     _.each sortedList, (item) ->
-      id = $('.record-info time', item).attr('datetime').substr(0, 10).replace /\s/g, '_'
+      id = moment($('.record-info time', item).attr('datetime')).format("YYYY-MM-DD")
       $("##{id}", parentCont).append item
 
 

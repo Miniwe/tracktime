@@ -35424,7 +35424,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
         date: (new Date()).toISOString()
       });
       if (_.isEmpty(options.recordDate)) {
-        options.recordDate = moment().toISOString();
+        options.recordDate = (new Date()).toISOString();
       }
       success = (function(_this) {
         return function(result) {
@@ -37769,24 +37769,23 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
         return timeB - timeA;
       });
       dates = $.unique($('.record-info time', parentCont).map(function(i, el) {
-        return $(el).attr('datetime').substr(0, 10);
+        return moment($(el).attr('datetime')).format("YYYY-MM-DD");
       })).sort(function(a, b) {
         return b > a;
       });
+      console.log('dates', dates);
       _.each(dates, function(el, b) {
-        var id;
-        id = el.replace(/\s/g, '_');
-        if ($("#" + id).length < 1) {
+        if ($("#" + el).length < 1) {
           return $(parentCont).append($("<ul> /", {
-            id: id
+            id: el
           }).append($("<li />", {
             "class": 'list-group-items-group navbar navbar-primary'
-          }).html(el)));
+          }).html(moment(el).format("Do MMMM YYYY"))));
         }
       });
       return _.each(sortedList, function(item) {
         var id;
-        id = $('.record-info time', item).attr('datetime').substr(0, 10).replace(/\s/g, '_');
+        id = moment($('.record-info time', item).attr('datetime')).format("YYYY-MM-DD");
         return $("#" + id, parentCont).append(item);
       });
     };
