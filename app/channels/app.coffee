@@ -103,7 +103,9 @@ _.extend Tracktime.AppChannel,
 
   addTime: (record, start) ->
     # diff = moment(new Date()) - moment(new Date(start))
-    @model.get('records').get(record).addTime moment(new Date()).diff(new Date(start), 'second')
+    record = @model.get('records').get(record)
+    if record instanceof Tracktime.Record
+      record.addTime moment(new Date()).diff(new Date(start), 'second')
 
 
   serverOnline: ->

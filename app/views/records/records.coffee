@@ -9,7 +9,7 @@ class Tracktime.RecordsView extends Backbone.View
     @render()
     @listenTo @collection, "sync", @resetRecordsList
     @listenTo @collection, "remove", @removeRecord
-    @listenTo @collection, "add", @addRecord
+    # @listenTo @collection, "add", @addRecord
     @listenTo @collection, "newRecord", @newRecord
     $('.removeFilter', @container).on 'click', @removeFilter
     $('.btn-loadmore', @container).on 'click', @loadMoreRecords
@@ -41,12 +41,12 @@ class Tracktime.RecordsView extends Backbone.View
      $('.btn-loadmore', @container).hide()
 
   newRecord: (record) ->
-    @loadMoreRecords()
-    # @sortRecords()
-    dateEl = record.get('recordDate').substr(0, 10).replace(/\s/g, '_')
-    # $('.scrollWrapper').animate
-    #   'scrollTop': .offset().top - $('.scrollWrapper').offset().top + $('.scrollWrapper').scrollTop() + 20
-    $('.scrollWrapper').scrollTop($("##{dateEl}").offset().top + $(".scrollWrapper").scrollTop() - 78)
+    @addRecord(record)
+    # @loadMoreRecords()
+
+    # dateEl = moment(record.get('recordDate') ).format("YYYY-MM-DD")
+    # if $("##{dateEl}").length > 0
+    #   $('.scrollWrapper').scrollTop($("##{dateEl}").offset().top + $(".scrollWrapper").scrollTop() - 78)
 
   sortRecords: ->
     parentCont = '#main .list-group'
@@ -57,7 +57,6 @@ class Tracktime.RecordsView extends Backbone.View
 
     dates = $.unique($('.record-info time', parentCont).map((i, el) -> moment($(el).attr('datetime')).format("YYYY-MM-DD") )).sort (a, b) -> b > a
 
-    console.log 'dates', dates
     _.each dates, (el, b) ->
       if $("##{el}").length < 1
         $(parentCont).append $("<ul> /", {id: el}).append $("<li />", {class: 'list-group-items-group navbar navbar-primary'}).html moment(el).format("Do MMMM YYYY")
@@ -67,7 +66,7 @@ class Tracktime.RecordsView extends Backbone.View
       $("##{id}", parentCont).append item
 
 
-  resetRecordsList: ->
+  resetRecordsList_old: ->
     frag = document.createDocumentFragment()
     models = @collection.getModels @exceptRecords()
     _.each models, (record) ->
@@ -76,7 +75,50 @@ class Tracktime.RecordsView extends Backbone.View
     , @
     @$el.prepend frag
     @sortRecords()
-    models.length
+
+  resetRecordsList: ->
+    parentCont = '#main .list-group'
+    models = @collection.getModels @exceptRecords()
+    _.each models, (record) ->
+      recordView = @setSubView "record-#{record.cid}", new Tracktime.RecordView model: record
+      @listGroup(record).append recordView.el
+    , @
+
+  listGroup: (record) ->
+    parentCont = '#main .list-group'
+    # получить дату группы из модели
+    groupDate = moment(record.get('recordDate')).format("YYYY-MM-DD")
+    group = null
+    # если группа существует то вернуть ев jquery
+    if $("##{groupDate}").length > 0
+      group = $("##{groupDate}")
+    # иначе
+    else
+      # создать группу с заголовком
+      group = $("<ul> /", {id: groupDate}).append $("<li />", {class: 'list-group-items-group navbar navbar-primary'}).html moment(groupDate).format("Do MMMM YYYY")
+      # если списков нет то добавить группу просто
+      if $(".list-group > ul", parentCont).length < 1
+        $(parentCont).append group
+      # иначе
+      else
+        # получить массив id групп - добавить в него новый элемент
+        # отсортировать по убыыванию
+        groups = $("ul.list-group > ul").map( (idx, el) -> $(el).attr('id') )
+        groups.push groupDate
+        groups = groups.sort( (a, b) -> b > a )
+        # получить индекс в массиве
+        groupIndex = _. indexOf groups, groupDate
+        # если индекс равен длине массива то добавить группу в конец
+        # иначе если индекс равен 0 массива то добавить группу в начало
+        if groupIndex == 0
+          $(parentCont).prepend group
+        # если есть предыдущий искомому элемент полученный по индексу то добавть ul после предыдушего
+        else
+          prevIndexGroup = groups[groupIndex - 1]
+          $("##{prevIndexGroup}").after group
+
+    group
+
 
   exceptRecords: () ->
     _.pluck $('.list-group-item > div', @container), 'id'
@@ -95,10 +137,11 @@ class Tracktime.RecordsView extends Backbone.View
 
   addRecord: (record, collection, params) ->
     # add record - depricated
-    # if record.isSatisfiedied @collection.filter
-    #   recordView = new Tracktime.RecordView { model: record }
-    #   $(recordView.el).prependTo @$el
-    #   @setSubView "record-#{record.cid}", recordView
+    if record.isSatisfied @collection.filter
+      recordView = new Tracktime.RecordView { model: record }
+      $(recordView.el).insertAfter('.list-group-items-group', @listGroup(record))
+      $('.btn[role="do-active"]', recordView.el).click()
+      # @setSubView "record-#{record.cid}", recordView
 
   removeFilter: (event) =>
     key = $(event.currentTarget).data('exclude')

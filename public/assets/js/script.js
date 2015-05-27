@@ -34103,10 +34103,10 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       this.get('users').fetch({
         ajaxSync: Tracktime.AppChannel.request('isOnline')
       });
-      this.get('records').fetch({
+      this.get('projects').fetch({
         ajaxSync: Tracktime.AppChannel.request('isOnline')
       });
-      return this.get('projects').fetch({
+      return this.get('records').fetch({
         ajaxSync: Tracktime.AppChannel.request('isOnline')
       });
     };
@@ -35448,26 +35448,23 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     };
 
     RecordsCollection.prototype.getModels = function(except) {
-      var fmodels, limit, models, outmodels;
+      var limit, models;
       if (except == null) {
         except = [];
       }
       models = {};
       limit = 6;
       if (this.length > 0) {
-        fmodels = _.filter(this.models, (function(_this) {
+        models = _.filter(this.models, (function(_this) {
           return function(model) {
             return model.isSatisfied(_this.filter);
           };
         })(this));
-        models = fmodels;
-      } else {
-        models = this.models;
       }
-      outmodels = _.filter(models, function(model) {
+      models = _.filter(models, function(model) {
         return _.indexOf(except, model.id) === -1;
       });
-      return _.first(outmodels, limit);
+      return _.first(models, limit);
     };
 
     return RecordsCollection;
@@ -35692,7 +35689,10 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       return this.model.get('authUser').setActiveRecord(record, status);
     },
     addTime: function(record, start) {
-      return this.model.get('records').get(record).addTime(moment(new Date()).diff(new Date(start), 'second'));
+      record = this.model.get('records').get(record);
+      if (record instanceof Tracktime.Record) {
+        return record.addTime(moment(new Date()).diff(new Date(start), 'second'));
+      }
     },
     serverOnline: function() {
       return this.trigger('isOnline', true);
@@ -37711,7 +37711,6 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       this.render();
       this.listenTo(this.collection, "sync", this.resetRecordsList);
       this.listenTo(this.collection, "remove", this.removeRecord);
-      this.listenTo(this.collection, "add", this.addRecord);
       this.listenTo(this.collection, "newRecord", this.newRecord);
       $('.removeFilter', this.container).on('click', this.removeFilter);
       $('.btn-loadmore', this.container).on('click', this.loadMoreRecords);
@@ -37753,10 +37752,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
     };
 
     RecordsView.prototype.newRecord = function(record) {
-      var dateEl;
-      this.loadMoreRecords();
-      dateEl = record.get('recordDate').substr(0, 10).replace(/\s/g, '_');
-      return $('.scrollWrapper').scrollTop($("#" + dateEl).offset().top + $(".scrollWrapper").scrollTop() - 78);
+      return this.addRecord(record);
     };
 
     RecordsView.prototype.sortRecords = function() {
@@ -37773,7 +37769,6 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       })).sort(function(a, b) {
         return b > a;
       });
-      console.log('dates', dates);
       _.each(dates, function(el, b) {
         if ($("#" + el).length < 1) {
           return $(parentCont).append($("<ul> /", {
@@ -37790,7 +37785,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       });
     };
 
-    RecordsView.prototype.resetRecordsList = function() {
+    RecordsView.prototype.resetRecordsList_old = function() {
       var frag, models;
       frag = document.createDocumentFragment();
       models = this.collection.getModels(this.exceptRecords());
@@ -37802,8 +37797,55 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
         return frag.appendChild(recordView.el);
       }, this);
       this.$el.prepend(frag);
-      this.sortRecords();
-      return models.length;
+      return this.sortRecords();
+    };
+
+    RecordsView.prototype.resetRecordsList = function() {
+      var models, parentCont;
+      parentCont = '#main .list-group';
+      models = this.collection.getModels(this.exceptRecords());
+      return _.each(models, function(record) {
+        var recordView;
+        recordView = this.setSubView("record-" + record.cid, new Tracktime.RecordView({
+          model: record
+        }));
+        return this.listGroup(record).append(recordView.el);
+      }, this);
+    };
+
+    RecordsView.prototype.listGroup = function(record) {
+      var group, groupDate, groupIndex, groups, parentCont, prevIndexGroup;
+      parentCont = '#main .list-group';
+      groupDate = moment(record.get('recordDate')).format("YYYY-MM-DD");
+      group = null;
+      if ($("#" + groupDate).length > 0) {
+        group = $("#" + groupDate);
+      } else {
+        group = $("<ul> /", {
+          id: groupDate
+        }).append($("<li />", {
+          "class": 'list-group-items-group navbar navbar-primary'
+        }).html(moment(groupDate).format("Do MMMM YYYY")));
+        if ($(".list-group > ul", parentCont).length < 1) {
+          $(parentCont).append(group);
+        } else {
+          groups = $("ul.list-group > ul").map(function(idx, el) {
+            return $(el).attr('id');
+          });
+          groups.push(groupDate);
+          groups = groups.sort(function(a, b) {
+            return b > a;
+          });
+          groupIndex = _.indexOf(groups, groupDate);
+          if (groupIndex === 0) {
+            $(parentCont).prepend(group);
+          } else {
+            prevIndexGroup = groups[groupIndex - 1];
+            $("#" + prevIndexGroup).after(group);
+          }
+        }
+      }
+      return group;
     };
 
     RecordsView.prototype.exceptRecords = function() {
@@ -37828,7 +37870,16 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       }
     };
 
-    RecordsView.prototype.addRecord = function(record, collection, params) {};
+    RecordsView.prototype.addRecord = function(record, collection, params) {
+      var recordView;
+      if (record.isSatisfied(this.collection.filter)) {
+        recordView = new Tracktime.RecordView({
+          model: record
+        });
+        $(recordView.el).insertAfter('.list-group-items-group', this.listGroup(record));
+        return $('.btn[role="do-active"]', recordView.el).click();
+      }
+    };
 
     RecordsView.prototype.removeFilter = function(event) {
       var key;

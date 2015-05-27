@@ -58,13 +58,12 @@ class Tracktime.RecordsCollection extends Tracktime.Collection
     models = {}
     limit = 6
     if @length > 0
-      fmodels = _.filter @models, (model) =>
+      models = _.filter @models, (model) =>
         model.isSatisfied @filter
-      models = fmodels
-    else
-      models = @models
-    outmodels = _.filter models, (model) ->
+
+    models = _.filter models, (model) ->
       _.indexOf(except, model.id) == -1
-    _.first outmodels, limit
+
+    _.first models, limit
 
 (module?.exports = Tracktime.RecordsCollection) or @Tracktime.RecordsCollection = Tracktime.RecordsCollection
