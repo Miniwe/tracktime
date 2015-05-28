@@ -139,7 +139,7 @@ class Tracktime.RecordsView extends Backbone.View
     # add record - depricated
     if record.isSatisfied @collection.filter
       recordView = new Tracktime.RecordView { model: record }
-      $(recordView.el).insertAfter('.list-group-items-group', @listGroup(record))
+      $(recordView.el).insertAfter $('.list-group-items-group', @listGroup(record))
       $('.btn[role="do-active"]', recordView.el).click()
       # @setSubView "record-#{record.cid}", recordView
 

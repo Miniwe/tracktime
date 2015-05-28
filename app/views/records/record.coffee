@@ -54,6 +54,7 @@ class Tracktime.RecordView extends Backbone.View
     Tracktime.AppChannel.command 'activeRecord', @model, not(Tracktime.AppChannel.checkActive @model.id)
 
   setActiveState: (status) ->
+    console.log 'try set acgive state', status, @$el
     $('.list-group-item').removeClass 'current'
     @$el.toggleClass 'current', status
 

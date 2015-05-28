@@ -3565,6 +3565,7 @@
     };
 
     RecordView.prototype.setActiveState = function(status) {
+      console.log('try set acgive state', status, this.$el);
       $('.list-group-item').removeClass('current');
       return this.$el.toggleClass('current', status);
     };
@@ -3866,7 +3867,7 @@
         recordView = new Tracktime.RecordView({
           model: record
         });
-        $(recordView.el).insertAfter('.list-group-items-group', this.listGroup(record));
+        $(recordView.el).insertAfter($('.list-group-items-group', this.listGroup(record)));
         return $('.btn[role="do-active"]', recordView.el).click();
       }
     };
