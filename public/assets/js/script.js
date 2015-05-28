@@ -37748,7 +37748,7 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       if (modelsNewCount > 0) {
         return $('.btn-loadmore', this.container).show().appendTo(this.container);
       } else {
-        return $('.btn-loadmore', this.container).hide();
+        return $('.btn-loadmore', this.container).remove();
       }
     };
 
@@ -37805,13 +37805,14 @@ this["JST"]["users/user"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"
       var models, parentCont;
       parentCont = '#main .list-group';
       models = this.collection.getModels(this.exceptRecords());
-      return _.each(models, function(record) {
+      _.each(models, function(record) {
         var recordView;
         recordView = this.setSubView("record-" + record.cid, new Tracktime.RecordView({
           model: record
         }));
         return this.listGroup(record).append(recordView.el);
       }, this);
+      return models.length;
     };
 
     RecordsView.prototype.listGroup = function(record) {

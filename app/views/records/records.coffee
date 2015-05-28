@@ -38,7 +38,7 @@ class Tracktime.RecordsView extends Backbone.View
     if modelsNewCount > 0
      $('.btn-loadmore', @container).show().appendTo @container
     else
-     $('.btn-loadmore', @container).hide()
+     $('.btn-loadmore', @container).remove()
 
   newRecord: (record) ->
     @addRecord(record)
@@ -83,6 +83,7 @@ class Tracktime.RecordsView extends Backbone.View
       recordView = @setSubView "record-#{record.cid}", new Tracktime.RecordView model: record
       @listGroup(record).append recordView.el
     , @
+    models.length
 
   listGroup: (record) ->
     parentCont = '#main .list-group'

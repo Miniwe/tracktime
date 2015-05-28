@@ -16,7 +16,7 @@
       <a href="#records{{filteredHref filter=filter project=project}}" class='record-info-project' title="Project"><i class="mdi-content-add-circle"></i><span>{{project}}</span>&#0160;</a>
       <time datetime="{{recordDate}}" title="Record Date"><i class="mdi-action-event"></i>{{dateFormat recordDate}}<!--  / {{recordDate}} --></time>
       &#0160;
-      <span title="Record Time" class="recordTime"><i class="mdi-action-schedule"></i><span class="value">{{minuteFormat recordTime}}</span> / {{recordTime}}</span>
+      <span title="Record Time" class="recordTime"><i class="mdi-action-schedule"></i><span class="value">{{minuteFormat recordTime}}</span><span class="hidden"> / {{recordTime}}</span></span>
 
       <!-- &#0160;
       {{user}} / {{project}} -->
@@ -25,7 +25,7 @@
     <div class="subject" style="border: none;">{{nl2br subject}}</div>
 
     <p class="last-update">
-        <time class="text-muted" datetime="{{date}}">{{dateFormat updatedAt}} / {{date}}</time>
+        <time class="text-muted" datetime="{{date}}">{{dateFormat updatedAt}}<span class="hidden"> / {{date}}</span></time>
     </p>
 
   </div>
